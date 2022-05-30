@@ -12,7 +12,7 @@ typedef enum{
 
 extern void show_prenotation_details(struct prenotazione *prenotazione ); 
 extern void update_trip_seat (struct viaggio *viaggio); 
-extern void validate_prenotation(struct prenotazione *prenotazione;
+extern void validate_prenotation(struct prenotazione *prenotazione);
 
 
 

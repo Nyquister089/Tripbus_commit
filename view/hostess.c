@@ -25,7 +25,7 @@ int get_hstss_action(void)
 	puts("3) Inserire una nuova prenotazione");
 	puts("4) Modifica posti disponibili per un viaggio");
 	puts("5) Conferma prenotazione ed intestazione posti");
-	puts("6) Esci")
+	puts("6) Esci");
 	
 
 
@@ -43,7 +43,7 @@ bool exe_hstss_act(hstss_act sel)
 		return; 
 		
 		case INSERT_PRENOTAZIONE:
-		insert_prenotation(struct prenotazione); 
+		insert_prenotation(prenotazione); 
 		return ;
      	
      		case POSTI_VIAGGIO:
@@ -74,13 +74,13 @@ void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura v
  get_input("Inserisci il numero di prenotazione : ", VARCHAR_LEN, BUFFER, false);
  // procedura di select prenotazione
  clear_screen(); 
- printf("** Dettagli prenotazione **")
+ printf("** Dettagli prenotazione **");
  printf("Penotazione numero: %d  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data Saldo: %s \n",
-	prenotazione.numerodiprenotazione, 
-	prenotazione.clienteprenotante,
-	prenotazione.datadiprenotazione, 
-	prenotazione.datadiconferma, 
-	prenotazione.datasaldo); 
+	prenotazione->numerodiprenotazione, 
+	prenotazione->clienteprenotante,
+	prenotazione->datadiprenotazione, 
+	prenotazione->datadiconferma, 
+	prenotazione->datasaldo); 
 }
 
 void update_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsonibili per viaggio 
@@ -90,9 +90,9 @@ void update_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dips
  clear_screen(); 
  printf("**  Dettagli Viaggio : %d", NUM); 
  printf("Tour : %s \n Posti disponibili: %d \n Data annullamento: %d \n ",
- 		viaggio.tourassociato, 
-		viaggio.postidisponibili, 
- 		viaggio.dataannullamento); 
+ 		viaggio->tourassociato, 
+		viaggio->postidisponibili, 
+ 		viaggio->dataannullamento); 
  get_input ("Inserisci i nuovi posti disponibili :", NUM_LEN , viaggio->postidisponibili, false); 
 
 }
@@ -101,7 +101,7 @@ void validate_prenotation(struct prenotazione *prenotazione)
 {
 	clear_screen();
 	printf("** Procedura conferma prenotazione **\n\n");
-	get_input("Inserisci numero d'interesse : ", NUM_LEN , ID_RSRC, false); 
+	get_input("Inserisci numero d'interesse : ", VARCHAR_LEN , BUFFER, false); 
     // procedura di select
 	printf("Numero:  %s \n  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data di saldo: %s \n  ", 
 		prenotazione->numerodiprenotazione,
@@ -127,12 +127,12 @@ void validate_prenotation(struct prenotazione *prenotazione)
 		fprintf(stderr, "Data errata!\n");
 		}
 }
-int main ()
-//void run_hstss_interface (void)
-{ 	
-	while (1){
+//int main ()
+void run_hstss_interface (void)
+{ 	hstss_act sel; 
+	while (true){
 	get_hstss_action(); 
-	if (!exe_hstss_act(mch_hstss sel))
+	if (!exe_hstss_act(sel))
 		break; 
 	
 	}

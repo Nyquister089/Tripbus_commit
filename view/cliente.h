@@ -1,7 +1,7 @@
 #pragma once
 #include "../model/trpdb.h"
 
-enum actions {
+typedef enum  {
 	TOUR_INFO,
 	METE_TOUR,
 	VIAGGI_TOUR,
@@ -13,7 +13,7 @@ enum actions {
 
 
 extern int get_cstmr_action(void);
-extern bool exe_cstmr_act(drv_act sel);
+extern bool exe_cstmr_act(cstmr_act sel);
 extern char* select_tour(struct tour *tour);
 extern void show_tour_information(struct tour *tour);
 extern void show_tour_destination(struct mete_tour *mete_tour, struct foto_mete *foto_mete);
