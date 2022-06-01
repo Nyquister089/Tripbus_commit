@@ -2,6 +2,6 @@
 #include <stdlib.h>
 
 #include "test_maker.h"
-#include "../updatetripbus.h"
+#include "../upd.h"
 
 struct tour *init_tour();

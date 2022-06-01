@@ -1,6 +1,5 @@
 make --dry-run --keep-going --print-directory
 make: Entering directory '/home/giordano/prg_bd/Tripbus'
+gcc -o run_test_validation test_validation.c  test_maker.c ../utils/validation.c
 make: Leaving directory '/home/giordano/prg_bd/Tripbus'
  
-make: *** No targets specified and no makefile found.  Stop.
-
