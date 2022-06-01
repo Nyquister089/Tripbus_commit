@@ -71,7 +71,7 @@ bool exe_hstss_act(hstss_act sel)
 
 void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura visualizzazione dettagli prenotazione
 {clear_screen(); 
- get_input("Inserisci il numero di prenotazione : ", VARCHAR_LEN, BUFFER, false);
+ get_input("Inserisci il numero di prenotazione : ", VARCHAR_LEN, BUFF, false);
  // procedura di select prenotazione
  clear_screen(); 
  printf("** Dettagli prenotazione **");
@@ -85,7 +85,7 @@ void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura v
 
 void update_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsonibili per viaggio 
 {clear_screen(); 
- get_input("Inserisci il codice del viaggio : ", VARCHAR_LEN, BUFFER, false);
+ get_input("Inserisci il codice del viaggio : ", VARCHAR_LEN, BUFF, false);
  //procedura select viaggio
  clear_screen(); 
  printf("**  Dettagli Viaggio "); 
@@ -101,7 +101,7 @@ void validate_prenotation(struct prenotazione *prenotazione)
 {
 	clear_screen();
 	printf("** Procedura conferma prenotazione **\n\n");
-	get_input("Inserisci numero d'interesse : ", VARCHAR_LEN , BUFFER, false); 
+	get_input("Inserisci numero d'interesse : ", VARCHAR_LEN , BUFF, false); 
     // procedura di select
 	printf("Numero:  %s \n  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data di saldo: %s \n  ", 
 		prenotazione->numerodiprenotazione,
@@ -131,7 +131,7 @@ void validate_prenotation(struct prenotazione *prenotazione)
 void update_d_doc(struct cliente  *cliente)
 {clear_screen();
 	printf("** Procedura di modifica data documenti cliente **\n\n");
-	get_input("Inserisci l'ID d'interesse : ", VARCHAR_LEN , BUFFER, false); 
+	get_input("Inserisci l'ID d'interesse : ", VARCHAR_LEN , BUFF, false); 
     // procedura di select
 	printf("E-mail:  %s \n Nome: %s \n Cognome: %s \n Indirizzo: %s \n Codice fiscale: %s \n Recapito telefonico: %s \n Fax: %s \n Data documentazione: %s \n", 
 		cliente->emailcliente,
