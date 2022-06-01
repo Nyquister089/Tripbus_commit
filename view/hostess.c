@@ -7,7 +7,6 @@
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
-char BUFFER[VARCHAR_LEN];
 int NUM; 
 
 int get_hstss_action(void)
@@ -95,7 +94,7 @@ void update_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dips
  printf("Tour : %s \n Posti disponibili: %s \n Data annullamento: %s \n ",
  		viaggio->tourassociato, 
 		viaggio->postidisponibili, 
- 		viaggio->dataannullamento); 
+ 		viaggio->datadiannullamento); 
  get_input ("Inserisci i nuovi posti disponibili :", NUM_LEN , viaggio->postidisponibili, false); 
 
 }

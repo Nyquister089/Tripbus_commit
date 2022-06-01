@@ -3,7 +3,6 @@
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
-char BUFFER [VARCHAR_LEN];
 char PIC_DEST [VARCHAR_LEN]; 
 char ANS [5]; 
 char DATE_D[DATE_LEN];
@@ -150,7 +149,7 @@ void show_trip(struct viaggi_tour *viaggi_tour, struct viaggio *viaggio)
 			viaggi_tour->viaggi_tour[i].datadiritornoviaggio,
 			viaggi_tour->viaggi_tour[i].costodelviaggio,
 			viaggi_tour->viaggi_tour[i].postidisponibili,
-			viaggi_tour->viaggi_tour[i].dataannullamento);
+			viaggi_tour->viaggi_tour[i].datadiannullamento);
 	}
  	
 }

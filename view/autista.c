@@ -3,8 +3,7 @@
 #include "autista.h"
 #include "../utils/io.h"
 #include "../utils/validation.h"
-
-char BUFFER [VARCHAR_LEN]; 
+ 
 char DATE[DATE_LEN]; 
 char TARGA[VARCHAR_LEN]; 
 

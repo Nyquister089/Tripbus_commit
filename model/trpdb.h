@@ -16,7 +16,8 @@ extern void fini_db(void);
 #define PASSWORD_LEN 45
 #define PIC 45
 #define BIT_LEN 2
-
+#define VARCHAR_LEN 45
+#define DES_LEN 5000
 
 struct credentials {
 	char username[USERNAME_LEN];
@@ -37,9 +38,7 @@ extern void db_switch_to_login(void);
 extern role_t attempt_login(struct credentials *cred);
 extern void db_switch_to_administrator(void);
 
-#define VARCHAR_LEN 45
-#define DES_LEN 5000
-
+char BUFFER[VARCHAR_LEN]; 
 
 struct associata{
 	char *cameraprenotata; 				//FK //Corretto trasformandolo da carattere a puntatore di carattere
