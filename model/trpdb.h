@@ -274,12 +274,12 @@ struct viaggio {
 	char *conducente; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
 	char *accompagnatrice; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
 	char mezzoimpiegato[VARCHAR_LEN]; 			// FK
-	char *datadipartenzaviaggio[DATETIME_LEN]; 
-	char *datadiritornoviaggio[DATETIME_LEN]; 
+	char datadipartenzaviaggio[DATETIME_LEN]; 
+	char datadiritornoviaggio[DATETIME_LEN]; 
 	char *costodelviaggio;  //Corretto trasformandolo da carattere a puntatore di carattere
 	char *numerodikm; //Corretto trasformandolo da carattere a puntatore di carattere
 	char *postidisponibili; //Corretto trasformandolo da carattere a puntatore di carattere
-	char *datadiannullamento[DATETIME_LEN]; 
+	char datadiannullamento[DATETIME_LEN]; 
 };
 struct viaggi_tour{
 	size_t num_viaggi; 
