@@ -50,8 +50,8 @@ bool exe_mch_act(mch_act sel)
 		insert_model (modello); 
 		return true;   
      	
-     		case INSERT_RICAMBIO:
-     		insert_sparepart(ricambio);
+     	case INSERT_RICAMBIO:
+     	insert_sparepart(ricambio);
 		return true; 
 
 	 	case INSERT_MEZZO:
