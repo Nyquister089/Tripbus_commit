@@ -1789,8 +1789,3 @@ void do_select_sparepart_warehouse(struct ricambio *ricambio)
 }
 
 
-int main(int argv, char* argc){
-    init_db();
-    return 0;
-}
-

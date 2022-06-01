@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <my_global.h>
-#include <my_sys.h>
+#include <mysql/my_global.h>
+#include <mysql/my_sys.h>
 #include <mysql/mysql.h>
 
 #include "login.h"
@@ -40,6 +40,7 @@ if(conn == NULL) {
 fprintf(stderr, "mysql_init() failed\n");
 exit(EXIT_FAILURE);
 }
+init_db();
 /* connect to server */
 if(mysql_real_connect(conn, opt_host_name, opt_user_name,
 opt_password, opt_db_name, opt_port_num, opt_socket_name,
@@ -52,4 +53,7 @@ exit(EXIT_FAILURE);
 /* disconnect from server */
 mysql_close(conn);
 exit(EXIT_SUCCESS);
+return 0; 
 }
+
+

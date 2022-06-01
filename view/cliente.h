@@ -20,3 +20,4 @@ extern void show_tour_destination(struct mete_tour *mete_tour, struct foto_mete 
 extern void show_trip(struct viaggi_tour *viaggi_tour, struct viaggio *viaggio);
 extern void show_service(struct servizi_albergo *servizi_albergo);
 extern void show_comfort(struct comfort_mezzo *comfort_mezzo, struct elenco_modelli *elenco_modelli);
+extern void insert_costumer(struct cliente *cliente); 

@@ -39,7 +39,6 @@ void insert_seat(struct postoprenotato *postoprenotato)
 void insert_review(struct revisione *revisione)
 {	clear_screen();
 	printf("** Dettagli inserimento revisione **\n\n");
-	get_input("Inserisci l'ID: ", NUM_LEN, revisione->idrevisione, false);
 	get_input("Inserisci l'ID del mezzo revisionato : ", NUM_LEN, revisione->mezzorevisionato, false);
 	get_input("Inserisci l'ID del meccanico che ha eseguito la revisione : ", NUM_LEN, revisione-> addettoallarevisione, false);
 	get_input("Inserisci la descrizione delle operazioni eseguite (massimo 5000 caratteri): ", DES_LEN, revisione-> operazionieseguite, false);
@@ -61,6 +60,24 @@ void insert_review(struct revisione *revisione)
 	}
 
 
+}
+
+void insert_costumer(struct cliente *cliente)
+{	clear_screen();
+	printf("** Dettagli inserimento cliente **\n\n");
+	get_input("Inserisci l'indirizzo e-mail: ", VARCHAR_LEN, cliente->emailcliente, false);
+	get_input("Inserisci il nome: ", VARCHAR_LEN, cliente->nomecliente, false);
+	get_input("Inserisci il cognome: ", VARCHAR_LEN, cliente->cognomecliente, false);
+	get_input("Inserisci l'indirizzo: ", VARCHAR_LEN, cliente->indirizzocliente, false);
+	get_input("Inserisci il codice fiscale: ", VARCHAR_LEN, cliente->codicefiscale, false);
+	get_input("Inserisci il recapito telefonico: ", NUM_LEN, cliente->recapitotelefonico, false);
+	get_input("Inserisci il numero di fax: ", NUM_LEN, cliente->fax, false);
+	while(true){
+		get_input("Inserisci l'ultima data d'invio dei documuenti [YYYY-DD-MM]: ", DATE_LEN, cliente->datadocumentazione, false);
+		if(validate_date(cliente->datadocumentazione))
+			break;
+		fprintf(stderr, "Data errata!\n");
+	}
 }
 
 void insert_sparepart(struct ricambio *ricambio)
@@ -99,7 +116,6 @@ void insert_bus(struct mezzo *mezzo)
 void insert_model(struct modello *modello)
 {	clear_screen();
 	printf("** Dettagli inserimento modello **\n\n");
-	get_input("Inserisci l'ID : ", NUM_LEN, modello->idmodello, false); // AUTOINCREMENT???
 	get_input("Inserisci il nome : ", DEC_LEN, modello->nomemodello, false);
 	get_input("Inserisci la casa costruttrice : ", NUM_LEN, modello->casacostruttrice, false);
 	get_input("Inserisci i dati tecnici (massimo 5000 caratteri) : ", DES_LEN, modello-> datitecnici, false);
@@ -109,7 +125,6 @@ void insert_model(struct modello *modello)
 void insert_certify(struct tagliando *tagliando)
 {	clear_screen();
 	printf("** Dettagli inserimento tagliando **\n\n");
-	get_input("Inserisci l'ID : ", NUM_LEN, tagliando->idtagliando, false); // AUTOINCREMENT???
 	get_input("Inserisci la tipologia del tagliando: ", VARCHAR_LEN, tagliando->tipologiatagliando, false);
 	get_input("Inserisci le validita' superate (massimo 5000 caratteri) : ", DES_LEN, tagliando->validitasuperate, false);
 }

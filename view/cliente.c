@@ -190,6 +190,24 @@ void show_comfort(struct comfort_mezzo *comfort_mezzo, struct elenco_modelli *el
 	}
 }
 
+void insert_costumer(struct cliente *cliente)
+{	clear_screen();
+	printf("** Dettagli inserimento cliente **\n\n");
+	get_input("Inserisci l'indirizzo e-mail: ", VARCHAR_LEN, cliente->emailcliente, false);
+	get_input("Inserisci il nome: ", VARCHAR_LEN, cliente->nomecliente, false);
+	get_input("Inserisci il cognome: ", VARCHAR_LEN, cliente->cognomecliente, false);
+	get_input("Inserisci l'indirizzo: ", VARCHAR_LEN, cliente->indirizzocliente, false);
+	get_input("Inserisci il codice fiscale: ", VARCHAR_LEN, cliente->codicefiscale, false);
+	get_input("Inserisci il recapito telefonico: ", NUM_LEN, cliente->recapitotelefonico, false);
+	get_input("Inserisci il numero di fax: ", NUM_LEN, cliente->fax, false);
+	while(true){
+		get_input("Inserisci l'ultima data d'invio dei documuenti [YYYY-DD-MM]: ", DATE_LEN, cliente->datadocumentazione, false);
+		if(validate_date(cliente->datadocumentazione))
+			break;
+		fprintf(stderr, "Data errata!\n");
+	}
+}
+
 void run_cstmr_interface (void)
 { 	cstmr_act sel; 
 	while (true){
