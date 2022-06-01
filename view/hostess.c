@@ -7,7 +7,7 @@
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
-char *BUFFER[VARCHAR_LEN];
+char BUFFER[VARCHAR_LEN];
 int NUM; 
 
 int get_hstss_action(void)
@@ -25,6 +25,7 @@ int get_hstss_action(void)
 	puts("3) Inserire una nuova prenotazione");
 	puts("4) Modifica posti disponibili per un viaggio");
 	puts("5) Conferma prenotazione ed intestazione posti");
+	puts("6) Modificare la data di invio ultimi documenti di un cliente"); 
 	puts("6) Esci");
 	
 
@@ -34,31 +35,33 @@ int get_hstss_action(void)
 }
 
 bool exe_hstss_act(hstss_act sel)
-{
+{	struct cliente *cliente; 
 	struct prenotazione *prenotazione;
 	switch (sel)
 		{case INSERT_CLIENTE:
-		struct cliente *cliente; 
 		insert_costumer(cliente); 
-		return; 
+		return true ; 
 		
 		case INSERT_PRENOTAZIONE:
 		insert_prenotation(prenotazione); 
-		return ;
+		return true;
      	
-     		case POSTI_VIAGGIO:
-     		struct  viaggio *viaggio; 
-     		update_trip_seat(viaggio);
-		return ; 
+     	case POSTI_VIAGGIO:
+     	struct  viaggio *viaggio; 
+     	update_trip_seat(viaggio);
+		return true; 
 
 	 	case CONFERMA_PRENOTAZIONE:		
 		validate_prenotation (prenotazione); 
-		return ;
+		return true;
 
+		case UPDATE_DATA_DOC:		
+		update_d_doc(cliente);
+		return true;
 		
 		case QUIT:
 		// gestire l'uscita dal Db (disconnessione e ritorno a schermata iniziale) 
-		return ; 
+		return false; 
 		
 	break;
 		default:
@@ -75,7 +78,7 @@ void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura v
  // procedura di select prenotazione
  clear_screen(); 
  printf("** Dettagli prenotazione **");
- printf("Penotazione numero: %d  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data Saldo: %s \n",
+ printf("Penotazione numero: %s  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data Saldo: %s \n",
 	prenotazione->numerodiprenotazione, 
 	prenotazione->clienteprenotante,
 	prenotazione->datadiprenotazione, 
@@ -85,11 +88,11 @@ void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura v
 
 void update_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsonibili per viaggio 
 {clear_screen(); 
- get_input("Inserisci il codice del viaggio : ", NUM_LEN, NUM , false);
+ get_input("Inserisci il codice del viaggio : ", VARCHAR_LEN, BUFFER, false);
  //procedura select viaggio
  clear_screen(); 
- printf("**  Dettagli Viaggio : %d", NUM); 
- printf("Tour : %s \n Posti disponibili: %d \n Data annullamento: %d \n ",
+ printf("**  Dettagli Viaggio "); 
+ printf("Tour : %s \n Posti disponibili: %s \n Data annullamento: %s \n ",
  		viaggio->tourassociato, 
 		viaggio->postidisponibili, 
  		viaggio->dataannullamento); 
@@ -127,6 +130,35 @@ void validate_prenotation(struct prenotazione *prenotazione)
 		fprintf(stderr, "Data errata!\n");
 		}
 }
+
+void update_d_doc(struct cliente  *cliente)
+{clear_screen();
+	printf("** Procedura di modifica data documenti cliente **\n\n");
+	get_input("Inserisci l'ID d'interesse : ", VARCHAR_LEN , BUFFER, false); 
+    // procedura di select
+	printf("E-mail:  %s \n Nome: %s \n Cognome: %s \n Indirizzo: %s \n Codice fiscale: %s \n Recapito telefonico: %s \n Fax: %s \n Data documentazione: %s \n", 
+		cliente->emailcliente,
+		cliente->nomecliente,
+		cliente->cognomecliente,
+		cliente->indirizzocliente,
+		cliente->codicefiscale,
+		cliente->recapitotelefonico,
+		cliente->fax,
+		cliente->datadocumentazione
+		);
+    bool answer_update = yes_or_no("\n\n Vuoi modificare la data documentazione di questo cliente? (s/n) ",'s','n',false,false);
+	if(!answer_update) {
+		return;
+	}
+	while(true){
+		get_input("Modifica l'ultima data d'invio dei documuenti [YYYY-DD-MM]: ", DATE_LEN, cliente->datadocumentazione, false);
+		if(validate_date(cliente->datadocumentazione))
+			break;
+		fprintf(stderr, "Data errata!\n");
+	}
+
+}
+
 //int main ()
 void run_hstss_interface (void)
 { 	hstss_act sel; 

@@ -4,11 +4,11 @@
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
-int ID; 
+char BUFFER [VARCHAR_LEN]; 
 char DATE[DATE_LEN]; 
 char TARGA[VARCHAR_LEN]; 
 
-int get_driver_action(void)
+int get_drvr_action(void)
 {
 	char options[5] = {'1','2','3','4','5'};
 	char op;
@@ -29,28 +29,32 @@ int get_driver_action(void)
 	return op - '1';
 }
 
-bool exe_drvr_act(drv_act sel)
+bool exe_drvr_act(drvr_act sel)
 {	
 	switch (sel)
 		{case VIAGGI_ASSEGNATI:
-		show_assigned_trip(struct viaggio *viaggio); 
-		return ;
+		 struct viaggio *viaggio; 
+		show_assigned_trip(viaggio); 
+		return true;
      	
-     		case ORARIO_APERTURA:
-     		show_opening_hour(struct meta *meta, struct visita *visita);
-		return ; 
+     	case ORARIO_APERTURA:
+		struct meta *meta; 
+     	show_opening_hour(meta);
+		return true; 
 
-	 	case MAPPE:		
-	 	show_map(struct mappa *mappa); 
-		return ;
+	 	case MAPPE:	
+		struct mappa *mappa; 
+	 	show_map(mappa); 
+		return true;
 
 	 	case AGGIORNA_KM:
-		update_km(struct mezzo *mezzo)
-		return ; 
+		struct mezzo *mezzo; 
+		update_km(mezzo);
+		return true; 
 		
 		case QUIT:
 		// gestire l'uscita dal Db (disconnessione e ritorno a schermata iniziale) 
-		return ; 
+		return false; 
 		
 	break;
 		default:
@@ -64,7 +68,7 @@ bool exe_drvr_act(drv_act sel)
 
 void show_assigned_trip(struct viaggio *viaggio)
 {	clear_screen();
-	get_input("Inserisci l'ID del conducente:", NUM_LEN, ID, false);
+	get_input("Inserisci l'ID del conducente:", VARCHAR_LEN, BUFFER, false);
 	while(true) {
 	get_input("Inserisci la data di interesse [YYYY-MM-DD]: ", DATE_LEN, DATE, false);
 	if(validate_date(DATE))
@@ -73,20 +77,20 @@ void show_assigned_trip(struct viaggio *viaggio)
 	}
 	//esegui procedura di select sul viaggio, visualizzare il viaggio successivo alla data inserita
 	printf("** Dettagli del viaggio assegnato **\n\n");
-	printf(" Il conducente %d è assegnato al seguente viaggio : \n Tour associato: %s \n Accompagnatrice: %d\n Targa mezzo: %s \n Data di partenza: %s \n Data di ritorno %s \n Numero di Km da percorrere: %d ",
-			viaggio.conducente, 
-			viaggio.tourassociato,
-			viaggio.accompagnatrice, 
-			viaggio.mezzoimpiegato, 
-			viaggio.datadipartenzaviaggio,
-			viaggio.datadiritornoviaggio,
-			viaggio.numerodikm);
+	printf(" Il conducente %s è assegnato al seguente viaggio : \n Tour associato: %s \n Accompagnatrice: %s\n Targa mezzo: %s \n Data di partenza: %s \n Data di ritorno %s \n Numero di Km da percorrere: %s ",
+			viaggio->conducente, 
+			viaggio->tourassociato,
+			viaggio->accompagnatrice, 
+			viaggio->mezzoimpiegato, 
+			viaggio->datadipartenzaviaggio,
+			viaggio->datadiritornoviaggio,
+			viaggio->numerodikm);
 }
 
-void show_opening_hour(struct meta *meta, struct visita *visita)
+void show_opening_hour(struct meta *meta)
 {	clear_screen();	
 	printf("** Visualizzazione orario di apertura **\n\n");
-	get_input("Inserisci l'ID della meta desiderata:", NUM_LEN, ID, false);
+	get_input("Inserisci l'ID della meta desiderata:", VARCHAR_LEN, BUFFER, false);
 	while(true) {
 	get_input("Inserisci la data di interesse [YYYY-MM-DD]: ", DATE_LEN, DATE, false);
 	if(validate_date(DATE))
@@ -94,33 +98,38 @@ void show_opening_hour(struct meta *meta, struct visita *visita)
 	fprintf(stderr, "Data Errata!\n");
 	}
 	//esegui procedura di select sul meta e visita
-	printf(" Il bene turistico %s avente ID %d aprira' alle ore %s ",
-			meta.nomemeta, 
-			visita.metavisitata, 
-			visita.orario di apertura,  
+	printf(" Il bene turistico %s aprira' alle ore %s ",
+			meta->nomemeta, 
+			meta->orariodiapertura 
 			);
 }
 
 void show_map(struct mappa *mappa)
 {	clear_screen();	
 	printf("** Visualizzazione mappa  **\n\n");
-	get_input("Inserisci l'ID della mappa desiderata:", NUM_LEN, ID, false);
+	get_input("Inserisci l'ID della mappa desiderata:", VARCHAR_LEN, BUFFER, false);
 	//esegui procedura di select su mappa 
 	printf(" Ecco la mappa di  %s:  ",
-			mappa.citta,  
+			mappa->citta  
 			);// come si visualizza un dato di tipo blob 
 }
 
 void update_km(struct mezzo *mezzo)
-{lear_screen();	
+{clear_screen();	
 	printf("** Aggiornamento conta Km **\n\n");
 	get_input("Inserisci la targa del mezzo :", VARCHAR_LEN, TARGA, false);
 	//esegui procedura di select su mappa 
-	get_input("Inserisci il valore attuale del conta chilometri: ", NUM_LEN, mezzo-> valorecontakm, false);
+	get_input("Inserisci il valore attuale del conta chilometri: ", VARCHAR_LEN, mezzo-> valorecontakm, false);
 
 }
 
-void quit_action (void)
-{
+void run_drvr_interface (void)
+{ 	drvr_act sel; 
+	while (true){
+	get_drvr_action(); 
+	if (!exe_drvr_act(sel))
+		break; 
 	
+	}
 }
+

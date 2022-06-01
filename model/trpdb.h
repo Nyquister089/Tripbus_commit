@@ -76,6 +76,11 @@ struct comfort {
 
 };
 
+struct comfort_mezzo{
+	size_t num_comfort; 
+	struct comfort comfort_mezzo[]; 
+};
+
 struct competenze {
 	char *meccanicocompetente; 				//FK //Corretto trasformandolo da carattere a puntatore di carattere
 	char *modelloassociato; 					//FK //Corretto trasformandolo da carattere a puntatore di carattere
@@ -106,8 +111,9 @@ struct documentazionefotografica {
 
 struct foto_mete {
 	size_t num_pic;
-	struct documentazionefotografica documentazione_fotografica[]; 
+	struct documentazionefotografica foto_mete[]; 
 }; 
+
 
 struct foto_modelli {
 	char *modellorappresentato; 				//FK //Corretto trasformandolo da carattere a puntatore di carattere
@@ -143,7 +149,7 @@ struct meta {
 
 struct mete_tour
 { size_t num_met; 
-  struct  meta info_mete [];
+  struct  meta mete_tour [];
 };
 
 struct mezzo {
@@ -268,12 +274,12 @@ struct viaggio {
 	char *conducente; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
 	char *accompagnatrice; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
 	char mezzoimpiegato[VARCHAR_LEN]; 			// FK
-	char datadipartenzaviaggio[DATETIME_LEN]; 
-	char datadiritornoviaggio[DATETIME_LEN]; 
+	char *datadipartenzaviaggio[DATETIME_LEN]; 
+	char *datadiritornoviaggio[DATETIME_LEN]; 
 	char *costodelviaggio;  //Corretto trasformandolo da carattere a puntatore di carattere
 	char *numerodikm; //Corretto trasformandolo da carattere a puntatore di carattere
 	char *postidisponibili; //Corretto trasformandolo da carattere a puntatore di carattere
-	char dataannullamento[DATETIME_LEN]; 
+	char *datadiannullamento[DATETIME_LEN]; 
 };
 struct viaggi_tour{
 	size_t num_viaggi; 

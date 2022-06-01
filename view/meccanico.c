@@ -134,9 +134,10 @@ void update_sparepart_number(struct ricambio *ricambio)
 }
 void run_mch_interface (void)
 { 	
-	while (1){
+	mch_act sel; 
+	while (true){
 	get_mch_action(); 
-	if (!exe_mch_act(mch_act sel))
+	if(!exe_mch_act(sel))
 		break; 
 	
 	}
