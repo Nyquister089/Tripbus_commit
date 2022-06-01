@@ -5,8 +5,9 @@
 
 void update_trip(struct viaggio *viaggio)
 {	clear_screen();
+	char buffer[VARCHAR_LEN]; 
 	printf("** Procedura di update viaggio **\n\n");
-	get_input("Inserisci l'ID d'interesse : ", VARCHAR_LEN , BUFF, false); 
+	get_input("Inserisci l'ID d'interesse : ", VARCHAR_LEN , buffer, false); 
     // procedura di select
     printf("ID  %s \n : Tour associato: %s \n Conducente: %s \n Accompagnatrice: %s \n Mezzo: %s \n Partenza: %s \n Ritorno: %s \n Costo : %s \n Numero Km : %s \n Posti: %s \n  ", 
 		viaggio->idviaggio,
@@ -56,8 +57,9 @@ void update_trip(struct viaggio *viaggio)
 
 void update_costumer(struct cliente *cliente)
 {	clear_screen();
+	char buffer[VARCHAR_LEN]; 
 	printf("** Procedura di update cliente **\n\n");
-	get_input("Inserisci l'ID d'interesse : ", VARCHAR_LEN , BUFF, false); 
+	get_input("Inserisci l'ID d'interesse : ", VARCHAR_LEN , buffer, false); 
     // procedura di select
 	printf("E-mail:  %s \n Nome: %s \n Cognome: %s \n Indirizzo: %s \n Codice fiscale: %s \n Recapito telefonico: %s \n Fax: %s \n Data documentazione: %s \n", 
 		cliente->emailcliente,
@@ -91,8 +93,9 @@ void update_costumer(struct cliente *cliente)
 
 void update_prenotation(struct prenotazione *prenotazione)
 {	clear_screen();
+	char buffer[VARCHAR_LEN]; 
 	printf("** Procedura di update prenotazione **\n\n");
-	get_input("Inserisci numero d'interesse : ", VARCHAR_LEN , BUFF, false); 
+	get_input("Inserisci numero d'interesse : ", VARCHAR_LEN , buffer, false); 
     // procedura di select
 	printf("Numero:  %s \n  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data di saldo: %s \n  ", 
 		prenotazione->numerodiprenotazione,

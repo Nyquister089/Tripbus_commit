@@ -94,9 +94,11 @@ for(size_t i = 0; i < count; i++) {
 }
 
 void show_sparepart (struct ricambio *ricambio) // procedura visualizazzione ricambio
-{clear_screen(); 
- printf("** Procedura consultazione magazzino **\n\n");
- get_input("Inserisci il codice d'interesse : ", VARCHAR_LEN , BUFF, false); 
+{
+	clear_screen();
+	char buffer[VARCHAR_LEN];  
+ 	printf("** Procedura consultazione magazzino **\n\n");
+ 	get_input("Inserisci il codice d'interesse : ", VARCHAR_LEN , buffer, false); 
     // procedura di select
 	printf(" Codice:  %s \n  Costo : %s \n Quantità di riordino: %s \n Descrizione: %s \n Scorta minima: %s \n Quantità in magazzino: %s \n  ", 
 		ricambio->codice,
@@ -111,8 +113,9 @@ void show_sparepart (struct ricambio *ricambio) // procedura visualizazzione ric
 void update_sparepart_number(struct ricambio *ricambio)
 {	
 	clear_screen();
+	char buffer[VARCHAR_LEN]; 
 	printf("** Procedura di modifica quantità ricambio **\n\n");
-	get_input("Inserisci il codice d'interesse : ", VARCHAR_LEN , BUFF, false); 
+	get_input("Inserisci il codice d'interesse : ", VARCHAR_LEN , buffer, false); 
     // procedura di select
 	printf(" Codice:  %s \n  Costo : %s \n Quantità di riordino: %s \n Descrizione: %s \n Scorta minima: %s \n Quantità in magazzino: %s \n  ", 
 		ricambio->codice,

@@ -67,7 +67,8 @@ bool exe_drvr_act(drvr_act sel)
 
 void show_assigned_trip(struct viaggio *viaggio)
 {	clear_screen();
-	get_input("Inserisci l'ID del conducente:", VARCHAR_LEN, BUFF, false);
+	char buffer[VARCHAR_LEN]; 
+	get_input("Inserisci l'ID del conducente:", VARCHAR_LEN, buffer, false);
 	while(true) {
 	get_input("Inserisci la data di interesse [YYYY-MM-DD]: ", DATE_LEN, DATE, false);
 	if(validate_date(DATE))
@@ -88,8 +89,9 @@ void show_assigned_trip(struct viaggio *viaggio)
 
 void show_opening_hour(struct meta *meta)
 {	clear_screen();	
+	char buffer[VARCHAR_LEN]; 
 	printf("** Visualizzazione orario di apertura **\n\n");
-	get_input("Inserisci l'ID della meta desiderata:", VARCHAR_LEN, BUFF, false);
+	get_input("Inserisci l'ID della meta desiderata:", VARCHAR_LEN, buffer, false);
 	while(true) {
 	get_input("Inserisci la data di interesse [YYYY-MM-DD]: ", DATE_LEN, DATE, false);
 	if(validate_date(DATE))
@@ -105,8 +107,9 @@ void show_opening_hour(struct meta *meta)
 
 void show_map(struct mappa *mappa)
 {	clear_screen();	
+	char buffer[VARCHAR_LEN]; 
 	printf("** Visualizzazione mappa  **\n\n");
-	get_input("Inserisci l'ID della mappa desiderata:", VARCHAR_LEN, BUFF, false);
+	get_input("Inserisci l'ID della mappa desiderata:", VARCHAR_LEN, buffer, false);
 	//esegui procedura di select su mappa 
 	printf(" Ecco la mappa di  %s:  ",
 			mappa->citta  
@@ -114,7 +117,9 @@ void show_map(struct mappa *mappa)
 }
 
 void update_km(struct mezzo *mezzo)
-{clear_screen();	
+{	
+	clear_screen();
+	char buffer[VARCHAR_LEN]; 	
 	printf("** Aggiornamento conta Km **\n\n");
 	get_input("Inserisci la targa del mezzo :", VARCHAR_LEN, TARGA, false);
 	//esegui procedura di select su mappa 

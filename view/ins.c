@@ -26,6 +26,7 @@ void insert_prenotation(struct prenotazione *prenotazione)
 		fprintf(stderr, "Data errata!\n");
 	}
 }
+
 void insert_seat(struct postoprenotato *postoprenotato)
 {	clear_screen();
 	printf("** Dettagli inserimento passeggero **\n\n");
