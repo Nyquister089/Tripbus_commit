@@ -182,13 +182,14 @@ void show_comfort(struct comfort_mezzo *comfort_mezzo, struct elenco_modelli *el
 	//  lancio procedura select per individuare il modello d'interesse e restituisco i relativi servizi offerti, inserisco il numero degli ultimi nella variabile COUNT
 	clear_screen(); 
 	printf("** Comfort offerti dal bus modello : %s \n\n", BUFFER);
+	
 	for(size_t i = 0; i < COUNT; i++) {
 		printf("Nome comfort: %s \n Descrizione: %s \n\n",
 			comfort_mezzo->comfort_mezzo[i].nomecomfort,
 			comfort_mezzo->comfort_mezzo[i].descrizionecomfort); 
 	}
 }
-//int main ()
+
 void run_cstmr_interface (void)
 { 	cstmr_act sel; 
 	while (true){

@@ -7,10 +7,6 @@
 
 #define KM 50000; 
 
-char BUFFER[VARCHAR_LEN]; 
-int NUM;
-
-
 int get_mch_action(void)
 {
 	char options[9] = {'1','2','3','4','5','6','7','8','9'};

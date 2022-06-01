@@ -7,8 +7,6 @@
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
-int NUM; 
-
 int get_hstss_action(void)
 {
 	char options[6] = {'1','2','3','4','5','6'};
@@ -158,7 +156,6 @@ void update_d_doc(struct cliente  *cliente)
 
 }
 
-//int main ()
 void run_hstss_interface (void)
 { 	hstss_act sel; 
 	while (true){
