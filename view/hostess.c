@@ -1,6 +1,5 @@
 
 #include <stdio.h>
-
 #include "hostess.h"
 #include "ins.h"
 #include "upd.h"
@@ -9,7 +8,7 @@
 
 int get_hstss_action(void)
 {
-	char options[6] = {'1','2','3','4','5','6'};
+	char options[6] = {'1','2','3','4','5','6','7'};
 	char op;
 			
 	clear_screen();
@@ -23,7 +22,7 @@ int get_hstss_action(void)
 	puts("4) Modifica posti disponibili per un viaggio");
 	puts("5) Conferma prenotazione ed intestazione posti");
 	puts("6) Modificare la data di invio ultimi documenti di un cliente"); 
-	puts("6) Esci");
+	puts("7) Esci");
 	
 
 
