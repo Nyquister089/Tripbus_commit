@@ -8,7 +8,7 @@
 
 int get_hstss_action(void)
 {
-	char options[6] = {'1','2','3','4','5','6','7'};
+	char options[7] = {'1','2','3','4','5','6','7'};
 	char op;
 			
 	clear_screen();

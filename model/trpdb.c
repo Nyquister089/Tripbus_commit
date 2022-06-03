@@ -3,15 +3,15 @@
 #include <string.h>
 #include <mysql/mysql.h>
 #include <assert.h>
-#include <mysql/my_global.h>
-#include <mysql/my_sys.h>
-
+//#include <mysql/my_global.h>
+//#include <mysql/my_sys.h>
 
 
 #include "trpdb.h"
 #include "../utils/db.h"
 
 static MYSQL *conn;
+
 static char *opt_host_name = NULL; /* host (default=localhost) */
 static char *opt_user_name = NULL; /* username (default=login name)*/
 static char *opt_password = NULL; /* password (default=none) */
@@ -20,9 +20,7 @@ static char *opt_socket_name = NULL; /* socket name (use built-in) */
 static char *opt_db_name = NULL; /* database name (default=none) */
 static unsigned int opt_flags = 0; /* connection flags (none) */
 
-
 static MYSQL_STMT *login_procedure;
-
 
 static MYSQL_STMT *insert_costumer; 
 static MYSQL_STMT *insert_reservation; 
@@ -32,9 +30,6 @@ static MYSQL_STMT *insert_model;
 static MYSQL_STMT *insert_bus; 
 static MYSQL_STMT *insert_sparepart; 
 static MYSQL_STMT *insert_certify;
-
-static MYSQL_STMT *validate_reservation; 
-
 
 static MYSQL_STMT *select_tour;
 static MYSQL_STMT *select_destination;
@@ -60,7 +55,8 @@ static MYSQL_STMT *select_employee;
 
 static MYSQL_STMT *update_trip_seat;
 static MYSQL_STMT *update_pullman_km; 
-static MYSQL_STMT *update_sparepart_number; 
+static MYSQL_STMT *update_sparepart_number;
+static MYSQL_STMT *validate_reservation; 
 
 static MYSQL_STMT *select_assigned_trip; // procedura che seleziona il tuor in base a data e conducente
 static MYSQL_STMT *select_visit_details; // procedure che selezione la visita e le foto ad essa associate in base a meta e data del viaggio 
