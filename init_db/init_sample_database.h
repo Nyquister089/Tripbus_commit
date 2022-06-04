@@ -6,7 +6,7 @@
 #include <string.h>
 
 
+void get_statement_from_sql_file(char *filename, char *statement_result);
 void finish_with_error(MYSQL* conn);
-void create_database(MYSQL *conn, char *stmt_ddl);
-void create_table(MYSQL *conn, char *stmt_ddl);
-bool is_already_in_table(MYSQL *conn, char *stmt_dml);
+void execute_query_ddl_from_sql_file(MYSQL *conn, char *filename);
+void execute_query_dml_from_sql_file(MYSQL *conn, char *filename);
