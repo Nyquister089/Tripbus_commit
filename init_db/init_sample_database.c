@@ -26,7 +26,6 @@ bool is_already_in_table(MYSQL *conn, char *stmt_dml){
         finish_with_error(conn);
     }
     MYSQL_RES *result_query = mysql_store_result(conn);
-
     if (result_query == NULL)
     {
         finish_with_error(conn);
@@ -84,6 +83,24 @@ int main(void)
     if (!isDipendente3InDB){
         insert_into_table(conn,"INSERT INTO `tripdb`.`dipendente` (`IdDipendente`, `TipologiaDipendente`, `TelefonoAziendale`, `NomeDipendente`, `CogrnomeDipendente`) VALUES ('3', 'meccanico', '7801', 'Paolo', 'Verdi');");
     }
+
+    create_table(conn, "CREATE TABLE IF NOT EXISTS `tripdb`.`localita` (  `Nome localita` varchar(45) NOT NULL,  `Regione` varchar(45) NOT NULL,  `Stato` varchar(45) NOT NULL,  PRIMARY KEY (`Nome localita`,`Regione`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;");
+
+    bool islocalita1InDB  = is_already_in_table(conn,"SELECT COUNT(1) FROM `tripdb`.`localita` WHERE `Nome localita` = 'roma' AND `Regione` = 'lazio'");
+    if (!islocalita1InDB){
+        insert_into_table(conn,"INSERT INTO `tripdb`.`localita` (`Nome localita`, `Regione`, `Stato`) VALUES ('roma', 'lazio', 'italia');");
+    }
+
+    bool islocalita2InDB  = is_already_in_table(conn,"SELECT COUNT(1) FROM `tripdb`.`localita` WHERE `Nome localita` = 'milano' AND `Regione` = 'lombardia'");
+    if (!islocalita2InDB){
+        insert_into_table(conn,"INSERT INTO `tripdb`.`localita` (`Nome localita`, `Regione`, `Stato`) VALUES ('milano', 'lombardia', 'italia');");
+    }
+
+    bool islocalita3InDB  = is_already_in_table(conn,"SELECT COUNT(1) FROM `tripdb`.`localita` WHERE `Nome localita` = 'graz' AND `Regione` = 'stiria'");
+    if (!islocalita3InDB){
+        insert_into_table(conn,"INSERT INTO `tripdb`.`localita` (`Nome localita`, `Regione`, `Stato`) VALUES ('graz', 'stiria', 'austria');");
+    }
+
 
     mysql_close(conn);
 }
