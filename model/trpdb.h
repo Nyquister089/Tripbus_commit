@@ -144,10 +144,15 @@ struct meta {
 	char localitadiappartenenza[VARCHAR_LEN]; 		//FK
 };
 
-struct mete_tour
-{ size_t num_met; 
-  struct  meta mete_tour [];
+struct mete_tour{ 
+	size_t num_met; 
+  	struct  meta mete_tour [];
 };
+
+struct mete_viaggio{	
+	size_t num_vme; 
+	struct meta mete_viaggio[]; 
+}; 
 
 struct mezzo {
 	char targa[VARCHAR_LEN];

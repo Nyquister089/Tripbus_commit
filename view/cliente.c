@@ -9,7 +9,7 @@ char DATE_D[DATE_LEN];
 char DATE_R[DATE_LEN];
 size_t COUNT; 
 size_t COUNT_PIC; 
-struct tour *TOUR_SEL; 
+
 
 int get_cstmr_action(void)
 {
@@ -125,7 +125,7 @@ void show_tour_destination(struct mete_tour *mete_tour, struct foto_mete *foto_m
 }
 
 void show_trip(struct viaggi_tour *viaggi_tour, struct viaggio *viaggio)
-{	select_tour(TOUR_SEL); 
+{
 	clear_screen(); 
 	puts("** Inserire il periodo d'interesse **\n\n");
 

@@ -4,8 +4,9 @@
 
 typedef enum {
 	VIAGGI_ASSEGNATI,
-	ORARIO_APERTURA,
+	METE_VISITATE,
 	MAPPE,
+	ORARIO_APERTURA,
 	AGGIORNA_KM, 
 	QUIT
 } drvr_act;
@@ -16,4 +17,5 @@ extern void show_assigned_trip(struct viaggio *viaggio);
 extern void show_opening_hour(struct meta *meta); 
 extern void show_map(struct mappa *mappa); 
 extern void update_km(struct mezzo *mezzo); 
+extern void show_tour_destination(struct mete_viaggio *mete_viaggio); 
 

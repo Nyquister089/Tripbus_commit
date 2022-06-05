@@ -83,7 +83,7 @@ int main(void)
         exit(EXIT_FAILURE);
     }
 
-    if (mysql_real_connect(conn, "localhost", "root", "password", NULL, 22, NULL, CLIENT_MULTI_STATEMENTS | CLIENT_MULTI_RESULTS) == NULL)
+    if (mysql_real_connect(conn, "localhost", "giordano", "root1989", NULL, 22, NULL, CLIENT_MULTI_STATEMENTS | CLIENT_MULTI_RESULTS) == NULL)
     {
         finish_with_error(conn);
     }

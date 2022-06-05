@@ -9,7 +9,7 @@ char TARGA[VARCHAR_LEN];
 
 int get_drvr_action(void)
 {
-	char options[5] = {'1','2','3','4','5'};
+	char options[6] = {'1','2','3','4','5','6'};
 	char op;
 
 	clear_screen();
@@ -17,19 +17,21 @@ int get_drvr_action(void)
 	puts("*   INTERFACCIA AUTISTA    *");
 	puts("*********************************\n");
 	puts("*** Quale operazione vorresti eseguire? ***\n");
-	puts("1) Consulta i viaggi a cui sei assegnato");
-	puts("2) Consulta l'orario di apertura dei beni tursitici");
+	puts("1) Consulta i dati temporali relativi ai viaggi a cui sei assegnato");
+	puts("2) Consulta le mete visitate durante un viaggio");
 	puts("3) Consulta le mappe");
-	puts("4) Aggiorna il valore del conta km dopo il viaggio ");
-	puts("5) Esci");
+	puts("4) Consulta l'orario di apertura dei beni tursitici");
+	puts("5) Aggiorna il valore del conta km dopo un viaggio"); 
+	puts("6) Esci");
 
 
-	op = multi_choice("Select an option", options, 5);
+	op = multi_choice("Select an option", options, 6);
 	return op - '1';
 }
 
 bool exe_drvr_act(drvr_act sel)
 {	
+	struct meta *meta; 
 	switch (sel)
 		{case VIAGGI_ASSEGNATI:
 		 struct viaggio *viaggio; 
@@ -37,7 +39,6 @@ bool exe_drvr_act(drvr_act sel)
 		return true;
      	
      	case ORARIO_APERTURA:
-		struct meta *meta; 
      	show_opening_hour(meta);
 		return true; 
 
@@ -49,6 +50,10 @@ bool exe_drvr_act(drvr_act sel)
 	 	case AGGIORNA_KM:
 		struct mezzo *mezzo; 
 		update_km(mezzo);
+		return true; 
+
+		case METE_VISITATE: 
+		show_destination(meta); 
 		return true; 
 		
 		case QUIT:
@@ -125,6 +130,22 @@ void update_km(struct mezzo *mezzo)
 	//esegui procedura di select su mappa 
 	get_input("Inserisci il valore attuale del conta chilometri: ", VARCHAR_LEN, mezzo-> valorecontakm, false);
 
+}
+
+void show_destination (struct meta *meta)
+{
+	clear_screen();
+	printf("** Procedura visualizzazione mete viaggio **\n\n");
+	get_input("Inserisci l'ID  : ", NUM_LEN , ID_RSRC, false); 
+    // procedura di select
+    printf("ID  %s \n : Nome: %s \n Tipologia: %s \n Località: %s \n Indirizzo: %s \n", 
+			mete_viaggio->mete_viaggio[i].idmeta,
+			mete_viaggio->mete_viaggio[i].nomemeta,
+			mete_viaggio->mete_viaggio[i].tipologiameta,
+			mete_viaggio->mete_viaggio[i].localitadiappartenenza,
+			mete_viaggio->mete_viaggio[i].indirizzometa
+			
+		);
 }
 
 void run_drvr_interface (void)
