@@ -1,4 +1,4 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/giordano/prg_bd/Tripbus'
 gcc -o run_test_validation test_validation.c  test_maker.c ../utils/validation.c
 make: Leaving directory '/home/giordano/prg_bd/Tripbus'

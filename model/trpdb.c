@@ -1800,6 +1800,7 @@ void do_select_sparepart_warehouse(struct ricambio *ricambio)
 int main (int argc, char **argv)
 {
 /* initialize connection handler */
+printf("Here"); 
 conn = mysql_init(NULL);
 if(conn == NULL) {
 fprintf(stderr, "mysql_init() failed\n");
