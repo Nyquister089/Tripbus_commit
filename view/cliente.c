@@ -34,33 +34,38 @@ int get_cstmr_action(void)
 bool exe_cstmr_act(cstmr_act sel)
 {
 	switch (sel)
-		{case TOUR_INFO:
+		{case TOUR_INFO:{
 		struct tour *tour; 
 		show_tour_information(tour); 
 		return true; 
+		}
 		
-		case METE_TOUR:
+		case METE_TOUR:{
 		struct mete_tour *mete_tour; 
 		struct foto_mete *foto_mete; 
 		show_tour_destination(mete_tour, foto_mete); 
 		return true;
-     	
-     	case VIAGGI_TOUR:
+		}
+		
+     	case VIAGGI_TOUR:{
 		struct viaggi_tour * viaggi_tour;
 		struct viaggio *viaggio; 
      	show_trip (viaggi_tour, viaggio);
 		return true; 
+		 }
 
-	 	case SERVIZI_ALBERGO:
+	 	case SERVIZI_ALBERGO:{
 		struct servizi_albergo *servizi_albergo; 
 		show_service(servizi_albergo);
 		return true;
+		 }
 
-	 	case COMFORT_MODELLO:
+	 	case COMFORT_MODELLO:{
 		struct comfort_mezzo *comfort_mezzo; 
 		struct elenco_modelli *elenco_modelli; 
 		show_comfort(comfort_mezzo, elenco_modelli);
 		return true; 
+		 }
 		
 		case QUIT:
 		return false; 
@@ -103,7 +108,8 @@ void show_tour_information(struct tour *tour)
 }
 
 void show_tour_destination(struct mete_tour *mete_tour, struct foto_mete *foto_mete)
-{	select_tour(TOUR_SEL); 
+{	
+	//select_tour(TOUR_SEL); TODO: Da verificare l'utilizzo di questa istruzione
 	clear_screen();
 	printf("** Mete visitate dal tour **\n\n");
 	//  lancio procedura select mete tramite denominazione tour nella tabella me-to per passare a mete e  conteggio delle stesse  tale conteggio viene inserito in COUNT inoltre deve effettuare una select su foto relative ed un ulteriore conteggio da inserire in COUNT_PIC 

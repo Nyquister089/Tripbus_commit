@@ -36,37 +36,44 @@ bool exe_mch_act(mch_act sel)
 	struct ricambio *ricambio;
 	 
 	switch (sel)
-		{case REVISIONI_SCADUTE:
+		{case REVISIONI_SCADUTE:{
 		struct revisioni_scadute *revisioni_scadute;
 		show_expired_revisions (revisioni_scadute);
 		return true;   
+		}
 		
-		case CONSULTA_MAGAZZINO: 
+		case CONSULTA_MAGAZZINO: {
 		show_sparepart (ricambio);
 		return true; 
+		}
  
-		case INSERT_MODELLO:
+		case INSERT_MODELLO:{
 		struct modello *modello;
 		insert_model (modello); 
 		return true;   
+		}
      	
-     	case INSERT_RICAMBIO:
+     	case INSERT_RICAMBIO:{
      	insert_sparepart(ricambio);
 		return true; 
+		 }
 
-	 	case INSERT_MEZZO:
+	 	case INSERT_MEZZO:{
 	 	struct mezzo *mezzo;		
 		insert_bus(mezzo); 
 		return true;  
+		 }
 
-		case INSERT_TAGLIANDO:	
+		case INSERT_TAGLIANDO:	{
 		struct tagliando *tagliando;	
 		insert_certify(tagliando); 
 		return true; 
+		}
 		
-		case MODIFICA_RICAMBIO:	
+		case MODIFICA_RICAMBIO:	{
 		update_sparepart_number (ricambio);
 		return true; 
+		}
 		
 		case QUIT:
 		return false;

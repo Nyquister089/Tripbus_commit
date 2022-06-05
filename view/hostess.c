@@ -35,25 +35,31 @@ bool exe_hstss_act(hstss_act sel)
 	struct prenotazione *prenotazione;
 	switch (sel)
 		{case INSERT_CLIENTE:
+		{
 		insert_costumer(cliente); 
 		return true ; 
+		}
 		
-		case INSERT_PRENOTAZIONE:
+		case INSERT_PRENOTAZIONE:{
 		insert_prenotation(prenotazione); 
 		return true;
+		}
      	
-     	case POSTI_VIAGGIO:
+     	case POSTI_VIAGGIO:{
      	struct  viaggio *viaggio; 
      	update_trip_seat(viaggio);
 		return true; 
+		 }
 
-	 	case CONFERMA_PRENOTAZIONE:		
+	 	case CONFERMA_PRENOTAZIONE:		{
 		validate_prenotation (prenotazione); 
 		return true;
+		 }
 
-		case UPDATE_DATA_DOC:		
+		case UPDATE_DATA_DOC:		{
 		update_d_doc(cliente);
 		return true;
+		}
 		
 		case QUIT:
 		// gestire l'uscita dal Db (disconnessione e ritorno a schermata iniziale) 

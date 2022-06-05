@@ -6,6 +6,7 @@
  
 char DATE[DATE_LEN]; 
 char TARGA[VARCHAR_LEN]; 
+char ID_RSRC[VARCHAR_LEN];
 
 int get_drvr_action(void)
 {
@@ -33,28 +34,33 @@ bool exe_drvr_act(drvr_act sel)
 {	
 	struct meta *meta; 
 	switch (sel)
-		{case VIAGGI_ASSEGNATI:
-		 struct viaggio *viaggio; 
-		show_assigned_trip(viaggio); 
+		{case VIAGGI_ASSEGNATI:{
+				struct viaggio *viaggio; 
+				show_assigned_trip(viaggio); 
 		return true;
+		}
      	
-     	case ORARIO_APERTURA:
+     	case ORARIO_APERTURA:{
      	show_opening_hour(meta);
 		return true; 
+		 }
 
-	 	case MAPPE:	
+	 	case MAPPE:	{
 		struct mappa *mappa; 
 	 	show_map(mappa); 
 		return true;
+		 }
 
-	 	case AGGIORNA_KM:
+	 	case AGGIORNA_KM:{
 		struct mezzo *mezzo; 
 		update_km(mezzo);
 		return true; 
+		 }
 
-		case METE_VISITATE: 
+		case METE_VISITATE: {
 		show_destination(meta); 
 		return true; 
+		}
 		
 		case QUIT:
 		// gestire l'uscita dal Db (disconnessione e ritorno a schermata iniziale) 
@@ -139,12 +145,11 @@ void show_destination (struct meta *meta)
 	get_input("Inserisci l'ID  : ", NUM_LEN , ID_RSRC, false); 
     // procedura di select
     printf("ID  %s \n : Nome: %s \n Tipologia: %s \n Località: %s \n Indirizzo: %s \n", 
-			mete_viaggio->mete_viaggio[i].idmeta,
-			mete_viaggio->mete_viaggio[i].nomemeta,
-			mete_viaggio->mete_viaggio[i].tipologiameta,
-			mete_viaggio->mete_viaggio[i].localitadiappartenenza,
-			mete_viaggio->mete_viaggio[i].indirizzometa
-			
+			meta->idmeta,
+			meta->nomemeta,
+			meta->tipologiameta,
+			meta->localitadiappartenenza,
+			meta->indirizzo
 		);
 }
 
