@@ -11,7 +11,7 @@
 #include "../utils/db.h"
 
 static MYSQL *conn;
-// eseguiamo la connessione !!!!
+
 static char *opt_host_name = "localhost"; /* host (default=localhost) */
 static char *opt_user_name = "giordano"; /* username (default=login name)*/
 static char *opt_password = "root11989"; /* password (default=none) */
@@ -34,8 +34,7 @@ static MYSQL_STMT *insert_certify;
 
 static MYSQL_STMT *select_tour;
 static MYSQL_STMT *select_destination;
-static MYSQL_STMT *select_trip; //ok HOSTESS
-static MYSQL_STMT *select_visit; 
+static MYSQL_STMT *select_trip; //ok HOSTESS, AUTISTA
 static MYSQL_STMT *select_picture; 
 static MYSQL_STMT *select_room; 
 static MYSQL_STMT *select_location;
@@ -60,7 +59,7 @@ static MYSQL_STMT *update_sparepart_number;
 static MYSQL_STMT *validate_reservation; //ok  HOSTESS
 static MYSQL_STMT *update_data_doc; //Ok  HOSTESS
 
-static MYSQL_STMT *select_assigned_trip; // procedura che seleziona il tuor in base a data e conducente
+static MYSQL_STMT *select_assigned_trip; // procedura che seleziona le mete visitate durante un viaggio
 static MYSQL_STMT *select_visit_details; // procedure che selezione la visita e le foto ad essa associate in base a meta e data del viaggio 
 static MYSQL_STMT *select_tour_destination; // procedura che seleziona le mete relative ad un tour 
 static MYSQL_STMT *select_model_comfort;  // procedura che seleziona le mete relative 
