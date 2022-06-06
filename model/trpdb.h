@@ -396,4 +396,8 @@ extern void do_select_hotel_service(struct meta *meta, struct servizio *servizio
 extern void do_select_expired_review(struct revisione *revisione);
 extern void do_select_spareparts_warehouse(struct ricambio *ricambio);
 extern void do_update_data_doc(struct cliente *cliente); 
+extern void do_validate_reservation(struct prenotazione *prenotazione); 
+extern void do_insert_assoc(struct associata *associata); 
+
+
 

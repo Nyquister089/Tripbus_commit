@@ -5,7 +5,6 @@
 void ins_prenotation(struct prenotazione *prenotazione)
 {	clear_screen();
 	printf("** Dettagli inserimento prenotazione **\n\n");
-	get_input("Inserisci il numero di prenotazione: ", NUM_LEN, prenotazione->numerodiprenotazione, false);/////Autoincrement
 	get_input("Inserisci l'indirizzo e-mail del cliente che ha effettuato la prenotazione : ", VARCHAR_LEN, prenotazione->clienteprenotante, false);
 	while(true){
 		get_input("Inserisci data [YYYY-DD-MM]: ", DATE_LEN, prenotazione->datadiprenotazione, false);
@@ -81,6 +80,7 @@ void ins_costumer(struct cliente *cliente)
 			break;
 		fprintf(stderr, "Data errata!\n");
 	}
+	do_insert_cosumer(cliente); 
 }
 
 void ins_sparepart(struct ricambio *ricambio)
@@ -132,3 +132,11 @@ void ins_certify(struct tagliando *tagliando)
 	get_input("Inserisci le validita' superate (massimo 5000 caratteri) : ", DES_LEN, tagliando->validitasuperate, false);
 }
 
+void ins_association(struct associata *associata)
+{clear_screen();
+	printf("** Dettagli associazione camera**\n\n");
+	get_input("Inserisci il numero della camera : ", NUM_LEN, associata->cameraprenotata, false);
+	get_input("Inserisci il nome dell'ospite: ", VARCHAR_LEN, associata->ospite, false);
+	get_input("Inserisci l'albergo in cui è ubicata la camera  : ", NUM_LEN, associata->albergoinquestione, false);	
+	do_insert_assoc(associata); 
+}

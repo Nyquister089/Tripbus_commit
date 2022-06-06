@@ -59,7 +59,8 @@ bool exe_hstss_act(hstss_act sel)
 				return true; 
 				}
 			case CONFERMA_PRENOTAZIONE:{
-				validate_prenotation (prenotazione, postoprenotato); 
+				struct associata * associata; 
+				validate_prenotation (prenotazione, postoprenotato, associata); 
 				return true;
 		 		}
 
@@ -113,7 +114,7 @@ void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsoni
 	do_update_trip_seat(viaggio); 
 }
 
-void validate_prenotation(struct prenotazione *prenotazione, struct postoprenotato *postoprenotato)
+void validate_prenotation(struct prenotazione *prenotazione, struct postoprenotato *postoprenotato, struct associata *associata)
 {
 	clear_screen();
 	char buffer[VARCHAR_LEN]; 
@@ -143,11 +144,19 @@ void validate_prenotation(struct prenotazione *prenotazione, struct postoprenota
 			break;
 		fprintf(stderr, "Data errata!\n");
 		}
-		do_validate_reservation(prenotazione); 
+		do_validate_reservation(prenotazione);
+		bool seat_ans, association_ans;   
 	do {
-		ins_seat(struct postoprenotato *postoprenotato); 
-		bool answer_update = yes_or_no("\n\n Vuoi associare un'altro posto a questa prenotazione? (s/n) ",'s','n',false,false);
-		} while(answer_update); 
+		printf("** Associa un passeggero alla prenotazione "); 
+		ins_seat(postoprenotato); 
+		do{	printf("** Associa camera al passeggero ** "); 
+			ins_association(associata); 
+			seat_ans = yes_or_no("\n\n Vuoi associare un'altra camera a questo passeggero? (s/n) ",'s','n',false,false);
+		
+		}
+		
+		seat_ans = yes_or_no("\n\n Vuoi associare un altro passeggero a questa prenotazione? (s/n) ",'s','n',false,false);
+		} while(seat_ans); 
 
 }
 

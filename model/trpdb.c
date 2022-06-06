@@ -22,9 +22,10 @@ static unsigned int opt_flags = 0; /* connection flags (none) */
 
 static MYSQL_STMT *login_procedure;
 
-static MYSQL_STMT *insert_costumer; 
+static MYSQL_STMT *insert_costumer; //OK HOSTESS
 static MYSQL_STMT *insert_reservation; // OK HOSTESS
-static MYSQL_STMT *insert_seat; 
+static MYSQL_STMT *insert_seat; //OK HOSTESS
+static MYSQL_STMT *insert_assoc; //OK HOSTESS
 static MYSQL_STMT *insert_review; 
 static MYSQL_STMT *insert_model; 
 static MYSQL_STMT *insert_bus; 
@@ -246,6 +247,10 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(update_data_doc); 
 		update_data_doc= NULL; 
 	}
+	if(insert_assoc){
+		mysql_stmt_close(insert_assoc);
+		insert_assoc = NULL; 
+	}
 
 }
 
@@ -349,8 +354,13 @@ static bool initialize_prepared_stmts(role_t for_role)
 			if(!setup_prepared_stmt(&update_trip_seat, "call update_trip_seat()", conn)) {
 				print_stmt_error(update_trip_seat, "Unable to initialize update trip statement statement\n");
 				return false;
+			}
 			if(!setup_prepared_stmt(&update_data_doc, "call update_data_doc()", conn)) {
 				print_stmt_error(update_data_doc, "Unable to initialize update trip statement statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&insert_assoc, "call insert_assoc()", conn)) {
+				print_stmt_error(insert_assoc, "Unable to initialize update trip statement statement\n");
 				return false;
 			}
 			break;
@@ -775,7 +785,7 @@ void do_insert_certify(struct tagliando *tagliando)
 
 	int idtagliando;  
 	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, tagliando->idtagliando, sizeof(idtagliando));
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idtagliando, sizeof(idtagliando));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tagliando->tipologiatagliando, strlen(tagliando->tipologiatagliando));
 	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, tagliando->validitasuperate, strlen(tagliando->validitasuperate));
 	
@@ -792,6 +802,34 @@ void do_insert_certify(struct tagliando *tagliando)
 	mysql_stmt_reset(insert_certify);
 	
 }
+
+
+void do_insert_assoc(struct associata *associata)
+{		
+	MYSQL_BIND param[3];
+
+	int cameraprenotata; 
+	int ospite; 
+	int albergoinquestione; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &cameraprenotata, sizeof(cameraprenotata));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &ospite, sizeof(ospite));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &albergoinquestione, sizeof(albergoinquestione));
+	
+	
+	if(mysql_stmt_bind_param(insert_assoc, param) != 0) {
+		print_stmt_error(insert_assoc, "Could not bind parameters for insert_assoc");
+		return;
+	}
+	if(mysql_stmt_execute(insert_assoc) != 0) {
+		print_stmt_error(insert_assoc, "Could not execute insert_assoc");
+		return;
+		}
+	mysql_stmt_free_result(insert_assoc);
+	mysql_stmt_reset(insert_assoc);
+	
+}
+
 
 
 					//*** Esecuzione update statement ***//
