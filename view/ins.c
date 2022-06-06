@@ -80,7 +80,7 @@ void ins_costumer(struct cliente *cliente)
 			break;
 		fprintf(stderr, "Data errata!\n");
 	}
-	do_insert_cosumer(cliente); 
+	do_insert_costumer(cliente); 
 }
 
 void ins_sparepart(struct ricambio *ricambio)

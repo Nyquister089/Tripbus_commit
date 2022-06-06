@@ -14,7 +14,7 @@ typedef enum{
 
 extern void show_prenotation_details(struct prenotazione *prenotazione ); 
 extern void mod_trip_seat (struct viaggio *viaggio); 
-extern void validate_prenotation(struct prenotazione *prenotazione, struct postoprenotato *postoprenotato);
+extern void validate_prenotation(struct prenotazione *prenotazione, struct postoprenotato *postoprenotato, struct associata *associata);
 extern void update_d_doc(struct cliente  *cliente); 
 
 

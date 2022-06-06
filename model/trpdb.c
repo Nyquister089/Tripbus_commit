@@ -11,13 +11,13 @@
 #include "../utils/db.h"
 
 static MYSQL *conn;
-
-static char *opt_host_name = NULL; /* host (default=localhost) */
-static char *opt_user_name = NULL; /* username (default=login name)*/
-static char *opt_password = NULL; /* password (default=none) */
-static unsigned int opt_port_num = 0; /* port number (use built-in) */
-static char *opt_socket_name = NULL; /* socket name (use built-in) */
-static char *opt_db_name = NULL; /* database name (default=none) */
+// eseguiamo la connessione !!!!
+static char *opt_host_name = "localhost"; /* host (default=localhost) */
+static char *opt_user_name = "giordano"; /* username (default=login name)*/
+static char *opt_password = "root11989"; /* password (default=none) */
+static unsigned int opt_port_num =  3306; /* port number (use built-in) */
+static char *opt_socket_name = "built-in"; /* socket name (use built-in) */
+static char *opt_db_name = "Tripbus"; /* database name (default=none) */
 static unsigned int opt_flags = 0; /* connection flags (none) */
 
 static MYSQL_STMT *login_procedure;
@@ -1876,8 +1876,8 @@ void do_update_data_doc(struct cliente *cliente)
 
 int main (int argc, char **argv)
 {
-/* initialize connection handler */
-printf("Here"); 
+/* initialize connection handler*/
+
 conn = mysql_init(NULL);
 if(conn == NULL) {
 fprintf(stderr, "mysql_init() failed\n");
