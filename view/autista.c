@@ -86,7 +86,7 @@ void show_assigned_trip(struct viaggio *viaggio)
 		break;
 	fprintf(stderr, "Data Errata!\n");
 	}
-	//esegui procedura di select sul viaggio, visualizzare il viaggio successivo alla data inserita
+	do_select_trip(viaggio); 
 	printf("** Dettagli del viaggio assegnato **\n\n");
 	printf(" Il conducente %s è assegnato al seguente viaggio : \n Tour associato: %s \n Accompagnatrice: %s\n Targa mezzo: %s \n Data di partenza: %s \n Data di ritorno %s \n Numero di Km da percorrere: %s ",
 			viaggio->conducente, 
@@ -142,7 +142,7 @@ void show_destination (struct meta *meta)
 {
 	clear_screen();
 	printf("** Procedura visualizzazione mete viaggio **\n\n");
-	get_input("Inserisci l'ID  : ", NUM_LEN , ID_RSRC, false); 
+	get_input("Inserisci l'ID del viaggio : ", NUM_LEN , ID_RSRC, false); 
     // procedura di select
     printf("ID  %s \n : Nome: %s \n Tipologia: %s \n Località: %s \n Indirizzo: %s \n", 
 			meta->idmeta,
