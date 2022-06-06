@@ -8,7 +8,7 @@
 
 int get_hstss_action(void)
 {
-	char options[7] = {'1','2','3','4','5','6','7'};
+	char options[8] = {'1','2','3','4','5','6','7','8'};
 	char op;
 			
 	clear_screen();
@@ -18,50 +18,57 @@ int get_hstss_action(void)
 	puts("*** Quale operazione vorresti eseguire? ***\n");
 	puts("1) Consultare prenotazioni");
 	puts("2) Inserire un nuovo cliente");
-	puts("3) Inserire una nuova prenotazione");
-	puts("4) Modifica posti disponibili per un viaggio");
-	puts("5) Conferma prenotazione ed intestazione posti");
-	puts("6) Modificare la data di invio ultimi documenti di un cliente"); 
-	puts("7) Esci");
+	puts("3) Inserire una nuova prenotazione"); 
+	puts("4) Inserire un nuovo posto prenotato"); 
+	puts("5) Modifica posti disponibili per un viaggio");
+	puts("6) Conferma prenotazione ed intestazione posti");
+	puts("7) Modificare la data di invio ultimi documenti di un cliente"); 
+	puts("8) Esci");
 	
 
 
-	op = multi_choice("Select an option", options, 6);
+	op = multi_choice("Select an option", options, 8);
 	return op - '1';
 }
 
 bool exe_hstss_act(hstss_act sel)
 {	struct cliente *cliente; 
 	struct prenotazione *prenotazione;
+	struct postoprenotato *postoprenotato;
 	switch (sel)
-		{case INSERT_CLIENTE:
-		{
-		ins_costumer(cliente); 
-		return true ; 
-		}
+		{	
+			case INFO_PRENOTAZIONI: {
+				show_prenotation_details(prenotazione); 
+				}
+			case INSERT_CLIENTE:{
+				ins_costumer(cliente); 
+				return true; 
+				}
 		
-		case INSERT_PRENOTAZIONE:{
-		ins_prenotation(prenotazione); 
-		return true;
-		}
-     	
-     	case POSTI_VIAGGIO:{
-     	struct  viaggio *viaggio; 
-     	mod_trip_seat(viaggio);
-		return true; 
-		 }
+			case INSERT_PRENOTAZIONE:{
+				ins_prenotation(prenotazione); 
+				return true;
+				}
+     		case INSERT_POSTPRENOTATO: {
+				ins_seat(postoprenotato); 
+				return true; 
+				}
+     		case POSTI_VIAGGIO:{
+     			struct  viaggio *viaggio; 
+     			mod_trip_seat(viaggio);
+				return true; 
+				}
+			case CONFERMA_PRENOTAZIONE:{
+				validate_prenotation (prenotazione, postoprenotato); 
+				return true;
+		 		}
 
-	 	case CONFERMA_PRENOTAZIONE:		{
-		validate_prenotation (prenotazione); 
-		return true;
-		 }
-
-		case UPDATE_DATA_DOC:		{
-		update_d_doc(cliente);
-		return true;
-		}
+			case UPDATE_DATA_DOC:{
+				update_d_doc(cliente);
+				return true;
+				}
 		
-		case QUIT:
+			case QUIT:
 		// gestire l'uscita dal Db (disconnessione e ritorno a schermata iniziale) 
 		return false; 
 		
@@ -95,7 +102,7 @@ void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsoni
 	clear_screen(); 
 	char buffer[VARCHAR_LEN]; 
  	get_input("Inserisci il codice del viaggio : ", VARCHAR_LEN, buffer, false);
- 	//procedura select viaggio
+ 	do_select_trip(viaggio);
  	clear_screen(); 
  	printf("**  Dettagli Viaggio "); 
  	printf("Tour : %s \n Posti disponibili: %s \n Data annullamento: %s \n ",
@@ -103,16 +110,16 @@ void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsoni
 		viaggio->postidisponibili, 
  		viaggio->datadiannullamento); 
  	get_input ("Inserisci i nuovi posti disponibili :", NUM_LEN , viaggio->postidisponibili, false); 
-
+	do_update_trip_seat(viaggio); 
 }
 
-void validate_prenotation(struct prenotazione *prenotazione)
+void validate_prenotation(struct prenotazione *prenotazione, struct postoprenotato *postoprenotato)
 {
 	clear_screen();
 	char buffer[VARCHAR_LEN]; 
 	printf("** Procedura conferma prenotazione **\n\n");
 	get_input("Inserisci numero d'interesse : ", VARCHAR_LEN , buffer, false); 
-    // procedura di select
+    do_select_reservation(prenotazione); 
 	printf("Numero:  %s \n  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data di saldo: %s \n  ", 
 		prenotazione->numerodiprenotazione,
 		prenotazione->clienteprenotante,
@@ -136,6 +143,12 @@ void validate_prenotation(struct prenotazione *prenotazione)
 			break;
 		fprintf(stderr, "Data errata!\n");
 		}
+		do_validate_reservation(prenotazione); 
+	do {
+		ins_seat(struct postoprenotato *postoprenotato); 
+		bool answer_update = yes_or_no("\n\n Vuoi associare un'altro posto a questa prenotazione? (s/n) ",'s','n',false,false);
+		} while(answer_update); 
+
 }
 
 void update_d_doc(struct cliente  *cliente)
@@ -144,7 +157,7 @@ void update_d_doc(struct cliente  *cliente)
 	char buffer[VARCHAR_LEN]; 
 	printf("** Procedura di modifica data documenti cliente **\n\n");
 	get_input("Inserisci l'ID d'interesse : ", VARCHAR_LEN , buffer, false); 
-    // procedura di select
+    do_select_costumer(cliente); 
 	printf("E-mail:  %s \n Nome: %s \n Cognome: %s \n Indirizzo: %s \n Codice fiscale: %s \n Recapito telefonico: %s \n Fax: %s \n Data documentazione: %s \n", 
 		cliente->emailcliente,
 		cliente->nomecliente,
@@ -165,8 +178,10 @@ void update_d_doc(struct cliente  *cliente)
 			break;
 		fprintf(stderr, "Data errata!\n");
 	}
+	do_update_data_doc(cliente); 
 
 }
+
 
 void run_hstss_interface (void)
 { 	hstss_act sel; 
@@ -177,5 +192,3 @@ void run_hstss_interface (void)
 	
 	}
 }	
-
-

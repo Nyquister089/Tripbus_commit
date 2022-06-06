@@ -23,7 +23,7 @@ static unsigned int opt_flags = 0; /* connection flags (none) */
 static MYSQL_STMT *login_procedure;
 
 static MYSQL_STMT *insert_costumer; 
-static MYSQL_STMT *insert_reservation; 
+static MYSQL_STMT *insert_reservation; // OK HOSTESS
 static MYSQL_STMT *insert_seat; 
 static MYSQL_STMT *insert_review; 
 static MYSQL_STMT *insert_model; 
@@ -33,14 +33,14 @@ static MYSQL_STMT *insert_certify;
 
 static MYSQL_STMT *select_tour;
 static MYSQL_STMT *select_destination;
-static MYSQL_STMT *select_trip;
+static MYSQL_STMT *select_trip; //ok HOSTESS
 static MYSQL_STMT *select_visit; 
 static MYSQL_STMT *select_picture; 
 static MYSQL_STMT *select_room; 
 static MYSQL_STMT *select_location;
 static MYSQL_STMT *select_map;
-static MYSQL_STMT *select_costumer; 
-static MYSQL_STMT *select_reservation; 
+static MYSQL_STMT *select_costumer; //Ok HOSTESS
+static MYSQL_STMT *select_reservation; //ok HOSTESS
 static MYSQL_STMT *select_seat; 
 static MYSQL_STMT *select_review; 
 static MYSQL_STMT *select_model; 
@@ -53,10 +53,11 @@ static MYSQL_STMT *select_employee;
 
 // Statement speciali
 
-static MYSQL_STMT *update_trip_seat;
+static MYSQL_STMT *update_trip_seat; //ok HOSTESS
 static MYSQL_STMT *update_pullman_km; 
 static MYSQL_STMT *update_sparepart_number;
-static MYSQL_STMT *validate_reservation; 
+static MYSQL_STMT *validate_reservation; //ok  HOSTESS
+static MYSQL_STMT *update_data_doc; //Ok  HOSTESS
 
 static MYSQL_STMT *select_assigned_trip; // procedura che seleziona il tuor in base a data e conducente
 static MYSQL_STMT *select_visit_details; // procedure che selezione la visita e le foto ad essa associate in base a meta e data del viaggio 
@@ -241,6 +242,10 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(select_service);
 		select_service= NULL;
 	}
+	if(update_data_doc){				// Procedura update data documentazione
+		mysql_stmt_close(update_data_doc); 
+		update_data_doc= NULL; 
+	}
 
 }
 
@@ -343,6 +348,9 @@ static bool initialize_prepared_stmts(role_t for_role)
 			break;
 			if(!setup_prepared_stmt(&update_trip_seat, "call update_trip_seat()", conn)) {
 				print_stmt_error(update_trip_seat, "Unable to initialize update trip statement statement\n");
+				return false;
+			if(!setup_prepared_stmt(&update_data_doc, "call update_data_doc()", conn)) {
+				print_stmt_error(update_data_doc, "Unable to initialize update trip statement statement\n");
 				return false;
 			}
 			break;
@@ -1795,6 +1803,37 @@ void do_select_sparepart_warehouse(struct ricambio *ricambio)
 	mysql_stmt_reset(select_sparepart_warehouse);
 }
 
+void do_update_data_doc(struct cliente *cliente)
+{	MYSQL_BIND param[8]; 
+	MYSQL_TIME datadocumentazione; 
+
+	int recapitotelefonico; 
+	int fax; 
+	
+	date_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
+	
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, strlen(cliente->nomecliente));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, strlen(cliente->cognomecliente));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, strlen(cliente->indirizzocliente));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, strlen(cliente->codicefiscale));
+	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datadocumentazione, sizeof(datadocumentazione));
+	set_binding_param(&param[6], MYSQL_TYPE_LONG, &recapitotelefonico, sizeof(recapitotelefonico));
+	set_binding_param(&param[7], MYSQL_TYPE_LONG, &fax, sizeof(fax));
+	
+	
+	if(mysql_stmt_bind_param(update_data_doc, param) != 0) {
+		print_stmt_error(update_data_doc, "Could not bind parameters for update_data_doc");
+		return;
+	}
+	if(mysql_stmt_execute(update_data_doc) != 0) {
+		print_stmt_error(update_data_doc, "Could not execute update_data_doc");
+		return;
+		}
+	mysql_stmt_free_result(update_data_doc);
+	mysql_stmt_reset(update_data_doc);
+	
+}
 
 
 int main (int argc, char **argv)

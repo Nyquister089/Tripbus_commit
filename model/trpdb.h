@@ -395,4 +395,5 @@ extern void do_select_model_comfort(struct modello *modello, struct comfort *com
 extern void do_select_hotel_service(struct meta *meta, struct servizio *servizio);
 extern void do_select_expired_review(struct revisione *revisione);
 extern void do_select_spareparts_warehouse(struct ricambio *ricambio);
+extern void do_update_data_doc(struct cliente *cliente); 
 

@@ -25,6 +25,7 @@ void ins_prenotation(struct prenotazione *prenotazione)
 			break;
 		fprintf(stderr, "Data errata!\n");
 	}
+	do_insert_reservation(prenotazione); 
 }
 
 void ins_seat(struct postoprenotato *postoprenotato)
@@ -35,6 +36,7 @@ void ins_seat(struct postoprenotato *postoprenotato)
 	get_input("Inserisci l'eta': ", NUM_LEN, postoprenotato-> etapasseggero, false);
 	get_input("Inserisci il nome: ", VARCHAR_LEN, postoprenotato-> nomepasseggero, false);
 	get_input("Inserisci il cognome: ", VARCHAR_LEN, postoprenotato-> cognomepasseggero, false);
+	do_insert_seat(postoprenotato); 
 }
 
 void ins_review(struct revisione *revisione)
