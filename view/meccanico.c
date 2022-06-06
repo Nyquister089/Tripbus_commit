@@ -49,24 +49,24 @@ bool exe_mch_act(mch_act sel)
  
 		case INSERT_MODELLO:{
 		struct modello *modello;
-		insert_model (modello); 
+		ins_model (modello); 
 		return true;   
 		}
      	
      	case INSERT_RICAMBIO:{
-     	insert_sparepart(ricambio);
+     	ins_sparepart(ricambio);
 		return true; 
 		 }
 
 	 	case INSERT_MEZZO:{
 	 	struct mezzo *mezzo;		
-		insert_bus(mezzo); 
+		ins_bus(mezzo); 
 		return true;  
 		 }
 
 		case INSERT_TAGLIANDO:	{
 		struct tagliando *tagliando;	
-		insert_certify(tagliando); 
+		ins_certify(tagliando); 
 		return true; 
 		}
 		

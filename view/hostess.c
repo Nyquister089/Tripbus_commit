@@ -151,9 +151,9 @@ void validate_prenotation(struct prenotazione *prenotazione, struct postoprenota
 		ins_seat(postoprenotato); 
 		do{	printf("** Associa camera al passeggero ** "); 
 			ins_association(associata); 
-			seat_ans = yes_or_no("\n\n Vuoi associare un'altra camera a questo passeggero? (s/n) ",'s','n',false,false);
+			association_ans= yes_or_no("\n\n Vuoi associare un'altra camera a questo passeggero? (s/n) ",'s','n',false,false);
 		
-		}
+		}while(association_ans);
 		
 		seat_ans = yes_or_no("\n\n Vuoi associare un altro passeggero a questa prenotazione? (s/n) ",'s','n',false,false);
 		} while(seat_ans); 
