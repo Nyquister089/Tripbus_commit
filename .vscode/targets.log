@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Jun  6 09:28:25 2022
+# Make data base, printed on Mon Jun  6 10:35:52 2022
 
 # Variables
 
@@ -23,7 +23,7 @@ SSH_AGENT_LAUNCHER = gnome-keyring
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-7d073103-7fb2-4e19-8767-8f34f853931a.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-e4ee3c00-f956-484e-bb00-a84270abfc5f.sock
 # environment
 VSCODE_CWD = /home/giordano
 # default
@@ -91,7 +91,7 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 2097
+VSCODE_PID = 9414
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
@@ -177,12 +177,13 @@ MAKE_VERSION := 4.3
 # environment
 MANAGERPID = 1018
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 2097
+GIO_LAUNCHED_DESKTOP_FILE_PID = 9414
 # environment
 _ = /usr/share/code/code
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
+ 
 JOURNAL_STREAM = 8:33233
 # environment
 XDG_SESSION_CLASS = user
@@ -202,6 +203,7 @@ IM_CONFIG_PHASE = 1
 .RECIPEPREFIX := 
 # automatic
 <F = $(notdir $<)
+ 
 # default
 SUFFIXES := 
 # default
@@ -277,6 +279,6 @@ all:
 # strcache performance: lookups = 31 / hit rate = 19%
 # hash-table stats:
 # Load=25/8192=0%, Rehash=0, Collisions=1/31=3%
-# Finished Make data base on Mon Jun  6 09:28:25 2022
+# Finished Make data base on Mon Jun  6 10:35:52 2022
 
  

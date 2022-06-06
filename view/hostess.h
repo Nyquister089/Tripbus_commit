@@ -12,7 +12,7 @@ typedef enum{
 } hstss_act;
 
 extern void show_prenotation_details(struct prenotazione *prenotazione ); 
-extern void update_trip_seat (struct viaggio *viaggio); 
+extern void mod_trip_seat (struct viaggio *viaggio); 
 extern void validate_prenotation(struct prenotazione *prenotazione);
 extern void update_d_doc(struct cliente  *cliente); 
 

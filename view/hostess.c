@@ -36,18 +36,18 @@ bool exe_hstss_act(hstss_act sel)
 	switch (sel)
 		{case INSERT_CLIENTE:
 		{
-		insert_costumer(cliente); 
+		ins_costumer(cliente); 
 		return true ; 
 		}
 		
 		case INSERT_PRENOTAZIONE:{
-		insert_prenotation(prenotazione); 
+		ins_prenotation(prenotazione); 
 		return true;
 		}
      	
      	case POSTI_VIAGGIO:{
      	struct  viaggio *viaggio; 
-     	update_trip_seat(viaggio);
+     	mod_trip_seat(viaggio);
 		return true; 
 		 }
 
@@ -79,7 +79,7 @@ void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura v
 	clear_screen(); 
 	char buffer[VARCHAR_LEN]; 
 	 get_input("Inserisci il numero di prenotazione : ", VARCHAR_LEN, buffer, false);
-	 // procedura di select prenotazione
+	 do_select_reservation(prenotazione); 
  	clear_screen(); 
  	printf("** Dettagli prenotazione **");
  	printf("Penotazione numero: %s  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data Saldo: %s \n",
@@ -90,7 +90,7 @@ void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura v
 		prenotazione->datasaldo); 
 }
 
-void update_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsonibili per viaggio 
+void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsonibili per viaggio 
 {
 	clear_screen(); 
 	char buffer[VARCHAR_LEN]; 

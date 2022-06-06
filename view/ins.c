@@ -2,7 +2,7 @@
 
 #include "ins.h"
 
-void insert_prenotation(struct prenotazione *prenotazione)
+void ins_prenotation(struct prenotazione *prenotazione)
 {	clear_screen();
 	printf("** Dettagli inserimento prenotazione **\n\n");
 	get_input("Inserisci il numero di prenotazione: ", NUM_LEN, prenotazione->numerodiprenotazione, false);/////Autoincrement
@@ -27,7 +27,7 @@ void insert_prenotation(struct prenotazione *prenotazione)
 	}
 }
 
-void insert_seat(struct postoprenotato *postoprenotato)
+void ins_seat(struct postoprenotato *postoprenotato)
 {	clear_screen();
 	printf("** Dettagli inserimento passeggero **\n\n");
 	get_input("Inserisci il numero di posto  : ", NUM_LEN, postoprenotato->numerodiposto, false);
@@ -37,7 +37,7 @@ void insert_seat(struct postoprenotato *postoprenotato)
 	get_input("Inserisci il cognome: ", VARCHAR_LEN, postoprenotato-> cognomepasseggero, false);
 }
 
-void insert_review(struct revisione *revisione)
+void ins_review(struct revisione *revisione)
 {	clear_screen();
 	printf("** Dettagli inserimento revisione **\n\n");
 	get_input("Inserisci l'ID del mezzo revisionato : ", NUM_LEN, revisione->mezzorevisionato, false);
@@ -63,7 +63,7 @@ void insert_review(struct revisione *revisione)
 
 }
 
-void insert_costumer(struct cliente *cliente)
+void ins_costumer(struct cliente *cliente)
 {	clear_screen();
 	printf("** Dettagli inserimento cliente **\n\n");
 	get_input("Inserisci l'indirizzo e-mail: ", VARCHAR_LEN, cliente->emailcliente, false);
@@ -81,7 +81,7 @@ void insert_costumer(struct cliente *cliente)
 	}
 }
 
-void insert_sparepart(struct ricambio *ricambio)
+void ins_sparepart(struct ricambio *ricambio)
 {	clear_screen();
 	printf("** Dettagli inserimento ricambio **\n\n");
 	get_input("Inserisci il codice: ", VARCHAR_LEN, ricambio->codice, false);
@@ -92,7 +92,7 @@ void insert_sparepart(struct ricambio *ricambio)
 	get_input("Inserisci quantita' di pezzi disponili: ", NUM_LEN, ricambio-> quantitainmagazzino, false);
 }
 
-void insert_bus(struct mezzo *mezzo)
+void ins_bus(struct mezzo *mezzo)
 {	clear_screen();
 	printf("** Dettagli inserimento mezzo **\n\n");
 	get_input("Inserisci la targa : ", VARCHAR_LEN, mezzo->targa, false);
@@ -114,7 +114,7 @@ void insert_bus(struct mezzo *mezzo)
 	}
 }
 
-void insert_model(struct modello *modello)
+void ins_model(struct modello *modello)
 {	clear_screen();
 	printf("** Dettagli inserimento modello **\n\n");
 	get_input("Inserisci il nome : ", DEC_LEN, modello->nomemodello, false);
@@ -123,7 +123,7 @@ void insert_model(struct modello *modello)
 	get_input("Inserisci il numero di posti: ", NUM_LEN, modello-> numeroposti, false);
 }
 
-void insert_certify(struct tagliando *tagliando)
+void ins_certify(struct tagliando *tagliando)
 {	clear_screen();
 	printf("** Dettagli inserimento tagliando **\n\n");
 	get_input("Inserisci la tipologia del tagliando: ", VARCHAR_LEN, tagliando->tipologiatagliando, false);
