@@ -12,13 +12,24 @@
 
 static MYSQL *conn;
 
+/** CONNESSIONI DI GIORDANO **/
+//static char *opt_host_name = "localhost"; /* host (default=localhost) */
+//static char *opt_user_name = "giordano"; /* username (default=login name)*/
+//static char *opt_password = "root11989"; /* password (default=none) */
+//static unsigned int opt_port_num =  3306; /* port number (use built-in) */
+//static char *opt_socket_name = "built-in"; /* socket name (use built-in) */
+//static char *opt_db_name = "Tripbus"; /* database name (default=none) */
+//static unsigned int opt_flags = CLIENT_MULTI_STATEMENTS | CLIENT_MULTI_RESULTS | CLIENT_COMPRESS | CLIENT_INTERACTIVE | CLIENT_REMEMBER_OPTIONS; /* connection flags (none) */
+
+/** CONNESSIONI DI SIMONE **/
 static char *opt_host_name = "localhost"; /* host (default=localhost) */
-static char *opt_user_name = "giordano"; /* username (default=login name)*/
-static char *opt_password = "root11989"; /* password (default=none) */
+static char *opt_user_name = "root"; /* username (default=login name)*/
+static char *opt_password = "password"; /* password (default=none) */
 static unsigned int opt_port_num =  3306; /* port number (use built-in) */
-static char *opt_socket_name = "built-in"; /* socket name (use built-in) */
-static char *opt_db_name = "Tripbus"; /* database name (default=none) */
-static unsigned int opt_flags = 0; /* connection flags (none) */
+static char *opt_socket_name = NULL; /* socket name (use built-in) */
+static char *opt_db_name = "tripdb"; /* database name (default=none) */
+static unsigned int opt_flags = CLIENT_MULTI_STATEMENTS | CLIENT_MULTI_RESULTS | CLIENT_COMPRESS | CLIENT_INTERACTIVE | CLIENT_REMEMBER_OPTIONS; /* connection flags (none) */
+
 
 static MYSQL_STMT *login_procedure;
 
@@ -90,10 +101,6 @@ static void close_prepared_stmts(void)
 		select_trip = NULL;
 	}				
 
-	if(select_visit) {				// Procedura di select visita
-		mysql_stmt_close(select_visit);
-		select_visit = NULL;
-	}							
 	if(select_picture) {				// Procedura di select foto
 		mysql_stmt_close(select_picture);
 		select_picture = NULL;
@@ -452,11 +459,17 @@ bool init_db(void) // OK ma ricontrollare in seguito
 		finish_with_error(conn, "mysql_init() failed (probably out of memory)\n");
 	}
 
+	/* DA RIMUOVERE ED UTILIZZARE IL METODO SOTTO COMMENTATO */
 	if(mysql_real_connect(conn, getenv("HOST"), getenv("LOGIN_USER"), getenv("LOGIN_PASS"), getenv("DB"),
 			      atoi(getenv("PORT")), NULL,
 			      CLIENT_MULTI_STATEMENTS | CLIENT_MULTI_RESULTS | CLIENT_COMPRESS | CLIENT_INTERACTIVE | CLIENT_REMEMBER_OPTIONS) == NULL) {
 		finish_with_error(conn, "mysql_real_connect() failed\n");
 	}
+
+	/*
+	if (mysql_real_connect(conn, opt_host_name, opt_user_name,opt_password, opt_db_name, opt_port_num, opt_socket_name,opt_flags)==NULL) {
+		finish_with_error(conn, "mysql_real_connect() failed\n");
+	}*/
 
 	if (mysql_options(conn, MYSQL_OPT_CONNECT_TIMEOUT, &timeout)) {
 		print_error(conn, "[mysql_options] failed.");
@@ -1139,16 +1152,16 @@ void do_select_visit(struct visita *visita)
 	
 	
 
-	if(mysql_stmt_bind_param(select_visit, param) != 0) {
-		print_stmt_error(select_visit, "Could not bind parameters for select_visit");
+	if(mysql_stmt_bind_param(select_visit_details, param) != 0) {
+		print_stmt_error(select_visit_details, "Could not bind parameters for select_visit");
 		return;
 	}
-	if(mysql_stmt_execute(select_visit) != 0) {
-		print_stmt_error(select_visit, "Could not execute select_visit");
+	if(mysql_stmt_execute(select_visit_details) != 0) {
+		print_stmt_error(select_visit_details, "Could not execute select_visit");
 		return;
 		}
-	mysql_stmt_free_result(select_visit);
-	mysql_stmt_reset(select_visit);
+	mysql_stmt_free_result(select_visit_details);
+	mysql_stmt_reset(select_visit_details);
 	
 }
 
@@ -1885,26 +1898,24 @@ void do_update_data_doc(struct cliente *cliente)
 int main (int argc, char **argv)
 {
 /* initialize connection handler*/
-
-conn = mysql_init(NULL);
-if(conn == NULL) {
-fprintf(stderr, "mysql_init() failed\n");
-exit(EXIT_FAILURE);
-}
-init_db();
+	/* TODO: DA RIMUOVERE: UTILIZZARE LE FUNZIONI ALL'INTERNO DI INIT_DB */
+	conn = mysql_init(NULL);
+	if(conn == NULL) {
+		fprintf(stderr, "mysql_init() failed\n");
+		exit(EXIT_FAILURE);
+	} 
+	
+   	init_db();
 /* connect to server */
-if(mysql_real_connect(conn, opt_host_name, opt_user_name,
-opt_password, opt_db_name, opt_port_num, opt_socket_name,
-opt_flags) == NULL) {
-fprintf(stderr, "mysql_real_connect() failed\n");
-mysql_close(conn);
-exit(EXIT_FAILURE);
-}
+	if(mysql_real_connect(conn, opt_host_name, opt_user_name,opt_password, opt_db_name, opt_port_num, opt_socket_name,opt_flags) == NULL) {
+		fprintf(stderr, "mysql_real_connect() failed\n");
+		mysql_close(conn);
+		exit(EXIT_FAILURE);
+	} 
 
 /* disconnect from server */
-mysql_close(conn);
-exit(EXIT_SUCCESS);
-return 0; 
+	mysql_close(conn);
+	exit(EXIT_SUCCESS);
 }
 
 void do_select_trip_destination(struct meta *meta, struct viaggio *viaggio, struct visita *visita)

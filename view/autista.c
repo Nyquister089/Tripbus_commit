@@ -61,7 +61,7 @@ bool exe_drvr_act(drvr_act sel)
 		 }
 
 		case METE_VISITATE: {
-		show_destination(meta); 
+		show_destination(meta,NULL,NULL); 
 		return true; 
 		}
 		
