@@ -90,12 +90,6 @@ static bool initialize_prepared_stmts(role_t for_role)
 			}
 			break;
 		case HOSTESS:
-			//Registrazione cliente
-			//Conferma prenotazione ed intestazione posti del viaggio
-			//Consultazione prenotazioni
-			//Aggiornamento posti disponibili per un viaggio
-			//Inserire nuova prenotazione
-
 			if(!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
 				print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
 				return false;
@@ -148,6 +142,7 @@ bool init_db(void)
 	bool reconnect = true;
 
 	conn = mysql_init(NULL);
+
 	if(conn == NULL) {
 		finish_with_error(conn, "mysql_init() failed (probably out of memory)\n");
 	}
