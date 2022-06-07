@@ -611,7 +611,3 @@ void do_update_data_doc(struct cliente *cliente)
 	mysql_stmt_reset(update_data_doc);
 	
 }
-
-
-
-
