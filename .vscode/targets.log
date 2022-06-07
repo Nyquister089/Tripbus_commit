@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Jun  7 10:13:49 2022
+# Make data base, printed on Tue Jun  7 11:46:24 2022
 
 # Variables
 
@@ -23,7 +23,7 @@ SSH_AGENT_LAUNCHER = gnome-keyring
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-a2e96b96-e2bb-4e68-a909-ed4f70e54cb6.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-1f73db29-3ac0-4db8-982b-0665f3fae23c.sock
 # environment
 VSCODE_CWD = /home/giordano
 # default
@@ -37,7 +37,7 @@ VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
 .VARIABLES := 
 # environment
-PWD = /home/giordano/prg_bd/Tripbus
+PWD = /home/giordano/db_prg/tripbus
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # environment
@@ -61,11 +61,11 @@ XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.OQJ1M1
 # makefile
 MAKEFLAGS = pqrR
 # makefile
-CURDIR := /home/giordano/prg_bd/Tripbus
+CURDIR := /home/giordano/db_prg/tripbus
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # automatic
@@ -91,7 +91,7 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 2931
+VSCODE_PID = 11794
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
@@ -177,7 +177,7 @@ MAKE_VERSION := 4.3
 # environment
 MANAGERPID = 1084
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 2931
+GIO_LAUNCHED_DESKTOP_FILE_PID = 11794
 # environment
 _ = /usr/share/code/code
 # environment
@@ -219,9 +219,9 @@ GDMSESSION = ubuntu
 
 # Directories
 
-# . (device 2050, inode 22611580): 18 files, no impossibilities.
+# . (device 2050, inode 22611580): 19 files, no impossibilities.
 
-# 18 files, no impossibilities in 1 directories.
+# 19 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -271,12 +271,12 @@ all:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 25 / storage = 235 B / avg = 9 B
-# current buf: size = 8162 B / used = 235 B / count = 25 / avg = 9 B
+# strcache buffers: 1 (0) / strings = 26 / storage = 247 B / avg = 9 B
+# current buf: size = 8162 B / used = 247 B / count = 26 / avg = 9 B
 
-# strcache performance: lookups = 31 / hit rate = 19%
+# strcache performance: lookups = 32 / hit rate = 18%
 # hash-table stats:
-# Load=25/8192=0%, Rehash=0, Collisions=1/31=3%
-# Finished Make data base on Tue Jun  7 10:13:49 2022
+# Load=26/8192=0%, Rehash=0, Collisions=1/32=3%
+# Finished Make data base on Tue Jun  7 11:46:24 2022
 
  
