@@ -20,4 +20,17 @@ bool ask_for_relogin(void)
 	return yes_or_no("Vuoi accedere con utente differente?", 'y', 'n', false, true);
 }
 
+int main (void)
+{
+	printf("Esecuzione main\n"); 
+	init_db();
+	struct credentials *cred; 
+	view_login(cred); 
+	bool answer = yes_or_no("\n\n Vuoi chiudere il database? (s/n) ",'s','n',false,false);
+	if(answer){
+		fini_db(); 
+		}
+	return 0; 
+}
+
 

@@ -136,7 +136,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 	return true;
 }
 
-bool init_db(void)
+bool init_db(void) //testato
 {
 printf("Inizializzazione database."); 
 	unsigned int timeout = 300;
@@ -171,7 +171,7 @@ printf(".completata \n");
 }
 
 
-void fini_db(void) // OK ma ricontrollare in seguito
+void fini_db(void)
 {
 	close_prepared_stmts();
 
@@ -179,7 +179,7 @@ void fini_db(void) // OK ma ricontrollare in seguito
 }
 
 
-role_t attempt_login(struct credentials *cred) //OK
+role_t attempt_login(struct credentials *cred)
 {
 	MYSQL_BIND param[3]; // Used both for input and output
 	int role = 0;
@@ -612,21 +612,6 @@ void do_update_data_doc(struct cliente *cliente)
 	
 }
 
-int main (void)
-{
-	// initialize connection handler
 
-	conn = mysql_init(NULL);
-	if(conn == NULL) {
-		fprintf(stderr, "mysql_init() failed\n");
-	exit(EXIT_FAILURE);
-	}
-	printf("Esecuzione main\n"); 
-	init_db();
-	
-	//disconnect from server
-	
-	mysql_close(conn);
-	exit(EXIT_SUCCESS);
-	return 0; 
-}
+
+
