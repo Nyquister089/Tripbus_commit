@@ -140,19 +140,19 @@ bool init_db(void)
 {
 	unsigned int timeout = 300;
 	bool reconnect = true;
-
+	
 	conn = mysql_init(NULL);
-
+	
 	if(conn == NULL) {
 		finish_with_error(conn, "mysql_init() failed (probably out of memory)\n");
 	}
-
+	// Segfaul in questa istanza di IF ->
 	if(mysql_real_connect(conn, getenv("HOST"), getenv("LOGIN_USER"), getenv("LOGIN_PASS"), getenv("DB"),
 			      atoi(getenv("PORT")), NULL,
 			      CLIENT_MULTI_STATEMENTS | CLIENT_MULTI_RESULTS | CLIENT_COMPRESS | CLIENT_INTERACTIVE | CLIENT_REMEMBER_OPTIONS) == NULL) {
 		finish_with_error(conn, "mysql_real_connect() failed\n");
 	}
-
+printf("Debug point!\n\n");
 	if (mysql_options(conn, MYSQL_OPT_CONNECT_TIMEOUT, &timeout)) {
 		print_error(conn, "[mysql_options] failed.");
 	}
@@ -616,18 +616,19 @@ void do_update_data_doc(struct cliente *cliente)
 	
 }
 
-
 int main (void)
 {
 	// initialize connection handler
-	printf("Here!"); 
+	printf("Here!\n\n"); 
 	conn = mysql_init(NULL);
 	if(conn == NULL) {
 		fprintf(stderr, "mysql_init() failed\n");
 	exit(EXIT_FAILURE);
 	}
+	printf("Debug point main\n"); 
 	init_db();
-	// connect to server 
+	
+	/*// connect to server 
 	if(mysql_real_connect(conn, opt_host_name, opt_user_name,opt_password, opt_db_name, opt_port_num, opt_socket_name,opt_flags) == NULL) {
 		fprintf(stderr, "mysql_real_connect() failed\n");
 		mysql_close(conn);
@@ -635,6 +636,6 @@ int main (void)
 	}
 	//disconnect from server
 	mysql_close(conn);
-	exit(EXIT_SUCCESS);
+	exit(EXIT_SUCCESS);*/
 	return 0; 
 }
