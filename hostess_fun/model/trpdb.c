@@ -1,16 +1,10 @@
-
 #include <stdio.h>
 #include <string.h>
 #include <mysql/mysql.h>
 #include <assert.h>
-#include <mysql/my_global.h>
-#include <mysql/my_sys.h>
-
 
 #include "trpdb.h"
 #include "../utils/db.h"
-
-static MYSQL *conn;
 
 static char *opt_host_name = "localhost"; /* host (default=localhost) */
 static char *opt_user_name = "giordano"; /* username (default=login name)*/
@@ -19,6 +13,8 @@ static unsigned int opt_port_num =  3306; /* port number (use built-in) */
 static char *opt_socket_name = "built-in"; /* socket name (use built-in) */
 static char *opt_db_name = "Tripbus"; /* database name (default=none) */
 static unsigned int opt_flags = 0; /* connection flags (none) */
+
+static MYSQL *conn;
 
 static MYSQL_STMT *login_procedure;
 
@@ -31,8 +27,6 @@ static MYSQL_STMT *select_trip; //ok HOSTESS
 static MYSQL_STMT *select_costumer; //Ok HOSTESS
 static MYSQL_STMT *select_reservation; //ok HOSTESS
 
-// Statement speciali
-
 static MYSQL_STMT *update_trip_seat; //ok HOSTESS
 static MYSQL_STMT *validate_reservation; //ok  HOSTESS
 static MYSQL_STMT *update_data_doc; //Ok  HOSTESS
@@ -43,8 +37,6 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(login_procedure);
 		login_procedure = NULL;
 	}
-							
-	
 	if(select_trip) {				// Procedura di select viaggi
 		mysql_stmt_close(select_trip);
 		select_trip = NULL;
@@ -630,28 +622,24 @@ void do_update_data_doc(struct cliente *cliente)
 }
 
 
-int main (int argc, char **argv)
+int main (void)
 {
-/* initialize connection handler*/
-
-conn = mysql_init(NULL);
-if(conn == NULL) {
-fprintf(stderr, "mysql_init() failed\n");
-exit(EXIT_FAILURE);
+	// initialize connection handler
+	printf("Here!"); 
+	conn = mysql_init(NULL);
+	if(conn == NULL) {
+		fprintf(stderr, "mysql_init() failed\n");
+	exit(EXIT_FAILURE);
+	}
+	init_db();
+	// connect to server 
+	if(mysql_real_connect(conn, opt_host_name, opt_user_name,opt_password, opt_db_name, opt_port_num, opt_socket_name,opt_flags) == NULL) {
+		fprintf(stderr, "mysql_real_connect() failed\n");
+		mysql_close(conn);
+		exit(EXIT_FAILURE);
+	}
+	//disconnect from server
+	mysql_close(conn);
+	exit(EXIT_SUCCESS);
+	return 0; 
 }
-init_db();
-/* connect to server */
-if(mysql_real_connect(conn, opt_host_name, opt_user_name,
-opt_password, opt_db_name, opt_port_num, opt_socket_name,
-opt_flags) == NULL) {
-fprintf(stderr, "mysql_real_connect() failed\n");
-mysql_close(conn);
-exit(EXIT_FAILURE);
-}
-
-/* disconnect from server */
-mysql_close(conn);
-exit(EXIT_SUCCESS);
-return 0; 
-}
-

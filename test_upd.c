@@ -1,4 +1,4 @@
-#include "test_updatetripbus.h"
+#include "test_upd.h"
 
 int main(void){
     init_validation();

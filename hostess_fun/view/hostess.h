@@ -1,4 +1,8 @@
 #pragma once
+#include <string.h>
+#include <mysql/mysql.h>
+#include <assert.h>
+
 #include "../model/trpdb.h"
 
 typedef enum{
