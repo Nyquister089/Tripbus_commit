@@ -18,5 +18,4 @@ extern void show_opening_hour(struct meta *meta);
 extern void show_map(struct mappa *mappa); 
 extern void update_km(struct mezzo *mezzo); 
 extern void show_tour_destination(struct mete_viaggio *mete_viaggio); 
-extern void show_destination (struct meta *meta);
-
+extern void show_destination (struct meta *meta, struct visita *visita, struct viaggio *viaggio);
