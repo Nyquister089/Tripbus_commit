@@ -34,7 +34,7 @@ static MYSQL_STMT *insert_certify;
 
 static MYSQL_STMT *select_tour;
 static MYSQL_STMT *select_destination;
-static MYSQL_STMT *select_trip; //ok HOSTESS, AUTISTA
+static MYSQL_STMT *select_trip; //ok HOSTESS
 static MYSQL_STMT *select_picture; 
 static MYSQL_STMT *select_room; 
 static MYSQL_STMT *select_location;
@@ -59,7 +59,8 @@ static MYSQL_STMT *update_sparepart_number;
 static MYSQL_STMT *validate_reservation; //ok  HOSTESS
 static MYSQL_STMT *update_data_doc; //Ok  HOSTESS
 
-static MYSQL_STMT *select_assigned_trip; // procedura che seleziona le mete visitate durante un viaggio
+static MYSQL_STMT *select_assigned_trip; //  OK AUTISTA procedura che seleziona i viaggi in base alla data ed il conducente
+static MYSQL_STMT *select_trip_destination; //OK AUTISTA procedura che seleziona tutte le mete relative ad un viaggio
 static MYSQL_STMT *select_visit_details; // procedure che selezione la visita e le foto ad essa associate in base a meta e data del viaggio 
 static MYSQL_STMT *select_tour_destination; // procedura che seleziona le mete relative ad un tour 
 static MYSQL_STMT *select_model_comfort;  // procedura che seleziona le mete relative 
@@ -250,6 +251,10 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(insert_assoc);
 		insert_assoc = NULL; 
 	}
+	if(select_trip_destination){
+		mysql_stmt_close(select_trip_destination);
+		select_trip_destination = NULL; 
+	}
 
 }
 
@@ -282,6 +287,10 @@ static bool initialize_prepared_stmts(role_t for_role)
 			}
 			if(!setup_prepared_stmt(&select_map, "call select_map()", conn)) {
 				print_stmt_error(select_map, "Unable to initialize select_map statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&select_trip_destination, "call select_trip_destination()", conn)) {
+				print_stmt_error(select_trip_destination, "Unable to initialize select_trip_destination statement\n");
 				return false;
 			}
 			
@@ -1896,4 +1905,88 @@ exit(EXIT_FAILURE);
 mysql_close(conn);
 exit(EXIT_SUCCESS);
 return 0; 
+}
+
+void do_select_trip_destination(struct meta *meta, struct viaggio *viaggio, struct visita *visita)
+{ 	
+	MYSQL_BIND param[31]; 
+	MYSQL_TIME orariodiapertura; 
+	MYSQL_TIME datadipartenzaviaggio; 
+	MYSQL_TIME datadiritornoviaggio;
+	MYSQL_TIME datadiannullamento; 
+	MYSQL_TIME datadiarrivo; 
+	MYSQL_TIME datadipartenza; 
+	MYSQL_TIME oradiarrivo; 
+	MYSQL_TIME oradipartenza; 
+
+	int idvisita;
+	int viaggiorelativo; 
+	int metavisitata;  
+	float supplemento; 
+	int idmeta; 
+	int telefonometa; 
+	int faxmeta; 
+	int idviaggio; 
+	int conducente; 
+	int accompagnatrice; 
+	float costodelviaggio; 
+	int numerodikm; 
+	int numerodipostidisponibili; 
+
+	
+	time_to_mysql_time(meta->orariodiapertura, &orariodiapertura);
+	date_to_mysql_time(viaggio->datadipartenzaviaggio, &datadipartenzaviaggio);
+	date_to_mysql_time(viaggio->datadiritornoviaggio, &datadiritornoviaggio); 
+	date_to_mysql_time(viaggio->datadiannullamento, &datadiannullamento); 
+	date_to_mysql_time (visita->datadiarrivo, &datadiarrivo); 
+	date_to_mysql_time (visita->datadipartenza, &datadipartenza);  
+	time_to_mysql_time (visita->oradiarrivo, &oradiarrivo); 
+	time_to_mysql_time (visita->oradipartenza, &oradipartenza);
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, strlen(viaggio->tourassociato));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, strlen(viaggio->mezzoimpiegato));
+	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
+	set_binding_param(&param[6], MYSQL_TYPE_DATETIME, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
+	set_binding_param(&param[7], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
+	set_binding_param(&param[8], MYSQL_TYPE_LONG, &numerodikm, sizeof(numerodikm));
+	set_binding_param(&param[9], MYSQL_TYPE_LONG, &numerodipostidisponibili, sizeof(numerodipostidisponibili));
+	set_binding_param(&param[10], MYSQL_TYPE_DATETIME, &datadiannullamento, sizeof(datadiannullamento));
+	set_binding_param(&param[11], MYSQL_TYPE_LONG, &idmeta, sizeof(idmeta));
+	set_binding_param(&param[12], MYSQL_TYPE_VAR_STRING, meta->nomemeta, strlen(meta->nomemeta));
+	set_binding_param(&param[13], MYSQL_TYPE_VAR_STRING, meta->emailmeta, strlen(meta->emailmeta));
+	set_binding_param(&param[14], MYSQL_TYPE_LONG, &telefonometa, sizeof(telefonometa));
+	set_binding_param(&param[15], MYSQL_TYPE_LONG, &faxmeta, sizeof(faxmeta));
+	set_binding_param(&param[16], MYSQL_TYPE_VAR_STRING, meta->indirizzo, strlen(meta->indirizzo));
+	set_binding_param(&param[17], MYSQL_TYPE_VAR_STRING, meta->tipologiameta, strlen(meta->tipologiameta));
+	set_binding_param(&param[18], MYSQL_TYPE_VAR_STRING, meta->categoriaalbergo, strlen(meta->categoriaalbergo));
+	set_binding_param(&param[19], MYSQL_TYPE_TIME, &orariodiapertura, sizeof(orariodiapertura));
+	set_binding_param(&param[20], MYSQL_TYPE_VAR_STRING, meta->localitadiappartenenza, strlen(meta->localitadiappartenenza));
+	set_binding_param(&param[21], MYSQL_TYPE_LONG, &idvisita, sizeof(idvisita));
+	set_binding_param(&param[22], MYSQL_TYPE_LONG, &viaggiorelativo, sizeof(viaggiorelativo));
+	set_binding_param(&param[23], MYSQL_TYPE_LONG, &metavisitata, sizeof(metavisitata));
+	set_binding_param(&param[24], MYSQL_TYPE_VAR_STRING, visita->datadiarrivo, strlen(visita->datadiarrivo));
+	set_binding_param(&param[25], MYSQL_TYPE_VAR_STRING, visita->datadipartenza, strlen(visita-> datadipartenza));
+	set_binding_param(&param[26], MYSQL_TYPE_VAR_STRING, visita->oradiarrivo, strlen(visita->oradiarrivo));
+	set_binding_param(&param[27], MYSQL_TYPE_VAR_STRING, visita->oradipartenza, strlen(visita->oradipartenza));
+	set_binding_param(&param[28], MYSQL_TYPE_BIT, visita->guida, strlen(visita->guida));
+	set_binding_param(&param[29], MYSQL_TYPE_FLOAT, &supplemento, sizeof(supplemento));
+	set_binding_param(&param[30], MYSQL_TYPE_VAR_STRING, visita->trattamentoalberghiero, strlen(visita->trattamentoalberghiero));
+	
+	
+
+	if(mysql_stmt_bind_param(select_trip_destination, param) != 0) {
+		print_stmt_error(select_trip_destination, "Could not bind parameters for select_trip_destination");
+		return;
+	}
+	// Run procedure
+	if(mysql_stmt_execute(select_trip_destination) != 0) {
+		print_stmt_error(select_trip_destination, "Could not execute select_trip_destination");
+		return;
+		}
+	mysql_stmt_free_result(select_trip_destination);
+	mysql_stmt_reset(select_trip_destination);
+	
 }

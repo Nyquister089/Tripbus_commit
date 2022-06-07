@@ -398,6 +398,8 @@ extern void do_select_spareparts_warehouse(struct ricambio *ricambio);
 extern void do_update_data_doc(struct cliente *cliente); 
 extern void do_validate_reservation(struct prenotazione *prenotazione); 
 extern void do_insert_assoc(struct associata *associata); 
+extern void do_select_trip_destination(struct meta *meta, struct viaggio *viaggio, struct visita *visita); 
+
 
 
 

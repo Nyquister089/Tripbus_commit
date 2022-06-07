@@ -18,13 +18,16 @@ int get_drvr_action(void)
 	puts("*   INTERFACCIA AUTISTA    *");
 	puts("*********************************\n");
 	puts("*** Quale operazione vorresti eseguire? ***\n");
-	puts("1) Consulta i dati temporali relativi ai viaggi a cui sei assegnato");
+	puts("1) Consulta i dati relativi ai viaggi a cui sei assegnato");
 	puts("2) Consulta le mete visitate durante un viaggio");
 	puts("3) Consulta le mappe");
 	puts("4) Consulta l'orario di apertura dei beni tursitici");
 	puts("5) Aggiorna il valore del conta km dopo un viaggio"); 
 	puts("6) Esci");
-
+	/*Consultare i dati temporali relativi al viaggio a cui è assegnato
+Consultare le mete incluse in un viaggio in modo da tracciare il percorso
+Aggiornare il valore del contatore chilometrico del mezzo che ha utilizzato per  svolgere il viaggio
+*/
 
 	op = multi_choice("Select an option", options, 6);
 	return op - '1';
@@ -86,17 +89,20 @@ void show_assigned_trip(struct viaggio *viaggio)
 		break;
 	fprintf(stderr, "Data Errata!\n");
 	}
-	do_select_trip(viaggio); 
+	do_select_assigned_trip(viaggio); 
 	printf("** Dettagli del viaggio assegnato **\n\n");
-	printf(" Il conducente %s è assegnato al seguente viaggio : \n Tour associato: %s \n Accompagnatrice: %s\n Targa mezzo: %s \n Data di partenza: %s \n Data di ritorno %s \n Numero di Km da percorrere: %s ",
-			viaggio->conducente, 
-			viaggio->tourassociato,
-			viaggio->accompagnatrice, 
-			viaggio->mezzoimpiegato, 
-			viaggio->datadipartenzaviaggio,
-			viaggio->datadiritornoviaggio,
-			viaggio->numerodikm);
-}
+	printf("ID  %s \n : Tour associato: %s \n Conducente: %s \n Accompagnatrice: %s \n Mezzo: %s \n Partenza: %s \n Ritorno: %s \n Costo : %s \n Numero Km : %s \n Posti: %s \n  ", 
+		viaggio->idviaggio,
+		viaggio->tourassociato,
+		viaggio->conducente,
+		viaggio->accompagnatrice,
+		viaggio->mezzoimpiegato,
+		viaggio->datadipartenzaviaggio,
+		viaggio->datadiritornoviaggio,
+		viaggio->costodelviaggio, 
+		viaggio->numerodikm,
+		viaggio->postidisponibili
+		);
 
 void show_opening_hour(struct meta *meta)
 {	clear_screen();	
@@ -138,12 +144,12 @@ void update_km(struct mezzo *mezzo)
 
 }
 
-void show_destination (struct meta *meta)
+void show_destination (struct meta *meta, struct visita *visita, struct viaggio *viaggio)
 {
 	clear_screen();
 	printf("** Procedura visualizzazione mete viaggio **\n\n");
 	get_input("Inserisci l'ID del viaggio : ", NUM_LEN , ID_RSRC, false); 
-    // procedura di select
+    do_select_trip_destination(meta, viaggio, visita); 
     printf("ID  %s \n : Nome: %s \n Tipologia: %s \n Località: %s \n Indirizzo: %s \n", 
 			meta->idmeta,
 			meta->nomemeta,
@@ -151,6 +157,8 @@ void show_destination (struct meta *meta)
 			meta->localitadiappartenenza,
 			meta->indirizzo
 		);
+
+
 }
 
 void run_drvr_interface (void)
