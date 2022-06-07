@@ -103,6 +103,7 @@ void show_assigned_trip(struct viaggio *viaggio)
 		viaggio->numerodikm,
 		viaggio->postidisponibili
 		);
+}
 
 void show_opening_hour(struct meta *meta)
 {	clear_screen();	
