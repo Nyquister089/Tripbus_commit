@@ -138,6 +138,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 
 bool init_db(void)
 {
+printf("Inizializzazione database."); 
 	unsigned int timeout = 300;
 	bool reconnect = true;
 	
@@ -146,11 +147,13 @@ bool init_db(void)
 	if(conn == NULL) {
 		finish_with_error(conn, "mysql_init() failed (probably out of memory)\n");
 	}
-	// Segfault in questa istanza di IF ->
+
 	if(mysql_real_connect(conn, opt_host_name, opt_user_name,opt_password, opt_db_name, opt_port_num, opt_socket_name,opt_flags) == NULL) {
 		finish_with_error(conn, "mysql_real_connect() failed\n");
 	}
-printf("Debug point!\n\n");
+
+printf("."); 
+
 	if (mysql_options(conn, MYSQL_OPT_CONNECT_TIMEOUT, &timeout)) {
 		print_error(conn, "[mysql_options] failed.");
 	}
@@ -163,7 +166,7 @@ printf("Debug point!\n\n");
 		print_error(conn, "[debug_info] failed.");
 	}
 #endif
-
+printf(".completata \n"); 
 	return initialize_prepared_stmts(LOGIN_ROLE);
 }
 
@@ -349,11 +352,6 @@ void do_insert_seat(struct postoprenotato *postoprenotato)
 	mysql_stmt_reset(insert_seat);
 	
 }
-
-
-
-
-
 
 void do_insert_assoc(struct associata *associata)
 {		
@@ -617,23 +615,18 @@ void do_update_data_doc(struct cliente *cliente)
 int main (void)
 {
 	// initialize connection handler
-	printf("Here!\n\n"); 
+
 	conn = mysql_init(NULL);
 	if(conn == NULL) {
 		fprintf(stderr, "mysql_init() failed\n");
 	exit(EXIT_FAILURE);
 	}
-	printf("Debug point main\n"); 
+	printf("Esecuzione main\n"); 
 	init_db();
 	
-	/*// connect to server 
-	if(mysql_real_connect(conn, opt_host_name, opt_user_name,opt_password, opt_db_name, opt_port_num, opt_socket_name,opt_flags) == NULL) {
-		fprintf(stderr, "mysql_real_connect() failed\n");
-		mysql_close(conn);
-		exit(EXIT_FAILURE);
-	}
 	//disconnect from server
+	
 	mysql_close(conn);
-	exit(EXIT_SUCCESS);*/
+	exit(EXIT_SUCCESS);
 	return 0; 
 }
