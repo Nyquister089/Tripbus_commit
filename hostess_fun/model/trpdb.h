@@ -3,10 +3,10 @@
 #include <stdlib.h>	
 
 #include "../utils/io.h"
-								
+
 extern bool init_db(void);
 extern void fini_db(void);
-
+							
 #define DATE_LEN 11
 #define TIME_LEN 6
 #define DATETIME_LEN (DATE_LEN + TIME_LEN)
@@ -34,6 +34,10 @@ typedef enum {
 	FAILED_LOGIN
 } role_t;
 
+extern void db_switch_to_login(void);
+extern role_t attempt_login(struct credentials *cred);
+extern void db_switch_to_administrator(void);
+
 struct associata{
 	char  cameraprenotata[NUM_LEN]; 				//FK //Corretto trasformandolo da carattere a puntatore di carattere
 	char  ospite[NUM_LEN]; 						//FK //Corretto trasformandolo da carattere a puntatore di carattere
@@ -47,9 +51,6 @@ struct camera {
 	char costo [NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 	
 };
-
-//extern void do_register_flight(struct flight  flight);
-
 
 struct cliente {
 	char emailcliente[VARCHAR_LEN];
@@ -98,12 +99,6 @@ struct foto_mete {
 	struct documentazionefotografica foto_mete[]; 
 }; 
 
-
-struct foto_modelli {
-	char *modellorappresentato; 				//FK //Corretto trasformandolo da carattere a puntatore di carattere
-	char *fotomodello; 					//FK //Corretto trasformandolo da carattere a puntatore di carattere
-}; 
-
 struct localita {
 	char nomelocalita[VARCHAR_LEN];
 	char regione[VARCHAR_LEN];
@@ -111,7 +106,7 @@ struct localita {
 };
 
 struct mappa {
-	char *idmappa; //Corretto trasformandolo da carattere a puntatore di carattere
+	char idmappa[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 	char citta[VARCHAR_LEN];
 	char livellodidettaglio[VARCHAR_LEN];
 	char zona[VARCHAR_LEN];
@@ -119,11 +114,11 @@ struct mappa {
 };
 
 struct meta { 
-	char *idmeta; //Corretto trasformandolo da carattere a puntatore di carattere
+	char idmeta[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 	char nomemeta[VARCHAR_LEN]; 
 	char emailmeta[VARCHAR_LEN]; 
-	char *telefonometa; //Corretto trasformandolo da carattere a puntatore di carattere
-	char *faxmeta; //Corretto trasformandolo da carattere a puntatore di carattere
+	char telefonometa[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	char faxmeta[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 	char indirizzo[VARCHAR_LEN]; 
 	char tipologiameta[VARCHAR_LEN]; 
 	char categoriaalbergo[VARCHAR_LEN]; 
@@ -143,20 +138,20 @@ struct mete_viaggio{
 
 struct mezzo {
 	char targa[VARCHAR_LEN];
-	char  * modellomezzo; 					//FK //Corretto trasformandolo da carattere a puntatore di carattere
+	char modellomezzo[NUM_LEN]; 					//FK //Corretto trasformandolo da carattere a puntatore di carattere
 	char ingombri[VARCHAR_LEN];	
-	char  *autonomia; //Corretto trasformandolo da carattere a puntatore di carattere
-	char  *valorecontakm; //Corretto trasformandolo da carattere a puntatore di carattere
+	char autonomia[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	char valorecontakm[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 	char dataultimarevisioneinmotorizzazione[DATE_LEN]; 
 	char dataimmatricolazione[DATE_LEN]; 
 };
 
 struct modello {
-	char *idmodello; //Corretto trasformandolo da carattere a puntatore di carattere
+	char idmodello[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 	char nomemodello[VARCHAR_LEN];
 	char datitecnici[DES_LEN]; 
 	char casacostruttrice[VARCHAR_LEN];
-	char *numeroposti; //Corretto trasformandolo da carattere a puntatore di carattere
+	char numeroposti[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 }; 
 
 struct elenco_modelli {
@@ -292,9 +287,6 @@ struct visita {
 	char supplemento[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 	char trattamentoalberghiero[VARCHAR_LEN]; 
 }; 
-extern void db_switch_to_login(void);
-extern role_t attempt_login(struct credentials *cred);
-extern void db_switch_to_administrator(void);
 
 extern void do_insert_costumer(struct cliente *cliente);
 extern void do_insert_reservation(struct prenotazione *prenotazione);
