@@ -13,7 +13,7 @@ extern void fini_db(void);
 #define NUM_LEN 45
 #define DEC_LEN 45 
 #define USERNAME_LEN 45
-#define PASSWORD_LEN 45
+#define PASSWORD_LEN 8
 #define PIC 45
 #define BIT_LEN 2
 #define VARCHAR_LEN 45

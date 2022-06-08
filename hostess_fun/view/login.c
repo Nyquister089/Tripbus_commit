@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "login.h"
 #include "../utils/io.h"
@@ -26,7 +27,10 @@ int main (void)
 	printf("Esecuzione main\n"); 
 	init_db();
 	printf("Avvio login"); 
-	struct credentials *cred; 
+	struct credentials *cred;
+	cred = malloc(sizeof(struct credentials)*8); 
+	/*strcpy ( cred->username, "1"); 
+	strcpy (cred->password, "1"); */
 	view_login(cred); 
 	bool answer = yes_or_no("\n\n Vuoi chiudere il database? (s/n) ",'s','n',false,false);
 	if(answer){
