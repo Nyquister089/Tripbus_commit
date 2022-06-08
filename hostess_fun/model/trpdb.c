@@ -223,7 +223,7 @@ role_t attempt_login(struct credentials *cred)
 
 	mysql_stmt_free_result(login_procedure);
 	mysql_stmt_reset(login_procedure);
-	printf("Role: %d", role);
+	
 	return role;
 }
 
