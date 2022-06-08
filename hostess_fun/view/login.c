@@ -3,8 +3,8 @@
 #include <string.h>
 
 #include "login.h"
+#include "hostess.h"
 #include "../utils/io.h"
-
 
 void view_login(struct credentials *cred)
 {
@@ -15,6 +15,7 @@ void view_login(struct credentials *cred)
 	puts("*********************************\n");
 	get_input("Username: ", USERNAME_LEN, cred->username, false);
 	get_input("Password: ", PASSWORD_LEN, cred->password, true);
+
 }
 
 bool ask_for_relogin(void)
@@ -23,19 +24,39 @@ bool ask_for_relogin(void)
 }
 
 int main (void)
-{
-	printf("Esecuzione main\n"); 
-	init_db();
-	printf("Avvio login"); 
+{	
+	bool answer = false; 
+
 	struct credentials *cred;
-	cred = malloc(sizeof(struct credentials)*8); 
-	/*strcpy ( cred->username, "1"); 
-	strcpy (cred->password, "1"); */
-	view_login(cred); 
-	bool answer = yes_or_no("\n\n Vuoi chiudere il database? (s/n) ",'s','n',false,false);
-	if(answer){
-		fini_db(); 
-		}
+
+	cred = malloc(sizeof(struct credentials)*8);
+
+	init_db();
+
+	while (!answer){
+		view_login(cred); 
+	
+		size_t role = 4; 
+		switch(role){
+			case AUTISTA: 
+				printf("Autista\n"); 
+				break;
+			case CLIENTE:
+				printf("CLiente\n"); 
+				break; 
+			case HOSTESS:
+				run_hstss_interface(); 
+			case MECCANICO: 
+				printf("Meccanico\n"); 
+				break; 
+			case QUIT: 
+				printf("Quit!\n");
+			}
+		answer = yes_or_no("\n\n Vuoi chiudere il database? (s/n) ",'s','n',false,false);
+		if(answer){
+			fini_db(); 
+			}
+	}
 	return 0; 
 }
 

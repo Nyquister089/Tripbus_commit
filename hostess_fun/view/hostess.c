@@ -31,10 +31,16 @@ int get_hstss_action(void)
 	return op - '1';
 }
 
-bool exe_hstss_act(hstss_act sel)
-{	struct cliente *cliente; 
+bool exe_hstss_act(char sel)
+{	
+	struct cliente *cliente; 
 	struct prenotazione *prenotazione;
 	struct postoprenotato *postoprenotato;
+
+	cliente = malloc(sizeof(struct cliente)*8); 
+	prenotazione = malloc(sizeof(struct prenotazione)*8); 
+	postoprenotato = malloc(sizeof(struct postoprenotato)*8); 
+
 	switch (sel)
 		{	
 			case INFO_PRENOTAZIONI: {
@@ -54,12 +60,20 @@ bool exe_hstss_act(hstss_act sel)
 				return true; 
 				}
      		case POSTI_VIAGGIO:{
+
      			struct  viaggio *viaggio; 
+				
+				viaggio = malloc(sizeof(struct viaggio)*8); 
+
      			mod_trip_seat(viaggio);
 				return true; 
 				}
 			case CONFERMA_PRENOTAZIONE:{
+
 				struct associata * associata; 
+
+				associata = malloc(sizeof(struct associata)*8); 
+
 				validate_prenotation (prenotazione, postoprenotato, associata); 
 				return true;
 		 		}
@@ -74,9 +88,9 @@ bool exe_hstss_act(hstss_act sel)
 		return false; 
 		
 	break;
-		default:
+		/*default:
 			fprintf(stderr, "Il carattere digitato non corrisponde a nessuna azione \n");
-			exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);*/
 	}
 
 	return true;
@@ -193,7 +207,7 @@ void update_d_doc(struct cliente  *cliente)
 
 
 void run_hstss_interface (void)
-{ 	hstss_act sel; 
+{ 	char sel; 
 	while (true){
 	get_hstss_action(); 
 	if (!exe_hstss_act(sel))

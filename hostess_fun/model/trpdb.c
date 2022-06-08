@@ -228,7 +228,7 @@ role_t attempt_login(struct credentials *cred)
 }
 
 
-void db_switch_to_login(void) // OK ma ricontrollare in seguito
+void db_switch_to_login(void)
 {
 	close_prepared_stmts();
 	if(mysql_change_user(conn, getenv("LOGIN_USER"), getenv("LOGIN_PASS"), getenv("DB"))) {
