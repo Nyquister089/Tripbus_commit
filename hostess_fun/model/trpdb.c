@@ -90,6 +90,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			}
 			//break;
 		//case HOSTESS:
+			// Impossibile inizializzare ->
 			if(!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
 				print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
 				return false;
@@ -567,7 +568,6 @@ void do_select_reservation(struct prenotazione *prenotazione)
 	set_binding_param(&param[3], MYSQL_TYPE_DATETIME, &datadiconferma, sizeof(datadiconferma));
 	set_binding_param(&param[4], MYSQL_TYPE_DATETIME, &datasaldo, sizeof(datasaldo));
 
-	//SEGFAULT ->
 	if(mysql_stmt_bind_param(select_reservation, param) != 0) {
 		print_stmt_error(select_reservation, "Could not bind parameters for select_reservation");
 		return;

@@ -34,7 +34,7 @@ void print_error(MYSQL *conn, char *message)
 
 
 bool setup_prepared_stmt(MYSQL_STMT **stmt, char *statement, MYSQL *conn)
-{
+{   
 	bool update_length = true;
 
 	*stmt = mysql_stmt_init(conn);
@@ -43,12 +43,12 @@ bool setup_prepared_stmt(MYSQL_STMT **stmt, char *statement, MYSQL *conn)
 		print_error(conn, "Could not initialize statement handler");
 		return false;
 	}
-
+	// non riesce ad eseguire ->
 	if (mysql_stmt_prepare (*stmt, statement, strlen(statement)) != 0) {
 		print_stmt_error(*stmt, "Could not prepare statement");
 		return false;
 	}
-
+	
 	mysql_stmt_attr_set(*stmt, STMT_ATTR_UPDATE_MAX_LENGTH, &update_length);
 
 	return true;
