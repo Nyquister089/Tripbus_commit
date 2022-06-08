@@ -81,16 +81,15 @@ static void close_prepared_stmts(void)
 
 static bool initialize_prepared_stmts(role_t for_role)
 {
-	/*switch(for_role) {
+	switch(for_role) {
 
-		case LOGIN_ROLE:*/
+		case LOGIN_ROLE:
 			if(!setup_prepared_stmt(&login_procedure, "call login(?, ?, ?)", conn)) {
 				print_stmt_error(login_procedure, "Unable to initialize login statement\n");
 				return false;
 			}
-			//break;
-		//case HOSTESS:
-			// Impossibile inizializzare ->
+			break;
+		case HOSTESS:
 			if(!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
 				print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
 				return false;
@@ -127,11 +126,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(insert_assoc, "Unable to initialize update trip statement statement\n");
 				return false;
 			}
-		/*	break;
+			break;
 		default:
 			fprintf(stderr, "[FATAL] Unexpected role to prepare statements.\n");
 			exit(EXIT_FAILURE);
-	}*/
+	}
 
 	return true;
 }

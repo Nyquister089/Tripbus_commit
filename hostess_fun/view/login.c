@@ -9,7 +9,7 @@
 void view_login(struct credentials *cred)
 {
 	clear_screen();
-	attempt_login(cred); 
+	
 	puts("*********************************");
 	puts("*   BENVENUTI IN TRIPBUS *");
 	puts("*********************************\n");
@@ -26,6 +26,7 @@ bool ask_for_relogin(void)
 int main (void)
 {	
 	bool answer = false; 
+	size_t role; 
 
 	struct credentials *cred;
 
@@ -34,9 +35,10 @@ int main (void)
 	init_db();
 
 	while (!answer){
+
 		view_login(cred); 
-	
-		size_t role = 4; 
+		role = attempt_login(cred);
+		 
 		switch(role){
 			case AUTISTA: 
 				printf("Autista\n"); 
