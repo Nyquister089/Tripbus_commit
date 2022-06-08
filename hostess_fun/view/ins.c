@@ -1,6 +1,6 @@
 #include <string.h>
-
 #include "ins.h"
+
 
 void ins_prenotation(struct prenotazione *prenotazione)
 {	//clear_scren();

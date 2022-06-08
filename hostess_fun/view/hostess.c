@@ -44,18 +44,23 @@ bool exe_hstss_act(char sel)
 		{	
 			case INFO_PRENOTAZIONI: {
 				show_prenotation_details(prenotazione); 
+				free(prenotazione); 
+				return true;
 				}
 			case INSERT_CLIENTE:{
 				ins_costumer(cliente); 
+				free(cliente);
 				return true; 
 				}
 		
 			case INSERT_PRENOTAZIONE:{
 				ins_prenotation(prenotazione); 
+				free(prenotazione); 
 				return true;
 				}
      		case INSERT_POSTPRENOTATO: {
 				ins_seat(postoprenotato); 
+				free(postoprenotato); 
 				return true; 
 				}
      		case POSTI_VIAGGIO:{
@@ -65,6 +70,7 @@ bool exe_hstss_act(char sel)
 				viaggio = malloc(sizeof(struct viaggio)*8); 
 
      			mod_trip_seat(viaggio);
+				free(viaggio);
 				return true; 
 				}
 			case CONFERMA_PRENOTAZIONE:{
@@ -74,11 +80,15 @@ bool exe_hstss_act(char sel)
 				associata = malloc(sizeof(struct associata)*8); 
 
 				validate_prenotation (prenotazione, postoprenotato, associata); 
+				free(prenotazione); 
+				free(postoprenotato);
+				free(associata); 
 				return true;
 		 		}
 
 			case UPDATE_DATA_DOC:{
 				update_d_doc(cliente);
+				free(cliente); 
 				return true;
 				}
 		
@@ -102,7 +112,7 @@ void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura v
 	 get_input("Inserisci il numero di prenotazione : ", VARCHAR_LEN, buffer, false);
 	 do_select_reservation(prenotazione); 
  	////clear_scren(); 
- 	printf("** Dettagli prenotazione **");
+ 	printf("** Dettagli prenotazione **\n\n");
  	printf("Penotazione numero: %s  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data Saldo: %s \n",
 		prenotazione->numerodiprenotazione, 
 		prenotazione->clienteprenotante,
@@ -118,7 +128,7 @@ void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsoni
  	get_input("Inserisci il codice del viaggio : ", VARCHAR_LEN, buffer, false);
  	do_select_trip(viaggio);
  	////clear_scren(); 
- 	printf("**  Dettagli Viaggio "); 
+ 	printf("**  Dettagli Viaggio ** \n\n"); 
  	printf("Tour : %s \n Posti disponibili: %s \n Data annullamento: %s \n ",
  		viaggio->tourassociato, 
 		viaggio->postidisponibili, 
@@ -134,7 +144,7 @@ void validate_prenotation(struct prenotazione *prenotazione, struct postoprenota
 	printf("** Procedura conferma prenotazione **\n\n");
 	get_input("Inserisci numero d'interesse : ", VARCHAR_LEN , buffer, false); 
     do_select_reservation(prenotazione); 
-	printf("Numero:  %s \n  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data di saldo: %s \n  ", 
+	printf("\nNumero:  %s \n  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data di saldo: %s \n  ", 
 		prenotazione->numerodiprenotazione,
 		prenotazione->clienteprenotante,
 		prenotazione->datadiprenotazione,
@@ -146,13 +156,13 @@ void validate_prenotation(struct prenotazione *prenotazione, struct postoprenota
 		return;
 		}
 	while(true){
-		get_input("Modifica data di conferma [YYYY-DD-MM]: ", DATE_LEN, prenotazione->datadiconferma, false);
+		get_input("\nModifica data di conferma [YYYY-DD-MM]: ", DATE_LEN, prenotazione->datadiconferma, false);
 		if(validate_date(prenotazione->datadiconferma))
 			break;
 		fprintf(stderr, "Data errata!\n");
 		}
 	while(true){
-		get_input("Modifica data di saldo [YYYY-DD-MM]: ", DATE_LEN, prenotazione->datasaldo, false);
+		get_input("\nModifica data di saldo [YYYY-DD-MM]: ", DATE_LEN, prenotazione->datasaldo, false);
 		if(validate_date(prenotazione->datasaldo))
 			break;
 		fprintf(stderr, "Data errata!\n");
@@ -160,7 +170,7 @@ void validate_prenotation(struct prenotazione *prenotazione, struct postoprenota
 		do_validate_reservation(prenotazione);
 		bool seat_ans, association_ans;   
 	do {
-		printf("** Associa un passeggero alla prenotazione "); 
+		printf("** Associa un passeggero alla prenotazione ** \n"); 
 		ins_seat(postoprenotato); 
 		do{	printf("** Associa camera al passeggero ** "); 
 			ins_association(associata); 
@@ -180,7 +190,7 @@ void update_d_doc(struct cliente  *cliente)
 	printf("** Procedura di modifica data documenti cliente **\n\n");
 	get_input("Inserisci l'ID d'interesse : ", VARCHAR_LEN , buffer, false); 
     do_select_costumer(cliente); 
-	printf("E-mail:  %s \n Nome: %s \n Cognome: %s \n Indirizzo: %s \n Codice fiscale: %s \n Recapito telefonico: %s \n Fax: %s \n Data documentazione: %s \n", 
+	printf("\nE-mail:  %s \n Nome: %s \n Cognome: %s \n Indirizzo: %s \n Codice fiscale: %s \n Recapito telefonico: %s \n Fax: %s \n Data documentazione: %s \n", 
 		cliente->emailcliente,
 		cliente->nomecliente,
 		cliente->cognomecliente,
@@ -195,7 +205,7 @@ void update_d_doc(struct cliente  *cliente)
 		return;
 	}
 	while(true){
-		get_input("Modifica l'ultima data d'invio dei documuenti [YYYY-DD-MM]: ", DATE_LEN, cliente->datadocumentazione, false);
+		get_input("\nModifica l'ultima data d'invio dei documuenti [YYYY-DD-MM]: ", DATE_LEN, cliente->datadocumentazione, false);
 		if(validate_date(cliente->datadocumentazione))
 			break;
 		fprintf(stderr, "Data errata!\n");
