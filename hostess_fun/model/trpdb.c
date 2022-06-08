@@ -91,39 +91,39 @@ static bool initialize_prepared_stmts(role_t for_role)
 			//break;
 		//case HOSTESS:
 			// Impossibile inizializzare ->
-			if(!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
+			if(!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
 				print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&insert_reservation, "call insert reservation(?, ?, ?, ?, ?, ?, ?)", conn)) {
+			if(!setup_prepared_stmt(&insert_reservation, "call insert_reservation(?, ?, ?, ?)", conn)) {
 				print_stmt_error(insert_reservation, "Unable to initialize insert reservation statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&insert_seat, "call insert_seat (?, ?, ?, ?, ?, ?, ?)", conn)) {
+			if(!setup_prepared_stmt(&insert_seat, "call insert_seat (?, ?, ?, ?, ?)", conn)) {
 				print_stmt_error(insert_seat, "Unable to initialize insert seat statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&validate_reservation, "call validate_reservation()", conn)) {
-				print_stmt_error(validate_reservation, "Unable to initialize update reservation statement\n");
+			if(!setup_prepared_stmt(&validate_reservation, "call validate_reservation(?, ?, ?)", conn)) {
+				print_stmt_error(validate_reservation, "Unable to initialize validate reservation statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&select_costumer, "call select_costumer()", conn)) {
+			if(!setup_prepared_stmt(&select_costumer, "call select_costumer(?)", conn)) {
 				print_stmt_error(select_costumer, "Unable to initialize select costumer statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&select_reservation, "call select_reservation()", conn)) {
+			if(!setup_prepared_stmt(&select_reservation, "call select_reservation(?, ?, ?, ?, ?)", conn)) {
 				print_stmt_error(select_reservation, "Unable to initialize select reservation statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&update_trip_seat, "call update_trip_seat()", conn)) {
+			if(!setup_prepared_stmt(&update_trip_seat, "call update_trip_seat(?, ?)", conn)) {
 				print_stmt_error(update_trip_seat, "Unable to initialize update trip statement statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&update_data_doc, "call update_data_doc()", conn)) {
+			if(!setup_prepared_stmt(&update_data_doc, "call update_data_doc(?, ?)", conn)) {
 				print_stmt_error(update_data_doc, "Unable to initialize update trip statement statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&insert_assoc, "call insert_assoc()", conn)) {
+			if(!setup_prepared_stmt(&insert_assoc, "call insert_assoc(?, ?, ?)", conn)) {
 				print_stmt_error(insert_assoc, "Unable to initialize update trip statement statement\n");
 				return false;
 			}
@@ -293,7 +293,7 @@ void do_insert_costumer(struct cliente *cliente)
 
 void do_insert_reservation(struct prenotazione *prenotazione)
 {		
-	MYSQL_BIND param[5]; 
+	MYSQL_BIND param[4]; 
 	MYSQL_TIME datadiprenotazione; 
 	MYSQL_TIME datadiconferma; 
 	MYSQL_TIME datasaldo; 
@@ -304,11 +304,10 @@ void do_insert_reservation(struct prenotazione *prenotazione)
 	date_to_mysql_time(prenotazione->datadiconferma, &datadiconferma);
 	date_to_mysql_time(prenotazione->datasaldo, &datasaldo);
 	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerodiprenotazione, sizeof(numerodiprenotazione));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, strlen(prenotazione->clienteprenotante));
-	set_binding_param(&param[2], MYSQL_TYPE_DATETIME, &datadiprenotazione,sizeof(datadiprenotazione));
-	set_binding_param(&param[3], MYSQL_TYPE_DATETIME, &datadiconferma, sizeof(datadiconferma));
-	set_binding_param(&param[4], MYSQL_TYPE_DATETIME, &datasaldo, sizeof(datasaldo));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, strlen(prenotazione->clienteprenotante));
+	set_binding_param(&param[1], MYSQL_TYPE_DATETIME, &datadiprenotazione,sizeof(datadiprenotazione));
+	set_binding_param(&param[2], MYSQL_TYPE_DATETIME, &datadiconferma, sizeof(datadiconferma));
+	set_binding_param(&param[3], MYSQL_TYPE_DATETIME, &datasaldo, sizeof(datasaldo));
 	
 	
 	if(mysql_stmt_bind_param(insert_reservation, param) != 0) {
@@ -388,22 +387,19 @@ void do_insert_assoc(struct associata *associata)
 	
 void do_validate_reservation(struct prenotazione *prenotazione)
 {		
-	MYSQL_BIND param[5]; 
-	MYSQL_TIME datadiprenotazione; 
+	MYSQL_BIND param[3]; 
+
 	MYSQL_TIME datadiconferma; 
 	MYSQL_TIME datasaldo; 
 
 	int numerodiprenotazione; 
-
-	date_to_mysql_time(prenotazione->datadiprenotazione, &datadiprenotazione);
+	
 	date_to_mysql_time(prenotazione->datadiconferma, &datadiconferma);
 	date_to_mysql_time(prenotazione->datasaldo, &datasaldo);
 	
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerodiprenotazione, sizeof(numerodiprenotazione));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, strlen(prenotazione->clienteprenotante));
-	set_binding_param(&param[2], MYSQL_TYPE_DATETIME, &datadiprenotazione,sizeof(datadiprenotazione));
-	set_binding_param(&param[3], MYSQL_TYPE_DATETIME, &datadiconferma, sizeof(datadiconferma));
-	set_binding_param(&param[4], MYSQL_TYPE_DATETIME, &datasaldo, sizeof(datasaldo));
+	set_binding_param(&param[1], MYSQL_TYPE_DATE, &datadiconferma, sizeof(datadiconferma));
+	set_binding_param(&param[2], MYSQL_TYPE_DATE, &datasaldo, sizeof(datasaldo));
 	
 	
 	if(mysql_stmt_bind_param(validate_reservation, param) != 0) {
@@ -573,7 +569,6 @@ void do_select_reservation(struct prenotazione *prenotazione)
 		return;
 	}
 
-		printf("do_select\n");
 	if(mysql_stmt_execute(select_reservation) != 0) {
 		print_stmt_error(select_reservation, "Could not execute select_reservation");
 		return;

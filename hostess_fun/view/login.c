@@ -33,7 +33,7 @@ int main (void)
 
 	init_db();
 
-	/*while (!answer){
+	while (!answer){
 		view_login(cred); 
 	
 		size_t role = 4; 
@@ -56,7 +56,7 @@ int main (void)
 		if(answer){
 			fini_db(); 
 			}
-	}*/
+	}
 	return 0; 
 }
 

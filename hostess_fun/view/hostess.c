@@ -11,7 +11,7 @@ int get_hstss_action(void)
 	char options[8] = {'1','2','3','4','5','6','7','8'};
 	char op;
 	
-	clear_screen();
+	//clear_scren();
 	puts("*********************************");
 	puts("*   INTERFACCIA HOSTESS    *");
 	puts("*********************************\n");
@@ -31,9 +31,7 @@ int get_hstss_action(void)
 }
 
 bool exe_hstss_act(char sel)
-{	
-	printf("choice %d\n", sel); 
-
+{
 	struct cliente *cliente; 
 	struct prenotazione *prenotazione;
 	struct postoprenotato *postoprenotato;
@@ -99,11 +97,11 @@ bool exe_hstss_act(char sel)
 
 void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura visualizzazione dettagli prenotazione
 {	
-	//clear_screen(); 
+	////clear_scren(); 
 	char buffer[VARCHAR_LEN]; 
 	 get_input("Inserisci il numero di prenotazione : ", VARCHAR_LEN, buffer, false);
 	 do_select_reservation(prenotazione); 
- 	clear_screen(); 
+ 	////clear_scren(); 
  	printf("** Dettagli prenotazione **");
  	printf("Penotazione numero: %s  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data Saldo: %s \n",
 		prenotazione->numerodiprenotazione, 
@@ -115,11 +113,11 @@ void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura v
 
 void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsonibili per viaggio 
 {
-	clear_screen(); 
+	////clear_scren(); 
 	char buffer[VARCHAR_LEN]; 
  	get_input("Inserisci il codice del viaggio : ", VARCHAR_LEN, buffer, false);
  	do_select_trip(viaggio);
- 	clear_screen(); 
+ 	////clear_scren(); 
  	printf("**  Dettagli Viaggio "); 
  	printf("Tour : %s \n Posti disponibili: %s \n Data annullamento: %s \n ",
  		viaggio->tourassociato, 
@@ -131,7 +129,7 @@ void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsoni
 
 void validate_prenotation(struct prenotazione *prenotazione, struct postoprenotato *postoprenotato, struct associata *associata)
 {
-	clear_screen();
+	////clear_scren();
 	char buffer[VARCHAR_LEN]; 
 	printf("** Procedura conferma prenotazione **\n\n");
 	get_input("Inserisci numero d'interesse : ", VARCHAR_LEN , buffer, false); 
@@ -177,7 +175,7 @@ void validate_prenotation(struct prenotazione *prenotazione, struct postoprenota
 
 void update_d_doc(struct cliente  *cliente)
 {
-	clear_screen();
+	//clear_scren();
 	char buffer[VARCHAR_LEN]; 
 	printf("** Procedura di modifica data documenti cliente **\n\n");
 	get_input("Inserisci l'ID d'interesse : ", VARCHAR_LEN , buffer, false); 

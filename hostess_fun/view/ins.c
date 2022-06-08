@@ -3,7 +3,7 @@
 #include "ins.h"
 
 void ins_prenotation(struct prenotazione *prenotazione)
-{	clear_screen();
+{	//clear_scren();
 	printf("** Dettagli inserimento prenotazione **\n\n");
 	get_input("Inserisci l'indirizzo e-mail del cliente che ha effettuato la prenotazione : ", VARCHAR_LEN, prenotazione->clienteprenotante, false);
 	while(true){
@@ -28,7 +28,7 @@ void ins_prenotation(struct prenotazione *prenotazione)
 }
 
 void ins_seat(struct postoprenotato *postoprenotato)
-{	clear_screen();
+{	//clear_scren();
 	printf("** Dettagli inserimento passeggero **\n\n");
 	get_input("Inserisci il numero di posto  : ", NUM_LEN, postoprenotato->numerodiposto, false);
 	get_input("Inserisci l'ID del viaggio a cui partecipera' il passeggero: ", NUM_LEN, postoprenotato->viaggioassociato, false);
@@ -39,7 +39,7 @@ void ins_seat(struct postoprenotato *postoprenotato)
 }
 
 void ins_review(struct revisione *revisione)
-{	clear_screen();
+{	//clear_scren();
 	printf("** Dettagli inserimento revisione **\n\n");
 	get_input("Inserisci l'ID del mezzo revisionato : ", NUM_LEN, revisione->mezzorevisionato, false);
 	get_input("Inserisci l'ID del meccanico che ha eseguito la revisione : ", NUM_LEN, revisione-> addettoallarevisione, false);
@@ -65,7 +65,7 @@ void ins_review(struct revisione *revisione)
 }
 
 void ins_costumer(struct cliente *cliente)
-{	clear_screen();
+{	//clear_scren();
 	printf("** Dettagli inserimento cliente **\n\n");
 	get_input("Inserisci l'indirizzo e-mail: ", VARCHAR_LEN, cliente->emailcliente, false);
 	get_input("Inserisci il nome: ", VARCHAR_LEN, cliente->nomecliente, false);
@@ -84,7 +84,7 @@ void ins_costumer(struct cliente *cliente)
 }
 
 void ins_sparepart(struct ricambio *ricambio)
-{	clear_screen();
+{	//clear_scren();
 	printf("** Dettagli inserimento ricambio **\n\n");
 	get_input("Inserisci il codice: ", VARCHAR_LEN, ricambio->codice, false);
 	get_input("Inserisci il costo unitario: ", DEC_LEN, ricambio->costounitario, false);
@@ -95,7 +95,7 @@ void ins_sparepart(struct ricambio *ricambio)
 }
 
 void ins_bus(struct mezzo *mezzo)
-{	clear_screen();
+{	//clear_scren();
 	printf("** Dettagli inserimento mezzo **\n\n");
 	get_input("Inserisci la targa : ", VARCHAR_LEN, mezzo->targa, false);
 	get_input("Inserisci l'ID del modello : ", NUM_LEN, mezzo->modellomezzo, false);
@@ -117,7 +117,7 @@ void ins_bus(struct mezzo *mezzo)
 }
 
 void ins_model(struct modello *modello)
-{	clear_screen();
+{	//clear_scren();
 	printf("** Dettagli inserimento modello **\n\n");
 	get_input("Inserisci il nome : ", DEC_LEN, modello->nomemodello, false);
 	get_input("Inserisci la casa costruttrice : ", NUM_LEN, modello->casacostruttrice, false);
@@ -126,14 +126,14 @@ void ins_model(struct modello *modello)
 }
 
 void ins_certify(struct tagliando *tagliando)
-{	clear_screen();
+{	//clear_scren();
 	printf("** Dettagli inserimento tagliando **\n\n");
 	get_input("Inserisci la tipologia del tagliando: ", VARCHAR_LEN, tagliando->tipologiatagliando, false);
 	get_input("Inserisci le validita' superate (massimo 5000 caratteri) : ", DES_LEN, tagliando->validitasuperate, false);
 }
 
 void ins_association(struct associata *associata)
-{clear_screen();
+{//clear_scren();
 	printf("** Dettagli associazione camera**\n\n");
 	get_input("Inserisci il numero della camera : ", NUM_LEN, associata->cameraprenotata, false);
 	get_input("Inserisci il nome dell'ospite: ", VARCHAR_LEN, associata->ospite, false);

@@ -1,14 +1,17 @@
 {
     "configurations": [
         {
-            "name": "Linux",
+            "name": "linux-gcc-x64",
             "includePath": [
-                "/usr/include"
+                "${workspaceFolder}/**",
+                "${default}",
+                "/usr/include/**",
+                "/usr/include/c++/11/tr1"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
-            "cStandard": "gnu17",
-            "cppStandard": "c++17",
+            "cStandard": "${default}",
+            "cppStandard": "${default}",
             "intelliSenseMode": "linux-gcc-x64",
             "configurationProvider": "ms-vscode.makefile-tools"
         }
