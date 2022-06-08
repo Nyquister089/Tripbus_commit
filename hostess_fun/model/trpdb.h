@@ -26,7 +26,6 @@ struct credentials {
 
 typedef enum {
 	LOGIN_ROLE,
-	AMMINISTRATORE,
 	AUTISTA,
 	CLIENTE,
 	HOSTESS,

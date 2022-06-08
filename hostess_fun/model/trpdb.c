@@ -241,7 +241,7 @@ void db_switch_to_login(void)
 	}
 }
 
-
+/*
 void db_switch_to_administrator(void) // OK ma ricontrollare in seguito
 {
 	close_prepared_stmts();
@@ -253,7 +253,7 @@ void db_switch_to_administrator(void) // OK ma ricontrollare in seguito
 		fprintf(stderr, "[FATAL] Cannot initialize prepared statements.\n");
 		exit(EXIT_FAILURE);
 	}
-}
+}*/
 
 										// Esecuzione insert statement
 
