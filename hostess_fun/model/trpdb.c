@@ -81,15 +81,15 @@ static void close_prepared_stmts(void)
 
 static bool initialize_prepared_stmts(role_t for_role)
 {
-	switch(for_role) {
+	/*switch(for_role) {
 
-		case LOGIN_ROLE:
+		case LOGIN_ROLE:*/
 			if(!setup_prepared_stmt(&login_procedure, "call login(?, ?, ?)", conn)) {
 				print_stmt_error(login_procedure, "Unable to initialize login statement\n");
 				return false;
 			}
-			break;
-		case HOSTESS:
+			//break;
+		//case HOSTESS:
 			if(!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
 				print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
 				return false;
@@ -114,7 +114,6 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(select_reservation, "Unable to initialize select reservation statement\n");
 				return false;
 			}
-			break;
 			if(!setup_prepared_stmt(&update_trip_seat, "call update_trip_seat()", conn)) {
 				print_stmt_error(update_trip_seat, "Unable to initialize update trip statement statement\n");
 				return false;
@@ -127,11 +126,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(insert_assoc, "Unable to initialize update trip statement statement\n");
 				return false;
 			}
-			break;
+		/*	break;
 		default:
 			fprintf(stderr, "[FATAL] Unexpected role to prepare statements.\n");
 			exit(EXIT_FAILURE);
-	}
+	}*/
 
 	return true;
 }
@@ -259,7 +258,8 @@ void db_switch_to_administrator(void) // OK ma ricontrollare in seguito
 
 
 void do_insert_costumer(struct cliente *cliente)
-{	MYSQL_BIND param[8]; 
+{	
+	MYSQL_BIND param[8]; 
 	MYSQL_TIME datadocumentazione; 
 
 	int recapitotelefonico; 
@@ -272,10 +272,10 @@ void do_insert_costumer(struct cliente *cliente)
 	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, strlen(cliente->cognomecliente));
 	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, strlen(cliente->indirizzocliente));
 	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, strlen(cliente->codicefiscale));
-	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datadocumentazione, sizeof(datadocumentazione));
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadocumentazione, sizeof(datadocumentazione));
 	set_binding_param(&param[6], MYSQL_TYPE_LONG, &recapitotelefonico, sizeof(recapitotelefonico));
 	set_binding_param(&param[7], MYSQL_TYPE_LONG, &fax, sizeof(fax));
-	
+
 	
 	if(mysql_stmt_bind_param(insert_costumer, param) != 0) {
 		print_stmt_error(insert_costumer, "Could not bind parameters for insert_costumer");
