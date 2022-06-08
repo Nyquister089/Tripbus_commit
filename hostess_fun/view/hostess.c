@@ -10,7 +10,7 @@ int get_hstss_action(void)
 {
 	char options[8] = {'1','2','3','4','5','6','7','8'};
 	char op;
-			
+	
 	clear_screen();
 	puts("*********************************");
 	puts("*   INTERFACCIA HOSTESS    *");
@@ -22,17 +22,18 @@ int get_hstss_action(void)
 	puts("4) Inserire un nuovo posto prenotato"); 
 	puts("5) Modifica posti disponibili per un viaggio");
 	puts("6) Conferma prenotazione ed intestazione posti");
-	puts("7) Modificare la data di invio ultimi documenti di un cliente"); 
+	puts("7) Modificare la data di invion ultimi documenti di un cliente"); 
 	puts("8) Esci");
-	
-
 
 	op = multi_choice("Select an option", options, 8);
-	return op - '1';
+
+	return op -'1'; 
 }
 
 bool exe_hstss_act(char sel)
 {	
+	printf("choice %d\n", sel); 
+
 	struct cliente *cliente; 
 	struct prenotazione *prenotazione;
 	struct postoprenotato *postoprenotato;
@@ -40,7 +41,7 @@ bool exe_hstss_act(char sel)
 	cliente = malloc(sizeof(struct cliente)*8); 
 	prenotazione = malloc(sizeof(struct prenotazione)*8); 
 	postoprenotato = malloc(sizeof(struct postoprenotato)*8); 
-
+	
 	switch (sel)
 		{	
 			case INFO_PRENOTAZIONI: {
@@ -98,7 +99,7 @@ bool exe_hstss_act(char sel)
 
 void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura visualizzazione dettagli prenotazione
 {	
-	clear_screen(); 
+	//clear_screen(); 
 	char buffer[VARCHAR_LEN]; 
 	 get_input("Inserisci il numero di prenotazione : ", VARCHAR_LEN, buffer, false);
 	 do_select_reservation(prenotazione); 
@@ -209,7 +210,7 @@ void update_d_doc(struct cliente  *cliente)
 void run_hstss_interface (void)
 { 	char sel; 
 	while (true){
-	get_hstss_action(); 
+	sel = get_hstss_action(); 
 	if (!exe_hstss_act(sel))
 		break; 
 	

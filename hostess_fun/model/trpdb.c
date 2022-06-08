@@ -553,32 +553,37 @@ void do_select_reservation(struct prenotazione *prenotazione)
 	MYSQL_TIME datadiprenotazione; 
 	MYSQL_TIME datadiconferma; 
 	MYSQL_TIME datasaldo; 
-
+	
 	int numerodiprenotazione;
 
-	date_to_mysql_time(prenotazione->datadiprenotazione, &datadiprenotazione);
+	date_to_mysql_time(prenotazione->datadiprenotazione, &datadiprenotazione); 
 	date_to_mysql_time(prenotazione->datadiconferma, &datadiconferma);
 	date_to_mysql_time(prenotazione->datasaldo, &datasaldo);
+	
 	
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerodiprenotazione, sizeof(numerodiprenotazione));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, strlen(prenotazione->clienteprenotante));
 	set_binding_param(&param[2], MYSQL_TYPE_DATETIME, &datadiprenotazione,sizeof(datadiprenotazione));
 	set_binding_param(&param[3], MYSQL_TYPE_DATETIME, &datadiconferma, sizeof(datadiconferma));
 	set_binding_param(&param[4], MYSQL_TYPE_DATETIME, &datasaldo, sizeof(datasaldo));
-	
-	
+
+	//SEGFAULT ->
 	if(mysql_stmt_bind_param(select_reservation, param) != 0) {
 		print_stmt_error(select_reservation, "Could not bind parameters for select_reservation");
 		return;
+	}
+
+		printf("do_select\n");
 	if(mysql_stmt_execute(select_reservation) != 0) {
 		print_stmt_error(select_reservation, "Could not execute select_reservation");
 		return;
 		}
-	}
+	
 	mysql_stmt_free_result(select_reservation);
 	mysql_stmt_reset(select_reservation);
-	
 }
+	
+
 
 void do_update_data_doc(struct cliente *cliente)
 {	MYSQL_BIND param[8]; 
