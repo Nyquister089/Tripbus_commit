@@ -190,14 +190,14 @@ role_t attempt_login(struct credentials *cred)
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &role, sizeof(role));
 
 	if(mysql_stmt_bind_param(login_procedure, param) != 0) { // Note _param
-		print_stmt_error(login_procedure, "Could not bind parameters for login");
+		print_stmt_error(login_procedure, "Binding dei parametri non riuscito");
 		role = FAILED_LOGIN;
 		goto out;
 	}
 
 	// Run procedure
 	if(mysql_stmt_execute(login_procedure) != 0) {
-		print_stmt_error(login_procedure, "Could not execute login procedure");
+		print_stmt_error(login_procedure, "Login non riuscito");
 		role = FAILED_LOGIN;
 		goto out;
 	}
