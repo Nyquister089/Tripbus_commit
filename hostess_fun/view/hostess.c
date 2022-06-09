@@ -11,7 +11,6 @@ int get_hstss_action(void)
 	char options[8] = {'1','2','3','4','5','6','7','8'};
 	char op;
 	
-	//clear_scren();
 	puts("*********************************");
 	puts("*   INTERFACCIA HOSTESS    *");
 	puts("*********************************\n");
@@ -109,10 +108,11 @@ void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura v
 {	
 	////clear_scren(); 
 	char buffer[VARCHAR_LEN]; 
-	 get_input("Inserisci il numero di prenotazione : ", VARCHAR_LEN, buffer, false);
-	 do_select_reservation(prenotazione); 
- 	////clear_scren(); 
- 	printf("** Dettagli prenotazione **\n\n");
+	get_input("Inserisci il numero di prenotazione : ", VARCHAR_LEN, buffer, false);
+
+	do_select_reservation(prenotazione); 
+	
+ 	printf("\n\n** Dettagli prenotazione **\n\n");
  	printf("Penotazione numero: %s  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data Saldo: %s \n",
 		prenotazione->numerodiprenotazione, 
 		prenotazione->clienteprenotante,

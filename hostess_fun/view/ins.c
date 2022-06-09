@@ -74,12 +74,14 @@ void ins_costumer(struct cliente *cliente)
 	get_input("Inserisci il codice fiscale: ", VARCHAR_LEN, cliente->codicefiscale, false);
 	get_input("Inserisci il recapito telefonico: ", NUM_LEN, cliente->recapitotelefonico, false);
 	get_input("Inserisci il numero di fax: ", NUM_LEN, cliente->fax, false);
+	// Inserimento data = segfault.
 	while(true){
 		get_input("Inserisci l'ultima data d'invio dei documuenti [YYYY-DD-MM]: ", DATE_LEN, cliente->datadocumentazione, false);
 		if(validate_date(cliente->datadocumentazione))
 			break;
 		fprintf(stderr, "Data errata!\n");
 	}
+	printf("here"); 
 	do_insert_costumer(cliente); 
 }
 
