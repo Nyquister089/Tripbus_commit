@@ -26,6 +26,7 @@ bool ask_for_relogin(void)
 int main (void)
 {	
 	bool answer = false; 
+
 	size_t role; 
 
 	struct credentials *cred;
@@ -38,7 +39,8 @@ int main (void)
 
 		view_login(cred); 
 		role = attempt_login(cred);
-		 
+		
+
 		switch(role){
 			case AUTISTA: 
 				printf("Autista\n"); 

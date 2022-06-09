@@ -89,6 +89,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 				return false;
 			}
 			break;
+
 		case HOSTESS:
 			if(!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
 				print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
@@ -223,6 +224,8 @@ role_t attempt_login(struct credentials *cred)
 
 	mysql_stmt_free_result(login_procedure);
 	mysql_stmt_reset(login_procedure);
+
+	initialize_prepared_stmts(role); 
 	
 	return role;
 }
@@ -260,7 +263,7 @@ void db_switch_to_administrator(void) // OK ma ricontrollare in seguito
 
 void do_insert_costumer(struct cliente *cliente)
 {	
-	MYSQL_BIND param[8]; 
+	MYSQL_BIND param[5]; 
 	MYSQL_TIME datadocumentazione; 
 
 	int recapitotelefonico; 
@@ -283,12 +286,13 @@ void do_insert_costumer(struct cliente *cliente)
 		return;
 	}
 
-		printf("insert\n"); 
+		
 
 	if(mysql_stmt_execute(insert_costumer) != 0) {
 		print_stmt_error(insert_costumer, "Could not execute insert_costumer");
 		return;
 		}
+		printf("insert\n"); 
 	mysql_stmt_free_result(insert_costumer);
 	mysql_stmt_reset(insert_costumer);
 	

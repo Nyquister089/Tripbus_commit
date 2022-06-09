@@ -44,23 +44,19 @@ bool exe_hstss_act(char sel)
 		{	
 			case INFO_PRENOTAZIONI: {
 				show_prenotation_details(prenotazione); 
-				free(prenotazione); 
 				return true;
 				}
 			case INSERT_CLIENTE:{
 				ins_costumer(cliente); 
-				free(cliente);
 				return true; 
 				}
 		
 			case INSERT_PRENOTAZIONE:{
 				ins_prenotation(prenotazione); 
-				free(prenotazione); 
 				return true;
 				}
      		case INSERT_POSTPRENOTATO: {
 				ins_seat(postoprenotato); 
-				free(postoprenotato); 
 				return true; 
 				}
      		case POSTI_VIAGGIO:{
@@ -70,7 +66,6 @@ bool exe_hstss_act(char sel)
 				viaggio = malloc(sizeof(struct viaggio)*8); 
 
      			mod_trip_seat(viaggio);
-				free(viaggio);
 				return true; 
 				}
 			case CONFERMA_PRENOTAZIONE:{
@@ -80,15 +75,11 @@ bool exe_hstss_act(char sel)
 				associata = malloc(sizeof(struct associata)*8); 
 
 				validate_prenotation (prenotazione, postoprenotato, associata); 
-				free(prenotazione); 
-				free(postoprenotato);
-				free(associata); 
 				return true;
 		 		}
 
 			case UPDATE_DATA_DOC:{
-				update_d_doc(cliente);
-				free(cliente); 
+				update_d_doc(cliente); 
 				return true;
 				}
 		
