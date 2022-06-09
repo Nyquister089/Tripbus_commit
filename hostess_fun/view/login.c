@@ -8,7 +8,7 @@
 
 void view_login(struct credentials *cred)
 {
-	clear_screen();
+	//clear_screen();
 	
 	puts("*********************************");
 	puts("*   BENVENUTI IN TRIPBUS *");

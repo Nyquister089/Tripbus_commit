@@ -74,19 +74,27 @@ void ins_costumer(struct cliente *cliente)
 	get_input("Inserisci il codice fiscale: ", VARCHAR_LEN, cliente->codicefiscale, false);
 	get_input("Inserisci il recapito telefonico: ", NUM_LEN, cliente->recapitotelefonico, false);
 	get_input("Inserisci il numero di fax: ", NUM_LEN, cliente->fax, false);
-	// Inserimento data = segfault.
+	/*
+	while(true) {
+		get_input("Insert day [YYYY-MM-DD]: ", DATE_LEN, flight-> giorno, false);
+		if(validate_date(flight->giorno))
+			break;
+		fprintf(stderr, "Invalid date!\n");
+	}*/
+	get_input("Inserisci l'ultima data d'invio dei documuenti [YYYY-DD-MM]: ", DATE_LEN, cliente->datadocumentazione, false);
+	/*	
 	while(true){
 		get_input("Inserisci l'ultima data d'invio dei documuenti [YYYY-DD-MM]: ", DATE_LEN, cliente->datadocumentazione, false);
 		if(validate_date(cliente->datadocumentazione))
 			break;
 		fprintf(stderr, "Data errata!\n");
-	}
-	printf("here"); 
+	}*/
 	do_insert_costumer(cliente); 
 }
 
 void ins_sparepart(struct ricambio *ricambio)
-{	//clear_scren();
+{	
+	//clear_scren();
 	printf("** Dettagli inserimento ricambio **\n\n");
 	get_input("Inserisci il codice: ", VARCHAR_LEN, ricambio->codice, false);
 	get_input("Inserisci il costo unitario: ", DEC_LEN, ricambio->costounitario, false);

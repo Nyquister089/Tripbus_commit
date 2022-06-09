@@ -276,12 +276,15 @@ void do_insert_costumer(struct cliente *cliente)
 	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadocumentazione, sizeof(datadocumentazione));
 	set_binding_param(&param[6], MYSQL_TYPE_LONG, &recapitotelefonico, sizeof(recapitotelefonico));
 	set_binding_param(&param[7], MYSQL_TYPE_LONG, &fax, sizeof(fax));
-
 	
+	//segfault->
 	if(mysql_stmt_bind_param(insert_costumer, param) != 0) {
 		print_stmt_error(insert_costumer, "Could not bind parameters for insert_costumer");
 		return;
 	}
+
+		printf("insert\n"); 
+
 	if(mysql_stmt_execute(insert_costumer) != 0) {
 		print_stmt_error(insert_costumer, "Could not execute insert_costumer");
 		return;

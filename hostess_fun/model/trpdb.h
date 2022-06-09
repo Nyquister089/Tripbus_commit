@@ -287,6 +287,7 @@ struct visita {
 	char trattamentoalberghiero[VARCHAR_LEN]; 
 }; 
 
+
 extern void do_insert_costumer(struct cliente *cliente);
 extern void do_insert_reservation(struct prenotazione *prenotazione);
 extern void do_insert_seat(struct postoprenotato *postoprenotato);

@@ -30,7 +30,7 @@ int get_hstss_action(void)
 }
 
 bool exe_hstss_act(char sel)
-{
+{	
 	struct cliente *cliente; 
 	struct prenotazione *prenotazione;
 	struct postoprenotato *postoprenotato;
@@ -38,6 +38,7 @@ bool exe_hstss_act(char sel)
 	cliente = malloc(sizeof(struct cliente)*8); 
 	prenotazione = malloc(sizeof(struct prenotazione)*8); 
 	postoprenotato = malloc(sizeof(struct postoprenotato)*8); 
+	
 	
 	switch (sel)
 		{	

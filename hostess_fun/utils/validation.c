@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdlib.h>
 #include <regex.h>
 #include <stdio.h>
 #include <string.h>
@@ -69,12 +70,12 @@ bool init_validation(void)
 * stampa un messaggio d'errore indicante la regex fallita.
 */
 bool validate(char *str, regex_t *regex){
-	printf("Validate\n"); 
-	
-	//questa istruzione causa seg fault
 
+	//Questa istruzione causa Segfault ->
 	int ret = regexec(regex, str, 0, NULL, REG_NOTEOL);
-	
+
+	printf("Validate\n");
+
 	if(ret != 0 && ret != REG_NOMATCH) {
 		size_t length = regerror(ret, regex, NULL, 0);
 		print_regerror(ret, length, regex);
