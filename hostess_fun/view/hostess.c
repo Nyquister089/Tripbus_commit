@@ -182,7 +182,7 @@ void update_d_doc(struct cliente  *cliente)
 	printf("** Procedura di modifica data documenti cliente **\n\n");
 	get_input("Inserisci l'ID d'interesse : ", VARCHAR_LEN , buffer, false); 
     do_select_costumer(cliente); 
-	printf("\nE-mail:  %s \n Nome: %s \n Cognome: %s \n Indirizzo: %s \n Codice fiscale: %s \n Recapito telefonico: %s \n Fax: %s \n Data documentazione: %s \n", 
+	printf("\nE-mail:  %s \n Nome: %s \n Cognome: %s \n Indirizzo: %s \n Codice fiscale: %s \n Recapito telefonico: %d \n Fax: %d \n Data documentazione: %s \n", 
 		cliente->emailcliente,
 		cliente->nomecliente,
 		cliente->cognomecliente,

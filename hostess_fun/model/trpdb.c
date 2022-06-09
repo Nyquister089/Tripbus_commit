@@ -266,8 +266,8 @@ void do_insert_costumer(struct cliente *cliente)
 	MYSQL_BIND param[5]; 
 	MYSQL_TIME datadocumentazione; 
 
-	int recapitotelefonico; 
-	int fax; 
+	/*int recapitotelefonico; 
+	int fax; */
 	
 	date_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
 	
