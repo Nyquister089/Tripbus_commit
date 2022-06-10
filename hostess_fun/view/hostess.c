@@ -120,6 +120,9 @@ void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsoni
 	////clear_scren(); 
 	char buffer[VARCHAR_LEN]; 
  	get_input("Inserisci il codice del viaggio : ", VARCHAR_LEN, buffer, false);
+
+	viaggio->idviaggio = atoi(buffer); 
+	
  	do_select_trip(viaggio);
  	////clear_scren(); 
  	printf("**  Dettagli Viaggio ** \n\n"); 

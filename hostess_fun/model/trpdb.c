@@ -115,6 +115,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(select_reservation, "Unable to initialize select reservation statement\n");
 				return false;
 			}
+			if(!setup_prepared_stmt(&select_trip, "call select_trip(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", conn)) {
+				print_stmt_error(select_trip, "Unable to initialize select reservation statement\n");
+				return false;
+			}
+
 			if(!setup_prepared_stmt(&update_trip_seat, "call update_trip_seat(?, ?)", conn)) {
 				print_stmt_error(update_trip_seat, "Unable to initialize update trip statement statement\n");
 				return false;
@@ -475,7 +480,7 @@ void do_select_trip(struct viaggio *viaggio)
 	MYSQL_TIME datadiritornoviaggio;
 	MYSQL_TIME datadiannullamento; 
 
-	int idviaggio; 
+	unsigned int idviaggio; 
 	int conducente; 
 	int accompagnatrice; 
 	float costodelviaggio; 
@@ -488,6 +493,7 @@ void do_select_trip(struct viaggio *viaggio)
 	date_to_mysql_time(viaggio->datadiannullamento, &datadiannullamento); 
 
 	
+
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, strlen(viaggio->tourassociato));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
@@ -500,6 +506,8 @@ void do_select_trip(struct viaggio *viaggio)
 	set_binding_param(&param[9], MYSQL_TYPE_LONG, &numerodipostidisponibili, sizeof(numerodipostidisponibili));
 	set_binding_param(&param[10], MYSQL_TYPE_DATETIME, &datadiannullamento, sizeof(datadiannullamento));
 	
+	printf("\n\nBind Select_trip in trpdb\n\n "); 
+	//Segfault ->
 	if(mysql_stmt_bind_param(select_trip, param) != 0) {
 		print_stmt_error(select_trip, "Could not bind parameters for select_trip");
 		return;
@@ -510,7 +518,6 @@ void do_select_trip(struct viaggio *viaggio)
 		return;
 		}
 
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, strlen(viaggio->tourassociato));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
 	set_binding_param(&param[3], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
