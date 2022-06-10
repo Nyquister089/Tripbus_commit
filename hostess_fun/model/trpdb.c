@@ -263,7 +263,7 @@ void db_switch_to_administrator(void) // OK ma ricontrollare in seguito
 
 void do_insert_costumer(struct cliente *cliente )
 {	
-	MYSQL_BIND param[7]; 
+	MYSQL_BIND param[8]; 
 	MYSQL_TIME datadocumentazione; 
 	int recapitotelefonico;
 	int fax; 
@@ -299,7 +299,7 @@ void do_insert_costumer(struct cliente *cliente )
 
 void do_insert_reservation(struct prenotazione *prenotazione)
 {		
-	MYSQL_BIND param[4]; 
+	MYSQL_BIND param[2]; 
 	MYSQL_TIME datadiprenotazione; 
 	MYSQL_TIME datadiconferma; 
 	MYSQL_TIME datasaldo; 
@@ -310,8 +310,6 @@ void do_insert_reservation(struct prenotazione *prenotazione)
 	
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, strlen(prenotazione->clienteprenotante));
 	set_binding_param(&param[1], MYSQL_TYPE_DATETIME, &datadiprenotazione,sizeof(datadiprenotazione));
-	set_binding_param(&param[2], MYSQL_TYPE_DATETIME, &datadiconferma, sizeof(datadiconferma));
-	set_binding_param(&param[3], MYSQL_TYPE_DATETIME, &datasaldo, sizeof(datasaldo));
 	
 	
 	if(mysql_stmt_bind_param(insert_reservation, param) != 0) {
@@ -322,6 +320,7 @@ void do_insert_reservation(struct prenotazione *prenotazione)
 		print_stmt_error(insert_reservation, "Could not execute insert_reservation");
 		return;
 		}
+
 	mysql_stmt_free_result(insert_reservation);
 	mysql_stmt_reset(insert_reservation);
 	
