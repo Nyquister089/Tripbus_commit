@@ -294,7 +294,7 @@ void do_insert_costumer(struct cliente *cliente)
 		 
 
 	mysql_stmt_free_result(insert_costumer);
-	printf("insert\n");
+	
 	mysql_stmt_reset(insert_costumer);
 	
 }
