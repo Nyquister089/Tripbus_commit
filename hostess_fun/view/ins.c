@@ -63,10 +63,10 @@ void ins_costumer(struct cliente *cliente) // funziona ma smashing stack su inse
 	get_input("Inserisci il cognome: ", VARCHAR_LEN, cliente->cognomecliente, false);
 	get_input("Inserisci l'indirizzo: ", VARCHAR_LEN, cliente->indirizzocliente, false);
 	get_input("Inserisci il codice fiscale: ", VARCHAR_LEN, cliente->codicefiscale, false);
-	get_input("Inserisci il recapito telefonico: ", NUM_LEN, buff, false);
-	cliente->recapitotelefonico = atoi(buff);  
+	get_input("Inserisci il recapito telefonico: ", NUM_LEN, buff, false); 
+	cliente->recapitotelefonico = atoi(buff); 
 	get_input("Inserisci il numero di fax: ", NUM_LEN, buff, false);
-	cliente->fax = atoi(buff); 
+	cliente->fax = atoi(buff);
 
 	while(true){
 		get_input("Inserisci l'ultima data d'invio dei documuenti [YYYY-MM-DD]: ", DATE_LEN, cliente->datadocumentazione, false);

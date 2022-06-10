@@ -261,13 +261,12 @@ void db_switch_to_administrator(void) // OK ma ricontrollare in seguito
 										// Esecuzione insert statement
 
 
-void do_insert_costumer(struct cliente *cliente)
+void do_insert_costumer(struct cliente *cliente )
 {	
 	MYSQL_BIND param[7]; 
 	MYSQL_TIME datadocumentazione; 
-
-	int recapitotelefonico; 
-	int fax;
+	int recapitotelefonico;
+	int fax; 
 	
 	date_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
 	
