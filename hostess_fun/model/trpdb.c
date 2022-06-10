@@ -269,8 +269,7 @@ void do_insert_costumer(struct cliente *cliente )
 	int fax; 
 	
 	date_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
-	printf("email %s\n", cliente->emailcliente); 
-	printf("fax %d \n",cliente->fax); 
+
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, strlen(cliente->nomecliente));
 	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, strlen(cliente->cognomecliente));
@@ -504,11 +503,36 @@ void do_select_trip(struct viaggio *viaggio)
 	if(mysql_stmt_bind_param(select_trip, param) != 0) {
 		print_stmt_error(select_trip, "Could not bind parameters for select_trip");
 		return;
-	}
+		}
+
 	if(mysql_stmt_execute(select_trip) != 0) {
 		print_stmt_error(select_trip, "Could not execute select_trip");
 		return;
 		}
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, strlen(viaggio->tourassociato));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, strlen(viaggio->mezzoimpiegato));
+	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
+	set_binding_param(&param[6], MYSQL_TYPE_DATETIME, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
+	set_binding_param(&param[7], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
+	set_binding_param(&param[8], MYSQL_TYPE_LONG, &numerodikm, sizeof(numerodikm));
+	set_binding_param(&param[9], MYSQL_TYPE_LONG, &numerodipostidisponibili, sizeof(numerodipostidisponibili));
+	set_binding_param(&param[10], MYSQL_TYPE_DATETIME, &datadiannullamento, sizeof(datadiannullamento));
+
+	if(mysql_stmt_bind_result(select_trip, param)) {
+		print_stmt_error(select_trip, "Could not retrieve output parameter select_trip");
+	}
+
+	// Retrieve output parameter
+	if(mysql_stmt_fetch(select_trip)) {
+		print_stmt_error(select_trip, "Could not buffer results select_trip");
+	}
+
+	//while(mysql_stmt_next_result(select_trip) != -1) {}
+
 	mysql_stmt_free_result(select_trip);
 	mysql_stmt_reset(select_trip);
 	
