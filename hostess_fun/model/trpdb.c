@@ -269,7 +269,8 @@ void do_insert_costumer(struct cliente *cliente )
 	int fax; 
 	
 	date_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
-	
+	printf("email %s\n", cliente->emailcliente); 
+	printf("fax %d \n",cliente->fax); 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, strlen(cliente->nomecliente));
 	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, strlen(cliente->cognomecliente));
@@ -283,8 +284,6 @@ void do_insert_costumer(struct cliente *cliente )
 		print_stmt_error(insert_costumer, "Could not bind parameters for insert_costumer");
 		return;
 	}
-
-		
 
 	if(mysql_stmt_execute(insert_costumer) != 0) {
 		print_stmt_error(insert_costumer, "Could not execute insert_costumer");
