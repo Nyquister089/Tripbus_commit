@@ -2,25 +2,13 @@
 #include "ins.h"
 
 
-void ins_prenotation(struct prenotazione *prenotazione)
+void ins_prenotation(struct prenotazione *prenotazione) //funziona
 {	//clear_scren();
 	printf("** Dettagli inserimento prenotazione **\n\n");
 	get_input("Inserisci l'indirizzo e-mail del cliente che ha effettuato la prenotazione : ", VARCHAR_LEN, prenotazione->clienteprenotante, false);
 	while(true){
 		get_input("Inserisci data [YYYY-MM-DD]: ", DATE_LEN, prenotazione->datadiprenotazione, false);
 		if(validate_date(prenotazione->datadiprenotazione))
-			break;
-		fprintf(stderr, "Data errata!\n");
-	}
-	while(true){
-		get_input("Inserisci data di conferma [YYYY-MM-DD]: ", DATE_LEN, prenotazione->datadiconferma, false);
-		if(validate_date(prenotazione->datadiconferma))
-			break;
-		fprintf(stderr, "Data errata!\n");
-	}
-	while(true){
-		get_input("Inserisci data di saldo [YYYY-MM-DD]: ", DATE_LEN, prenotazione->datasaldo, false);
-		if(validate_date(prenotazione->datasaldo))
 			break;
 		fprintf(stderr, "Data errata!\n");
 	}
@@ -64,7 +52,7 @@ void ins_review(struct revisione *revisione)
 
 }
 
-void ins_costumer(struct cliente *cliente)
+void ins_costumer(struct cliente *cliente) // funziona ma smashing stack su inserimento interi3
 {	
 	//clear_scren();
 	char buff[VARCHAR_LEN]; 
@@ -76,13 +64,9 @@ void ins_costumer(struct cliente *cliente)
 	get_input("Inserisci l'indirizzo: ", VARCHAR_LEN, cliente->indirizzocliente, false);
 	get_input("Inserisci il codice fiscale: ", VARCHAR_LEN, cliente->codicefiscale, false);
 	get_input("Inserisci il recapito telefonico: ", NUM_LEN, buff, false);
-	cliente->recapitotelefonico = atoi(buff); 
-	printf("recapito %d", cliente->recapitotelefonico); 
+	cliente->recapitotelefonico = atoi(buff);  
 	get_input("Inserisci il numero di fax: ", NUM_LEN, buff, false);
 	cliente->fax = atoi(buff); 
-
-	//get_input("Inserisci l'ultima data d'invio dei documuenti [YYYY-MM-DD]: ", DATE_LEN, cliente->datadocumentazione, false);
-		
 
 	while(true){
 		get_input("Inserisci l'ultima data d'invio dei documuenti [YYYY-MM-DD]: ", DATE_LEN, cliente->datadocumentazione, false);
@@ -106,7 +90,8 @@ void ins_sparepart(struct ricambio *ricambio)
 }
 
 void ins_bus(struct mezzo *mezzo)
-{	//clear_scren();
+{	
+	//clear_scren();
 	printf("** Dettagli inserimento mezzo **\n\n");
 	get_input("Inserisci la targa : ", VARCHAR_LEN, mezzo->targa, false);
 	get_input("Inserisci l'ID del modello : ", NUM_LEN, mezzo->modellomezzo, false);
@@ -128,7 +113,8 @@ void ins_bus(struct mezzo *mezzo)
 }
 
 void ins_model(struct modello *modello)
-{	//clear_scren();
+{	
+	//clear_scren();
 	printf("** Dettagli inserimento modello **\n\n");
 	get_input("Inserisci il nome : ", DEC_LEN, modello->nomemodello, false);
 	get_input("Inserisci la casa costruttrice : ", NUM_LEN, modello->casacostruttrice, false);

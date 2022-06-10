@@ -263,7 +263,7 @@ void db_switch_to_administrator(void) // OK ma ricontrollare in seguito
 
 void do_insert_costumer(struct cliente *cliente)
 {	
-	MYSQL_BIND param[5]; 
+	MYSQL_BIND param[7]; 
 	MYSQL_TIME datadocumentazione; 
 
 	int recapitotelefonico; 
@@ -305,8 +305,6 @@ void do_insert_reservation(struct prenotazione *prenotazione)
 	MYSQL_TIME datadiprenotazione; 
 	MYSQL_TIME datadiconferma; 
 	MYSQL_TIME datasaldo; 
-
-	int numerodiprenotazione; 
 
 	date_to_mysql_time(prenotazione->datadiprenotazione, &datadiprenotazione);
 	date_to_mysql_time(prenotazione->datadiconferma, &datadiconferma);

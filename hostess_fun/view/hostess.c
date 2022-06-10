@@ -6,6 +6,21 @@
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
+struct cliente *cliente; 
+struct prenotazione *prenotazione;
+struct postoprenotato *postoprenotato;
+struct  viaggio *viaggio; 
+struct associata * associata;
+
+void  allocation_hstss(void)
+{
+	cliente = malloc(sizeof(struct cliente)); 
+	prenotazione = malloc(sizeof(struct prenotazione)); 
+	postoprenotato = malloc(sizeof(struct postoprenotato));
+	viaggio = malloc(sizeof(struct viaggio)); 
+	associata = malloc(sizeof(struct associata));
+}
+
 int get_hstss_action(void)
 {
 	char options[8] = {'1','2','3','4','5','6','7','8'};
@@ -29,17 +44,14 @@ int get_hstss_action(void)
 	return op -'1'; 
 }
 
-bool exe_hstss_act(char sel)
+bool exe_hstss_act(char sel, 
+	struct cliente *cliente,
+	struct prenotazione * prenotazione,
+	struct postoprenotato *postoprenotato, 
+	struct viaggio *viaggio, 
+	struct associata *associata)
 {	
-	struct cliente *cliente; 
-	struct prenotazione *prenotazione;
-	struct postoprenotato *postoprenotato;
 
-	cliente = malloc(sizeof(struct cliente)*8); 
-	prenotazione = malloc(sizeof(struct prenotazione)*8); 
-	postoprenotato = malloc(sizeof(struct postoprenotato)*8); 
-	
-	
 	switch (sel)
 		{	
 			case INFO_PRENOTAZIONI: {
@@ -60,20 +72,10 @@ bool exe_hstss_act(char sel)
 				return true; 
 				}
      		case POSTI_VIAGGIO:{
-
-     			struct  viaggio *viaggio; 
-				
-				viaggio = malloc(sizeof(struct viaggio)*8); 
-
      			mod_trip_seat(viaggio);
 				return true; 
 				}
 			case CONFERMA_PRENOTAZIONE:{
-
-				struct associata * associata; 
-
-				associata = malloc(sizeof(struct associata)*8); 
-
 				validate_prenotation (prenotazione, postoprenotato, associata); 
 				return true;
 		 		}
@@ -148,13 +150,13 @@ void validate_prenotation(struct prenotazione *prenotazione, struct postoprenota
 		return;
 		}
 	while(true){
-		get_input("\nModifica data di conferma [YYYY-DD-MM]: ", DATE_LEN, prenotazione->datadiconferma, false);
+		get_input("\nModifica data di conferma [YYYY-MM-DD]: ", DATE_LEN, prenotazione->datadiconferma, false);
 		if(validate_date(prenotazione->datadiconferma))
 			break;
 		fprintf(stderr, "Data errata!\n");
 		}
 	while(true){
-		get_input("\nModifica data di saldo [YYYY-DD-MM]: ", DATE_LEN, prenotazione->datasaldo, false);
+		get_input("\nModifica data di saldo [YYYY-MM-DD]: ", DATE_LEN, prenotazione->datasaldo, false);
 		if(validate_date(prenotazione->datasaldo))
 			break;
 		fprintf(stderr, "Data errata!\n");
@@ -197,7 +199,7 @@ void update_d_doc(struct cliente  *cliente)
 		return;
 	}
 	while(true){
-		get_input("\nModifica l'ultima data d'invio dei documuenti [YYYY-DD-MM]: ", DATE_LEN, cliente->datadocumentazione, false);
+		get_input("\nModifica l'ultima data d'invio dei documuenti [YYYY-MM-DD]: ", DATE_LEN, cliente->datadocumentazione, false);
 		if(validate_date(cliente->datadocumentazione))
 			break;
 		fprintf(stderr, "Data errata!\n");
@@ -208,11 +210,17 @@ void update_d_doc(struct cliente  *cliente)
 
 
 void run_hstss_interface (void)
-{ 	char sel; 
+{ 	
+	char sel;  
+				
+	if(	cliente == NULL || prenotazione == NULL || postoprenotato == NULL ||viaggio == NULL||associata == NULL) 
+		allocation_hstss(); 
+
 	while (true){
+		printf("Get hostess action\n\n"); 
 	sel = get_hstss_action(); 
-	if (!exe_hstss_act(sel))
+	if (!exe_hstss_act(sel, cliente, prenotazione,postoprenotato, viaggio, associata))
 		break; 
-	
 	}
+
 }	

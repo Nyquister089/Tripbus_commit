@@ -75,8 +75,6 @@ bool validate(char *str, regex_t *regex){
 	//Questa istruzione causa Segfault ->
 	int ret = regexec(regex, str, 0, NULL, REG_NOTEOL);
 
-	printf("Validate\n");
-
 	if(ret != 0 && ret != REG_NOMATCH) {
 		size_t length = regerror(ret, regex, NULL, 0);
 		print_regerror(ret, length, regex);
