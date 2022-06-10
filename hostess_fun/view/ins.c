@@ -81,15 +81,15 @@ void ins_costumer(struct cliente *cliente)
 	get_input("Inserisci il numero di fax: ", NUM_LEN, buff, false);
 	cliente->fax = atoi(buff); 
 
-	get_input("Inserisci l'ultima data d'invio dei documuenti [YYYY-DD-MM]: ", DATE_LEN, cliente->datadocumentazione, false);
+	//get_input("Inserisci l'ultima data d'invio dei documuenti [YYYY-DD-MM]: ", DATE_LEN, cliente->datadocumentazione, false);
 		
-/*
+
 	while(true){
 		get_input("Inserisci l'ultima data d'invio dei documuenti [YYYY-DD-MM]: ", DATE_LEN, cliente->datadocumentazione, false);
 		if(validate_date(cliente->datadocumentazione))
 			break;
 		fprintf(stderr, "Data errata!\n");
-	}*/
+	}
 	do_insert_costumer(cliente); 
 }
 

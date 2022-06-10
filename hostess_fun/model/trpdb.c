@@ -266,8 +266,8 @@ void do_insert_costumer(struct cliente *cliente)
 	MYSQL_BIND param[5]; 
 	MYSQL_TIME datadocumentazione; 
 
-	/*int recapitotelefonico; 
-	int fax; */
+	int recapitotelefonico; 
+	int fax;
 	
 	date_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
 	
@@ -280,7 +280,6 @@ void do_insert_costumer(struct cliente *cliente)
 	set_binding_param(&param[6], MYSQL_TYPE_LONG, &recapitotelefonico, sizeof(recapitotelefonico));
 	set_binding_param(&param[7], MYSQL_TYPE_LONG, &fax, sizeof(fax));
 	
-	//segfault->
 	if(mysql_stmt_bind_param(insert_costumer, param) != 0) {
 		print_stmt_error(insert_costumer, "Could not bind parameters for insert_costumer");
 		return;
@@ -292,8 +291,10 @@ void do_insert_costumer(struct cliente *cliente)
 		print_stmt_error(insert_costumer, "Could not execute insert_costumer");
 		return;
 		}
-		printf("insert\n"); 
+		 
+
 	mysql_stmt_free_result(insert_costumer);
+	printf("insert\n");
 	mysql_stmt_reset(insert_costumer);
 	
 }

@@ -71,6 +71,7 @@ bool init_validation(void)
 */
 bool validate(char *str, regex_t *regex){
 
+	init_validation();
 	//Questa istruzione causa Segfault ->
 	int ret = regexec(regex, str, 0, NULL, REG_NOTEOL);
 
@@ -81,6 +82,9 @@ bool validate(char *str, regex_t *regex){
 		print_regerror(ret, length, regex);
 		return false;
 	}
+
+	fini_validation(); 
+
 	return ret == 0;
 }
 
