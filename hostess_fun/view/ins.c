@@ -7,19 +7,19 @@ void ins_prenotation(struct prenotazione *prenotazione)
 	printf("** Dettagli inserimento prenotazione **\n\n");
 	get_input("Inserisci l'indirizzo e-mail del cliente che ha effettuato la prenotazione : ", VARCHAR_LEN, prenotazione->clienteprenotante, false);
 	while(true){
-		get_input("Inserisci data [YYYY-DD-MM]: ", DATE_LEN, prenotazione->datadiprenotazione, false);
+		get_input("Inserisci data [YYYY-MM-DD]: ", DATE_LEN, prenotazione->datadiprenotazione, false);
 		if(validate_date(prenotazione->datadiprenotazione))
 			break;
 		fprintf(stderr, "Data errata!\n");
 	}
 	while(true){
-		get_input("Inserisci data di conferma [YYYY-DD-MM]: ", DATE_LEN, prenotazione->datadiconferma, false);
+		get_input("Inserisci data di conferma [YYYY-MM-DD]: ", DATE_LEN, prenotazione->datadiconferma, false);
 		if(validate_date(prenotazione->datadiconferma))
 			break;
 		fprintf(stderr, "Data errata!\n");
 	}
 	while(true){
-		get_input("Inserisci data di saldo [YYYY-DD-MM]: ", DATE_LEN, prenotazione->datasaldo, false);
+		get_input("Inserisci data di saldo [YYYY-MM-DD]: ", DATE_LEN, prenotazione->datasaldo, false);
 		if(validate_date(prenotazione->datasaldo))
 			break;
 		fprintf(stderr, "Data errata!\n");
@@ -49,13 +49,13 @@ void ins_review(struct revisione *revisione)
 	if(strcmp(revisione->tipologiarevisione,"straordinaria") == 0)
 		get_input("Inserisci la motivazione della revisione straordinaria (massimo 5000 caratteri) : ", DES_LEN, revisione-> motivazione, false);
 	while(true){
-		get_input("Inserisci la data di inizio[YYYY-DD-MM]: ", DATE_LEN, revisione->datainizio, false);
+		get_input("Inserisci la data di inizio[YYYY-MM-DD]: ", DATE_LEN, revisione->datainizio, false);
 		if(validate_date(revisione->datainizio))
 			break;
 		fprintf(stderr, "Data errata!\n");
 	}
 	while(true){
-		get_input("Inserisci la data di conclusione[YYYY-DD-MM]: ", DATE_LEN, revisione->datafine, false);
+		get_input("Inserisci la data di conclusione[YYYY-MM-DD]: ", DATE_LEN, revisione->datafine, false);
 		if(validate_date(revisione->datafine))
 			break;
 		fprintf(stderr, "Data errata!\n");
@@ -81,11 +81,11 @@ void ins_costumer(struct cliente *cliente)
 	get_input("Inserisci il numero di fax: ", NUM_LEN, buff, false);
 	cliente->fax = atoi(buff); 
 
-	//get_input("Inserisci l'ultima data d'invio dei documuenti [YYYY-DD-MM]: ", DATE_LEN, cliente->datadocumentazione, false);
+	//get_input("Inserisci l'ultima data d'invio dei documuenti [YYYY-MM-DD]: ", DATE_LEN, cliente->datadocumentazione, false);
 		
 
 	while(true){
-		get_input("Inserisci l'ultima data d'invio dei documuenti [YYYY-DD-MM]: ", DATE_LEN, cliente->datadocumentazione, false);
+		get_input("Inserisci l'ultima data d'invio dei documuenti [YYYY-MM-DD]: ", DATE_LEN, cliente->datadocumentazione, false);
 		if(validate_date(cliente->datadocumentazione))
 			break;
 		fprintf(stderr, "Data errata!\n");
@@ -114,13 +114,13 @@ void ins_bus(struct mezzo *mezzo)
 	get_input("Inserisci l'autonomia : ", NUM_LEN, mezzo-> autonomia, false);
 	get_input("Inserisci il valore attuale del conta chilometri: ", NUM_LEN, mezzo-> valorecontakm, false);
 		while(true){
-		get_input("Inserisci la data dell'ultima revisione presso la motorizzazione [YYYY-DD-MM]: ", DATE_LEN, mezzo->dataultimarevisioneinmotorizzazione, false);
+		get_input("Inserisci la data dell'ultima revisione presso la motorizzazione [YYYY-MM-DD]: ", DATE_LEN, mezzo->dataultimarevisioneinmotorizzazione, false);
 		if(validate_date(mezzo->dataultimarevisioneinmotorizzazione))
 			break;
 		fprintf(stderr, "Data errata!\n");
 	}
 	while(true){
-		get_input("Inserisci la data di immatricolazione  [YYYY-DD-MM]: ", DATE_LEN, mezzo->dataimmatricolazione, false);
+		get_input("Inserisci la data di immatricolazione  [YYYY-MM-DD]: ", DATE_LEN, mezzo->dataimmatricolazione, false);
 		if(validate_date(mezzo->dataimmatricolazione))
 			break;
 		fprintf(stderr, "Data errata!\n");
