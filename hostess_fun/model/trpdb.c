@@ -240,13 +240,15 @@ void db_switch_to_login(void)
 {
 	close_prepared_stmts();
 	if(mysql_change_user(conn, getenv("LOGIN_USER"), getenv("LOGIN_PASS"), getenv("DB"))) {
-		fprintf(stderr, "mysql_change_user() failed: %s\n", mysql_error(conn));
+		fprintf(stderr,"mysql_change_user() failed: %s\n", mysql_error(conn));
 		exit(EXIT_FAILURE);
 	}
+
 	if(!initialize_prepared_stmts(LOGIN_ROLE)) {
-		fprintf(stderr, "[FATAL] Cannot initialize prepared statements.\n");
+		fprintf(stderr,"[FATAL] Cannot initialize prepared statements.\n");
 		exit(EXIT_FAILURE);
 	}
+
 }
 
 /*
@@ -480,13 +482,14 @@ void do_select_trip(struct viaggio *viaggio)
 	MYSQL_TIME datadiritornoviaggio;
 	MYSQL_TIME datadiannullamento; 
 
-	size_t idviaggio; 
-	int conducente; 
-	int accompagnatrice; 
-	float costodelviaggio; 
-	int numerodikm; 
-	int numerodipostidisponibili; 
-	
+	int idviaggio; 
+	char tourassociato[VARCHAR_LEN]; 
+	int conducente; 				
+	int accompagnatrice; 					
+	char mezzoimpiegato[VARCHAR_LEN]; 			
+	float costodelviaggio[NUM_LEN];
+	int numerodikm;
+	int postidisponibili;
 	
 	date_to_mysql_time(viaggio->datadipartenzaviaggio, &datadipartenzaviaggio);
 	date_to_mysql_time(viaggio->datadiritornoviaggio, &datadiritornoviaggio); 
@@ -501,8 +504,8 @@ void do_select_trip(struct viaggio *viaggio)
 	set_binding_param(&param[6], MYSQL_TYPE_DATE, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
 	set_binding_param(&param[7], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
 	set_binding_param(&param[8], MYSQL_TYPE_LONG, &numerodikm, sizeof(numerodikm));
-	set_binding_param(&param[9], MYSQL_TYPE_LONG, &numerodipostidisponibili, sizeof(numerodipostidisponibili));
-	set_binding_param(&param[10], MYSQL_TYPE_DATETIME, &datadiannullamento, sizeof(datadiannullamento));
+	set_binding_param(&param[9], MYSQL_TYPE_LONG, &postidisponibili, sizeof(postidisponibili));
+	set_binding_param(&param[10], MYSQL_TYPE_DATE, &datadiannullamento, sizeof(datadiannullamento));
 	
 	if(mysql_stmt_bind_param(select_trip, param) != 0) {
 		print_stmt_error(select_trip, "Could not bind parameters for select_trip");
@@ -518,12 +521,12 @@ void do_select_trip(struct viaggio *viaggio)
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
 	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, strlen(viaggio->mezzoimpiegato));
-	set_binding_param(&param[4], MYSQL_TYPE_DATETIME, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
-	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
+	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
 	set_binding_param(&param[6], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
 	set_binding_param(&param[7], MYSQL_TYPE_LONG, &numerodikm, sizeof(numerodikm));
-	set_binding_param(&param[8], MYSQL_TYPE_LONG, &numerodipostidisponibili, sizeof(numerodipostidisponibili));
-	set_binding_param(&param[9], MYSQL_TYPE_DATETIME, &datadiannullamento, sizeof(datadiannullamento));
+	set_binding_param(&param[8], MYSQL_TYPE_LONG, &postidisponibili, sizeof(postidisponibili));
+	set_binding_param(&param[9], MYSQL_TYPE_DATE, &datadiannullamento, sizeof(datadiannullamento));
 
 	if(mysql_stmt_bind_result(select_trip, param)) {
 		print_stmt_error(select_trip, "Could not retrieve output parameter select_trip");
