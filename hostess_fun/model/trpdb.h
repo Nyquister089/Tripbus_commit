@@ -252,16 +252,16 @@ struct tour {
 }; 
 
 struct viaggio {
-	size_t idviaggio; //Corretto trasformandolo da carattere a puntatore di carattere
+	int idviaggio; //Corretto trasformandolo da carattere a puntatore di carattere
 	char tourassociato[VARCHAR_LEN]; 
-	char conducente[NUM_LEN]; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
-	char accompagnatrice[NUM_LEN]; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
+	int conducente; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
+	int accompagnatrice; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
 	char mezzoimpiegato[VARCHAR_LEN]; 			// FK
 	char datadipartenzaviaggio[DATETIME_LEN]; 
 	char datadiritornoviaggio[DATETIME_LEN]; 
-	char costodelviaggio[NUM_LEN];  //Corretto trasformandolo da carattere a puntatore di carattere
-	char numerodikm[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
-	char postidisponibili[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	float costodelviaggio[NUM_LEN];  //Corretto trasformandolo da carattere a puntatore di carattere
+	int numerodikm; //Corretto trasformandolo da carattere a puntatore di carattere
+	int postidisponibili; //Corretto trasformandolo da carattere a puntatore di carattere
 	char datadiannullamento[DATETIME_LEN]; 
 };
 struct viaggi_tour{
