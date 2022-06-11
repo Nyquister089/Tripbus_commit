@@ -3,129 +3,211 @@
 /**
  * Estrae lo statement SQL dal file di testo e lo concatena alla stringa statement_result
  */
-void get_statement_from_sql_file(char *filename, char *statement_result)
+int get_statement_from_sql_file(char *filename, char *statement_result)
 {
-    char *statement = malloc(4000);
-
     FILE *file = fopen(filename, "r");
     if (file == NULL)
     {
-        fprintf(stderr, "Errore\n");
+        fprintf(log_file, "Error: Trying to open file %s but it fails\n", filename);
+        return -1;
     }
 
-    char str[50];
-    while (fgets(str, 50, file) != NULL)
+    const int COUNTER_CHARACTER_TO_READ = 50;
+    int counter_character = 0;
+    char str[COUNTER_CHARACTER_TO_READ];
+    while (fgets(str, COUNTER_CHARACTER_TO_READ, file) != NULL)
     {
         strcat(statement_result, str);
+        counter_character += strlen(str) - 1;
+
+        if (counter_character + COUNTER_CHARACTER_TO_READ > MAX_STATEMENT_LENGTH)
+        {
+            fprintf(log_file, "Error: The file %s contains more than %d characters. Reduce the length of the statement.", filename, MAX_STATEMENT_LENGTH);
+            fclose(file);
+            return -2;
+        }
     }
     fclose(file);
+
+    return 0;
 }
 
-/**
- * Chiude con eleganza l'applicazione, terminando la connessione mysql e mostrando l'errore ottenuto.
- */
-void finish_with_error(MYSQL *conn)
+void show_mysql_error()
 {
-    fprintf(stderr, "[%u] %s\n", mysql_errno(conn), mysql_error(conn));
-    mysql_close(conn);
+    fprintf(log_file, "[%u] %s\n", mysql_errno(connection_init_db), mysql_error(connection_init_db));
+    mysql_close(connection_init_db);
+}
+
+void finish_init_db_with_error()
+{
+    show_mysql_error();
     exit(1);
 }
 
 /**
- * Consente di eseguire lo statement DDL contenuto all'interno del file
+ * Consente di eseguire lo statement contenuto all'interno del file
  */
-void execute_query_ddl_from_sql_file(MYSQL *conn, char *filename)
+int execute_query_from_file_sql(char *filename)
 {
-    char stmt[4000] = "";
-    get_statement_from_sql_file(filename, stmt);
-
-    if (mysql_query(conn, stmt))
+    char stmt[MAX_STATEMENT_LENGTH] = "";
+    if (get_statement_from_sql_file(filename, stmt) != 0)
     {
-        fprintf(stderr, "failed to query file %s\n", filename);
-        finish_with_error(conn);
+        fprintf(log_file, "Error: Failed to read statement SQL from file %s\n", filename);
+        return -1;
     }
-}
 
-/**
- * Consente di eseguire lo statement DML contenuto all'interno del file.
- * I risultati sono ignorati.
- */
-void execute_query_dml_from_sql_file(MYSQL *conn, char *filename)
-{
-    char stmt[4000] = "";
-    get_statement_from_sql_file(filename, stmt);
-
-    if (mysql_query(conn, stmt))
+    if (mysql_query(connection_init_db,stmt))
     {
-        fprintf(stderr, "failed to query file %s\n", filename);
-        finish_with_error(conn);
+        fprintf(log_file, "Error: Failed to query file %s\n", filename);
+        show_mysql_error();
+        return -2;
     }
 
     int status = 0;
     do
     {
-        status = mysql_next_result(conn);
+        status = mysql_next_result(connection_init_db);
 
         if (status > 0)
         {
-            finish_with_error(conn);
+            show_mysql_error();
+            return -3;
         }
 
     } while (status == 0);
+
+    fprintf(log_file,"Query in file %s executed successfully\n", filename);
 }
 
-int main(void)
+MYSQL *start_connection_mysql()
 {
-    MYSQL *conn = mysql_init(NULL);
-    if (conn == NULL)
+    connection_init_db = mysql_init(NULL);
+    if (connection_init_db == NULL)
     {
-        fprintf(stderr, "fail mysql_init(): Out of memory\n");
+        fprintf(log_file, "Error: Fail to execute mysql_init(): Out of memory\n");
         exit(EXIT_FAILURE);
     }
 
-    if (mysql_real_connect(conn, "localhost", "giordano", "root1989", NULL, 22, NULL, CLIENT_MULTI_STATEMENTS | CLIENT_MULTI_RESULTS) == NULL)
+    if (mysql_real_connect(connection_init_db, "localhost", "root", "password", NULL, 22, NULL, CLIENT_MULTI_STATEMENTS | CLIENT_MULTI_RESULTS) == NULL)
     {
-        finish_with_error(conn);
+        finish_init_db_with_error();
+    }
+}
+
+void close_connection_mysql()
+{
+    mysql_close(connection_init_db);
+}
+
+void create_database()
+{
+    execute_query_from_file_sql("../sql/ddl/database/tripdb.sql");
+}
+
+void drop_tables()
+{
+    execute_query_from_file_sql("../sql/ddl/table/drop_all.sql");
+}
+
+void create_tables()
+{
+    execute_query_from_file_sql("../sql/ddl/table/meta.sql");
+    execute_query_from_file_sql("../sql/ddl/table/servizio.sql");
+    execute_query_from_file_sql("../sql/ddl/table/offre.sql");
+    execute_query_from_file_sql("../sql/ddl/table/camera.sql");
+    execute_query_from_file_sql("../sql/ddl/table/cliente.sql");
+    execute_query_from_file_sql("../sql/ddl/table/prenotazione.sql");
+    execute_query_from_file_sql("../sql/ddl/table/modello.sql");
+    execute_query_from_file_sql("../sql/ddl/table/mezzo.sql");
+    execute_query_from_file_sql("../sql/ddl/table/tour.sql");
+    execute_query_from_file_sql("../sql/ddl/table/dipendenti.sql");
+    execute_query_from_file_sql("../sql/ddl/table/viaggi.sql");
+    execute_query_from_file_sql("../sql/ddl/table/postoprenotato.sql");
+    execute_query_from_file_sql("../sql/ddl/table/associata.sql");
+    execute_query_from_file_sql("../sql/ddl/table/comfort.sql");
+    execute_query_from_file_sql("../sql/ddl/table/presenti.sql");
+    execute_query_from_file_sql("../sql/ddl/table/revisione.sql");
+    execute_query_from_file_sql("../sql/ddl/table/ricambio.sql");
+    execute_query_from_file_sql("../sql/ddl/table/documentazionefotografica.sql");
+    execute_query_from_file_sql("../sql/ddl/table/tagliando.sql");
+    execute_query_from_file_sql("../sql/ddl/table/rt.sql");
+    execute_query_from_file_sql("../sql/ddl/table/fme.sql");
+    execute_query_from_file_sql("../sql/ddl/table/fmo.sql");
+    execute_query_from_file_sql("../sql/ddl/table/localita.sql");
+    execute_query_from_file_sql("../sql/ddl/table/tome.sql");
+    execute_query_from_file_sql("../sql/ddl/table/mappa.sql");
+    execute_query_from_file_sql("../sql/ddl/table/visita.sql");
+    execute_query_from_file_sql("../sql/ddl/table/utente.sql");
+}
+
+void drop_views()
+{
+}
+
+void create_views()
+{
+}
+
+void populate_tables()
+{
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_servizio.sql");
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_localita.sql");
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_dipendenti.sql");
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_modello.sql");
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_comfort.sql");
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_meta.sql");
+}
+
+void set_stderr_as_log_file()
+{
+    log_file = stderr;
+    fprintf(log_file,"All logs will be printed to the stderr\n");
+}
+
+void set_argument_as_log_file(char *log_filename)
+{
+    log_file = fopen(log_filename,"w");
+    if (log_file == NULL){
+        fprintf(stderr,"Error: Argument %s is not valid for new log file.\n", log_filename);
+        set_stderr_as_log_file();
+    }
+    fprintf(stderr,"All logs will be printed to the file %s\n", log_filename);
+}
+
+void create_file_log(int argc, char *argv[]){
+    if (argc == 1) {
+        set_stderr_as_log_file();
+        return;
     }
 
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_database.sql");
-    printf("database: ok\n");
+    if (argc == 2) {
+        set_argument_as_log_file(argv[1]);
+        return;
+    }
 
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_servizio.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_meta.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_offre.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_camera.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_cliente.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_prenotazione.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_modello.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_mezzo.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_tour.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_dipendenti.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_viaggi.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_postoprenotato.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_associata.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_comfort.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_presenti.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_revisione.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_ricambio.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_documentazionefotografica.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_tagliando.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_rt.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_fme.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_fmo.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_localita.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_tome.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_mappa.sql");
-    execute_query_ddl_from_sql_file(conn, "../sql/ddl/create_table_visita.sql");
-    printf("tables: ok\n");
+    if (argc > 2) {
+        fprintf(stderr,"Error: There is no usage for more than 1 argument for the application.\n");
+        exit(1);
+    }
+}
 
-    execute_query_dml_from_sql_file(conn, "../sql/dml/delete_and_insert_servizio.sql");
-    execute_query_dml_from_sql_file(conn, "../sql/dml/delete_and_insert_localita.sql");
-    execute_query_dml_from_sql_file(conn, "../sql/dml/delete_and_insert_dipendenti.sql");
-    execute_query_dml_from_sql_file(conn, "../sql/dml/delete_and_insert_modello.sql");
-    execute_query_dml_from_sql_file(conn, "../sql/dml/delete_and_insert_comfort.sql");
-    execute_query_dml_from_sql_file(conn, "../sql/dml/delete_and_insert_meta.sql");
-    printf("deletes and inserts: ok\n");
+void close_file_log(){
+    fclose(log_file);
+}
 
-    mysql_close(conn);
+int main(int argc, char *argv[])
+{
+    create_file_log(argc,argv);
+    start_connection_mysql();
+
+    create_database();
+    drop_tables();
+    create_tables();
+    drop_views();
+    create_views();
+
+    populate_tables();
+
+    close_connection_mysql();
+    close_file_log();
 }

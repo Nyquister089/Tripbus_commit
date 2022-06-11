@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS `tripdb`.`presenti` (
+  `ComfortPresenti` int unsigned NOT NULL,
+  `ModelloAssociato` varchar(45) NOT NULL,
+  PRIMARY KEY (`ComfortPresenti`,`ModelloAssociato`),
+  KEY `FK_Modello_associato_idx` (`ModelloAssociato`),
+  CONSTRAINT `FK_Comfort` FOREIGN KEY (`ComfortPresenti`) REFERENCES `comfort` (`IdComfort`),
+  CONSTRAINT `FK_Modello_associato` FOREIGN KEY (`ModelloAssociato`) REFERENCES `modello` (`NomeModello`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
