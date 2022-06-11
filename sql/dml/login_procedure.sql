@@ -8,5 +8,5 @@ DECLARE msg VARCHAR(45);
 			FROM utente AS u 
             WHERE u.EmailUtente = usrn AND u.Pswrd = pass;
             SET tip = u.TipoUtente; 
-            SELECT @tip; 
+            
 END

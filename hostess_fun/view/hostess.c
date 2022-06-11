@@ -120,9 +120,9 @@ void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsoni
 	////clear_scren(); 
 	char buffer[VARCHAR_LEN]; 
  	get_input("Inserisci il codice del viaggio : ", VARCHAR_LEN, buffer, false);
-
-	viaggio->idviaggio = atoi(buffer); 
 	
+	viaggio->idviaggio = atoi(buffer);
+
  	do_select_trip(viaggio);
  	////clear_scren(); 
  	printf("\n\n**  Dettagli Viaggio ** \n\n"); 
@@ -132,8 +132,8 @@ void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsoni
  		viaggio->datadiannullamento); 
  	get_input ("Inserisci i nuovi posti disponibili :", NUM_LEN , buffer, false); 
 
-	 viaggio->postidisponibili = atoi( buffer); 
-	 
+	 memcpy(viaggio->postidisponibili , ((void*) atol( buffer)), 45); 
+
 	do_update_trip_seat(viaggio); 
 }
 

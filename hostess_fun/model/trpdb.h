@@ -252,7 +252,7 @@ struct tour {
 }; 
 
 struct viaggio {
-	unsigned int idviaggio; //Corretto trasformandolo da carattere a puntatore di carattere
+	size_t idviaggio; //Corretto trasformandolo da carattere a puntatore di carattere
 	char tourassociato[VARCHAR_LEN]; 
 	char conducente[NUM_LEN]; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
 	char accompagnatrice[NUM_LEN]; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere

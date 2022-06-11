@@ -480,7 +480,7 @@ void do_select_trip(struct viaggio *viaggio)
 	MYSQL_TIME datadiritornoviaggio;
 	MYSQL_TIME datadiannullamento; 
 
-	unsigned int idviaggio; 
+	size_t idviaggio; 
 	int conducente; 
 	int accompagnatrice; 
 	float costodelviaggio; 
@@ -529,7 +529,7 @@ void do_select_trip(struct viaggio *viaggio)
 		print_stmt_error(select_trip, "Could not retrieve output parameter select_trip");
 	}
 printf("\n\nBind Select_trip in trpdb\n\n "); 
-	//Segfault ->
+	//Errore qui
 	// Retrieve output parameter
 	if(mysql_stmt_fetch(select_trip)) {
 		print_stmt_error(select_trip, "Could not buffer results select_trip");

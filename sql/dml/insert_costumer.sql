@@ -1,6 +1,6 @@
 CREATE DEFINER=`giordano`@`localhost` PROCEDURE `insert_costumer`(
 in em varchar(45), in nom varchar(45), in cog varchar(45), in ind varchar(45), 
-in cod varchar(45), in dat date, in rec int, in fa int )
+in cod varchar(45), in dat date, in rec int, in fa int)
 BEGIN
 insert into cliente 
 			(EmailCLiente, 
