@@ -492,22 +492,18 @@ void do_select_trip(struct viaggio *viaggio)
 	date_to_mysql_time(viaggio->datadiritornoviaggio, &datadiritornoviaggio); 
 	date_to_mysql_time(viaggio->datadiannullamento, &datadiannullamento); 
 
-	
-
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, strlen(viaggio->tourassociato));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
 	set_binding_param(&param[3], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
 	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, strlen(viaggio->mezzoimpiegato));
-	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
-	set_binding_param(&param[6], MYSQL_TYPE_DATETIME, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
+	set_binding_param(&param[6], MYSQL_TYPE_DATE, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
 	set_binding_param(&param[7], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
 	set_binding_param(&param[8], MYSQL_TYPE_LONG, &numerodikm, sizeof(numerodikm));
 	set_binding_param(&param[9], MYSQL_TYPE_LONG, &numerodipostidisponibili, sizeof(numerodipostidisponibili));
 	set_binding_param(&param[10], MYSQL_TYPE_DATETIME, &datadiannullamento, sizeof(datadiannullamento));
 	
-	printf("\n\nBind Select_trip in trpdb\n\n "); 
-	//Segfault ->
 	if(mysql_stmt_bind_param(select_trip, param) != 0) {
 		print_stmt_error(select_trip, "Could not bind parameters for select_trip");
 		return;
@@ -518,21 +514,22 @@ void do_select_trip(struct viaggio *viaggio)
 		return;
 		}
 
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, strlen(viaggio->tourassociato));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, strlen(viaggio->mezzoimpiegato));
-	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
-	set_binding_param(&param[6], MYSQL_TYPE_DATETIME, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
-	set_binding_param(&param[7], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
-	set_binding_param(&param[8], MYSQL_TYPE_LONG, &numerodikm, sizeof(numerodikm));
-	set_binding_param(&param[9], MYSQL_TYPE_LONG, &numerodipostidisponibili, sizeof(numerodipostidisponibili));
-	set_binding_param(&param[10], MYSQL_TYPE_DATETIME, &datadiannullamento, sizeof(datadiannullamento));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, strlen(viaggio->tourassociato));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, strlen(viaggio->mezzoimpiegato));
+	set_binding_param(&param[4], MYSQL_TYPE_DATETIME, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
+	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
+	set_binding_param(&param[6], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
+	set_binding_param(&param[7], MYSQL_TYPE_LONG, &numerodikm, sizeof(numerodikm));
+	set_binding_param(&param[8], MYSQL_TYPE_LONG, &numerodipostidisponibili, sizeof(numerodipostidisponibili));
+	set_binding_param(&param[9], MYSQL_TYPE_DATETIME, &datadiannullamento, sizeof(datadiannullamento));
 
 	if(mysql_stmt_bind_result(select_trip, param)) {
 		print_stmt_error(select_trip, "Could not retrieve output parameter select_trip");
 	}
-
+printf("\n\nBind Select_trip in trpdb\n\n "); 
+	//Segfault ->
 	// Retrieve output parameter
 	if(mysql_stmt_fetch(select_trip)) {
 		print_stmt_error(select_trip, "Could not buffer results select_trip");

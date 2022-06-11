@@ -125,12 +125,15 @@ void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsoni
 	
  	do_select_trip(viaggio);
  	////clear_scren(); 
- 	printf("**  Dettagli Viaggio ** \n\n"); 
- 	printf("Tour : %s \n Posti disponibili: %s \n Data annullamento: %s \n ",
+ 	printf("\n\n**  Dettagli Viaggio ** \n\n"); 
+ 	printf(" Tour : %s \n Posti disponibili: %s \n Data annullamento: %s \n ",
  		viaggio->tourassociato, 
 		viaggio->postidisponibili, 
  		viaggio->datadiannullamento); 
- 	get_input ("Inserisci i nuovi posti disponibili :", NUM_LEN , viaggio->postidisponibili, false); 
+ 	get_input ("Inserisci i nuovi posti disponibili :", NUM_LEN , buffer, false); 
+
+	 viaggio->postidisponibili = atoi( buffer); 
+	 
 	do_update_trip_seat(viaggio); 
 }
 
