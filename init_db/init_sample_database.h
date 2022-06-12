@@ -8,7 +8,6 @@
 #define MAX_STATEMENT_LENGTH 4000
 
 MYSQL *connection_init_db;
-FILE *log_file;
 
 MYSQL* start_connection_mysql();
 void close_connection_mysql();
@@ -23,7 +22,3 @@ void create_views();
 void populate_tables();
 void show_mysql_error();
 void finish_init_db_with_error();
-void create_file_log(int argc, char *argv[]);
-void close_file_log();
-void set_argument_as_log_file(char *log_filename);
-void set_stderr_as_log_file();

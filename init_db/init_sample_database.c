@@ -8,7 +8,7 @@ int get_statement_from_sql_file(char *filename, char *statement_result)
     FILE *file = fopen(filename, "r");
     if (file == NULL)
     {
-        fprintf(log_file, "Error: Trying to open file %s but it fails\n", filename);
+        fprintf(stderr, "Error: Trying to open file %s but it fails\n", filename);
         return -1;
     }
 
@@ -22,7 +22,7 @@ int get_statement_from_sql_file(char *filename, char *statement_result)
 
         if (counter_character + COUNTER_CHARACTER_TO_READ > MAX_STATEMENT_LENGTH)
         {
-            fprintf(log_file, "Error: The file %s contains more than %d characters. Reduce the length of the statement.", filename, MAX_STATEMENT_LENGTH);
+            fprintf(stderr, "Error: The file %s contains more than %d characters. Reduce the length of the statement.", filename, MAX_STATEMENT_LENGTH);
             fclose(file);
             return -2;
         }
@@ -34,7 +34,7 @@ int get_statement_from_sql_file(char *filename, char *statement_result)
 
 void show_mysql_error()
 {
-    fprintf(log_file, "[%u] %s\n", mysql_errno(connection_init_db), mysql_error(connection_init_db));
+    fprintf(stderr, "[%u] %s\n", mysql_errno(connection_init_db), mysql_error(connection_init_db));
 }
 
 void finish_init_db_with_error()
@@ -52,13 +52,13 @@ int execute_query_from_file_sql(char *filename)
     char stmt[MAX_STATEMENT_LENGTH] = "";
     if (get_statement_from_sql_file(filename, stmt) != 0)
     {
-        fprintf(log_file, "Error: Failed to read statement SQL from file %s\n", filename);
+        fprintf(stderr, "Error: Failed to read statement SQL from file %s\n", filename);
         return -1;
     }    
 
     if (mysql_query(connection_init_db,stmt))
     {
-        fprintf(log_file, "Error: Failed to query file %s\n", filename);
+        fprintf(stderr, "Error: Failed to query file %s\n", filename);
         show_mysql_error();
         return -2;
     }
@@ -76,7 +76,7 @@ int execute_query_from_file_sql(char *filename)
 
     } while (status == 0);
 
-    fprintf(log_file,"Query in file %s executed successfully\n", filename);
+    fprintf(stdout,"Query in file %s executed successfully\n", filename);
 }
 
 MYSQL *start_connection_mysql()
@@ -84,7 +84,7 @@ MYSQL *start_connection_mysql()
     connection_init_db = mysql_init(NULL);
     if (connection_init_db == NULL)
     {
-        fprintf(log_file, "Error: Fail to execute mysql_init(): Out of memory\n");
+        fprintf(stderr, "Error: Fail to execute mysql_init(): Out of memory\n");
         exit(EXIT_FAILURE);
     }
 
@@ -106,7 +106,7 @@ void create_database()
 
 void drop_tables()
 {
-    execute_query_from_file_sql("../sql/ddl/table/drop_all.sql");
+    execute_query_from_file_sql("../sql/ddl/table/drop_all_tables.sql");
 }
 
 void create_tables()
@@ -142,7 +142,7 @@ void create_tables()
 
 void drop_views()
 {
-    execute_query_from_file_sql("../sql/ddl/view/drop_all.sql");
+    execute_query_from_file_sql("../sql/ddl/view/drop_all_views.sql");
 }
 
 void create_views()
@@ -165,46 +165,26 @@ void populate_tables()
     execute_query_from_file_sql("../sql/dml/delete_and_insert_meta.sql");
 }
 
-void set_stderr_as_log_file()
-{
-    log_file = stdout;
-    fprintf(log_file,"All logs will be printed to the stdout\n");
+void drop_procedures(){
+    execute_query_from_file_sql("../sql/ddl/procedure/drop_all_procedures.sql");
 }
 
-void set_argument_as_log_file(char *log_filename)
-{
-    log_file = fopen(log_filename,"w");
-    if (log_file == NULL){
-        fprintf(stderr,"Error: Argument %s is not valid for new log file.\n", log_filename);
-        set_stderr_as_log_file();
-    }
-    fprintf(stderr,"All logs will be printed to the file %s\n", log_filename);
-}
-
-void create_file_log(int argc, char *argv[]){
-    if (argc == 1) {
-        set_stderr_as_log_file();
-        return;
-    }
-
-    if (argc == 2) {
-        set_argument_as_log_file(argv[1]);
-        return;
-    }
-
-    if (argc > 2) {
-        fprintf(stderr,"Error: There is no usage for more than 1 argument for the application.\n");
-        exit(1);
-    }
-}
-
-void close_file_log(){
-    fclose(log_file);
+void create_procedures(){
+    execute_query_from_file_sql("../sql/ddl/procedure/login.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/insert_assoc.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/insert_costumer.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/update_trip_seat.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/login_procedure.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/select_reservation.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/select_costumer.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/insert_seat.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/update_data_doc.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/select_trip.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/insert_reservation.sql");
 }
 
 int main(int argc, char *argv[])
 {
-    create_file_log(argc,argv);
     start_connection_mysql();
 
     create_database();
@@ -212,9 +192,10 @@ int main(int argc, char *argv[])
     create_tables();
     drop_views();
     create_views();
+    drop_procedures();
+    create_procedures();
 
     populate_tables();
 
     close_connection_mysql();
-    close_file_log();
 }
