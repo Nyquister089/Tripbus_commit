@@ -35,12 +35,12 @@ int get_statement_from_sql_file(char *filename, char *statement_result)
 void show_mysql_error()
 {
     fprintf(log_file, "[%u] %s\n", mysql_errno(connection_init_db), mysql_error(connection_init_db));
-    mysql_close(connection_init_db);
 }
 
 void finish_init_db_with_error()
 {
     show_mysql_error();
+    mysql_close(connection_init_db);
     exit(1);
 }
 
@@ -54,7 +54,7 @@ int execute_query_from_file_sql(char *filename)
     {
         fprintf(log_file, "Error: Failed to read statement SQL from file %s\n", filename);
         return -1;
-    }
+    }    
 
     if (mysql_query(connection_init_db,stmt))
     {
@@ -142,10 +142,17 @@ void create_tables()
 
 void drop_views()
 {
+    execute_query_from_file_sql("../sql/ddl/view/drop_all.sql");
 }
 
 void create_views()
 {
+    execute_query_from_file_sql("../sql/ddl/view/Autista_mete_visistate.sql");
+    execute_query_from_file_sql("../sql/ddl/view/Cliente_mete_tour.sql");
+    execute_query_from_file_sql("../sql/ddl/view/Cliente_modello_info.sql");
+    execute_query_from_file_sql("../sql/ddl/view/Meccanico_pianifica_revisione.sql");
+    execute_query_from_file_sql("../sql/ddl/view/Hostess_clienti_prenotazioni.sql");
+    execute_query_from_file_sql("../sql/ddl/view/Cliente_servizi_albergo.sql");
 }
 
 void populate_tables()
@@ -160,8 +167,8 @@ void populate_tables()
 
 void set_stderr_as_log_file()
 {
-    log_file = stderr;
-    fprintf(log_file,"All logs will be printed to the stderr\n");
+    log_file = stdout;
+    fprintf(log_file,"All logs will be printed to the stdout\n");
 }
 
 void set_argument_as_log_file(char *log_filename)
