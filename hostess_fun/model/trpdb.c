@@ -7,6 +7,7 @@
 #include "trpdb.h"
 #include "../utils/db.h"
 
+
 static char *opt_host_name = "localhost"; /* host (default=localhost) */
 static char *opt_user_name = "giordano"; /* username (default=login name)*/
 static char *opt_password = "root1989"; /* password (default=none) */
@@ -265,52 +266,6 @@ void db_switch_to_administrator(void) // OK ma ricontrollare in seguito
 		exit(EXIT_FAILURE);
 	}
 }*/
-
-void binding_parmaters(MYSQL_STMT *procedure, MYSQL_BIND *param, char * name_procedure){
-
-if(mysql_stmt_bind_param(procedure, param) != 0) {
-		print_stmt_error(procedure, "Impossibile eseguire il bindig dei parametri");
-		printf("(%s) \n", name_procedure);
-		return;
-	}
-}
-void execution_stmt(MYSQL_STMT *procedure, MYSQL_BIND *param, char * name_procedure){
-
-	if(mysql_stmt_execute(procedure) != 0) {
-		print_stmt_error(procedure, "\nImpossibile eseguire la procedura: ");
-		printf("%s\n",name_procedure); 
-		exit(0);
-		}
-}
-
-void binding_result(MYSQL_STMT *procedure, MYSQL_BIND *param, char * name_procedure){
-
-if(mysql_stmt_bind_result(procedure, param) != 0) {
-		print_stmt_error(procedure, "\nImpossibile eseguire il bind dei parametri su:");
-		printf("%s\n",name_procedure); 
-		exit(0); 
-	}
-
-}
-
-void store_result(MYSQL_STMT *procedure, char * name_procedure){
-	
-	if( mysql_stmt_store_result(procedure) != 0){
-		print_stmt_error(procedure, "\nImpossibile eseguire lo store del result set ");
-		printf("(%s)\n",name_procedure); 
-		exit(0); 
-	}
-}
-
-void data_fetch(MYSQL_STMT *procedure, char * name_procedure){
-
-	if(mysql_stmt_fetch(procedure)) {
-		print_stmt_error(procedure, "\nImpossile eseguire il fetch dei dati ");
-		printf("(%s)\n", name_procedure); 
-		exit(0);
-	}
-}
-
 
 
 										// Esecuzione insert statement
@@ -593,7 +548,6 @@ printf("\n\nBind Select_trip in trpdb\n\n ");
 	
 }
 
-
 void do_select_costumer(struct cliente *cliente)
 {	
 	MYSQL_BIND param[8]; 
@@ -606,6 +560,9 @@ void do_select_costumer(struct cliente *cliente)
 	char codicefiscale[VARCHAR_LEN];
 	char recapitotelefonico[VARCHAR_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 	char fax[VARCHAR_LEN];
+
+	
+
 
 	date_to_mysql_time(  cliente->datadocumentazione, &datadocumentazione);
 
@@ -626,6 +583,7 @@ void do_select_costumer(struct cliente *cliente)
 		print_stmt_error(select_costumer, "Impossibile eseguire la procedura select_costumer\n");
 		return;
 		}
+		fetch_field(select_costumer ,"select_costumer"); 
 /*
 	if(mysql_stmt_result_metadata(select_costumer) == NULL) {
 		print_stmt_error(select_costumer, "Impossile prelevare i dati (select_costumer)\n ");

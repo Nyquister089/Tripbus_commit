@@ -114,3 +114,75 @@ void mysql_date_to_string(MYSQL_TIME *date, char *str)
 {
 	snprintf(str, DATE_LEN, "%4d-%02d-%02d", date->year, date->month, date->day);
 }
+
+
+
+
+
+void fetch_field(MYSQL_STMT *procedure, char *procedure_name){
+
+	MYSQL_FIELD *field;
+	MYSQL_RES *result = mysql_stmt_result_metadata(procedure); 
+	unsigned int num_fields;
+	unsigned int i;
+
+	if( result == NULL) {
+		print_stmt_error(procedure, "Impossile prelevare i dati");
+		printf("(%s)\n\n", procedure_name); 
+		return; 
+	}
+
+	num_fields = mysql_num_fields(result);
+	for(i = 0; i < num_fields; i++)
+	{
+    	field = mysql_fetch_field_direct(result, i);
+    	printf("%s: \n", field->name);
+	}
+}
+
+void binding_parmaters(MYSQL_STMT *procedure, MYSQL_BIND *param, char * name_procedure){
+
+if(mysql_stmt_bind_param(procedure, param) != 0) {
+		print_stmt_error(procedure, "Impossibile eseguire il bindig dei parametri");
+		printf("(%s) \n", name_procedure);
+		return;
+	}
+}
+void execution_stmt(MYSQL_STMT *procedure, MYSQL_BIND *param, char * name_procedure){
+
+	if(mysql_stmt_execute(procedure) != 0) {
+		print_stmt_error(procedure, "\nImpossibile eseguire la procedura: ");
+		printf("%s\n",name_procedure); 
+		exit(0);
+		}
+}
+
+void binding_result(MYSQL_STMT *procedure, MYSQL_BIND *param, char * name_procedure){
+
+if(mysql_stmt_bind_result(procedure, param) != 0) {
+		print_stmt_error(procedure, "\nImpossibile eseguire il bind dei parametri su:");
+		printf("%s\n",name_procedure); 
+		exit(0); 
+	}
+
+}
+
+void store_result(MYSQL_STMT *procedure, char * name_procedure){
+	
+	if( mysql_stmt_store_result(procedure) != 0){
+		print_stmt_error(procedure, "\nImpossibile eseguire lo store del result set ");
+		printf("(%s)\n",name_procedure); 
+		exit(0); 
+	}
+}
+
+void data_fetch(MYSQL_STMT *procedure, char * name_procedure){
+
+	if(mysql_stmt_fetch(procedure)) {
+		print_stmt_error(procedure, "\nImpossile eseguire il fetch dei dati ");
+		printf("(%s)\n", name_procedure); 
+		exit(0);
+	}
+}
+
+
