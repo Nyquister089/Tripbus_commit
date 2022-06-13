@@ -31,7 +31,7 @@ int main (void)
 
 	struct credentials *cred;
 
-	cred = malloc(sizeof(struct credentials)*8);
+	cred = malloc(sizeof(struct credentials));
 
 	init_db();
 
@@ -50,6 +50,7 @@ int main (void)
 				break; 
 			case HOSTESS:
 				run_hstss_interface(); 
+				break; 
 			case MECCANICO: 
 				printf("Meccanico\n"); 
 				break; 
