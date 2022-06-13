@@ -103,7 +103,7 @@ void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura v
 	////clear_scren(); 
 	char buffer[VARCHAR_LEN]; 
 	get_input("Inserisci il numero di prenotazione : ", VARCHAR_LEN, buffer, false);
-
+	printf("\n\n"); 
 	do_select_reservation(prenotazione); 
 	
  	printf("\n\n** Dettagli prenotazione **\n\n");
@@ -188,9 +188,10 @@ void update_d_doc(struct cliente  *cliente)
 	//clear_scren();
 	char buffer[VARCHAR_LEN]; 
 	printf("** Procedura di modifica data documenti cliente **\n\n");
-	get_input("Inserisci l'ID d'interesse : ", VARCHAR_LEN , buffer, false); 
+	get_input("Inserisci la mail d'interesse : ", VARCHAR_LEN , cliente->emailcliente, false);
+	printf("\n\n");  
     do_select_costumer(cliente); 
-	printf("\nE-mail:  %s \n Nome: %s \n Cognome: %s \n Indirizzo: %s \n Codice fiscale: %s \n Recapito telefonico: %d \n Fax: %d \n Data documentazione: %s \n", 
+	printf("\nE-mail:  %s \n Nome: %s \n Cognome: %s \n Indirizzo: %s \n Codice fiscale: %s \n Recapito telefonico: %s \n Fax: %s \n Data documentazione: %s \n", 
 		cliente->emailcliente,
 		cliente->nomecliente,
 		cliente->cognomecliente,

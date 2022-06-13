@@ -58,8 +58,8 @@ struct cliente {
 	char indirizzocliente[VARCHAR_LEN];
 	char codicefiscale[VARCHAR_LEN];
 	char datadocumentazione[DATETIME_LEN];
-	int recapitotelefonico; //Corretto trasformandolo da carattere a puntatore di carattere
-	int fax; //Corretto trasformandolo da carattere a puntatore di carattere
+	char recapitotelefonico[VARCHAR_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	char fax[VARCHAR_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 };
 
 struct comfort {

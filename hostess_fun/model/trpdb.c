@@ -2,6 +2,7 @@
 #include <string.h>
 #include <mysql/mysql.h>
 #include <assert.h>
+#include <err.h>
 
 #include "trpdb.h"
 #include "../utils/db.h"
@@ -107,7 +108,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(validate_reservation, "Unable to initialize validate reservation statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&select_costumer, "call select_costumer(?)", conn)) {
+			if(!setup_prepared_stmt(&select_costumer, "call select_costumer(?, ?, ?, ?, ?, ?, ?, ? )", conn)) {
 				print_stmt_error(select_costumer, "Unable to initialize select costumer statement\n");
 				return false;
 			}
@@ -265,6 +266,53 @@ void db_switch_to_administrator(void) // OK ma ricontrollare in seguito
 	}
 }*/
 
+void binding_parmaters(MYSQL_STMT *procedure, MYSQL_BIND *param, char * name_procedure){
+
+if(mysql_stmt_bind_param(procedure, param) != 0) {
+		print_stmt_error(procedure, "Impossibile eseguire il bindig dei parametri");
+		printf("(%s) \n", name_procedure);
+		return;
+	}
+}
+void execution_stmt(MYSQL_STMT *procedure, MYSQL_BIND *param, char * name_procedure){
+
+	if(mysql_stmt_execute(procedure) != 0) {
+		print_stmt_error(procedure, "\nImpossibile eseguire la procedura: ");
+		printf("%s\n",name_procedure); 
+		exit(0);
+		}
+}
+
+void binding_result(MYSQL_STMT *procedure, MYSQL_BIND *param, char * name_procedure){
+
+if(mysql_stmt_bind_result(procedure, param) != 0) {
+		print_stmt_error(procedure, "\nImpossibile eseguire il bind dei parametri su:");
+		printf("%s\n",name_procedure); 
+		exit(0); 
+	}
+
+}
+
+void store_result(MYSQL_STMT *procedure, char * name_procedure){
+	
+	if( mysql_stmt_store_result(procedure) != 0){
+		print_stmt_error(procedure, "\nImpossibile eseguire lo store del result set ");
+		printf("(%s)\n",name_procedure); 
+		exit(0); 
+	}
+}
+
+void data_fetch(MYSQL_STMT *procedure, char * name_procedure){
+
+	if(mysql_stmt_fetch(procedure)) {
+		print_stmt_error(procedure, "\nImpossile eseguire il fetch dei dati ");
+		printf("(%s)\n", name_procedure); 
+		exit(0);
+	}
+}
+
+
+
 										// Esecuzione insert statement
 
 
@@ -283,8 +331,8 @@ void do_insert_costumer(struct cliente *cliente )
 	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, strlen(cliente->indirizzocliente));
 	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, strlen(cliente->codicefiscale));
 	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadocumentazione, sizeof(datadocumentazione));
-	set_binding_param(&param[6], MYSQL_TYPE_LONG, &recapitotelefonico, sizeof(recapitotelefonico));
-	set_binding_param(&param[7], MYSQL_TYPE_LONG, &fax, sizeof(fax));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, strlen(cliente->recapitotelefonico));
+	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, cliente->fax, strlen(cliente->fax));
 	
 	if(mysql_stmt_bind_param(insert_costumer, param) != 0) {
 		print_stmt_error(insert_costumer, "Could not bind parameters for insert_costumer");
@@ -549,12 +597,17 @@ printf("\n\nBind Select_trip in trpdb\n\n ");
 void do_select_costumer(struct cliente *cliente)
 {	
 	MYSQL_BIND param[8]; 
-	MYSQL_TIME datadocumentazione; 
+	MYSQL_TIME datadocumentazione;
 
-	int recapitotelefonico; 
-	int fax;
+	char emailcliente[VARCHAR_LEN];
+	char nomecliente[VARCHAR_LEN];
+	char cognomecliente[VARCHAR_LEN];
+	char indirizzocliente[VARCHAR_LEN];
+	char codicefiscale[VARCHAR_LEN];
+	char recapitotelefonico[VARCHAR_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	char fax[VARCHAR_LEN];
 
-	date_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
+	date_to_mysql_time(  cliente->datadocumentazione, &datadocumentazione);
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, strlen(cliente->nomecliente));
@@ -562,17 +615,47 @@ void do_select_costumer(struct cliente *cliente)
 	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, strlen(cliente->indirizzocliente));
 	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, strlen(cliente->codicefiscale));
 	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datadocumentazione, sizeof(datadocumentazione));
-	set_binding_param(&param[6], MYSQL_TYPE_LONG, &recapitotelefonico, sizeof(recapitotelefonico));
-	set_binding_param(&param[7], MYSQL_TYPE_LONG, &fax, sizeof(fax));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, strlen(cliente->recapitotelefonico));
+	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, cliente->fax, strlen(cliente->fax));
 	
 	if(mysql_stmt_bind_param(select_costumer, param) != 0) {
-		print_stmt_error(select_costumer, "Could not bind parameters for select_costumer");
+		print_stmt_error(select_costumer, "Impossibile eseguire il bind dei parametri (select_costumer)\n");
 		return;
 	}
 	if(mysql_stmt_execute(select_costumer) != 0) {
-		print_stmt_error(select_costumer, "Could not execute select_costumer");
+		print_stmt_error(select_costumer, "Impossibile eseguire la procedura select_costumer\n");
 		return;
 		}
+/*
+	if(mysql_stmt_result_metadata(select_costumer) == NULL) {
+		print_stmt_error(select_costumer, "Impossile prelevare i dati (select_costumer)\n ");
+		return; 
+	}
+*/
+	//prepare output parameters
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, strlen(cliente->nomecliente));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, strlen(cliente->cognomecliente));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, strlen(cliente->indirizzocliente));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, strlen(cliente->codicefiscale));
+	set_binding_param(&param[4], MYSQL_TYPE_DATETIME, &datadocumentazione, sizeof(datadocumentazione));
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, strlen(cliente->recapitotelefonico));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->fax, strlen(cliente->fax));
+	
+	if(mysql_stmt_bind_result(select_costumer, param)) {
+		print_stmt_error(select_costumer, "Impossibile eseguire il bind dei parametri (select_costumer)\n");
+		return; 
+	}
+	
+	//store_result(select_costumer,"select_costumer"); 
+
+	/*if(mysql_stmt_result_metadata(select_costumer) == NULL) {
+		print_stmt_error(select_costumer, "Impossile prelevare i dati (select_costumer)\n ");
+		return; 
+	}*/
+	data_fetch(select_costumer, "select costumer"); 
+	while(mysql_stmt_next_result(select_costumer) != -1) {}
+
+	
 	mysql_stmt_free_result(select_costumer);
 	mysql_stmt_reset(select_costumer);
 	
@@ -599,12 +682,12 @@ void do_select_reservation(struct prenotazione *prenotazione)
 	set_binding_param(&param[4], MYSQL_TYPE_DATETIME, &datasaldo, sizeof(datasaldo));
 
 	if(mysql_stmt_bind_param(select_reservation, param) != 0) {
-		print_stmt_error(select_reservation, "Could not bind parameters for select_reservation");
+		print_stmt_error(select_reservation, "Impossibile eseguire il bind dei parametri(select_reservation)");
 		return;
 	}
 
 	if(mysql_stmt_execute(select_reservation) != 0) {
-		print_stmt_error(select_reservation, "Could not execute select_reservation");
+		print_stmt_error(select_reservation, "Impossibile eseguire la procedura  select_reservation\n");
 		return;
 		}
 	
@@ -615,23 +698,13 @@ void do_select_reservation(struct prenotazione *prenotazione)
 
 
 void do_update_data_doc(struct cliente *cliente)
-{	MYSQL_BIND param[8]; 
+{	MYSQL_BIND param[2]; 
 	MYSQL_TIME datadocumentazione; 
 
-	int recapitotelefonico; 
-	int fax; 
-	
 	date_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
 	
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, strlen(cliente->nomecliente));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, strlen(cliente->cognomecliente));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, strlen(cliente->indirizzocliente));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, strlen(cliente->codicefiscale));
-	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datadocumentazione, sizeof(datadocumentazione));
-	set_binding_param(&param[6], MYSQL_TYPE_LONG, &recapitotelefonico, sizeof(recapitotelefonico));
-	set_binding_param(&param[7], MYSQL_TYPE_LONG, &fax, sizeof(fax));
-	
+	set_binding_param(&param[1], MYSQL_TYPE_DATETIME, &datadocumentazione, sizeof(datadocumentazione));
 	
 	if(mysql_stmt_bind_param(update_data_doc, param) != 0) {
 		print_stmt_error(update_data_doc, "Could not bind parameters for update_data_doc");
