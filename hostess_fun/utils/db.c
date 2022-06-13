@@ -119,26 +119,7 @@ void mysql_date_to_string(MYSQL_TIME *date, char *str)
 
 
 
-void fetch_field(MYSQL_STMT *procedure, char *procedure_name){
 
-	MYSQL_FIELD *field;
-	MYSQL_RES *result = mysql_stmt_result_metadata(procedure); 
-	unsigned int num_fields;
-	unsigned int i;
-
-	if( result == NULL) {
-		print_stmt_error(procedure, "Impossile prelevare i dati");
-		printf("(%s)\n\n", procedure_name); 
-		return; 
-	}
-
-	num_fields = mysql_num_fields(result);
-	for(i = 0; i < num_fields; i++)
-	{
-    	field = mysql_fetch_field_direct(result, i);
-    	printf("%s: \n", field->name);
-	}
-}
 
 void binding_parmaters(MYSQL_STMT *procedure, MYSQL_BIND *param, char * name_procedure){
 
@@ -178,7 +159,7 @@ void store_result(MYSQL_STMT *procedure, char * name_procedure){
 
 void data_fetch(MYSQL_STMT *procedure, char * name_procedure){
 
-	if(mysql_stmt_fetch(procedure)) {
+	if(mysql_stmt_fetch(procedure) != 0) {
 		print_stmt_error(procedure, "\nImpossile eseguire il fetch dei dati ");
 		printf("(%s)\n", name_procedure); 
 		exit(0);
@@ -186,3 +167,37 @@ void data_fetch(MYSQL_STMT *procedure, char * name_procedure){
 }
 
 
+void fetch_field(MYSQL_STMT *procedure, char *procedure_name){
+
+	MYSQL_FIELD *field;
+	MYSQL_RES *data_field; 
+	unsigned int num_fields;
+	unsigned int i;
+	int result_set; 
+
+	data_field = mysql_stmt_result_metadata(procedure);
+	result_set = mysql_stmt_store_result(procedure);
+
+	if(result_set != 0){
+		print_stmt_error(procedure, "Impossibile inizializzare il result set "); 
+		printf("(%s)\n\n", procedure_name); 
+		exit(0); 
+	}
+
+	if( data_field == NULL) {
+		print_stmt_error(procedure, "Impossile prelevare i campi dati ");
+		printf("(%s)\n\n", procedure_name); 
+		exit(0); 
+	}
+ // error handling omitted 
+
+	data_fetch(procedure,procedure_name); 
+
+	num_fields = mysql_num_fields(data_field);
+		
+		for(i = 0; i < num_fields; i++){
+    		field = mysql_fetch_field_direct(data_field, i);
+    		printf("%s\n", field->name );
+		}
+
+}
