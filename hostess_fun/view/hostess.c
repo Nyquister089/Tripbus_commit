@@ -14,11 +14,11 @@ struct associata * associata;
 
 void  allocation_hstss(void)
 {
-	cliente = malloc(sizeof(struct cliente)); 
-	prenotazione = malloc(sizeof(struct prenotazione)); 
-	postoprenotato = malloc(sizeof(struct postoprenotato));
-	viaggio = malloc(sizeof(struct viaggio)); 
-	associata = malloc(sizeof(struct associata));
+	cliente = malloc(sizeof(struct cliente)*8); 
+	prenotazione = malloc(sizeof(struct prenotazione)*8); 
+	postoprenotato = malloc(sizeof(struct postoprenotato)*8);
+	viaggio = malloc(sizeof(struct viaggio)*8); 
+	associata = malloc(sizeof(struct associata)*8);
 }
 
 int get_hstss_action(void)

@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Jun 13 09:49:50 2022
+# Make data base, printed on Mon Jun 13 19:06:09 2022
 
 # Variables
 
@@ -23,7 +23,7 @@ SSH_AGENT_LAUNCHER = gnome-keyring
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-48c628ac-c0cb-4492-80ca-4ace874969a5.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-88661061-49b6-4512-bb4d-58c0a8c54352.sock
 # environment
 VSCODE_CWD = /home/giordano
 # default
@@ -91,7 +91,7 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 6881
+VSCODE_PID = 26673
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
@@ -107,7 +107,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
 # environment
-VSCODE_NLS_CONFIG = {"locale":"it","availableLanguages":{"*":"it"},"_languagePackId":"edd95fe2637dfb670c0c498374f66f34.it","_translationsConfigFile":"/home/giordano/.config/Code/clp/edd95fe2637dfb670c0c498374f66f34.it/tcf.json","_cacheRoot":"/home/giordano/.config/Code/clp/edd95fe2637dfb670c0c498374f66f34.it","_resolvedLanguagePackCoreLocation":"/home/giordano/.config/Code/clp/edd95fe2637dfb670c0c498374f66f34.it/4af164ea3a06f701fe3e89a2bcbb421d2026b68f","_corruptedFile":"/home/giordano/.config/Code/clp/edd95fe2637dfb670c0c498374f66f34.it/corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"it","availableLanguages":{"*":"it"},"_languagePackId":"0e2106c0f43031e48dd45a1308cc4315.it","_translationsConfigFile":"/home/giordano/.config/Code/clp/0e2106c0f43031e48dd45a1308cc4315.it/tcf.json","_cacheRoot":"/home/giordano/.config/Code/clp/0e2106c0f43031e48dd45a1308cc4315.it","_resolvedLanguagePackCoreLocation":"/home/giordano/.config/Code/clp/0e2106c0f43031e48dd45a1308cc4315.it/4af164ea3a06f701fe3e89a2bcbb421d2026b68f","_corruptedFile":"/home/giordano/.config/Code/clp/0e2106c0f43031e48dd45a1308cc4315.it/corrupted.info","_languagePackSupport":true}
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -177,7 +177,7 @@ MAKE_VERSION := 4.3
 # environment
 MANAGERPID = 1033
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 6881
+GIO_LAUNCHED_DESKTOP_FILE_PID = 26673
 # environment
 _ = /usr/share/code/code
 # environment
@@ -277,6 +277,6 @@ all:
 # strcache performance: lookups = 32 / hit rate = 18%
 # hash-table stats:
 # Load=26/8192=0%, Rehash=0, Collisions=1/32=3%
-# Finished Make data base on Mon Jun 13 09:49:50 2022
+# Finished Make data base on Mon Jun 13 19:06:09 2022
 
  
