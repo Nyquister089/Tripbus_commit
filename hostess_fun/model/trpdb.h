@@ -58,7 +58,7 @@ struct cliente {
 	char cognomecliente[VARCHAR_LEN];
 	char indirizzocliente[VARCHAR_LEN];
 	char codicefiscale[VARCHAR_LEN];
-	char datadocumentazione[DATETIME_LEN];
+	char datadocumentazione[DATE_LEN];
 	char recapitotelefonico[VARCHAR_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 	char fax[VARCHAR_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 };

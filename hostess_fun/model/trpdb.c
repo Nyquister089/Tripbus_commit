@@ -554,14 +554,6 @@ void do_select_costumer(struct cliente *cliente)
 	MYSQL_BIND param[8]; 
 	MYSQL_TIME datadocumentazione;
 
-	char emailcliente[VARCHAR_LEN];
-	char nomecliente[VARCHAR_LEN];
-	char cognomecliente[VARCHAR_LEN];
-	char indirizzocliente[VARCHAR_LEN];
-	char codicefiscale[VARCHAR_LEN];
-	char recapitotelefonico[VARCHAR_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
-	char fax[VARCHAR_LEN];
-
 	date_to_mysql_time(  cliente->datadocumentazione, &datadocumentazione);
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente));

@@ -190,7 +190,9 @@ void update_d_doc(struct cliente  *cliente)
 	printf("** Procedura di modifica data documenti cliente **\n\n");
 	get_input("Inserisci la mail d'interesse : ", VARCHAR_LEN , cliente->emailcliente, false);
 	printf("\n\n");  
+
     do_select_costumer(cliente); 
+	
 	printf("\nE-mail:  %s \n Nome: %s \n Cognome: %s \n Indirizzo: %s \n Codice fiscale: %s \n Recapito telefonico: %s \n Fax: %s \n Data documentazione: %s \n", 
 		cliente->emailcliente,
 		cliente->nomecliente,

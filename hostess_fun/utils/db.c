@@ -158,10 +158,19 @@ void store_result(MYSQL_STMT *procedure, char * name_procedure){
 }
 
 void data_fetch(MYSQL_STMT *procedure, char * name_procedure){
-
-	if(mysql_stmt_fetch(procedure) != 0) {
+	int status; 
+	int i = 0; 
+	//status =  mysql_stmt_fetch(procedure);
+	while(true){
+		status =  mysql_stmt_fetch(procedure);
+		printf("while %d\n", i); 
+		i++; 
+		if(status == 1 || status == MYSQL_NO_DATA)
+			break; 
+		}
+	if(status != 0) {
 		print_stmt_error(procedure, "\nImpossile eseguire il fetch dei dati ");
-		printf("(%s)\n", name_procedure); 
+		printf("(%s): status %d \n", name_procedure, status); 
 		exit(0);
 	}
 }
@@ -189,7 +198,6 @@ void fetch_field(MYSQL_STMT *procedure, char *procedure_name){
 		printf("(%s)\n\n", procedure_name); 
 		exit(0); 
 	}
- // error handling omitted 
 
 	data_fetch(procedure,procedure_name); 
 
@@ -199,5 +207,4 @@ void fetch_field(MYSQL_STMT *procedure, char *procedure_name){
     		field = mysql_fetch_field_direct(data_field, i);
     		printf("%s\n", field->name );
 		}
-
 }
