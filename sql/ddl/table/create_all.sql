@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`associata` (
   CONSTRAINT `FK_AlbergoInQuestione` FOREIGN KEY (`AlbergoInQuestione`) REFERENCES `meta` (`IdMeta`),
   CONSTRAINT `FK_Camera` FOREIGN KEY (`CameraPrenotata`) REFERENCES `camera` (`IdAlbergo`),
   CONSTRAINT `FK_Ospite` FOREIGN KEY (`Ospite`) REFERENCES `postoprenotato` (`NumeroDiPosto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`camera` (
   PRIMARY KEY (`NumeroCamera`,`IdAlbergo`),
   KEY `FK_IdAlbergo_idx` (`IdAlbergo`),
   CONSTRAINT `FK_idAlbergoCamera` FOREIGN KEY (`IdAlbergo`) REFERENCES `meta` (`IdMeta`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`cliente` (
   PRIMARY KEY (`E-mailCliente`),
   UNIQUE KEY `E-mailCliente_UNIQUE` (`E-mailCliente`),
   UNIQUE KEY `id utente_UNIQUE` (`IdUtente`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`comfort` (
   `DescrizioneComfort` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`IdComfort`),
   UNIQUE KEY `IdComfort_UNIQUE` (`IdComfort`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`dipendente` (
   `CogrnomeDipendente` varchar(45) NOT NULL,
   PRIMARY KEY (`IdDipendente`),
   UNIQUE KEY `IdDipendente_UNIQUE` (`IdDipendente`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`documentazionefotografica` (
   `DocumentazioneFotograficacol` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idDocumentazioneFotografica`),
   UNIQUE KEY `idDocumentazioneFotografica_UNIQUE` (`idDocumentazioneFotografica`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `tripdb`.`f-me` (
   `MetaRappresentata` int unsigned NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`f-me` (
   KEY `FK_documentazioneFotografica_idx` (`FotoMeta`),
   CONSTRAINT `FK_documentazioneFotografica` FOREIGN KEY (`FotoMeta`) REFERENCES `documentazionefotografica` (`idDocumentazioneFotografica`),
   CONSTRAINT `FK_Meta` FOREIGN KEY (`MetaRappresentata`) REFERENCES `meta` (`IdMeta`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `tripdb`.`f-mo` (
   `FotoModello` int unsigned NOT NULL,
@@ -88,14 +88,14 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`f-mo` (
   KEY `FK_Modello_idx` (`ModelloRappresentato`),
   CONSTRAINT `FK_Foto` FOREIGN KEY (`FotoModello`) REFERENCES `documentazionefotografica` (`idDocumentazioneFotografica`),
   CONSTRAINT `FK_Modello` FOREIGN KEY (`ModelloRappresentato`) REFERENCES `modello` (`NomeModello`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `tripdb`.`localita` (
   `Nome localita` varchar(45) NOT NULL,
   `Regione` varchar(45) NOT NULL,
   `Stato` varchar(45) NOT NULL,
   PRIMARY KEY (`Nome localita`,`Regione`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `tripdb`.`mappa` (
   `IdMappa` int NOT NULL AUTO_INCREMENT,
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`mappa` (
   `Zona` varchar(45) NOT NULL,
   PRIMARY KEY (`IdMappa`),
   UNIQUE KEY `IdMappa_UNIQUE` (`IdMappa`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`meta` (
   `OrarioDiApertura` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`IdMeta`),
   UNIQUE KEY `IdMeta_UNIQUE` (`IdMeta`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
@@ -137,7 +137,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`mezzo` (
   UNIQUE KEY `Targa_UNIQUE` (`Targa`),
   KEY `ModelloMezzo_idx` (`ModelloMezzo`),
   CONSTRAINT `ModelloMezzo` FOREIGN KEY (`ModelloMezzo`) REFERENCES `modello` (`NomeModello`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`modello` (
   `Numero posti` int NOT NULL,
   PRIMARY KEY (`NomeModello`),
   UNIQUE KEY `targa_UNIQUE` (`NomeModello`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `tripdb`.`offre` (
   `idOfferta` int NOT NULL,
@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`offre` (
   KEY `FK_IdAlbergo_idx` (`IdAlbergo`),
   CONSTRAINT `FK_IdAlbergo` FOREIGN KEY (`IdAlbergo`) REFERENCES `meta` (`IdMeta`),
   CONSTRAINT `FK_IdServizio` FOREIGN KEY (`IdServizio`) REFERENCES `servizio` (`IdServizio`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
@@ -176,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`postoprenotato` (
   KEY `prenotazioneAssociata_idx` (`PrenotazioneAssociata`),
   CONSTRAINT `prenotazioneAssociata` FOREIGN KEY (`PrenotazioneAssociata`) REFERENCES `prenotazione` (`NumeroDiPrenotazione`),
   CONSTRAINT `viaggioAssociato` FOREIGN KEY (`ViaggioAssociato`) REFERENCES `viaggi` (`idviaggio`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
@@ -190,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`prenotazione` (
   UNIQUE KEY `NumeroDiPrenotazione_UNIQUE` (`NumeroDiPrenotazione`),
   UNIQUE KEY `ClientePrenotante_UNIQUE` (`ClientePrenotante`),
   CONSTRAINT `ClientePrenotatne` FOREIGN KEY (`ClientePrenotante`) REFERENCES `cliente` (`IdUtente`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `tripdb`.`presenti` (
   `ComfortPresenti` int unsigned NOT NULL,
@@ -199,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`presenti` (
   KEY `FK_Modello_associato_idx` (`ModelloAssociato`),
   CONSTRAINT `FK_Comfort` FOREIGN KEY (`ComfortPresenti`) REFERENCES `comfort` (`IdComfort`),
   CONSTRAINT `FK_Modello_associato` FOREIGN KEY (`ModelloAssociato`) REFERENCES `modello` (`NomeModello`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
@@ -216,7 +216,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`revisione` (
   UNIQUE KEY `IdRevisione_UNIQUE` (`IdRevisione`),
   KEY `FK_revisione_mezzo_idx` (`MezzoRevisionato`),
   CONSTRAINT `FK_revisione_mezzo` FOREIGN KEY (`MezzoRevisionato`) REFERENCES `mezzo` (`Targa`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `tripdb`.`ricambio` (
   `Codice` varchar(45) NOT NULL,
@@ -227,7 +227,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`ricambio` (
   `QuantitàMagazzino` int unsigned NOT NULL,
   PRIMARY KEY (`Codice`),
   UNIQUE KEY `Codice_UNIQUE` (`Codice`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `tripdb`.`r-t` (
   `RevisioneRelativa` int unsigned NOT NULL,
@@ -236,7 +236,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`r-t` (
   KEY `FK_tagliando_idx` (`TagliandoAssociato`),
   CONSTRAINT `FK_revisione` FOREIGN KEY (`RevisioneRelativa`) REFERENCES `revisione` (`IdRevisione`),
   CONSTRAINT `FK_tagliando` FOREIGN KEY (`TagliandoAssociato`) REFERENCES `tagliando` (`IdTagliando`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
@@ -245,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`servizio` (
   `NomeServizio` varchar(45) NOT NULL,
   `DescrizioneServizio` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`IdServizio`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
@@ -255,7 +255,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`tagliando` (
   `Validità superate` varchar(1000) NOT NULL,
   PRIMARY KEY (`IdTagliando`),
   UNIQUE KEY `IdTagliando_UNIQUE` (`IdTagliando`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `tripdb`.`to-me` (
   `Meta` int unsigned NOT NULL,
@@ -264,7 +264,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`to-me` (
   KEY `Tour_idx` (`Tour`),
   CONSTRAINT `Meta` FOREIGN KEY (`Meta`) REFERENCES `meta` (`IdMeta`),
   CONSTRAINT `Tour` FOREIGN KEY (`Tour`) REFERENCES `tour` (`DenominazioneTour`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
@@ -278,7 +278,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`tour` (
   `Accompagnatrice` tinyint DEFAULT NULL,
   PRIMARY KEY (`DenominazioneTour`),
   UNIQUE KEY `DenominazioneTour_UNIQUE` (`DenominazioneTour`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Programma di viaggio consultabile da clienti ed impiegati dell’azienda.';
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Programma di viaggio consultabile da clienti ed impiegati dell’azienda.';
 
 
 
@@ -303,7 +303,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`viaggi` (
   CONSTRAINT `FK_IdConducente` FOREIGN KEY (`IdConducente`) REFERENCES `dipendente` (`IdDipendente`),
   CONSTRAINT `FK_Mezzoimpiegato` FOREIGN KEY (`TargaMezzoImpiegato`) REFERENCES `mezzo` (`Targa`),
   CONSTRAINT `FK_TourAssocciato` FOREIGN KEY (`TourAssociato`) REFERENCES `tour` (`DenominazioneTour`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `tripdb`.`visita` (
   `idvisita` int NOT NULL AUTO_INCREMENT,
@@ -321,4 +321,4 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`visita` (
   KEY `FK_MetaVisitata_idx` (`MetaVisitata`),
   CONSTRAINT `FK_MetaVisitata` FOREIGN KEY (`MetaVisitata`) REFERENCES `meta` (`IdMeta`),
   CONSTRAINT `FK_ViaggioRelativo` FOREIGN KEY (`ViaggioRelativo`) REFERENCES `viaggi` (`idviaggio`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='    ';
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='    ';

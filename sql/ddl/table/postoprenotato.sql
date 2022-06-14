@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`postoprenotato` (
   KEY `prenotazioneAssociata_idx` (`PrenotazioneAssociata`),
   CONSTRAINT `prenotazioneAssociata` FOREIGN KEY (`PrenotazioneAssociata`) REFERENCES `prenotazione` (`NumeroDiPrenotazione`),
   CONSTRAINT `viaggioAssociato` FOREIGN KEY (`ViaggioAssociato`) REFERENCES `viaggi` (`idviaggio`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

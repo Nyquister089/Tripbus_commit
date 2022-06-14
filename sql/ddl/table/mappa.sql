@@ -5,4 +5,4 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`mappa` (
   `Zona` varchar(45) NOT NULL,
   PRIMARY KEY (`IdMappa`),
   UNIQUE KEY `IdMappa_UNIQUE` (`IdMappa`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

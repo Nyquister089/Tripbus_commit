@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`modello` (
   `Numero posti` int NOT NULL,
   PRIMARY KEY (`NomeModello`),
   UNIQUE KEY `targa_UNIQUE` (`NomeModello`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

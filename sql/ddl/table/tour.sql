@@ -8,4 +8,4 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`tour` (
   `Accompagnatrice` tinyint DEFAULT NULL,
   PRIMARY KEY (`DenominazioneTour`),
   UNIQUE KEY `DenominazioneTour_UNIQUE` (`DenominazioneTour`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Programma di viaggio consultabile da clienti ed impiegati dell’azienda.';
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Programma di viaggio consultabile da clienti ed impiegati dell’azienda.';

@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`meta` (
   `OrarioDiApertura` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`IdMeta`),
   UNIQUE KEY `IdMeta_UNIQUE` (`IdMeta`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

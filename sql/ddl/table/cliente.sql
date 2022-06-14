@@ -11,4 +11,4 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`cliente` (
   PRIMARY KEY (`E-mailCliente`),
   UNIQUE KEY `E-mailCliente_UNIQUE` (`E-mailCliente`),
   UNIQUE KEY `id utente_UNIQUE` (`IdUtente`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
