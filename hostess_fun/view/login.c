@@ -59,7 +59,9 @@ int main (void)
 			}
 		answer = yes_or_no("\n\n Vuoi chiudere il database? (s/n) ",'s','n',false,false);
 		if(answer){
+		
 			fini_db(); 
+
 			}
 	}
 	

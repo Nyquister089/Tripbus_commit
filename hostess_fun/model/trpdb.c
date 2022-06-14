@@ -552,7 +552,11 @@ printf("\n\nBind Select_trip in trpdb\n\n ");
 void do_select_costumer(struct cliente *cliente)
 {	
 	MYSQL_BIND param[8]; 
+	MYSQL_FIELD *field;
+	MYSQL_RES *data_field; 
 	MYSQL_TIME datadocumentazione;
+	size_t num_fields = 0;
+	int column_count; 
 
 	date_to_mysql_time(  cliente->datadocumentazione, &datadocumentazione);
 
@@ -567,12 +571,23 @@ void do_select_costumer(struct cliente *cliente)
 
 	if(mysql_stmt_bind_param(select_costumer, param) != 0) {
 		print_stmt_error(select_costumer, "Impossibile eseguire il bind dei parametri (select_costumer)\n");
-		return;
+		goto stop;
 	}
 	if(mysql_stmt_execute(select_costumer) != 0) {
 		print_stmt_error(select_costumer, "Impossibile eseguire la procedura select_costumer\n");
-		return;
+		goto stop;
 		}
+
+	data_field = mysql_stmt_result_metadata(select_costumer);
+
+	if( data_field == NULL) {
+		print_stmt_error(select_costumer, "Impossile prelevare i campi dati ");
+		printf("(select_costumer))\n\n"); 
+		goto stop; 
+	}
+	column_count= mysql_num_fields(data_field);
+	fprintf(stdout," total columns in SELECT statement: %d\n",column_count); 
+
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, strlen(cliente->nomecliente));
@@ -585,37 +600,29 @@ void do_select_costumer(struct cliente *cliente)
 
 	if(mysql_stmt_bind_result(select_costumer, param)) {
 		print_stmt_error(select_costumer, "Impossibile eseguire il bind dei parametri (select_costumer)\n");
-		return; 
+		goto stop; 
 	}
 
-	fetch_field(select_costumer ,"select_costumer"); 
-/*
-	//prepare output parameters
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, strlen(cliente->nomecliente));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, strlen(cliente->cognomecliente));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, strlen(cliente->indirizzocliente));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, strlen(cliente->codicefiscale));
-	set_binding_param(&param[4], MYSQL_TYPE_DATETIME, &datadocumentazione, sizeof(datadocumentazione));
-	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, strlen(cliente->recapitotelefonico));
-	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->fax, strlen(cliente->fax));
-	
-	if(mysql_stmt_bind_result(select_costumer, param)) {
-		print_stmt_error(select_costumer, "Impossibile eseguire il bind dei parametri (select_costumer)\n");
-		return; 
+	if( mysql_stmt_store_result(select_costumer) != 0){
+		print_stmt_error(select_costumer, "\nImpossibile eseguire lo store del result set ");
+		printf("(select_costumer)"); 
+		goto stop;
 	}
+
+	//fetch_field(select_costumer ,"select_costumer"); 
 	
 	//store_result(select_costumer,"select_costumer"); 
-
-	if(mysql_stmt_result_metadata(select_costumer) == NULL) {
-		print_stmt_error(select_costumer, "Impossile prelevare i dati (select_costumer)\n ");
-		return; 
-	}
-	data_fetch(select_costumer, "select costumer"); 
-	while(mysql_stmt_next_result(select_costumer) != -1) {}
-
 	
+	while (!mysql_stmt_fetch(select_costumer)) {
+		//esaminare meglio la struct MYSQL_BIND 
+		fprintf(stdout,"Dato %ld: %s", num_fields ,((char*)param[num_fields].buffer)); 
+		num_fields++; 
+	
+	}
+
+	stop:
 	mysql_stmt_free_result(select_costumer);
-	mysql_stmt_reset(select_costumer);*/
+	mysql_stmt_reset(select_costumer);
 	
 }
 
