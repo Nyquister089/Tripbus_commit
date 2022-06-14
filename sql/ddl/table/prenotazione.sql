@@ -8,4 +8,4 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`prenotazione` (
   UNIQUE KEY `NumeroDiPrenotazione_UNIQUE` (`NumeroDiPrenotazione`),
   UNIQUE KEY `ClientePrenotante_UNIQUE` (`ClientePrenotante`),
   CONSTRAINT `ClientePrenotatne` FOREIGN KEY (`ClientePrenotante`) REFERENCES `cliente` (`IdUtente`)
-) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

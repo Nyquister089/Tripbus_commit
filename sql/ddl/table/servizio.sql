@@ -3,4 +3,4 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`servizio` (
   `NomeServizio` varchar(45) NOT NULL,
   `DescrizioneServizio` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`IdServizio`)
-) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

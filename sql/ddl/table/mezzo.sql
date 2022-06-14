@@ -11,4 +11,4 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`mezzo` (
   UNIQUE KEY `Targa_UNIQUE` (`Targa`),
   KEY `ModelloMezzo_idx` (`ModelloMezzo`),
   CONSTRAINT `ModelloMezzo` FOREIGN KEY (`ModelloMezzo`) REFERENCES `modello` (`NomeModello`)
-) ENGINE=InnoDB DEFAULT DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
