@@ -565,7 +565,7 @@ void do_select_costumer(struct cliente *cliente)
 	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, strlen(cliente->cognomecliente));
 	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, strlen(cliente->indirizzocliente));
 	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, strlen(cliente->codicefiscale));
-	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datadocumentazione, sizeof(datadocumentazione));
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadocumentazione, sizeof(datadocumentazione));
 	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, strlen(cliente->recapitotelefonico));
 	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, cliente->fax, strlen(cliente->fax));
 
@@ -594,7 +594,7 @@ void do_select_costumer(struct cliente *cliente)
 	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, strlen(cliente->cognomecliente));
 	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, strlen(cliente->indirizzocliente));
 	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, strlen(cliente->codicefiscale));
-	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datadocumentazione, sizeof(datadocumentazione));
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadocumentazione, sizeof(datadocumentazione));
 	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, strlen(cliente->recapitotelefonico));
 	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, cliente->fax, strlen(cliente->fax));
 
@@ -608,16 +608,13 @@ void do_select_costumer(struct cliente *cliente)
 		printf("(select_costumer)"); 
 		goto stop;
 	}
+	
+	//mysql_stmt_fetch(select_costumer);
 
-	//fetch_field(select_costumer ,"select_costumer"); 
-	
-	//store_result(select_costumer,"select_costumer"); 
-	
-	while (!mysql_stmt_fetch(select_costumer)) {
+	while (num_fields<column_count) {
 		//esaminare meglio la struct MYSQL_BIND 
 		fprintf(stdout,"Dato %ld: %s", num_fields ,((char*)param[num_fields].buffer)); 
 		num_fields++; 
-	
 	}
 
 	stop:
