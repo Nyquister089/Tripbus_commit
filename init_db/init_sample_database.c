@@ -121,7 +121,7 @@ void create_tables()
     execute_query_from_file_sql("../sql/ddl/table/mezzo.sql");
     execute_query_from_file_sql("../sql/ddl/table/tour.sql");
     execute_query_from_file_sql("../sql/ddl/table/dipendenti.sql");
-    execute_query_from_file_sql("../sql/ddl/table/viaggi.sql");
+    execute_query_from_file_sql("../sql/ddl/table/viaggio.sql");
     execute_query_from_file_sql("../sql/ddl/table/postoprenotato.sql");
     execute_query_from_file_sql("../sql/ddl/table/associata.sql");
     execute_query_from_file_sql("../sql/ddl/table/comfort.sql");

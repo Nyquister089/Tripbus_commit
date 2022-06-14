@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `tripdb`.`viaggi` (
+CREATE TABLE IF NOT EXISTS `tripdb`.`viaggio` (
   `idviaggio` int NOT NULL AUTO_INCREMENT,
   `TourAssociato` varchar(50) NOT NULL,
   `IdConducente` int unsigned NOT NULL,
