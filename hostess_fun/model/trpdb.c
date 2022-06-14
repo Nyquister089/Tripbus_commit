@@ -565,7 +565,6 @@ void do_select_costumer(struct cliente *cliente)
 	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, strlen(cliente->recapitotelefonico));
 	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, cliente->fax, strlen(cliente->fax));
 
- 
 	if(mysql_stmt_bind_param(select_costumer, param) != 0) {
 		print_stmt_error(select_costumer, "Impossibile eseguire il bind dei parametri (select_costumer)\n");
 		return;
