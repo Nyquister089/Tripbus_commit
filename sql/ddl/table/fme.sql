@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `tripdb`.`f-me` (
+CREATE TABLE IF NOT EXISTS `tripdb`.`fme` (
   `MetaRappresentata` int unsigned NOT NULL,
   `FotoMeta` int unsigned NOT NULL,
   PRIMARY KEY (`MetaRappresentata`,`FotoMeta`),

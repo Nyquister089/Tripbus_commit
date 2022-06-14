@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `tripdb`.`r-t` (
+CREATE TABLE IF NOT EXISTS `tripdb`.`rt` (
   `RevisioneRelativa` int unsigned NOT NULL,
   `TagliandoAssociato` int unsigned NOT NULL,
   PRIMARY KEY (`RevisioneRelativa`,`TagliandoAssociato`),

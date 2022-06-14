@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `tripdb`.`f-mo` (
+CREATE TABLE IF NOT EXISTS `tripdb`.`fmo` (
   `FotoModello` int unsigned NOT NULL,
   `ModelloRappresentato` varchar(45) NOT NULL,
   PRIMARY KEY (`FotoModello`,`ModelloRappresentato`),

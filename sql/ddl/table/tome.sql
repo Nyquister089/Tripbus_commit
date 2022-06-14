@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `tripdb`.`to-me` (
+CREATE TABLE IF NOT EXISTS `tripdb`.`tome` (
   `Meta` int unsigned NOT NULL,
   `Tour` varchar(45) NOT NULL,
   PRIMARY KEY (`Meta`,`Tour`),

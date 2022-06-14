@@ -88,7 +88,7 @@ MYSQL *start_connection_mysql()
         exit(EXIT_FAILURE);
     }
 
-    if (mysql_real_connect(connection_init_db, "localhost", "root", "password", NULL, 22, NULL, CLIENT_MULTI_STATEMENTS | CLIENT_MULTI_RESULTS) == NULL)
+    if (mysql_real_connect(connection_init_db, "localhost", "giordano", "root1989", NULL, 22, NULL, CLIENT_MULTI_STATEMENTS | CLIENT_MULTI_RESULTS) == NULL)
     {
         finish_init_db_with_error();
     }
@@ -106,7 +106,7 @@ void create_database()
 
 void drop_tables()
 {
-    execute_query_from_file_sql("../sql/ddl/table/drop_all_tables.sql");
+    execute_query_from_file_sql("../sql/ddl/table/drop_all.sql");
 }
 
 void create_tables()
