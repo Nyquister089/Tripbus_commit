@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `tripdb`.`tagliando`;
 DROP TABLE IF EXISTS `tripdb`.`tome`;
 DROP TABLE IF EXISTS `tripdb`.`tour`;
 DROP TABLE IF EXISTS `tripdb`.`utente`;
-DROP TABLE IF EXISTS `tripdb`.`viaggi`;
+DROP TABLE IF EXISTS `tripdb`.`viaggio`;
 DROP TABLE IF EXISTS `tripdb`.`visita`;
 
 SET FOREIGN_KEY_CHECKS = 1;

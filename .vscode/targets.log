@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Jun 14 13:34:54 2022
+# Make data base, printed on Wed Jun 15 09:51:09 2022
 
 # Variables
 
@@ -23,7 +23,7 @@ SSH_AGENT_LAUNCHER = gnome-keyring
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-d22101ab-e4a2-49e9-a266-92c7458a2916.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-f8d08e26-eef7-4a3d-a958-d41451b1ef88.sock
 # environment
 VSCODE_CWD = /home/giordano
 # default
@@ -53,7 +53,7 @@ VSCODE_CODE_CACHE_PATH = /home/giordano/.config/Code/CachedData/4af164ea3a06f701
 # environment
 LANG = C
 # environment
-XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.AGPLN1
+XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.QKFRN1
 # default
 .LOADED := 
 # default
@@ -91,13 +91,13 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 4278
+VSCODE_PID = 5209
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/oem-Aspire-E5-553G:@/tmp/.ICE-unix/1170,unix/oem-Aspire-E5-553G:/tmp/.ICE-unix/1170
+SESSION_MANAGER = local/oem-Aspire-E5-553G:@/tmp/.ICE-unix/1149,unix/oem-Aspire-E5-553G:/tmp/.ICE-unix/1149
 # automatic
 *F = $(notdir $*)
 # environment
@@ -135,7 +135,7 @@ MAKEFILES :=
 # automatic
 ^F = $(notdir $^)
 # environment
-INVOCATION_ID = 411ec8baa0004190878a815bca5a9e11
+INVOCATION_ID = 62f3f0a2c58e49d689fb529ca6645f8a
 # environment
 VSCODE_LOG_NATIVE = false
 # environment
@@ -165,7 +165,7 @@ GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # makefile
 .DEFAULT_GOAL := compile
 # environment
-SYSTEMD_EXEC_PID = 1195
+SYSTEMD_EXEC_PID = 1176
 # environment
 DISPLAY = :0
 # environment
@@ -175,15 +175,15 @@ GTK_MODULES = gail:atk-bridge
 # default
 MAKE_VERSION := 4.3
 # environment
-MANAGERPID = 1036
+MANAGERPID = 1019
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 4278
+GIO_LAUNCHED_DESKTOP_FILE_PID = 5209
 # environment
 _ = /usr/share/code/code
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
-JOURNAL_STREAM = 8:33167
+JOURNAL_STREAM = 8:30367
 # environment
 XDG_SESSION_CLASS = user
 # environment
@@ -277,6 +277,6 @@ all:
 # strcache performance: lookups = 32 / hit rate = 18%
 # hash-table stats:
 # Load=26/8192=0%, Rehash=0, Collisions=1/32=3%
-# Finished Make data base on Tue Jun 14 13:34:54 2022
+# Finished Make data base on Wed Jun 15 09:51:09 2022
 
  
