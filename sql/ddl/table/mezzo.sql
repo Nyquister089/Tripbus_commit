@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`mezzo` (
   `ValoreContaKm` int unsigned NOT NULL,
   `Ingombri` varchar(45) NOT NULL,
   `DataImmatricolazione` date NOT NULL,
-  `Mezzocol` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`Targa`),
   UNIQUE KEY `Targa_UNIQUE` (`Targa`),
   KEY `FK_modello_idx` (`ModelloMezzo`),
