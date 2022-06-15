@@ -3,4 +3,4 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`localita` (
   `Regione` varchar(45) NOT NULL,
   `Stato` varchar(45) NOT NULL,
   PRIMARY KEY (`NomeLocalita`,`Regione`)
-) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE= utf8mb4_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE = utf8_general_ci;

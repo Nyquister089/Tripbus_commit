@@ -19,4 +19,4 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`viaggio` (
   CONSTRAINT `FK_IdConducente` FOREIGN KEY (`IdConducente`) REFERENCES `dipendente` (`IdDipendente`),
   CONSTRAINT `FK_Mezzoimpiegato` FOREIGN KEY (`TargaMezzoImpiegato`) REFERENCES `mezzo` (`Targa`),
   CONSTRAINT `FK_TourAssocciato` FOREIGN KEY (`TourAssociato`) REFERENCES `tour` (`DenominazioneTour`)
-) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE= utf8mb4_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE = utf8_general_ci;

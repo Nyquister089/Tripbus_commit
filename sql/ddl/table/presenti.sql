@@ -5,4 +5,4 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`presenti` (
   KEY `FK_Modello_associato_idx` (`ModelloAssociato`),
   CONSTRAINT `FK_Comfort` FOREIGN KEY (`ComfortPresenti`) REFERENCES `comfort` (`IdComfort`),
   CONSTRAINT `FK_Modello_associato` FOREIGN KEY (`ModelloAssociato`) REFERENCES `modello` (`NomeModello`)
-) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE= utf8mb4_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE = utf8_general_ci;
