@@ -105,14 +105,14 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(insert_seat, "Unable to initialize insert seat statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&validate_reservation, "call validate_reservation(?, ?, ?)", conn)) {
+			/*if(!setup_prepared_stmt(&validate_reservation, "call validate_reservation(?, ?, ?)", conn)) {
 				print_stmt_error(validate_reservation, "Unable to initialize validate reservation statement\n");
 				return false;
-			}
+			}*/
 			if(!setup_prepared_stmt(&select_costumer, "call select_costumer(?, ?, ?, ?, ?, ?, ?, ? )", conn)) {
 				print_stmt_error(select_costumer, "Unable to initialize select costumer statement\n");
 				return false;
-			}
+			}/*
 			if(!setup_prepared_stmt(&select_reservation, "call select_reservation(?)", conn)) {
 				print_stmt_error(select_reservation, "Unable to initialize select reservation statement\n");
 				return false;
@@ -133,7 +133,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			if(!setup_prepared_stmt(&insert_assoc, "call insert_assoc(?, ?, ?)", conn)) {
 				print_stmt_error(insert_assoc, "Unable to initialize update trip statement statement\n");
 				return false;
-			}
+			}*/
 			break;
 		default:
 			fprintf(stderr, "[FATAL] Unexpected role to prepare statements.\n");
@@ -623,7 +623,7 @@ void do_select_costumer(struct cliente *cliente)
 
 	while (num_fields<column_count) {
 		//esaminare meglio la struct MYSQL_BIND 
-		fprintf(stdout,"Dato %ld: %s", num_fields ,((char*)param[num_fields].buffer)); 
+		fprintf(stdout,"Dato %ld: %s\n\n", num_fields ,((char*)param[num_fields].buffer)); 
 		num_fields++; 
 	}
 	printf("Fetch !!!\n");
