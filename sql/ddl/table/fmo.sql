@@ -5,4 +5,4 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`fmo` (
   KEY `FK_Modello_idx` (`ModelloRappresentato`),
   CONSTRAINT `FK_Foto` FOREIGN KEY (`FotoModello`) REFERENCES `documentazionefotografica` (`idDocumentazioneFotografica`),
   CONSTRAINT `FK_Modello` FOREIGN KEY (`ModelloRappresentato`) REFERENCES `modello` (`NomeModello`)
-) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci; 
+) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE= utf8mb4_general_ci; 

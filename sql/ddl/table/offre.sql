@@ -7,4 +7,4 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`offre` (
   KEY `FK_IdAlbergo_idx` (`IdAlbergo`),
   CONSTRAINT `FK_IdAlbergo` FOREIGN KEY (`IdAlbergo`) REFERENCES `meta` (`IdMeta`),
   CONSTRAINT `FK_IdServizio` FOREIGN KEY (`IdServizio`) REFERENCES `servizio` (`IdServizio`)
-) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE= utf8mb4_general_ci;
