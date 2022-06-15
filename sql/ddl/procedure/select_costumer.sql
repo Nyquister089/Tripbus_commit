@@ -8,14 +8,18 @@ OUT ddc DATE,
 OUT tel NVARCHAR(45), 
 OUT fax NVARCHAR(45))
 BEGIN
-SELECT eml = c.EmailCliente, 	
+SELECT *
+FROM cliente as c
+WHERE c.EmailCliente = eml;
+
+SET eml = c.EmailCliente, 	
 	nmc = c.NomeCliente, 
     cgn = c.CognomeCliente, 
     inc = c.IndirizzoCliente, 
     cdf = c.CodiceFiscale, 
     ddc = c.DataDocumentazione, 
     tel = c.RecapitoTelefonico, 
-    fax = c.Fax
-FROM cliente as c
-WHERE c.EmailCliente = eml; 
+    fax = c.Fax;
+/*SELECT CONVERT (select_costumer USING utf8) COLLATE utf8_general_ci; */
+
 END

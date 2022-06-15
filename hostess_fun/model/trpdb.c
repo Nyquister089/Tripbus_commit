@@ -97,7 +97,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&insert_reservation, "call insert_reservation(?, ?, ?, ?)", conn)) {
+			if(!setup_prepared_stmt(&insert_reservation, "call insert_reservation(?, ?, ?, ?, ?)", conn)) {
 				print_stmt_error(insert_reservation, "Unable to initialize insert reservation statement\n");
 				return false;
 			}
@@ -113,7 +113,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(select_costumer, "Unable to initialize select costumer statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&select_reservation, "call select_reservation(?, ?, ?, ?, ?)", conn)) {
+			if(!setup_prepared_stmt(&select_reservation, "call select_reservation(?)", conn)) {
 				print_stmt_error(select_reservation, "Unable to initialize select reservation statement\n");
 				return false;
 			}
@@ -231,7 +231,8 @@ role_t attempt_login(struct credentials *cred)
 
 	mysql_stmt_free_result(login_procedure);
 	mysql_stmt_reset(login_procedure);
-
+	
+	printf(" ROLE = %d", role); 
 	initialize_prepared_stmts(role); 
 	
 	return role;
@@ -561,7 +562,7 @@ void do_select_costumer(struct cliente *cliente)
 	int column_count; 
 
 	printf("HERE!!!\n");
-	
+
 	date_to_mysql_time(  cliente->datadocumentazione, &datadocumentazione);
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente));
@@ -572,6 +573,7 @@ void do_select_costumer(struct cliente *cliente)
 	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadocumentazione, sizeof(datadocumentazione));
 	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, strlen(cliente->recapitotelefonico));
 	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, cliente->fax, strlen(cliente->fax));
+
 	printf("Bind declare!!!\n");
 
 	if(mysql_stmt_bind_param(select_costumer, param) != 0) {
