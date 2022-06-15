@@ -174,7 +174,6 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/insert_assoc.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/insert_costumer.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/update_trip_seat.sql");
-    execute_query_from_file_sql("../sql/ddl/procedure/login_procedure.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/select_reservation.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/select_costumer.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/insert_seat.sql");
