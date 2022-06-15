@@ -193,7 +193,7 @@ void update_d_doc(struct cliente  *cliente)
 
     do_select_costumer(cliente); 
 	
-	printf("\nE-mail:  %s \n Nome: %s \n Cognome: %s \n Indirizzo: %s \n Codice fiscale: %s \n Recapito telefonico: %s \n Fax: %s \n Data documentazione: %s \n", 
+	printf("\n E-mail:  %s \n Nome: %s \n Cognome: %s \n Indirizzo: %s \n Codice fiscale: %s \n Recapito telefonico: %s \n Fax: %s \n Data documentazione: %s \n", 
 		cliente->emailcliente,
 		cliente->nomecliente,
 		cliente->cognomecliente,

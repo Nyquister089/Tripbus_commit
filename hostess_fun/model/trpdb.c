@@ -606,6 +606,7 @@ void do_select_costumer(struct cliente *cliente)
 	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, strlen(cliente->recapitotelefonico));
 	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, cliente->fax, strlen(cliente->fax));
 	printf("Binding out \n");
+
 	if(mysql_stmt_bind_result(select_costumer, param)) {
 		print_stmt_error(select_costumer, "Impossibile eseguire il bind dei parametri (select_costumer)\n");
 		goto stop; 
@@ -618,13 +619,30 @@ void do_select_costumer(struct cliente *cliente)
 		goto stop;
 	}
 	printf("Store result!!!\n");
-	//mysql_stmt_fetch(select_costumer);
+	
+	mysql_stmt_fetch(select_costumer);
+	unsigned long offset = 0; 
+	char *values; 
+    values = malloc(sizeof(char *)*45); 
+/* 
+	param->buffer_type = type;
+	param->buffer = buffer;
+	param->buffer_length = len;*/
 
 	while (num_fields<column_count) {
 		//esaminare meglio la struct MYSQL_BIND 
-		fprintf(stdout,"Dato %ld: %s\n\n", num_fields ,((char*)param[num_fields].buffer)); 
-		num_fields++; 
+
+		field = mysql_fetch_field_direct(data_field,num_fields);
+		memcpy(values, ((char*)param[offset].buffer),param[num_fields].buffer_length); 
+		fprintf(stdout,"%s: %s\n\n",field->name,((char*)param[offset].buffer) );
+		num_fields++;
+		
+	  
+
 	}
+
+
+
 	printf("Fetch !!!\n");
 
 	stop:

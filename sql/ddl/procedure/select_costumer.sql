@@ -1,12 +1,12 @@
 CREATE DEFINER=`giordano`@`localhost` PROCEDURE `select_costumer`(
 INOUT eml VARCHAR(45),
-OUT nmc NVARCHAR (45),
-OUT cgn NVARCHAR (45), 
-OUT inc NVARCHAR (45), 
-OUT cdf NVARCHAR(45), 
+OUT nmc VARCHAR (45),
+OUT cgn VARCHAR (45), 
+OUT inc VARCHAR (45), 
+OUT cdf VARCHAR(45), 
 OUT ddc DATE, 
-OUT tel NVARCHAR(45), 
-OUT fax NVARCHAR(45))
+OUT tel VARCHAR(45), 
+OUT fax VARCHAR(45))
 BEGIN
 SELECT c.EmailCliente, 	
 	c.NomeCliente, 
