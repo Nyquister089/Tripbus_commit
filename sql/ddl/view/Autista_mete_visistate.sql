@@ -1,8 +1,9 @@
-CREATE 
+USE `tripdb`; 
+CREATE
     ALGORITHM = UNDEFINED 
     DEFINER = `giordano`@`localhost` 
     SQL SECURITY DEFINER
-VIEW `Autista_mete_visitate` AS
+VIEW `tripdb`.`Autista_mete_visitate` AS
     SELECT 
         `m`.`IdMeta` AS `IdMeta`,
         `m`.`NomeMeta` AS `NomeMeta`,

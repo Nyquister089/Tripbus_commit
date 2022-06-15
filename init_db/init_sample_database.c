@@ -111,6 +111,7 @@ void drop_tables()
 
 void create_tables()
 {   //execute_query_from_file_sql("../sql/ddl/table/create_all.sql");
+    execute_query_from_file_sql("../sql/ddl/table/localita.sql");
     execute_query_from_file_sql("../sql/ddl/table/meta.sql");
     execute_query_from_file_sql("../sql/ddl/table/servizio.sql");
     execute_query_from_file_sql("../sql/ddl/table/offre.sql");
@@ -133,7 +134,7 @@ void create_tables()
     execute_query_from_file_sql("../sql/ddl/table/rt.sql");
     execute_query_from_file_sql("../sql/ddl/table/fme.sql");
     execute_query_from_file_sql("../sql/ddl/table/fmo.sql");
-    execute_query_from_file_sql("../sql/ddl/table/localita.sql");
+  
     execute_query_from_file_sql("../sql/ddl/table/tome.sql");
     execute_query_from_file_sql("../sql/ddl/table/mappa.sql");
     execute_query_from_file_sql("../sql/ddl/table/visita.sql");
