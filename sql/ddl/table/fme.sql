@@ -5,4 +5,4 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`fme` (
   KEY `FK_documentazioneFotografica_idx` (`FotoMeta`),
   CONSTRAINT `FK_documentazioneFotografica` FOREIGN KEY (`FotoMeta`) REFERENCES `documentazionefotografica` (`idDocumentazioneFotografica`),
   CONSTRAINT `FK_Meta` FOREIGN KEY (`MetaRappresentata`) REFERENCES `meta` (`IdMeta`)
-) ENGINE=InnoDB  CHARSET=utf8 COLLATE= utf8_general_ci;
+) ENGINE=InnoDB  CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci;
