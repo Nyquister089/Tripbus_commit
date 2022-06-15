@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`cliente` (
   `CognomeCliente` varchar(45) NOT NULL,
   `IndirizzoCliente` varchar(45) NOT NULL,
   `CodiceFiscale` varchar(45) NOT NULL,
-  `DataDocumentazione` datetime NOT NULL,
+  `DataDocumentazione` date NOT NULL,
   `RecapitoTelefonico` varchar(45) NOT NULL,
   `Fax` varchar(45) NOT NULL,
   PRIMARY KEY (`EmailCliente`),

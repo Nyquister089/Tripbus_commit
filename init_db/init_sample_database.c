@@ -167,6 +167,7 @@ void populate_tables()
     execute_query_from_file_sql("../sql/dml/delete_and_insert_meta.sql");
     execute_query_from_file_sql("../sql/dml/delete_and_insert_utente.sql");
     execute_query_from_file_sql("../sql/dml/delete_and_insert_viaggio.sql");
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_cliente.sql");
 }
 
 void drop_procedures(){
