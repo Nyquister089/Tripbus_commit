@@ -110,7 +110,7 @@ void drop_tables()
 }
 
 void create_tables()
-{
+{   //execute_query_from_file_sql("../sql/ddl/table/create_all.sql");
     execute_query_from_file_sql("../sql/ddl/table/meta.sql");
     execute_query_from_file_sql("../sql/ddl/table/servizio.sql");
     execute_query_from_file_sql("../sql/ddl/table/offre.sql");
@@ -187,14 +187,14 @@ int main(int argc, char *argv[])
 {
     start_connection_mysql();
 
-    create_database();
+    
     drop_tables();
-    create_tables();
     drop_views();
-    create_views();
     drop_procedures();
+    create_database();
+    create_tables();
+    create_views();
     create_procedures();
-
     populate_tables();
 
     close_connection_mysql();
