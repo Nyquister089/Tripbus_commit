@@ -14,7 +14,7 @@ INSERT INTO `tripdb`.`utente`
  VALUES 
  ('drvr@mail.com',
   '1',
-  '1`);
+  '1');
   INSERT INTO `tripdb`.`utente` 
 (`EmailUtente`,
   `Pswrd`,

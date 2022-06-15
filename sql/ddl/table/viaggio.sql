@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `tripdb`.`viaggio` (
   `idviaggio` int NOT NULL AUTO_INCREMENT,
-  `TourAssociato` varchar(50) NOT NULL,
+  `TourAssociato` varchar(45) NOT NULL,
   `IdConducente` int unsigned NOT NULL,
   `IdAccompagnatrice` int unsigned DEFAULT NULL,
   `TargaMezzoImpiegato` varchar(10) NOT NULL,
