@@ -1,3 +1,5 @@
+
+DROP PROCEDURE IF EXISTS `tripdb`.`login`;
 DROP PROCEDURE IF EXISTS `tripdb`.`insert_assoc`;
 DROP PROCEDURE IF EXISTS `tripdb`.`insert_costumer`;
 DROP PROCEDURE IF EXISTS `tripdb`.`insert_reservation`;

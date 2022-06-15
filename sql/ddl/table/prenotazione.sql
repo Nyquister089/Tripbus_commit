@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `tripdb`.`prenotazione` (
   `NumeroDiPrenotazione` int unsigned NOT NULL AUTO_INCREMENT,
-  `ClientePrenotante` int unsigned NOT NULL,
+  `ClientePrenotante` varchar(45) NOT NULL,
   `DataDiPrenotazione` datetime NOT NULL,
   `DataDiConferma` datetime DEFAULT NULL,
   `DataSaldo` datetime DEFAULT NULL,

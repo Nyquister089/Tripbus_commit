@@ -11,7 +11,7 @@ VIEW `Cliente_servizi_albergo` AS
     FROM
         ((`meta` `m`
         JOIN `offre` `o` ON ((`m`.`IdMeta` = `o`.`IdAlbergo`)))
-        JOIN `servizio` `s` ON ((`o`.`IdServizi` = `s`.`IdServizio`)))
+        JOIN `servizio` `s` ON ((`o`.`IdServizio` = `s`.`IdServizio`)))
     WHERE
         (`m`.`NomeMeta` = 'nom')
         
