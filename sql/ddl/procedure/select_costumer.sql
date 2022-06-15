@@ -8,7 +8,14 @@ OUT ddc DATE,
 OUT tel NVARCHAR(45), 
 OUT fax NVARCHAR(45))
 BEGIN
-SELECT *
+SELECT c.EmailCliente, 	
+	c.NomeCliente, 
+    c.CognomeCliente, 
+    c.IndirizzoCliente, 
+    c.CodiceFiscale, 
+    c.DataDocumentazione, 
+    c.RecapitoTelefonico, 
+	c.Fax
 FROM cliente as c
 WHERE c.EmailCliente = eml;
 

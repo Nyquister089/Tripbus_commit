@@ -560,7 +560,7 @@ void do_select_costumer(struct cliente *cliente)
 	size_t num_fields = 0;
 	int column_count; 
 
-	printf("HERE!!!\n");
+	printf("HERE\n");
 
 	date_to_mysql_time(  cliente->datadocumentazione, &datadocumentazione);
 
@@ -573,18 +573,18 @@ void do_select_costumer(struct cliente *cliente)
 	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, strlen(cliente->recapitotelefonico));
 	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, cliente->fax, strlen(cliente->fax));
 
-	printf("Bind declare!!!\n");
+	printf("Bind declare\n");
 
 	if(mysql_stmt_bind_param(select_costumer, param) != 0) {
 		print_stmt_error(select_costumer, "Impossibile eseguire il bind dei parametri (select_costumer)\n");
 		goto stop;
 	}
-	printf("Binding !!!\n");
+	printf("Binding \n");
 	if(mysql_stmt_execute(select_costumer) != 0) {
 		print_stmt_error(select_costumer, "Impossibile eseguire la procedura select_costumer\n");
 		goto stop;
 		}
-	printf("Execute!!!\n");
+	printf("Execute \n");
 	data_field = mysql_stmt_result_metadata(select_costumer);
 
 	if( data_field == NULL) {
@@ -592,7 +592,7 @@ void do_select_costumer(struct cliente *cliente)
 		printf("(select_costumer))\n\n"); 
 		goto stop; 
 	}
-	printf("Metadata!!!\n");
+	printf("Metadata \n");
 	column_count= mysql_num_fields(data_field);
 	fprintf(stdout," total columns in SELECT statement: %d\n",column_count); 
 
@@ -605,7 +605,7 @@ void do_select_costumer(struct cliente *cliente)
 	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadocumentazione, sizeof(datadocumentazione));
 	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, strlen(cliente->recapitotelefonico));
 	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, cliente->fax, strlen(cliente->fax));
-	printf("Bind 2!!!\n");
+	printf("Binding out \n");
 	if(mysql_stmt_bind_result(select_costumer, param)) {
 		print_stmt_error(select_costumer, "Impossibile eseguire il bind dei parametri (select_costumer)\n");
 		goto stop; 
