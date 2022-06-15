@@ -105,14 +105,14 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(insert_seat, "Unable to initialize insert seat statement\n");
 				return false;
 			}
-			/*if(!setup_prepared_stmt(&validate_reservation, "call validate_reservation(?, ?, ?)", conn)) {
+			if(!setup_prepared_stmt(&validate_reservation, "call validate_reservation(?, ?, ?)", conn)) {
 				print_stmt_error(validate_reservation, "Unable to initialize validate reservation statement\n");
 				return false;
-			}*/
+			}
 			if(!setup_prepared_stmt(&select_costumer, "call select_costumer(?, ?, ?, ?, ?, ?, ?, ? )", conn)) {
 				print_stmt_error(select_costumer, "Unable to initialize select costumer statement\n");
 				return false;
-			}/*
+			}
 			if(!setup_prepared_stmt(&select_reservation, "call select_reservation(?)", conn)) {
 				print_stmt_error(select_reservation, "Unable to initialize select reservation statement\n");
 				return false;
@@ -133,7 +133,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			if(!setup_prepared_stmt(&insert_assoc, "call insert_assoc(?, ?, ?)", conn)) {
 				print_stmt_error(insert_assoc, "Unable to initialize update trip statement statement\n");
 				return false;
-			}*/
+			}
 			break;
 		default:
 			fprintf(stderr, "[FATAL] Unexpected role to prepare statements.\n");
@@ -145,7 +145,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 
 bool init_db(void) //testato
 {
-printf("Inizializzazione database."); 
+printf("Inizializzazione database..."); 
 	unsigned int timeout = 300;
 	bool reconnect = true;
 	
@@ -159,7 +159,6 @@ printf("Inizializzazione database.");
 		finish_with_error(conn, "mysql_real_connect() failed\n");
 	}
 
-printf("."); 
 
 	if (mysql_options(conn, MYSQL_OPT_CONNECT_TIMEOUT, &timeout)) {
 		print_error(conn, "[mysql_options] failed.");
@@ -173,7 +172,7 @@ printf(".");
 		print_error(conn, "[debug_info] failed.");
 	}
 #endif
-printf(".completata \n"); 
+printf("completata \n"); 
 	return initialize_prepared_stmts(LOGIN_ROLE);
 }
 
@@ -232,7 +231,7 @@ role_t attempt_login(struct credentials *cred)
 	mysql_stmt_free_result(login_procedure);
 	mysql_stmt_reset(login_procedure);
 	
-	printf(" ROLE = %d", role); 
+	printf(" ROLE = %d\n\n", role); 
 	initialize_prepared_stmts(role); 
 	
 	return role;
