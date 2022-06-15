@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `tripdb`.`tour` (
-  `DenominazioneTour` varchar(50) NOT NULL,
+  `DenominazioneTour` varchar(45) NOT NULL,
   `DescrizioneTour` varchar(5000) NOT NULL,
   `Minimopartecipanti` int unsigned NOT NULL,
   `CostoAssicurazioneMedica` decimal(18,2) unsigned DEFAULT NULL,
