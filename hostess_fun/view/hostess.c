@@ -91,13 +91,13 @@ bool exe_hstss_act(char sel, struct cliente *cliente,struct prenotazione * preno
 
 void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura visualizzazione dettagli prenotazione
 {	
-	char buffer[VARCHAR_LEN]; 
-	get_input("Inserisci il numero di prenotazione : ", VARCHAR_LEN, buffer, false);
-	printf("\n\n"); 
+	char buff[VARCHAR_LEN]; 
+	get_input("Inserisci il numero di prenotazione : ", VARCHAR_LEN, buff, false);
+	prenotazione->numerodiprenotazione = atoi(buff); 
 	do_select_reservation(prenotazione); 
 	
  	printf("\n\n** Dettagli prenotazione **\n\n");
- 	printf("Penotazione numero: %d  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data Saldo: %s \n",
+ 	printf(" Penotazione numero: %d \n E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data Saldo: %s \n",
 		prenotazione->numerodiprenotazione, 
 		prenotazione->clienteprenotante,
 		prenotazione->datadiprenotazione, 

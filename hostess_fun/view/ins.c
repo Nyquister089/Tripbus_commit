@@ -92,7 +92,7 @@ void ins_sparepart(struct ricambio *ricambio)
 	get_input("Inserisci la quantita' minima: ", NUM_LEN, ricambio->quantitadiriordino, false);
 	get_input("Inserisci la descrizione (massimo 5000 caratteri) : ", DES_LEN, ricambio-> descrizione, false);
 	get_input("Inserisci la scorta minima: ", NUM_LEN, ricambio-> scortaminima, false);
-	get_input("Inserisci quantita' di pezzi disponili: ", NUM_LEN, ricambio-> quantitainmagazzino, false);
+	get_input("Inserisci quantita' di pezzi disponibili: ", NUM_LEN, ricambio-> quantitainmagazzino, false);
 }
 
 void ins_bus(struct mezzo *mezzo)
@@ -120,7 +120,7 @@ void ins_bus(struct mezzo *mezzo)
 
 void ins_model(struct modello *modello)
 {	
-	//clear_scren();
+
 	printf("\n** Dettagli inserimento modello **\n\n");
 	get_input("Inserisci il nome : ", DEC_LEN, modello->nomemodello, false);
 	get_input("Inserisci la casa costruttrice : ", NUM_LEN, modello->casacostruttrice, false);
@@ -139,18 +139,18 @@ void ins_association(struct associata *associata)
 {	
 	char buff[NUM_LEN]; 
 	printf("\n** Dettagli associazione camera**\n\n");
-	get_input("Inserisci il numero della camera : ", NUM_LEN, buff, false);
+	get_input("Inserisci il numero della camera: ", NUM_LEN, buff, false);
 	associata->cameraprenotata = atoi(buff); 
-	get_input("Inserisci l'albergo in cui è ubicata la camera  : ", NUM_LEN, buff,false);	
+	get_input("Inserisci l'albergo in cui è ubicata la camera: ", NUM_LEN, buff,false);	
 	associata->albergoinquestione = atoi(buff); 
 	while(true){
-	get_input("Inserici la data d'inizio del soggiorno :",DATE_LEN, associata->datainiziosoggiorno,false); 
+	get_input("Inserici la data d'inizio del soggiorno: ",DATE_LEN, associata->datainiziosoggiorno,false); 
 	if(validate_date(associata->datainiziosoggiorno))
 			break;
 		fprintf(stderr, "Data errata!\n");
 	}
 	while(true){
-		get_input("Inserisci la data di fine soggiorno",DATE_LEN, associata->datafinesoggiorno, false);
+		get_input("Inserisci la data di fine soggiorno: ",DATE_LEN, associata->datafinesoggiorno, false);
 		if(validate_date(associata->datafinesoggiorno))
 				break;
 			fprintf(stderr, "Data errata!\n");

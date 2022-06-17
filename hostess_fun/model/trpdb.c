@@ -586,7 +586,7 @@ void do_select_costumer(struct cliente *cliente) // funziona ma rivedere il camp
 }
 
 
-void do_select_reservation(struct prenotazione *prenotazione)
+void do_select_reservation(struct prenotazione *prenotazione)//Funziona ma mostra più date
 {		
 	MYSQL_BIND param[5]; 
 	MYSQL_TIME datadiprenotazione; 
@@ -611,19 +611,19 @@ void do_select_reservation(struct prenotazione *prenotazione)
 	init_mysql_timestamp(&dds); 
 	
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerodiprenotazione, sizeof(numerodiprenotazione));
-	/*set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, strlen(prenotazione->clienteprenotante));
-	set_binding_param(&param[2], MYSQL_TYPE_DATETIME, &datadiprenotazione,sizeof(datadiprenotazione));
-	set_binding_param(&param[3], MYSQL_TYPE_DATETIME, &datadiconferma, sizeof(datadiconferma));
-	set_binding_param(&param[4], MYSQL_TYPE_DATETIME, &datasaldo, sizeof(datasaldo));*/
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, strlen(prenotazione->clienteprenotante));
+	set_binding_param(&param[2], MYSQL_TYPE_DATE, &datadiprenotazione,sizeof(datadiprenotazione));
+	set_binding_param(&param[3], MYSQL_TYPE_DATE, &datadiconferma, sizeof(datadiconferma));
+	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datasaldo, sizeof(datasaldo));
 
 	if(bind_exe(select_reservation,param,"select_reservation") == -1)
 		goto stop;  
 
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &ndp, NUM_LEN);
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, &cli, VARCHAR_LEN);
-	set_binding_param(&param[2], MYSQL_TYPE_DATETIME, &ddp, DATE_LEN);
-	set_binding_param(&param[3], MYSQL_TYPE_DATETIME, &ddc, DATE_LEN);
-	set_binding_param(&param[4], MYSQL_TYPE_DATETIME, &dds, DATE_LEN);
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &ndp, sizeof(ndp));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cli, srtlen(cli));
+	set_binding_param(&param[2], MYSQL_TYPE_DATE, &ddp, sizeof(ddp));
+	set_binding_param(&param[3], MYSQL_TYPE_DATE, &ddc, sizeof(ddc));
+	set_binding_param(&param[4], MYSQL_TYPE_DATE, &dds, sizeof(dds));
 
 	if(take_result(select_reservation,param,"select_reservation")== -1) 
 		goto stop; 
