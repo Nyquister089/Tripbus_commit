@@ -184,9 +184,7 @@ void validate_prenotation(struct prenotazione *prenotazione, struct postoprenota
 }
 
 void update_d_doc(struct cliente  *cliente)
-{
-	//clear_scren();
-	char buffer[VARCHAR_LEN]; 
+{ 
 	printf("\n\n** Procedura di modifica data documenti cliente **\n\n");
 	get_input("Inserisci la mail d'interesse : ", VARCHAR_LEN , cliente->emailcliente, false);
 	printf("\n\n");  
@@ -226,7 +224,7 @@ void run_hstss_interface (void)
 		allocation_hstss(); 
 
 	while (true){
-		printf("Get hostess action\n\n"); 
+
 	sel = get_hstss_action(); 
 	if (!exe_hstss_act(sel, cliente, prenotazione,postoprenotato, viaggio, associata))
 		break; 

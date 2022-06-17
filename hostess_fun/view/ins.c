@@ -16,13 +16,18 @@ void ins_prenotation(struct prenotazione *prenotazione) //funziona
 }
 
 void ins_seat(struct postoprenotato *postoprenotato)
-{	//clear_scren();
+{	
+	char buff[NUM_LEN]; 
 	printf("** Dettagli inserimento passeggero **\n\n");
-	get_input("Inserisci il numero di posto  : ", NUM_LEN, postoprenotato->numerodiposto, false);
-	get_input("Inserisci l'ID del viaggio a cui partecipera' il passeggero: ", NUM_LEN, postoprenotato->viaggioassociato, false);
-	get_input("Inserisci l'eta': ", NUM_LEN, postoprenotato-> etapasseggero, false);
+	get_input("Inserisci il numero di posto  : ", NUM_LEN, buff, false);
+	postoprenotato->numerodiposto = atoi(buff); 
+	get_input("Inserisci l'ID del viaggio a cui partecipera' il passeggero: ", NUM_LEN, buff, false);
+	postoprenotato->viaggioassociato = atoi(buff); 
+	get_input("Inserisci l'eta': ", NUM_LEN, buff, false);
+	postoprenotato->etapasseggero = atoi(buff); 
 	get_input("Inserisci il nome: ", VARCHAR_LEN, postoprenotato-> nomepasseggero, false);
 	get_input("Inserisci il cognome: ", VARCHAR_LEN, postoprenotato-> cognomepasseggero, false);
+
 	do_insert_seat(postoprenotato); 
 }
 

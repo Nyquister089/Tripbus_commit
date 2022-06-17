@@ -63,6 +63,8 @@ struct cliente {
 	char fax[VARCHAR_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 };
 
+
+
 struct comfort {
 	char idcomfort [NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 	char nomecomfort[VARCHAR_LEN]; 
@@ -165,10 +167,10 @@ struct offre {
 }; 
 
 struct postoprenotato {
-	char numerodiposto[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
-	char viaggioassociato[NUM_LEN]; 					//Fk //Corretto trasformandolo da carattere a puntatore di carattere
-	char prenotazioneassociata[NUM_LEN]; 				//Fk //Corretto trasformandolo da carattere a puntatore di carattere
-	char etapasseggero[NUM_LEN];  //Corretto trasformandolo da carattere a puntatore di carattere
+	int numerodiposto; //Corretto trasformandolo da carattere a puntatore di carattere
+	int viaggioassociato; 					//Fk //Corretto trasformandolo da carattere a puntatore di carattere
+	int prenotazioneassociata; 				//Fk //Corretto trasformandolo da carattere a puntatore di carattere
+	int etapasseggero;  //Corretto trasformandolo da carattere a puntatore di carattere
 	char nomepasseggero[VARCHAR_LEN]; 
 	char cognomepasseggero[VARCHAR_LEN]; 
 }; 
