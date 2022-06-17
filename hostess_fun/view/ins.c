@@ -150,7 +150,7 @@ void ins_association(struct associata *associata)
 		fprintf(stderr, "Data errata!\n");
 	}
 	while(true){
-		get_inpunt("Inserisci la data di fine soggiorno",DATE_LEN, associata->datafinesoggiorno, false);
+		get_input("Inserisci la data di fine soggiorno",DATE_LEN, associata->datafinesoggiorno, false);
 		if(validate_date(associata->datafinesoggiorno))
 				break;
 			fprintf(stderr, "Data errata!\n");

@@ -47,10 +47,10 @@ struct associata{
 }; 
 
 struct camera {
-	char numerocamera [NUM_LEN];//Corretto trasformandolo da carattere a puntatore di carattere
-	char albergo [NUM_LEN];						//FK //Corretto trasformandolo da carattere a puntatore di carattere
+	int numerocamera;//Corretto trasformandolo da carattere a puntatore di carattere
+	int albergo;						//FK //Corretto trasformandolo da carattere a puntatore di carattere
 	char tipologia[VARCHAR_LEN];
-	char costo [NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	float costo ; //Corretto trasformandolo da carattere a puntatore di carattere
 	
 };
 

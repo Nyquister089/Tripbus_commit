@@ -27,6 +27,6 @@ SET eml = c.EmailCliente,
     ddc = c.DataDocumentazione, 
     tel = c.RecapitoTelefonico, 
     fax = c.Fax;
-/*SELECT CONVERT (select_costumer USING utf8) COLLATE utf8_general_ci; */
+/*SELECT CONVERT (select_costumer USING utf8) COLLATE utf8_general_ci;*/
 
 END

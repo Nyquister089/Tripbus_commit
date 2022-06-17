@@ -130,7 +130,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(update_data_doc, "Unable to initialize update trip statement statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&insert_assoc, "call insert_assoc(?, ?, ?)", conn)) {
+			if(!setup_prepared_stmt(&insert_assoc, "call insert_assoc(?, ?, ?, ?, ?)", conn)) {
 				print_stmt_error(insert_assoc, "Unable to initialize update trip statement statement\n");
 				return false;
 			}
@@ -359,25 +359,26 @@ void do_insert_seat(struct postoprenotato *postoprenotato) //Funziona
 
 void do_insert_assoc(struct associata *associata) 
 {		
-	MYSQL_BIND param[3];
+	MYSQL_BIND param[5];
+	MYSQL_TIME datafinesoggiorno;
+	MYSQL_TIME datainiziosoggiorno; 
 
 	int cameraprenotata; 
 	int ospite; 
 	int albergoinquestione; 
 
+	date_to_mysql_time(associata->datainiziosoggiorno, &datainiziosoggiorno); 
+	date_to_mysql_time(associata->datafinesoggiorno, &datafinesoggiorno); 
+
+
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &cameraprenotata, sizeof(cameraprenotata));
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &ospite, sizeof(ospite));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &albergoinquestione, sizeof(albergoinquestione));
+	set_binding_param(&param[3], MYSQL_TYPE_DATE, &datainiziosoggiorno, sizeof(datainiziosoggiorno)); 
+	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datafinesoggiorno, sizeof(datafinesoggiorno));
 	
-	
-	if(mysql_stmt_bind_param(insert_assoc, param) != 0) {
-		print_stmt_error(insert_assoc, "Could not bind parameters for insert_assoc");
-		return;
-	}
-	if(mysql_stmt_execute(insert_assoc) != 0) {
-		print_stmt_error(insert_assoc, "Could not execute insert_assoc");
-		return;
-		}
+	bind_exe(insert_assoc, param, "insert_assoc"); 
+
 	mysql_stmt_free_result(insert_assoc);
 	mysql_stmt_reset(insert_assoc);
 	
@@ -610,7 +611,11 @@ void do_select_reservation(struct prenotazione *prenotazione)
 	init_mysql_timestamp(&dds); 
 	
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerodiprenotazione, sizeof(numerodiprenotazione));
-	
+	/*set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, strlen(prenotazione->clienteprenotante));
+	set_binding_param(&param[2], MYSQL_TYPE_DATETIME, &datadiprenotazione,sizeof(datadiprenotazione));
+	set_binding_param(&param[3], MYSQL_TYPE_DATETIME, &datadiconferma, sizeof(datadiconferma));
+	set_binding_param(&param[4], MYSQL_TYPE_DATETIME, &datasaldo, sizeof(datasaldo));*/
+
 	if(bind_exe(select_reservation,param,"select_reservation") == -1)
 		goto stop;  
 
