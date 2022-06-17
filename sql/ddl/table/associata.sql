@@ -2,6 +2,8 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`associata` (
   `CameraPrenotata` int unsigned NOT NULL,
   `Ospite` int unsigned NOT NULL,
   `AlbergoInQuestione` int unsigned NOT NULL,
+  `DataInizioSoggiorno` DATE NOT NULL, 
+  `DataFineSoggiorno` DATE NOT NULL,
   PRIMARY KEY (`CameraPrenotata`,`Ospite`,`AlbergoInQuestione`),
   KEY `AlbergoInQuestione_idx` (`AlbergoInQuestione`),
   KEY `Ospite_idx` (`Ospite`),

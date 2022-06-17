@@ -230,8 +230,7 @@ role_t attempt_login(struct credentials *cred)
 
 	mysql_stmt_free_result(login_procedure);
 	mysql_stmt_reset(login_procedure);
-	
-	printf(" ROLE = %d\n\n", role); 
+	 
 	initialize_prepared_stmts(role); 
 	
 	return role;
@@ -330,14 +329,19 @@ void do_insert_reservation(struct prenotazione *prenotazione)// funziona
 	
 }
 
-void do_insert_seat(struct postoprenotato *postoprenotato)
+void do_insert_seat(struct postoprenotato *postoprenotato) //Funziona
 {		
 	MYSQL_BIND param[6]; 
 	
-	unsigned int numerodiposto; 
-	unsigned int viaggioassociato; 
-	unsigned int prenotazioneassociata; 
+	int numerodiposto; 
+	int viaggioassociato; 
+	int prenotazioneassociata; 
 	int etapasseggero; 
+
+	numerodiposto = postoprenotato->numerodiposto; 
+	viaggioassociato = postoprenotato->viaggioassociato; 
+	prenotazioneassociata = postoprenotato->prenotazioneassociata; 
+	etapasseggero = postoprenotato->etapasseggero; 
 	
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerodiposto, sizeof(numerodiposto));
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &viaggioassociato, sizeof(viaggioassociato));
@@ -346,23 +350,14 @@ void do_insert_seat(struct postoprenotato *postoprenotato)
 	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, postoprenotato->nomepasseggero, strlen(postoprenotato->nomepasseggero));
 	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, postoprenotato->cognomepasseggero, strlen(postoprenotato->cognomepasseggero));
 	
-	
-	if(mysql_stmt_bind_param(insert_seat, param) != 0) {
-		print_stmt_error(insert_seat, "Could not bind parameters for insert_seat");
-		goto stop;
-	}
-	if(mysql_stmt_execute(insert_seat) != 0) {
-		print_stmt_error(insert_seat, "Could not execute insert_seat");
-		goto stop; 
-		}
+    bind_exe(insert_seat,param, "insert_seat"); 
 
-	stop:
 	mysql_stmt_free_result(insert_seat);
 	mysql_stmt_reset(insert_seat);
 	
 }
 
-void do_insert_assoc(struct associata *associata)
+void do_insert_assoc(struct associata *associata) 
 {		
 	MYSQL_BIND param[3];
 
@@ -402,6 +397,8 @@ void do_validate_reservation(struct prenotazione *prenotazione)
 	MYSQL_TIME datasaldo; 
 
 	int numerodiprenotazione; 
+
+	numerodiprenotazione = prenotazione->numerodiprenotazione; 
 	
 	date_to_mysql_time(prenotazione->datadiconferma, &datadiconferma);
 	date_to_mysql_time(prenotazione->datasaldo, &datasaldo);
@@ -410,15 +407,8 @@ void do_validate_reservation(struct prenotazione *prenotazione)
 	set_binding_param(&param[1], MYSQL_TYPE_DATE, &datadiconferma, sizeof(datadiconferma));
 	set_binding_param(&param[2], MYSQL_TYPE_DATE, &datasaldo, sizeof(datasaldo));
 	
-	
-	if(mysql_stmt_bind_param(validate_reservation, param) != 0) {
-		print_stmt_error(validate_reservation, "Could not bind parameters for bind_reservation");
-		return;
-	}
-	if(mysql_stmt_execute(validate_reservation) != 0) {
-		print_stmt_error(validate_reservation, "Could not execute validate_reservation");
-		return;
-		}
+	bind_exe(validate_reservation,param,"validate_reservation"); 
+
 	mysql_stmt_free_result(validate_reservation);
 	mysql_stmt_reset(validate_reservation);
 	
@@ -429,73 +419,67 @@ void do_validate_reservation(struct prenotazione *prenotazione)
 
 
 
-void do_update_trip_seat(struct viaggio *viaggio)
+void do_update_trip_seat(struct viaggio *viaggio) //Funziona
 {	
-	MYSQL_BIND param[11]; 
-	MYSQL_TIME datadipartenzaviaggio; 
-	MYSQL_TIME datadiritornoviaggio;
-	MYSQL_TIME datadiannullamento; 
+	MYSQL_BIND param[2]; 
 
 	int idviaggio; 
-	int conducente; 
-	int accompagnatrice; 
-	float costodelviaggio; 
-	int numerodikm; 
-	int numerodipostidisponibili; 
-	int dataannullamento; 
-	
-	date_to_mysql_time(viaggio->datadipartenzaviaggio, &datadipartenzaviaggio);
-	date_to_mysql_time(viaggio->datadiritornoviaggio, &datadiritornoviaggio); 
-	date_to_mysql_time(viaggio->datadiannullamento, &datadiannullamento); 
+	int postidisponibili; 
 
-	
+	idviaggio = viaggio->idviaggio; 
+	postidisponibili = viaggio->postidisponibili; 
+
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, strlen(viaggio->tourassociato));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, strlen(viaggio->mezzoimpiegato));
-	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
-	set_binding_param(&param[6], MYSQL_TYPE_DATETIME, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
-	set_binding_param(&param[7], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
-	set_binding_param(&param[8], MYSQL_TYPE_LONG, &numerodikm, sizeof(numerodikm));
-	set_binding_param(&param[9], MYSQL_TYPE_LONG, &numerodipostidisponibili, sizeof(numerodipostidisponibili));
-	set_binding_param(&param[10], MYSQL_TYPE_DATETIME, &dataannullamento, sizeof(dataannullamento));
-	
-	if(mysql_stmt_bind_param(update_trip_seat, param) != 0) {
-		print_stmt_error(update_trip_seat, "Could not bind parameters for update_trip_seat");
-		return;
-	}
-	if(mysql_stmt_execute(update_trip_seat) != 0) {
-		print_stmt_error(update_trip_seat, "Could not execute update_trip_seat");
-		return;
-		}
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &postidisponibili, sizeof(postidisponibili));
+
+	bind_exe(update_trip_seat, param, "update_trip_seat"); 
+
 	mysql_stmt_free_result(update_trip_seat);
 	mysql_stmt_reset(update_trip_seat);
 }
 
 
 
-void do_select_trip(struct viaggio *viaggio)
+void do_select_trip(struct viaggio *viaggio) //Funziona
 {		
 	MYSQL_BIND param[11]; 
 	MYSQL_TIME datadipartenzaviaggio; 
 	MYSQL_TIME datadiritornoviaggio;
-	MYSQL_TIME datadiannullamento; 
+	MYSQL_TIME datadiannullamento;
+	MYSQL_TIME ddp; 
+	MYSQL_TIME ddr; 
+	MYSQL_TIME dda; 
 
 	int idviaggio; 
-	char tourassociato[VARCHAR_LEN]; 
 	int conducente; 				
-	int accompagnatrice; 					
-	char mezzoimpiegato[VARCHAR_LEN]; 			
-	float costodelviaggio[NUM_LEN];
-	int numerodikm;
-	int postidisponibili;
+	int accompagnatrice; 
+	float costodelviaggio;  
+	int numerodikm; 
+	int postidisponibili; 
 
-	
-	
+	int idv; 
+	char tou[VARCHAR_LEN]; 
+	int con; 				
+	int acc; 					
+	char mez[VARCHAR_LEN]; 			
+	float cos;
+	int nkm;
+	int pds;
+
 	date_to_mysql_time(viaggio->datadipartenzaviaggio, &datadipartenzaviaggio);
 	date_to_mysql_time(viaggio->datadiritornoviaggio, &datadiritornoviaggio); 
-	date_to_mysql_time(viaggio->datadiannullamento, &datadiannullamento); 
+	date_to_mysql_time(viaggio->datadiannullamento, &datadiannullamento);
+
+	init_mysql_timestamp(&ddp); 
+	init_mysql_timestamp(&ddr); 
+	init_mysql_timestamp(&dda);
+    
+	idviaggio = viaggio->idviaggio; 
+	conducente = viaggio->conducente; 				
+	accompagnatrice = viaggio->accompagnatrice ; 
+	costodelviaggio = viaggio->costodelviaggio;  
+	numerodikm = viaggio->numerodikm; 
+	postidisponibili = viaggio -> postidisponibili; 
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, strlen(viaggio->tourassociato));
@@ -509,49 +493,43 @@ void do_select_trip(struct viaggio *viaggio)
 	set_binding_param(&param[9], MYSQL_TYPE_LONG, &postidisponibili, sizeof(postidisponibili));
 	set_binding_param(&param[10], MYSQL_TYPE_DATE, &datadiannullamento, sizeof(datadiannullamento));
 	
-	if(mysql_stmt_bind_param(select_trip, param) != 0) {
-		print_stmt_error(select_trip, "Could not bind parameters for select_trip");
-		return;
-		}
+	if(bind_exe(select_trip,param,"select_trip") == -1)
+		goto stop; 
 
-	if(mysql_stmt_execute(select_trip) != 0) {
-		print_stmt_error(select_trip, "Could not execute select_trip");
-		return;
-		}
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tou, VARCHAR_LEN);
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &con, NUM_LEN);
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &acc, VARCHAR_LEN);
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mez, VARCHAR_LEN);
+	set_binding_param(&param[4], MYSQL_TYPE_DATE, &ddp, DATE_LEN);
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &ddr, DATE_LEN);
+	set_binding_param(&param[6], MYSQL_TYPE_FLOAT, &cos, NUM_LEN);
+	set_binding_param(&param[7], MYSQL_TYPE_LONG, &nkm, NUM_LEN);
+	set_binding_param(&param[8], MYSQL_TYPE_LONG, &pds, NUM_LEN);
+	set_binding_param(&param[9], MYSQL_TYPE_DATE, &dda, DATE_LEN);
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, strlen(viaggio->tourassociato));
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, strlen(viaggio->mezzoimpiegato));
-	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
-	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
-	set_binding_param(&param[6], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
-	set_binding_param(&param[7], MYSQL_TYPE_LONG, &numerodikm, sizeof(numerodikm));
-	set_binding_param(&param[8], MYSQL_TYPE_LONG, &postidisponibili, sizeof(postidisponibili));
-	set_binding_param(&param[9], MYSQL_TYPE_DATE, &datadiannullamento, sizeof(datadiannullamento));
+	if(take_result(select_trip,param, "select_trip") == -1)
+		goto stop; 
 
-	if(mysql_stmt_bind_result(select_trip, param)) {
-		print_stmt_error(select_trip, "Could not retrieve output parameter select_trip");
-	}
-printf("\n\nBind Select_trip in trpdb\n\n "); 
-	//Errore
-	// Retrieve output parameter
-	if(mysql_stmt_fetch(select_trip)) {
-		print_stmt_error(select_trip, "Could not buffer results select_trip");
-	}
+		strcpy(viaggio->tourassociato, tou);
+		strcpy(viaggio->mezzoimpiegato, mez);
+		viaggio->conducente = con; 
+		viaggio->accompagnatrice = acc; 
+		viaggio->numerodikm = nkm; 
+		viaggio->postidisponibili = pds; 
 
-	//while(mysql_stmt_next_result(select_trip) != -1) {}
+		mysql_timestamp_to_string(&ddp, viaggio->datadipartenzaviaggio);
+		mysql_timestamp_to_string(&ddr, viaggio->datadiritornoviaggio); 
+        mysql_timestamp_to_string(&dda, viaggio->datadiannullamento);
+
+	stop: 
 
 	mysql_stmt_free_result(select_trip);
-	mysql_stmt_reset(select_trip);
-	
+	mysql_stmt_reset(select_trip);	
 }
 	
 void do_select_costumer(struct cliente *cliente) // funziona ma rivedere il campo recapito telefonico
 {	 
-	MYSQL_BIND param[8]; 
-	MYSQL_FIELD *field;
-	MYSQL_RES *data_field; 
+	MYSQL_BIND param[8];  
 	MYSQL_TIME datadocumentazione;
     MYSQL_TIME ddc; 
 
@@ -560,12 +538,9 @@ void do_select_costumer(struct cliente *cliente) // funziona ma rivedere il camp
 	char cgm[VARCHAR_LEN];
 	char ind[VARCHAR_LEN];
 	char cdf[VARCHAR_LEN];
-	char tel[VARCHAR_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	char tel[VARCHAR_LEN];
 	char fax[VARCHAR_LEN];
 
-	size_t num_fields = 0;
-	int column_count; 
-    int status; 
 
 	date_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
     init_mysql_timestamp(&ddc);
@@ -579,48 +554,29 @@ void do_select_costumer(struct cliente *cliente) // funziona ma rivedere il camp
 	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, strlen(cliente->recapitotelefonico));
 	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, cliente->fax, strlen(cliente->fax));
 
-	if(mysql_stmt_bind_param(select_costumer, param) != 0) {
-		print_stmt_error(select_costumer, "Impossibile eseguire il bind dei parametri (select_costumer)\n");
-		goto stop;
-	}
-
-	if(mysql_stmt_execute(select_costumer) != 0) {
-		print_stmt_error(select_costumer, "Impossibile eseguire la procedura select_costumer\n");
-		goto stop;
-		} 
+	if(bind_exe(select_costumer,param,"select_costumer") == -1)
+		goto stop; 
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, eml, VARCHAR_LEN);
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, nmc, VARCHAR_LEN);
 	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cgm, VARCHAR_LEN);
 	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, ind, VARCHAR_LEN);
 	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cdf, VARCHAR_LEN);
-	set_binding_param(&param[5], MYSQL_TYPE_DATE, &ddc, sizeof(ddc));
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &ddc, DATE_LEN);
 	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, tel, VARCHAR_LEN);
 	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, fax, VARCHAR_LEN);
 
-	if(mysql_stmt_bind_result(select_costumer, param)) {
-		print_stmt_error(select_costumer, "Impossibile eseguire il bind dei parametri (select_costumer)\n");
-		goto stop; 
-	}
-
-	if( mysql_stmt_store_result(select_costumer) != 0){
-		print_stmt_error(select_costumer, "\nImpossibile eseguire lo store del result set ");
-		printf("(select_costumer)"); 
+	if(take_result(select_costumer,param,"select_costumer")== -1)
 		goto stop;
-	}
-	
-	mysql_stmt_fetch(select_costumer);
-    if (status == 1 || status == MYSQL_NO_DATA)
-			goto stop; 
 
-		strcpy(cliente->emailcliente, eml);
-		strcpy(cliente->nomecliente, nmc);
-		strcpy(cliente->cognomecliente, cgm);
-        strcpy(cliente->codicefiscale, cdf);
-        strcpy(cliente->indirizzocliente, ind);
-        strcpy(cliente->recapitotelefonico,tel); 
-        strcpy(cliente->fax, fax); 
-        mysql_timestamp_to_string(&ddc, cliente->datadocumentazione);
+	strcpy(cliente->emailcliente, eml);
+	strcpy(cliente->nomecliente, nmc);
+	strcpy(cliente->cognomecliente, cgm);
+    strcpy(cliente->codicefiscale, cdf);
+    strcpy(cliente->indirizzocliente, ind);
+    strcpy(cliente->recapitotelefonico,tel); 
+    strcpy(cliente->fax, fax); 
+    mysql_timestamp_to_string(&ddc, cliente->datadocumentazione);
 		
     stop:
 	mysql_stmt_free_result(select_costumer);
@@ -635,30 +591,45 @@ void do_select_reservation(struct prenotazione *prenotazione)
 	MYSQL_TIME datadiprenotazione; 
 	MYSQL_TIME datadiconferma; 
 	MYSQL_TIME datasaldo; 
+	MYSQL_TIME ddp; 
+	MYSQL_TIME ddc; 
+	MYSQL_TIME dds; 
 	
 	int numerodiprenotazione;
+	int ndp; 
+	char cli[VARCHAR_LEN];
+
+	numerodiprenotazione = prenotazione->numerodiprenotazione; 
 
 	date_to_mysql_time(prenotazione->datadiprenotazione, &datadiprenotazione); 
 	date_to_mysql_time(prenotazione->datadiconferma, &datadiconferma);
 	date_to_mysql_time(prenotazione->datasaldo, &datasaldo);
-	
+
+	init_mysql_timestamp(&ddp); 
+	init_mysql_timestamp(&ddc); 
+	init_mysql_timestamp(&dds); 
 	
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerodiprenotazione, sizeof(numerodiprenotazione));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, strlen(prenotazione->clienteprenotante));
-	set_binding_param(&param[2], MYSQL_TYPE_DATETIME, &datadiprenotazione,sizeof(datadiprenotazione));
-	set_binding_param(&param[3], MYSQL_TYPE_DATETIME, &datadiconferma, sizeof(datadiconferma));
-	set_binding_param(&param[4], MYSQL_TYPE_DATETIME, &datasaldo, sizeof(datasaldo));
-
-	if(mysql_stmt_bind_param(select_reservation, param) != 0) {
-		print_stmt_error(select_reservation, "Impossibile eseguire il bind dei parametri(select_reservation)");
-		return;
-	}
-
-	if(mysql_stmt_execute(select_reservation) != 0) {
-		print_stmt_error(select_reservation, "Impossibile eseguire la procedura  select_reservation\n");
-		return;
-		}
 	
+	if(bind_exe(select_reservation,param,"select_reservation") == -1)
+		goto stop;  
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &ndp, NUM_LEN);
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, &cli, VARCHAR_LEN);
+	set_binding_param(&param[2], MYSQL_TYPE_DATETIME, &ddp, DATE_LEN);
+	set_binding_param(&param[3], MYSQL_TYPE_DATETIME, &ddc, DATE_LEN);
+	set_binding_param(&param[4], MYSQL_TYPE_DATETIME, &dds, DATE_LEN);
+
+	if(take_result(select_reservation,param,"select_reservation")== -1) 
+		goto stop; 
+
+	strcpy(prenotazione->clienteprenotante, cli); 
+	prenotazione->numerodiprenotazione = ndp; 
+	mysql_timestamp_to_string(&ddp, prenotazione->datadiprenotazione); 
+	mysql_timestamp_to_string(&ddc, prenotazione->datadiconferma); 
+	mysql_timestamp_to_string(&dds, prenotazione->datasaldo); 
+
+	stop: 
 	mysql_stmt_free_result(select_reservation);
 	mysql_stmt_reset(select_reservation);
 }

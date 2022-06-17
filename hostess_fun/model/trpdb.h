@@ -39,9 +39,11 @@ extern role_t attempt_login(struct credentials *cred);
 extern void db_switch_to_administrator(void);
 
 struct associata{
-	char  cameraprenotata[NUM_LEN]; 				//FK //Corretto trasformandolo da carattere a puntatore di carattere
-	char  ospite[NUM_LEN]; 						//FK //Corretto trasformandolo da carattere a puntatore di carattere
-	char  albergoinquestione[NUM_LEN]; 			//FK //Corretto trasformandolo da carattere a puntatore di carattere
+	int  cameraprenotata; 				//FK //Corretto trasformandolo da carattere a puntatore di carattere
+	int  ospite; 						//FK //Corretto trasformandolo da carattere a puntatore di carattere
+	int albergoinquestione; 			//FK //Corretto trasformandolo da carattere a puntatore di carattere
+	char datainiziosoggiorno[DATE_LEN]; 
+	char datafinesoggiorno[DATE_LEN];
 }; 
 
 struct camera {
@@ -176,7 +178,7 @@ struct postoprenotato {
 }; 
 
 struct prenotazione {
-	char numerodiprenotazione[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	int numerodiprenotazione; //Corretto trasformandolo da carattere a puntatore di carattere
 	char clienteprenotante[VARCHAR_LEN]; 			//FK
 	char datadiprenotazione[DATE_LEN]; 
 	char datadiconferma[DATE_LEN]; 
@@ -262,7 +264,7 @@ struct viaggio {
 	char mezzoimpiegato[VARCHAR_LEN]; 			// FK
 	char datadipartenzaviaggio[DATETIME_LEN]; 
 	char datadiritornoviaggio[DATETIME_LEN]; 
-	float costodelviaggio[NUM_LEN];  //Corretto trasformandolo da carattere a puntatore di carattere
+	float costodelviaggio;  //Corretto trasformandolo da carattere a puntatore di carattere
 	int numerodikm; //Corretto trasformandolo da carattere a puntatore di carattere
 	int postidisponibili; //Corretto trasformandolo da carattere a puntatore di carattere
 	char datadiannullamento[DATETIME_LEN]; 

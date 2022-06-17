@@ -2,7 +2,7 @@ CREATE DEFINER=`giordano`@`localhost` PROCEDURE `update_trip_seat`(IN trip INT, 
 BEGIN 
 
 UPDATE viaggio as v
-SET v.PostiDispobili = pos
+SET v.PostiDisponibili = pos
 WHERE v.IdViaggio = trip; 
 
 END

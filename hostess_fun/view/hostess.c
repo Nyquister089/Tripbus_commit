@@ -23,7 +23,7 @@ void  allocation_hstss(void)
 
 int get_hstss_action(void)
 {
-	char options[8] = {'1','2','3','4','5','6','7','8'};
+	char options[7] = {'1','2','3','4','5','6','7'};
 	char op;
 	
 	puts("*********************************");
@@ -32,24 +32,19 @@ int get_hstss_action(void)
 	puts("*** Quale operazione vorresti eseguire? ***\n");
 	puts("1) Consultare prenotazioni");
 	puts("2) Inserire un nuovo cliente");
-	puts("3) Inserire una nuova prenotazione"); 
-	puts("4) Inserire un nuovo posto prenotato"); 
-	puts("5) Modifica posti disponibili per un viaggio");
-	puts("6) Conferma prenotazione ed intestazione posti");
-	puts("7) Modificare la data di invion ultimi documenti di un cliente"); 
-	puts("8) Esci");
+	puts("3) Inserire una nuova prenotazione");  
+	puts("4) Modifica posti disponibili per un viaggio");
+	puts("5) Conferma prenotazione ed intestazione posti");
+	puts("6) Modificare la data di invio degli ultimi documenti di un cliente"); 
+	puts("7) Esci");
 
-	op = multi_choice("Select an option", options, 8);
+	op = multi_choice("Select an option", options, 7);
 
 	return op -'1'; 
 }
 
-bool exe_hstss_act(char sel, 
-	struct cliente *cliente,
-	struct prenotazione * prenotazione,
-	struct postoprenotato *postoprenotato, 
-	struct viaggio *viaggio, 
-	struct associata *associata)
+bool exe_hstss_act(char sel, struct cliente *cliente,struct prenotazione * prenotazione,
+	struct postoprenotato *postoprenotato, struct viaggio *viaggio, struct associata *associata)
 {	
 
 	switch (sel)
@@ -67,16 +62,12 @@ bool exe_hstss_act(char sel,
 				ins_prenotation(prenotazione); 
 				return true;
 				}
-     		case INSERT_POSTPRENOTATO: {
-				ins_seat(postoprenotato); 
-				return true; 
-				}
      		case POSTI_VIAGGIO:{
      			mod_trip_seat(viaggio);
 				return true; 
 				}
 			case CONFERMA_PRENOTAZIONE:{
-				validate_prenotation (prenotazione, postoprenotato, associata); 
+				validate_reservation (prenotazione, postoprenotato, associata); 
 				return true;
 		 		}
 
@@ -100,14 +91,13 @@ bool exe_hstss_act(char sel,
 
 void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura visualizzazione dettagli prenotazione
 {	
-	////clear_scren(); 
 	char buffer[VARCHAR_LEN]; 
 	get_input("Inserisci il numero di prenotazione : ", VARCHAR_LEN, buffer, false);
 	printf("\n\n"); 
 	do_select_reservation(prenotazione); 
 	
  	printf("\n\n** Dettagli prenotazione **\n\n");
- 	printf("Penotazione numero: %s  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data Saldo: %s \n",
+ 	printf("Penotazione numero: %d  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data Saldo: %s \n",
 		prenotazione->numerodiprenotazione, 
 		prenotazione->clienteprenotante,
 		prenotazione->datadiprenotazione, 
@@ -117,14 +107,14 @@ void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura v
 
 void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsonibili per viaggio 
 {
-	////clear_scren(); 
+	
 	char buffer[VARCHAR_LEN]; 
  	get_input("Inserisci il codice del viaggio : ", VARCHAR_LEN, buffer, false);
 	
 	viaggio->idviaggio = atoi(buffer);
 
  	do_select_trip(viaggio);
- 	////clear_scren(); 
+
  	printf("\n\n**  Dettagli Viaggio ** \n\n"); 
  	printf(" Tour : %s \n Posti disponibili: %d \n Data annullamento: %s \n ",
  		viaggio->tourassociato, 
@@ -137,14 +127,14 @@ void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsoni
 	do_update_trip_seat(viaggio); 
 }
 
-void validate_prenotation(struct prenotazione *prenotazione, struct postoprenotato *postoprenotato, struct associata *associata)
+void validate_reservation(struct prenotazione *prenotazione, struct postoprenotato *postoprenotato, struct associata *associata)
 {
-	////clear_scren();
-	char buffer[VARCHAR_LEN]; 
+	char buff[NUM_LEN]; 
 	printf("** Procedura conferma prenotazione **\n\n");
-	get_input("Inserisci numero d'interesse : ", VARCHAR_LEN , buffer, false); 
+	get_input("Inserisci numero d'interesse : ", NUM_LEN , buff, false); 
+	prenotazione->numerodiprenotazione = atoi(buff); 
     do_select_reservation(prenotazione); 
-	printf("\nNumero:  %s \n  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data di saldo: %s \n  ", 
+	printf("\nNumero:  %d \n  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data di saldo: %s \n  ", 
 		prenotazione->numerodiprenotazione,
 		prenotazione->clienteprenotante,
 		prenotazione->datadiprenotazione,
@@ -155,12 +145,14 @@ void validate_prenotation(struct prenotazione *prenotazione, struct postoprenota
 	if(!answer_update) {
 		return;
 		}
+
 	while(true){
 		get_input("\nModifica data di conferma [YYYY-MM-DD]: ", DATE_LEN, prenotazione->datadiconferma, false);
 		if(validate_date(prenotazione->datadiconferma))
 			break;
 		fprintf(stderr, "Data errata!\n");
 		}
+
 	while(true){
 		get_input("\nModifica data di saldo [YYYY-MM-DD]: ", DATE_LEN, prenotazione->datasaldo, false);
 		if(validate_date(prenotazione->datasaldo))
@@ -169,10 +161,16 @@ void validate_prenotation(struct prenotazione *prenotazione, struct postoprenota
 		}
 		do_validate_reservation(prenotazione);
 		bool seat_ans, association_ans;   
+
 	do {
 		printf("** Associa un passeggero alla prenotazione ** \n"); 
+
+		postoprenotato->prenotazioneassociata = prenotazione->numerodiprenotazione; 
+
 		ins_seat(postoprenotato); 
-		do{	printf("** Associa camera al passeggero ** "); 
+
+		do{	printf("** Associa camera al passeggero ** ");
+			 associata->ospite = postoprenotato->numerodiposto; 
 			ins_association(associata); 
 			association_ans= yes_or_no("\n\n Vuoi associare un'altra camera a questo passeggero? (s/n) ",'s','n',false,false);
 		

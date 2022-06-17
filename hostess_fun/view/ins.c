@@ -3,8 +3,8 @@
 
 
 void ins_prenotation(struct prenotazione *prenotazione) //funziona
-{	//clear_scren();
-	printf("** Dettagli inserimento prenotazione **\n\n");
+{
+	printf("\n** Dettagli inserimento prenotazione **\n\n");
 	get_input("Inserisci l'indirizzo e-mail del cliente che ha effettuato la prenotazione : ", VARCHAR_LEN, prenotazione->clienteprenotante, false);
 	while(true){
 		get_input("Inserisci data [YYYY-MM-DD]: ", DATE_LEN, prenotazione->datadiprenotazione, false);
@@ -18,13 +18,17 @@ void ins_prenotation(struct prenotazione *prenotazione) //funziona
 void ins_seat(struct postoprenotato *postoprenotato)
 {	
 	char buff[NUM_LEN]; 
-	printf("** Dettagli inserimento passeggero **\n\n");
-	get_input("Inserisci il numero di posto  : ", NUM_LEN, buff, false);
+	printf("\n** Dettagli inserimento passeggero **\n\n");
+	get_input("Inserisci il numero di posto: ", NUM_LEN, buff, false);
+
 	postoprenotato->numerodiposto = atoi(buff); 
+
 	get_input("Inserisci l'ID del viaggio a cui partecipera' il passeggero: ", NUM_LEN, buff, false);
 	postoprenotato->viaggioassociato = atoi(buff); 
-	get_input("Inserisci l'eta': ", NUM_LEN, buff, false);
+	
+	get_input("Inserisci l'età: ", NUM_LEN, buff, false);
 	postoprenotato->etapasseggero = atoi(buff); 
+
 	get_input("Inserisci il nome: ", VARCHAR_LEN, postoprenotato-> nomepasseggero, false);
 	get_input("Inserisci il cognome: ", VARCHAR_LEN, postoprenotato-> cognomepasseggero, false);
 
@@ -32,8 +36,8 @@ void ins_seat(struct postoprenotato *postoprenotato)
 }
 
 void ins_review(struct revisione *revisione)
-{	//clear_scren();
-	printf("** Dettagli inserimento revisione **\n\n");
+{
+	printf("\n** Dettagli inserimento revisione **\n\n");
 	get_input("Inserisci l'ID del mezzo revisionato : ", NUM_LEN, revisione->mezzorevisionato, false);
 	get_input("Inserisci l'ID del meccanico che ha eseguito la revisione : ", NUM_LEN, revisione-> addettoallarevisione, false);
 	get_input("Inserisci la descrizione delle operazioni eseguite (massimo 5000 caratteri): ", DES_LEN, revisione-> operazionieseguite, false);
@@ -59,10 +63,9 @@ void ins_review(struct revisione *revisione)
 
 void ins_costumer(struct cliente *cliente) // funziona ma smashing stack su inserimento interi3
 {	
-	//clear_scren();
 	char buff[VARCHAR_LEN]; 
 	
-	printf("** Dettagli inserimento cliente **\n\n");
+	printf("\n** Dettagli inserimento cliente **\n\n");
 	get_input("Inserisci l'indirizzo e-mail: ", VARCHAR_LEN, cliente->emailcliente, false);
 	get_input("Inserisci il nome: ", VARCHAR_LEN, cliente->nomecliente, false);
 	get_input("Inserisci il cognome: ", VARCHAR_LEN, cliente->cognomecliente, false);
@@ -83,8 +86,7 @@ void ins_costumer(struct cliente *cliente) // funziona ma smashing stack su inse
 
 void ins_sparepart(struct ricambio *ricambio)
 {	
-	//clear_scren();
-	printf("** Dettagli inserimento ricambio **\n\n");
+	printf("\n** Dettagli inserimento ricambio **\n\n");
 	get_input("Inserisci il codice: ", VARCHAR_LEN, ricambio->codice, false);
 	get_input("Inserisci il costo unitario: ", DEC_LEN, ricambio->costounitario, false);
 	get_input("Inserisci la quantita' minima: ", NUM_LEN, ricambio->quantitadiriordino, false);
@@ -95,8 +97,8 @@ void ins_sparepart(struct ricambio *ricambio)
 
 void ins_bus(struct mezzo *mezzo)
 {	
-	//clear_scren();
-	printf("** Dettagli inserimento mezzo **\n\n");
+	
+	printf("\n** Dettagli inserimento mezzo **\n\n");
 	get_input("Inserisci la targa : ", VARCHAR_LEN, mezzo->targa, false);
 	get_input("Inserisci l'ID del modello : ", NUM_LEN, mezzo->modellomezzo, false);
 	get_input("Inserisci gli ingombri : ", VARCHAR_LEN, mezzo->ingombri, false);
@@ -119,7 +121,7 @@ void ins_bus(struct mezzo *mezzo)
 void ins_model(struct modello *modello)
 {	
 	//clear_scren();
-	printf("** Dettagli inserimento modello **\n\n");
+	printf("\n** Dettagli inserimento modello **\n\n");
 	get_input("Inserisci il nome : ", DEC_LEN, modello->nomemodello, false);
 	get_input("Inserisci la casa costruttrice : ", NUM_LEN, modello->casacostruttrice, false);
 	get_input("Inserisci i dati tecnici (massimo 5000 caratteri) : ", DES_LEN, modello-> datitecnici, false);
@@ -128,16 +130,30 @@ void ins_model(struct modello *modello)
 
 void ins_certify(struct tagliando *tagliando)
 {	//clear_scren();
-	printf("** Dettagli inserimento tagliando **\n\n");
+	printf("\n** Dettagli inserimento tagliando **\n\n");
 	get_input("Inserisci la tipologia del tagliando: ", VARCHAR_LEN, tagliando->tipologiatagliando, false);
 	get_input("Inserisci le validita' superate (massimo 5000 caratteri) : ", DES_LEN, tagliando->validitasuperate, false);
 }
 
 void ins_association(struct associata *associata)
-{//clear_scren();
-	printf("** Dettagli associazione camera**\n\n");
-	get_input("Inserisci il numero della camera : ", NUM_LEN, associata->cameraprenotata, false);
-	get_input("Inserisci il nome dell'ospite: ", VARCHAR_LEN, associata->ospite, false);
-	get_input("Inserisci l'albergo in cui è ubicata la camera  : ", NUM_LEN, associata->albergoinquestione, false);	
+{	
+	char buff[NUM_LEN]; 
+	printf("\n** Dettagli associazione camera**\n\n");
+	get_input("Inserisci il numero della camera : ", NUM_LEN, buff, false);
+	associata->cameraprenotata = atoi(buff); 
+	get_input("Inserisci l'albergo in cui è ubicata la camera  : ", NUM_LEN, buff,false);	
+	associata->albergoinquestione = atoi(buff); 
+	while(true){
+	get_input("Inserici la data d'inizio del soggiorno :",DATE_LEN, associata->datainiziosoggiorno,false); 
+	if(validate_date(associata->datainiziosoggiorno))
+			break;
+		fprintf(stderr, "Data errata!\n");
+	}
+	while(true){
+		get_inpunt("Inserisci la data di fine soggiorno",DATE_LEN, associata->datafinesoggiorno, false);
+		if(validate_date(associata->datafinesoggiorno))
+				break;
+			fprintf(stderr, "Data errata!\n");
+		} 
 	do_insert_assoc(associata); 
 }

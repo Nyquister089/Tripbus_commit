@@ -44,7 +44,7 @@ bool setup_prepared_stmt(MYSQL_STMT **stmt, char *statement, MYSQL *conn)
 		print_error(conn, "Could not initialize statement handler");
 		return false;
 	}
-	// non riesce ad eseguire ->
+
 	if (mysql_stmt_prepare (*stmt, statement, strlen(statement)) != 0) {
 		print_stmt_error(*stmt, "Could not prepare statement");
 		return false;
@@ -55,14 +55,12 @@ bool setup_prepared_stmt(MYSQL_STMT **stmt, char *statement, MYSQL *conn)
 	return true;
 }
 
-
 void finish_with_error(MYSQL *conn, char *message)
 {
 	print_error(conn, message);
 	mysql_close(conn);
 	exit(EXIT_FAILURE);
 }
-
 
 void finish_with_stmt_error(MYSQL *conn, MYSQL_STMT *stmt, char *message, bool close_stmt)
 {
@@ -115,96 +113,41 @@ void mysql_date_to_string(MYSQL_TIME *date, char *str)
 	snprintf(str, DATE_LEN, "%4d-%02d-%02d", date->year, date->month, date->day);
 }
 
-
-
-
-
-
-
-void binding_parmaters(MYSQL_STMT *procedure, MYSQL_BIND *param, char * name_procedure){
+int bind_exe(MYSQL_STMT *procedure, MYSQL_BIND *param, char * buff){
 
 if(mysql_stmt_bind_param(procedure, param) != 0) {
-		print_stmt_error(procedure, "Impossibile eseguire il bindig dei parametri");
-		printf("(%s) \n", name_procedure);
-		return;
+		print_stmt_error(procedure, "\nImpossibile eseguire il bind dei parametri");
+		printf("(%s) \n", buff);
+		return-1;
 	}
-}
-void execution_stmt(MYSQL_STMT *procedure, MYSQL_BIND *param, char * name_procedure){
 
 	if(mysql_stmt_execute(procedure) != 0) {
 		print_stmt_error(procedure, "\nImpossibile eseguire la procedura: ");
-		printf("%s\n",name_procedure); 
-		exit(0);
-		}
+		printf("%s\n",buff); 
+		return -1;
+	}
+	return 0; 
 }
 
-void binding_result(MYSQL_STMT *procedure, MYSQL_BIND *param, char * name_procedure){
-
-if(mysql_stmt_bind_result(procedure, param) != 0) {
-		print_stmt_error(procedure, "\nImpossibile eseguire il bind dei parametri su:");
-		printf("%s\n",name_procedure); 
-		exit(0); 
+int take_result(MYSQL_STMT *procedure, MYSQL_BIND *param, char *buff)
+{ 	
+	int status; 
+	if(mysql_stmt_bind_result(procedure, param)) {
+		print_stmt_error(procedure, "\n\n Impossibile eseguire il bind dei risultati \n\n");
+		printf("(%s)",buff); 
+		return -1; 
 	}
 
-}
 
-void store_result(MYSQL_STMT *procedure, char * name_procedure){
-	
 	if( mysql_stmt_store_result(procedure) != 0){
 		print_stmt_error(procedure, "\nImpossibile eseguire lo store del result set ");
-		printf("(%s)\n",name_procedure); 
-		exit(0); 
+		printf("(%s)", buff); 
+		return -1;
 	}
-}
+	
+	mysql_stmt_fetch(procedure);
+    if (status == 1 || status == MYSQL_NO_DATA)
+		return -1;  
 
-void data_fetch(MYSQL_STMT *procedure, char * name_procedure){
-	int status; 
-	int i = 0; 
-	//status =  mysql_stmt_fetch(procedure);
-	while(true){
-		status =  mysql_stmt_fetch(procedure);
-		printf("while %d\n", i); 
-		i++; 
-		if(status == 1 || status == MYSQL_NO_DATA)
-			break; 
-		}
-	if(status != 0) {
-		print_stmt_error(procedure, "\nImpossile eseguire il fetch dei dati ");
-		printf("(%s): status %d \n", name_procedure, status); 
-		exit(0);
-	}
-}
-
-
-void fetch_field(MYSQL_STMT *procedure, char *procedure_name){
-
-	MYSQL_FIELD *field;
-	MYSQL_RES *data_field; 
-	unsigned int num_fields;
-	unsigned int i;
-	int result_set; 
-
-	data_field = mysql_stmt_result_metadata(procedure);
-	result_set = mysql_stmt_store_result(procedure);
-
-	if(result_set != 0){
-		print_stmt_error(procedure, "Impossibile inizializzare il result set "); 
-		printf("(%s)\n\n", procedure_name); 
-		exit(0); 
-	}
-
-	if( data_field == NULL) {
-		print_stmt_error(procedure, "Impossile prelevare i campi dati ");
-		printf("(%s)\n\n", procedure_name); 
-		exit(0); 
-	}
-
-	data_fetch(procedure,procedure_name); 
-
-	num_fields = mysql_num_fields(data_field);
-		
-		for(i = 0; i < num_fields; i++){
-    		field = mysql_fetch_field_direct(data_field, i);
-    		printf("%s\n", field->name );
-		}
+	return 0;
 }

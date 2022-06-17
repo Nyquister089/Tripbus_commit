@@ -15,12 +15,5 @@ extern void init_mysql_timestamp(MYSQL_TIME *time);
 extern void mysql_timestamp_to_string(MYSQL_TIME *time, char *str);
 extern void mysql_date_to_string(MYSQL_TIME *date, char *str);
 
-
-extern void fetch_field(MYSQL_STMT *procedure, char *procedure_name); 
-extern void binding_parmaters(MYSQL_STMT *procedure, MYSQL_BIND *param, char * name_procedure);
-extern void execution_stmt(MYSQL_STMT *procedure, MYSQL_BIND *param, char * name_procedure);
-extern void binding_result(MYSQL_STMT *procedure, MYSQL_BIND *param, char * name_procedure); 
-extern void store_result(MYSQL_STMT *procedure, char * name_procedure);
-extern void data_fetch(MYSQL_STMT *procedure, char * name_procedure);
-
-
+extern int take_result(MYSQL_STMT *procedure, MYSQL_BIND *param, char *buff); 
+extern int bind_exe(MYSQL_STMT *procedure, MYSQL_BIND *param, char * buff);
