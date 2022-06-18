@@ -4,7 +4,7 @@ CREATE PROCEDURE `login`(
     OUT tip INT
 )
 BEGIN
-    SET tip = 0;
+    SET tip = -1;
 
 	SELECT u.TipoUtente
     INTO tip
