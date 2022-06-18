@@ -620,7 +620,7 @@ void do_select_reservation(struct prenotazione *prenotazione)//Funziona ma mostr
 		goto stop;  
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &ndp, sizeof(ndp));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cli, srtlen(cli));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cli, strlen(cli));
 	set_binding_param(&param[2], MYSQL_TYPE_DATE, &ddp, sizeof(ddp));
 	set_binding_param(&param[3], MYSQL_TYPE_DATE, &ddc, sizeof(ddc));
 	set_binding_param(&param[4], MYSQL_TYPE_DATE, &dds, sizeof(dds));
