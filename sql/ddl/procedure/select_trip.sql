@@ -12,18 +12,35 @@ OUT npd INT,
 OUT dcn DATE
   )
 BEGIN
-SELECT *
+
+
+SELECT 
+	TourAssociato,
+	IdConducente,
+    IdAccompagnatrice, 
+	TargaMezzoImpiegato, 
+	DataPartenzaViaggio,
+    DataRitornoViaggio, 
+	CostoDelViaggio,
+	NumeroKm, 
+	PostiDisponibili, 
+	DataCancellazione
+into
+	tou,
+	idc,
+	ida, 
+	trg, 
+	dpv, 
+	drv,
+	cdv, 
+	nkm, 
+	npd,
+	dcn
 FROM viaggio as v
+JOIN dipendente as d on v.IdConducente = d.IdDipendente 
+JOIN dipendente as d1 on v.IdAccompagnatrice = d1.IdDipendente
+JOIN mezzo as m on v.TargaMezzoImpiegato = m.Targa
+JOIN tour as t on v.TourAssociato = t.DenominazioneTour
 WHERE v.IdViaggio = trip; 
 
-SET tou = v.TourAssociato,
-	idc = v.IdConducente,
-    ida = v.IdAccompagnatrice, 
-	trg = v.TargaMezzoImpiegato, 
-	dpv = v.DataPartenzaViaggio,
-    drv = v.DataDiRitornoViaggio, 
-	cdv = v.CostoDelViaggio,
-	nkm = v.NumeroKm, 
-	npd = v.PostiDisponibili, 
-	dcn = v.DataCancellazione;
 END

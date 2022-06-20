@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "hostess.h"
 #include "ins.h"
+#include "show.h"
 
 #include "../utils/io.h"
 #include "../utils/validation.h"
@@ -76,16 +77,10 @@ bool exe_hstss_act(char sel, struct cliente *cliente,struct prenotazione * preno
 				return true;
 				}
 		
-			case QUIT:
-		// gestire l'uscita dal Db (disconnessione e ritorno a schermata iniziale) 
-		return false; 
+			case QUIT: 
+				return false; 
 		
-	break;
-		/*default:
-			fprintf(stderr, "Il carattere digitato non corrisponde a nessuna azione \n");
-			exit(EXIT_FAILURE);*/
 	}
-
 	return true;
 }
 
@@ -96,14 +91,7 @@ void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura v
 	get_input("Inserisci il numero di prenotazione : ", VARCHAR_LEN, buff, false);
 	prenotazione->numerodiprenotazione = atoi(buff); 
 	do_select_reservation(prenotazione); 
-	
- 	printf("\n\n** Dettagli prenotazione **\n\n");
- 	printf(" Penotazione numero: %d \n E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data Saldo: %s \n",
-		prenotazione->numerodiprenotazione, 
-		prenotazione->clienteprenotante,
-		prenotazione->datadiprenotazione, 
-		prenotazione->datadiconferma, 
-		prenotazione->datasaldo); 
+ 	show_reservation( prenotazione); 
 }
 
 void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsonibili per viaggio 
@@ -112,31 +100,17 @@ void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsoni
 	char buffer[VARCHAR_LEN]; 
 	printf("** Procedura modifica posti viaggio **\n\n"); 
  	get_input("Inserisci il codice del viaggio : ", VARCHAR_LEN, buffer, false);
-	
 	viaggio->idviaggio = atoi(buffer);
 
  	do_select_trip(viaggio);
-
- 	printf("\n\n**  Dettagli Viaggio ** \n\n"); 
- 	printf(" ID : %d \n Tour : %s \n Conducente : %d \n Accompagnatrice : %d \n Targa mezzo : %s \n Data di partenza : %s \n Data di ritorno : %s \n Costo : %f \n Chilometri da percorrere : %d \n Posti disponibili: %d \n Data annullamento: %s \n ",
- 		viaggio->idviaggio, 
-		viaggio->tourassociato,
-		viaggio->conducente, 					
-		viaggio->accompagnatrice, 				
-		viaggio->mezzoimpiegato, 			
-		viaggio->datadipartenzaviaggio, 
-		viaggio->datadiritornoviaggio, 
-		viaggio->costodelviaggio, 
-		viaggio->numerodikm, 
-		viaggio->postidisponibili,
-		viaggio->datadiannullamento); 
+	show_trip (viaggio);
 
 	bool ans = yes_or_no("\n\n Vuoi modificare i posti disponibili per questo viaggio? (s/n) ",'s','n',false,false);
 	if(!ans) {
 		return;
 	}
- 	get_input ("Inserisci i nuovi posti disponibili :", NUM_LEN , buffer, false); 
 
+ 	get_input ("Inserisci i nuovi posti disponibili :", NUM_LEN , buffer, false); 
 	viaggio->postidisponibili = atoi(buffer); 
 
 	do_update_trip_seat(viaggio); 
@@ -148,14 +122,10 @@ void validate_reservation(struct prenotazione *prenotazione, struct postoprenota
 	printf("** Procedura conferma prenotazione **\n\n");
 	get_input("Inserisci numero d'interesse : ", NUM_LEN , buff, false); 
 	prenotazione->numerodiprenotazione = atoi(buff); 
+
     do_select_reservation(prenotazione); 
-	printf("\nNumero:  %d \n  E-mail cliente: %s \n Data di prenotazione: %s \n Data di conferma: %s \n Data di saldo: %s \n  ", 
-		prenotazione->numerodiprenotazione,
-		prenotazione->clienteprenotante,
-		prenotazione->datadiprenotazione,
-		prenotazione->datadiconferma,
-		prenotazione->datasaldo
-		);
+	show_reservation(prenotazione); 
+
  	bool answer_update = yes_or_no("\n\n Vuoi confermare questa prenotazione? (s/n) ",'s','n',false,false);
 	if(!answer_update) {
 		return;
@@ -181,6 +151,7 @@ void validate_reservation(struct prenotazione *prenotazione, struct postoprenota
 		printf("** Associa un passeggero alla prenotazione ** \n"); 
 
 		postoprenotato->prenotazioneassociata = prenotazione->numerodiprenotazione; 
+		printf(" Numero di prenotazione hostess %d \n\n", postoprenotato->prenotazioneassociata); 
 
 		ins_seat(postoprenotato); 
 
@@ -203,17 +174,8 @@ void update_d_doc(struct cliente  *cliente)
 	printf("\n\n");  
 
     do_select_costumer(cliente); 
-	
-	printf("\n E-mail:  %s \n Nome: %s \n Cognome: %s \n Indirizzo: %s \n Codice fiscale: %s \n Recapito telefonico: %s \n Fax: %s \n Data documentazione: %s \n", 
-		cliente->emailcliente,
-		cliente->nomecliente,
-		cliente->cognomecliente,
-		cliente->indirizzocliente,
-		cliente->codicefiscale,
-		cliente->recapitotelefonico,
-		cliente->fax,
-		cliente->datadocumentazione
-		);
+	show_costumer (cliente); 
+
     bool ans = yes_or_no("\n\n Vuoi modificare la data documentazione di questo cliente? (s/n) ",'s','n',false,false);
 	if(!ans) {
 		return;
@@ -237,7 +199,6 @@ void run_hstss_interface (void)
 		allocation_hstss(); 
 
 	while (true){
-
 	sel = get_hstss_action(); 
 	if (!exe_hstss_act(sel, cliente, prenotazione,postoprenotato, viaggio, associata))
 		break; 

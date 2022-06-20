@@ -342,6 +342,9 @@ void do_insert_seat(struct postoprenotato *postoprenotato) //Funziona
 	viaggioassociato = postoprenotato->viaggioassociato; 
 	prenotazioneassociata = postoprenotato->prenotazioneassociata; 
 	etapasseggero = postoprenotato->etapasseggero; 
+
+	printf("Numero di prenotazione tripdb %d \n\n", postoprenotato->prenotazioneassociata); 
+
 	
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerodiposto, sizeof(numerodiposto));
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &viaggioassociato, sizeof(viaggioassociato));
@@ -599,7 +602,6 @@ void do_select_reservation(struct prenotazione *prenotazione)//Funziona ma mostr
 	MYSQL_TIME dds; 
 	
 	int numerodiprenotazione;
-	int ndp; 
 	char cli[VARCHAR_LEN];
 
 	numerodiprenotazione = prenotazione->numerodiprenotazione; 
@@ -621,16 +623,15 @@ void do_select_reservation(struct prenotazione *prenotazione)//Funziona ma mostr
 	if(bind_exe(select_reservation,param,"select_reservation") == -1)
 		goto stop;  
 
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &ndp, sizeof(ndp));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cli, strlen(cli));
-	set_binding_param(&param[2], MYSQL_TYPE_DATE, &ddp, sizeof(ddp));
-	set_binding_param(&param[3], MYSQL_TYPE_DATE, &ddc, sizeof(ddc));
-	set_binding_param(&param[4], MYSQL_TYPE_DATE, &dds, sizeof(dds));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cli, VARCHAR_LEN);
+	set_binding_param(&param[1], MYSQL_TYPE_DATE, &ddp, sizeof(ddp));
+	set_binding_param(&param[2], MYSQL_TYPE_DATE, &ddc, sizeof(ddc));
+	set_binding_param(&param[3], MYSQL_TYPE_DATE, &dds, sizeof(dds));
 
 	if(take_result(select_reservation,param,"select_reservation")== -1) 
 		goto stop; 
 
-	prenotazione->numerodiprenotazione = ndp; 
+	
 	strcpy(prenotazione->clienteprenotante, cli);
 	mysql_date_to_string(&ddp, prenotazione->datadiprenotazione); 
 	mysql_date_to_string(&ddc, prenotazione->datadiconferma); 

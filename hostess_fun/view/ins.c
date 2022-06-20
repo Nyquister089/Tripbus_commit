@@ -2,6 +2,7 @@
 #include "ins.h"
 
 
+
 void ins_prenotation(struct prenotazione *prenotazione) //funziona
 {
 	printf("\n** Dettagli inserimento prenotazione **\n\n");
