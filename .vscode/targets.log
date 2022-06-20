@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Jun 15 15:58:33 2022
+# Make data base, printed on Mon Jun 20 09:03:37 2022
 
 # Variables
 
@@ -23,7 +23,7 @@ SSH_AGENT_LAUNCHER = gnome-keyring
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-ae443d1b-46c9-4353-a088-66334b745388.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-2cc32e63-af15-4072-b152-f883e72d4403.sock
 # environment
 VSCODE_CWD = /home/giordano
 # default
@@ -53,7 +53,7 @@ VSCODE_CODE_CACHE_PATH = /home/giordano/.config/Code/CachedData/4af164ea3a06f701
 # environment
 LANG = C
 # environment
-XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.QKFRN1
+XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.X4YKO1
 # default
 .LOADED := 
 # default
@@ -91,13 +91,13 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 32074
+VSCODE_PID = 3352
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/oem-Aspire-E5-553G:@/tmp/.ICE-unix/1149,unix/oem-Aspire-E5-553G:/tmp/.ICE-unix/1149
+SESSION_MANAGER = local/oem-Aspire-E5-553G:@/tmp/.ICE-unix/1228,unix/oem-Aspire-E5-553G:/tmp/.ICE-unix/1228
 # automatic
 *F = $(notdir $*)
 # environment
@@ -107,7 +107,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
 # environment
-VSCODE_NLS_CONFIG = {"locale":"it","availableLanguages":{"*":"it"},"_languagePackId":"0e2106c0f43031e48dd45a1308cc4315.it","_translationsConfigFile":"/home/giordano/.config/Code/clp/0e2106c0f43031e48dd45a1308cc4315.it/tcf.json","_cacheRoot":"/home/giordano/.config/Code/clp/0e2106c0f43031e48dd45a1308cc4315.it","_resolvedLanguagePackCoreLocation":"/home/giordano/.config/Code/clp/0e2106c0f43031e48dd45a1308cc4315.it/4af164ea3a06f701fe3e89a2bcbb421d2026b68f","_corruptedFile":"/home/giordano/.config/Code/clp/0e2106c0f43031e48dd45a1308cc4315.it/corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"it","availableLanguages":{"*":"it"},"_languagePackId":"e42d83a2243fefd704ae12d65a4126f2.it","_translationsConfigFile":"/home/giordano/.config/Code/clp/e42d83a2243fefd704ae12d65a4126f2.it/tcf.json","_cacheRoot":"/home/giordano/.config/Code/clp/e42d83a2243fefd704ae12d65a4126f2.it","_resolvedLanguagePackCoreLocation":"/home/giordano/.config/Code/clp/e42d83a2243fefd704ae12d65a4126f2.it/4af164ea3a06f701fe3e89a2bcbb421d2026b68f","_corruptedFile":"/home/giordano/.config/Code/clp/e42d83a2243fefd704ae12d65a4126f2.it/corrupted.info","_languagePackSupport":true}
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -135,7 +135,7 @@ MAKEFILES :=
 # automatic
 ^F = $(notdir $^)
 # environment
-INVOCATION_ID = 62f3f0a2c58e49d689fb529ca6645f8a
+INVOCATION_ID = b8710ee5c661407f93b124c8ba00e5ac
 # environment
 VSCODE_LOG_NATIVE = false
 # environment
@@ -165,7 +165,7 @@ GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # makefile
 .DEFAULT_GOAL := compile
 # environment
-SYSTEMD_EXEC_PID = 1176
+SYSTEMD_EXEC_PID = 1264
 # environment
 DISPLAY = :0
 # environment
@@ -175,15 +175,15 @@ GTK_MODULES = gail:atk-bridge
 # default
 MAKE_VERSION := 4.3
 # environment
-MANAGERPID = 1019
+MANAGERPID = 1080
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 32074
+GIO_LAUNCHED_DESKTOP_FILE_PID = 3352
 # environment
 _ = /usr/share/code/code
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
-JOURNAL_STREAM = 8:30367
+JOURNAL_STREAM = 8:33394
 # environment
 XDG_SESSION_CLASS = user
 # environment
@@ -277,6 +277,6 @@ all:
 # strcache performance: lookups = 32 / hit rate = 18%
 # hash-table stats:
 # Load=26/8192=0%, Rehash=0, Collisions=1/32=3%
-# Finished Make data base on Wed Jun 15 15:58:33 2022
+# Finished Make data base on Mon Jun 20 09:03:37 2022
 
  
