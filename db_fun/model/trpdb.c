@@ -25,9 +25,17 @@ static MYSQL_STMT *insert_reservation; // OK HOSTESS
 static MYSQL_STMT *insert_seat; //OK HOSTESS
 static MYSQL_STMT *insert_assoc; //OK HOSTESS
 
-static MYSQL_STMT *select_trip; //ok HOSTESS
+static MYSQL_STMT *select_trip; //ok HOSTESS, CLIENTE
 static MYSQL_STMT *select_costumer; //Ok HOSTESS
 static MYSQL_STMT *select_reservation; //ok HOSTESS
+
+static MYSQL_STMT *select_tour; //Cliente
+static MYSQL_STMT *select_destination;// Cliente
+static MYSQL_STMT *select_picture; // Cliente
+static MYSQL_STMT *select_room; // Cliente
+static MYSQL_STMT *select_model; //Cliente
+static MYSQL_STMT *select_comfort;// Cliente
+static MYSQL_STMT *select_service; // Cliente 
 
 static MYSQL_STMT *update_trip_seat; //ok HOSTESS
 static MYSQL_STMT *validate_reservation; //ok  HOSTESS
@@ -39,10 +47,38 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(login_procedure);
 		login_procedure = NULL;
 	}
+	if(select_tour) {						// Procedura di select tour
+		mysql_stmt_close(select_tour);
+		select_tour = NULL;
+	}	
+	if(select_destination) {				// Procedura di select meta
+		mysql_stmt_close(select_destination);
+		select_destination = NULL;
+	}	
+	if(select_service) {					// Procedura di select servizio
+		mysql_stmt_close(select_service);
+		select_service = NULL;
+	}	
+	if(select_comfort) {					// Procedura di select comfort
+		mysql_stmt_close(select_comfort);
+		select_comfort = NULL;
+	}	
+	if(select_model) {						// Procedura di select model
+		mysql_stmt_close(select_model);
+		select_model = NULL;
+	}	
+	if(select_picture) {					// Procedura di select documentazione fotografica
+		mysql_stmt_close(select_picture);
+		select_picture = NULL;
+	}
+	if(select_room) {						// Procedura di select camera
+		mysql_stmt_close(select_room);
+		select_room = NULL;
+	}	
 	if(select_trip) {				// Procedura di select viaggi
 		mysql_stmt_close(select_trip);
 		select_trip = NULL;
-	}				
+	}							
 	if(insert_costumer) {				// Procedura di insert cliente (HOSTESS) 
 		mysql_stmt_close(insert_costumer);
 		insert_costumer= NULL;
@@ -118,10 +154,9 @@ static bool initialize_prepared_stmts(role_t for_role)
 				return false;
 			}
 			if(!setup_prepared_stmt(&select_trip, "call select_trip(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", conn)) {
-				print_stmt_error(select_trip, "Unable to initialize select reservation statement\n");
+				print_stmt_error(select_trip, "Unable to initialize select trip statement\n");
 				return false;
 			}
-
 			if(!setup_prepared_stmt(&update_trip_seat, "call update_trip_seat(?, ?)", conn)) {
 				print_stmt_error(update_trip_seat, "Unable to initialize update trip statement statement\n");
 				return false;
@@ -135,6 +170,41 @@ static bool initialize_prepared_stmts(role_t for_role)
 				return false;
 			}
 			break;
+			case CLIENTE:
+			if(!setup_prepared_stmt(&select_tour, "call select_tour()", conn)) {
+				print_stmt_error(select_tour, "Unable to initialize select_tour statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&select_destination, "call select_destination()", conn)) {
+				print_stmt_error(select_destination, "Unable to initialize select_destination statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&select_comfort, "call select_comfort()", conn)) {
+				print_stmt_error(select_comfort, "Unable to initialize select_model_comfort statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&select_service, "call select_service()", conn)) {
+				print_stmt_error(select_service, "Unable to initialize select_service statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&select_model, "call select_model()", conn)) {
+				print_stmt_error(select_model, "Unable to initialize select_model statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&select_room, "call select_room()", conn)) {
+				print_stmt_error(select_room, "Unable to initialize select_room statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&select_picture, "call select_picture()", conn)) {
+				print_stmt_error(select_picture, "Unable to initialize select_picture statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&select_trip, "call select_trip(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", conn)) {
+				print_stmt_error(select_trip, "Unable to initialize select_trip statement\n");
+				return false;
+			}
+			break;
+
 		default:
 			fprintf(stderr, "[FATAL] Unexpected role to prepare statements.\n");
 			exit(EXIT_FAILURE);
@@ -667,4 +737,196 @@ void do_update_data_doc(struct cliente *cliente) //funziona
 	mysql_stmt_free_result(update_data_doc);
 	mysql_stmt_reset(update_data_doc);
 	
+}
+void do_select_tour( struct tour *tour)
+{	
+	MYSQL_BIND param[6];
+
+	int minimopartecipanti; 
+	float assicurazionemedica; 
+	float bagaglio; 
+	signed char accompagnatrice; 
+
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tour->denominazionetour, strlen(tour->denominazionetour));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tour->descrizionetour, strlen(tour->descrizionetour));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &minimopartecipanti, sizeof(minimopartecipanti));
+	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &assicurazionemedica, sizeof(assicurazionemedica));
+	set_binding_param(&param[4], MYSQL_TYPE_FLOAT, &bagaglio, sizeof(bagaglio));
+	set_binding_param(&param[5], MYSQL_TYPE_TINY, &accompagnatrice, sizeof(accompagnatrice));
+	
+
+	if(mysql_stmt_bind_param(select_tour, param) != 0) {
+		print_stmt_error(select_tour, "Could not bind parameters for select_tour");
+		return;
+	}
+	if(mysql_stmt_execute(select_tour) != 0) {
+		print_stmt_error(select_tour, "Could not execute select_tour");
+		return;
+		}
+
+	mysql_stmt_free_result(select_tour);
+	mysql_stmt_reset(select_tour);
+	
+}
+
+
+void do_select_destination(struct meta *meta)
+{ 	
+	MYSQL_BIND param[10]; 
+	MYSQL_TIME orariodiapertura; 
+
+	int idmeta; 
+	int telefonometa; 
+	int faxmeta; 
+	
+	time_to_mysql_time(meta->orariodiapertura, &orariodiapertura);
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idmeta, sizeof(idmeta));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, meta->nomemeta, strlen(meta->nomemeta));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, meta->emailmeta, strlen(meta->emailmeta));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &telefonometa, sizeof(telefonometa));
+	set_binding_param(&param[4], MYSQL_TYPE_LONG, &faxmeta, sizeof(faxmeta));
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, meta->indirizzo, strlen(meta->indirizzo));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, meta->tipologiameta, strlen(meta->tipologiameta));
+	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, meta->categoriaalbergo, strlen(meta->categoriaalbergo));
+	set_binding_param(&param[8], MYSQL_TYPE_TIME, &orariodiapertura, sizeof(orariodiapertura));
+	set_binding_param(&param[9], MYSQL_TYPE_VAR_STRING, meta->localitadiappartenenza, strlen(meta->localitadiappartenenza));
+	
+	
+	if(mysql_stmt_bind_param(select_destination, param) != 0) {
+		print_stmt_error(select_destination, "Could not bind parameters for select_destination");
+		return;
+	}
+	// Run procedure
+	if(mysql_stmt_execute(select_destination) != 0) {
+		print_stmt_error(select_destination, "Could not execute select_destination");
+		return;
+		}
+	mysql_stmt_free_result(select_destination);
+	mysql_stmt_reset(select_destination);
+	
+}
+void do_select_service(struct servizio *servizio)
+{		
+	MYSQL_BIND param[3]; 
+
+	int idservizio; 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, servizio->idservizio, sizeof(idservizio));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, servizio->nomeservizio, strlen(servizio->nomeservizio));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, servizio->descrizioneservizio, strlen(servizio->descrizioneservizio));
+	
+	
+	if(mysql_stmt_bind_param(select_service, param) != 0) {
+		print_stmt_error(select_service, "Could not bind parameters for select_service");
+		return;
+	}
+	if(mysql_stmt_execute(select_service) != 0) {
+		print_stmt_error(select_service, "Could not execute select_service");
+		return;
+		}
+	mysql_stmt_free_result(select_service);
+	mysql_stmt_reset(select_service);
+	
+}
+
+void do_select_comfort(struct comfort *comfort)
+{		
+	MYSQL_BIND param[3]; 
+
+	int idcomfort; 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, comfort->idcomfort, sizeof(idcomfort));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, comfort->nomecomfort, strlen(comfort->nomecomfort));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, comfort->descrizionecomfort, strlen(comfort->descrizionecomfort));
+	
+	
+	if(mysql_stmt_bind_param(select_comfort, param) != 0) {
+		print_stmt_error(select_comfort, "Could not bind parameters for select_comfort");
+		return;
+	}
+	if(mysql_stmt_execute(select_comfort) != 0) {
+		print_stmt_error(select_comfort, "Could not execute select_comfort");
+		return;
+		}
+	mysql_stmt_free_result(select_comfort);
+	mysql_stmt_reset(select_comfort);
+	
+}
+
+void do_select_model(struct modello *modello)
+{		
+	MYSQL_BIND param[6]; 
+	
+	int idmodello;
+	int numerodiposti;  
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idmodello, sizeof(idmodello));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, modello->nomemodello, strlen(modello->nomemodello));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, modello->datitecnici, strlen(modello->datitecnici));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, modello->casacostruttrice, strlen(modello->casacostruttrice));
+	set_binding_param(&param[4], MYSQL_TYPE_LONG, &numerodiposti, sizeof(numerodiposti));
+	
+
+	if(mysql_stmt_bind_param(select_model, param) != 0) {
+		print_stmt_error(select_model, "Could not bind parameters for select_model");
+		return;
+	}
+	if(mysql_stmt_execute(select_model) != 0) {
+		print_stmt_error(select_model, "Could not execute select_model");
+		return;
+		}
+	mysql_stmt_free_result(select_model);
+	mysql_stmt_reset(select_model);
+}
+
+void do_select_picture(struct documentazionefotografica *documentazionefotografica)
+{	
+	MYSQL_BIND param[2]; 
+
+	int idfoto; 
+
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idfoto, sizeof(idfoto));
+	set_binding_param(&param[1], MYSQL_TYPE_BLOB, documentazionefotografica->foto, strlen(documentazionefotografica->foto));
+	
+	
+	if(mysql_stmt_bind_param(select_picture, param) != 0) {
+		print_stmt_error(select_picture, "Could not bind parameters for select_picture");
+		return;
+	}
+	if(mysql_stmt_execute(select_picture) != 0) {
+		print_stmt_error(select_picture, "Could not execute select_picture");
+		return;
+		}
+	mysql_stmt_free_result(select_picture);
+	mysql_stmt_reset(select_picture);
+	
+}
+
+void do_select_room(struct camera *camera)
+{		
+	MYSQL_BIND param[4]; 
+
+	int numerocamera; 
+	int albergoinquestione;
+	int costo;  
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerocamera, sizeof(numerocamera));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &albergoinquestione, sizeof(albergoinquestione));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, camera->tipologia, strlen(camera->tipologia));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &costo , sizeof(costo));
+	
+	
+	if(mysql_stmt_bind_param(select_room, param) != 0) {
+		print_stmt_error(select_room, "Could not bind parameters for select_room");
+		return;
+	}
+	if(mysql_stmt_execute(select_room) != 0) {
+		print_stmt_error(select_room, "Could not execute select_room");
+		return;
+		}
+	mysql_stmt_free_result(select_room);
+	mysql_stmt_reset(select_room);
 }
