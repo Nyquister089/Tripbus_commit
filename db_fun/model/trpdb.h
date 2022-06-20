@@ -251,9 +251,10 @@ struct tome {
 struct tour {
 	char denominazionetour[VARCHAR_LEN]; 
 	char descrizionetour[DES_LEN]; 
-	char minimopartecipanti[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
-	char assicurazionemedica[DEC_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
-	char bagaglio[DEC_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	int minimopartecipanti; //Corretto trasformandolo da carattere a puntatore di carattere
+	float assicurazionemedica; //Corretto trasformandolo da carattere a puntatore di carattere
+	float bagaglio; //Corretto trasformandolo da carattere a puntatore di carattere
+	float garanziaannullamento; 
 	char accompagnatrice[VARCHAR_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 }; 
 

@@ -42,3 +42,17 @@ void show_costumer (struct cliente * cliente)
 		cliente->datadocumentazione
 		);
 }
+
+void show_tour(struct tour *tour)
+{printf("\n\n**  Dettagli tour ** \n\n");
+		printf("\n Denominazione:  		%s \n Descrizione:		 %s \n Minimo partecipanti: 	%d \n Assicurazione medica:  	%f \n Bagaglio: 	%s \n Garanzia annullamento: 	%f \n Accompagnatrice:		 %s \n", 
+		tour->denominazionetour, 
+		tour->descrizionetour, 
+		tour->minimopartecipanti,
+		tour->assicurazionemedica, 
+		tour->bagaglio, 
+		tour->garanziaannullamento, 
+		tour->accompagnatrice
+		);
+
+}

@@ -1,9 +1,9 @@
 
 #include <stdio.h>
+
 #include "hostess.h"
 #include "ins.h"
 #include "show.h"
-
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
@@ -16,10 +16,30 @@ struct associata * associata;
 void  allocation_hstss(void)
 {
 	cliente = malloc(sizeof(struct cliente)); 
+	if(cliente == NULL)
+		{printf("Fallimento malloc su cliente (hostess) \n\n"); 
+		 exit(0); 
+		}
 	prenotazione = malloc(sizeof(struct prenotazione)); 
+	if(prenotazione == NULL)
+		{printf("Fallimento malloc su prenotazione (hostess) \n\n");
+		 exit(0); 
+		}
 	postoprenotato = malloc(sizeof(struct postoprenotato));
+	if(postoprenotato == NULL)
+		{printf("Fallimento malloc su postoprenotato (hostess) \n\n"); 
+		 exit(0); 
+		}
 	viaggio = malloc(sizeof(struct viaggio)); 
+	if(viaggio == NULL)
+		{printf("Fallimento malloc su viaggio (hostess) \n\n"); 
+		 exit(0);
+		}
 	associata = malloc(sizeof(struct associata));
+	if(associata == NULL)
+		{printf("Fallimento malloc associata (hostess) \n\n"); 
+		 exit(0); 
+		 }
 }
 
 int get_hstss_action(void)

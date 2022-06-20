@@ -1,14 +1,66 @@
 #include <stdio.h>
+
 #include"cliente.h"
+#include "ins.h"
+#include "show.h"
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
-char PIC_DEST [VARCHAR_LEN]; 
-char ANS [5]; 
-char DATE_D[DATE_LEN];
-char DATE_R[DATE_LEN];
-size_t COUNT; 
-size_t COUNT_PIC; 
+struct tour *tour; 
+struct viaggio *viaggio; 
+struct meta *meta; 
+struct servizio *servizio; 
+struct comfort *comfort; 
+struct modello *modello; 
+struct documentazionefotografica *documentazionefotografica; 
+struct camera *camera; 
+
+
+void allocation_cstmr(void)
+{
+	tour = malloc(sizeof(struct tour)); 
+	if(tour == NULL){
+		printf("Fallimento malloc su tour (cliente) \n\n"); 
+		exit(0); 
+	}
+	viaggio = malloc(sizeof(struct viaggio)); 
+	if(viaggio == NULL){
+		printf("Fallimento malloc su viaggio (cliente) \n\n"); 
+		exit(0); 
+	}
+	meta = malloc (sizeof(struct meta )); 
+	if(meta == NULL){
+		printf("Fallimento malloc su meta (cliente) \n\n"); 
+		exit(0); 
+	}
+	servizio = malloc (sizeof(struct servizio));
+	if(servizio == NULL){
+		printf("Fallimento malloc su servizio (cliente) \n\n"); 
+		exit(0); 
+	}
+	comfort = malloc (sizeof(struct comfort)); 
+	if(comfort == NULL){
+		printf("Fallimento malloc su comfort (cliente) \n\n"); 
+		exit(0); 
+	}
+	modello = malloc(sizeof(struct modello)); 
+	if(modello == NULL){
+		printf("Fallimento malloc su modello (cliente) \n\n"); 
+		exit(0); 
+	}
+	documentazionefotografica = malloc(sizeof(struct documentazionefotografica)); 
+	if(documentazionefotografica == NULL){
+		printf("Fallimento malloc su documentazionefotografica (cliente) \n\n"); 
+		exit(0); 
+	}
+	camera = malloc(sizeof(struct camera)); 
+	if(camera == NULL){
+		printf("Fallimento malloc su camera (cliente) \n\n"); 
+		exit(0); 
+	}
+	
+
+}
 
 
 int get_cstmr_action(void)
@@ -35,70 +87,49 @@ bool exe_cstmr_act(cstmr_act sel)
 {
 	switch (sel)
 		{case TOUR_INFO:{
-		struct tour *tour; 
 		show_tour_information(tour); 
 		return true; 
 		}
 		
 		case METE_TOUR:{
-		struct mete_tour *mete_tour; 
-		struct foto_mete *foto_mete; 
 		show_tour_destination(mete_tour, foto_mete); 
 		return true;
 		}
 		
      	case VIAGGI_TOUR:{
-		struct viaggi_tour * viaggi_tour;
-		struct viaggio *viaggio; 
      	show_trip (viaggi_tour, viaggio);
 		return true; 
 		 }
 
 	 	case SERVIZI_ALBERGO:{
-		struct servizi_albergo *servizi_albergo; 
 		show_service(servizi_albergo);
 		return true;
 		 }
 
 	 	case COMFORT_MODELLO:{
-		struct comfort_mezzo *comfort_mezzo; 
-		struct elenco_modelli *elenco_modelli; 
 		show_comfort(comfort_mezzo, elenco_modelli);
 		return true; 
 		 }
 		
 		case QUIT:
-		return false; 
-		
-	break;
-		default:
-			fprintf(stderr, "Il carattere digitato non corrisponde a nessuna azione \n");
-			exit(EXIT_FAILURE);
+		return false;
 	}
 
 	return true;
 }
 
-char select_tour(struct tour *tour)
-{   clear_screen();
-	char tour_options[4] = {'1','2','3','4'}; 
-	char t;  
-	puts("** Seleziona il tour d'interesse  **\n\n");
-	puts("1) Fuga da Tor Vergata");
-	puts("2) Ingegneria estrema");
-	puts("3) Il miraggio della laurea");
-	puts("4) Mille splendidi crediti");
-	t = multi_choice("Seleziona un opzione", tour_options, 4);
-	return t-'1';// Return la denominazione del tour scelto
-}
+
 
 void show_tour_information(struct tour *tour)
 {	
-	select_tour(tour); 
-	// procedura di select del tour in base alla scelta sopra menzionata 
-	clear_screen();
+	printf("** Tour offerti  **\n\n"); 
+	// seleziona i nominativi dei tour
+	do_select_tour(tour); 
+	// seleziona il tour 
+	show_tour(tour); 
+	
+	
 	char buffer[VARCHAR_LEN]; 
-	printf("** Dettagli tour: %s **\n\n", buffer);
 	//  lancio procedura select Tour tramite denominazione
 	printf("Descrizione %s \n\n Accompagnatrice %s \n Costo bagaglio %s\n Costo assicurazione medica : %s ",
 			tour->descrizionetour, 
@@ -201,11 +232,14 @@ void show_comfort(struct comfort_mezzo *comfort_mezzo, struct elenco_modelli *el
 }
 
 void run_cstmr_interface (void)
-{ 	cstmr_act sel; 
+{ 	char sel; 
+	if(	tour == NULL || viaggio == NULL || meta == NULL || servizio == NULL|| comfort == NULL || documentazionefotografica == NULL || cmaera == NULL ) 
+		allocation_cstmr();
 	while (true){
-	get_cstmr_action(); 
-	if (!exe_cstmr_act(sel))
+	sel = get_cstmr_action(); 
+	if (!exe_cstmr_act(sel, tour,viaggio,  meta, servizio, comfort, modelli, documentazionefotografica, camere))
 		break; 
-	
 	}
 }
+
+

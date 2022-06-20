@@ -10,8 +10,8 @@ typedef enum  {
 	QUIT
 } cstmr_act;
 
-
-
+extern void run_cstmr_interface (void)
+extern void allocation_cstmr(void); 
 extern int get_cstmr_action(void);
 extern bool exe_cstmr_act(cstmr_act sel);
 extern char select_tour(struct tour *tour);

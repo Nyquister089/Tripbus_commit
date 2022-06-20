@@ -46,7 +46,7 @@ int main (void)
 				printf("Autista\n"); 
 				break;
 			case CLIENTE:
-				printf("CLiente\n"); 
+				run_cstmr_interface(); 
 				break; 
 			case HOSTESS:
 				run_hstss_interface(); 
@@ -57,7 +57,7 @@ int main (void)
 			case QUIT: 
 				printf("Quit!\n");
 			}
-		answer = yes_or_no("\n\n Vuoi chiudere il database? (s/n) ",'s','n',false,false);
+		answer = yes_or_no("\n\nVuoi chiudere il database? (s/n) ",'s','n',false,false);
 		if(answer){
 		
 			fini_db(); 
