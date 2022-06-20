@@ -360,7 +360,7 @@ void do_insert_seat(struct postoprenotato *postoprenotato) //Funziona
 	
 }
 
-void do_insert_assoc(struct associata *associata) 
+void do_insert_assoc(struct associata *associata) // Funziona
 {		
 	MYSQL_BIND param[5];
 	MYSQL_TIME datafinesoggiorno;
@@ -372,8 +372,11 @@ void do_insert_assoc(struct associata *associata)
 
 	date_to_mysql_time(associata->datainiziosoggiorno, &datainiziosoggiorno); 
 	date_to_mysql_time(associata->datafinesoggiorno, &datafinesoggiorno); 
-
-
+	
+	cameraprenotata = associata->cameraprenotata; 
+	albergoinquestione = associata->albergoinquestione;
+	ospite = associata->ospite; 
+	
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &cameraprenotata, sizeof(cameraprenotata));
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &ospite, sizeof(ospite));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &albergoinquestione, sizeof(albergoinquestione));
@@ -393,7 +396,7 @@ void do_insert_assoc(struct associata *associata)
 	
 	
 	
-void do_validate_reservation(struct prenotazione *prenotazione)
+void do_validate_reservation(struct prenotazione *prenotazione) //Funziona
 {		
 	MYSQL_BIND param[3]; 
 
@@ -533,7 +536,7 @@ void do_select_trip(struct viaggio *viaggio) //Funziona
 	mysql_stmt_reset(select_trip);	
 }
 	
-void do_select_costumer(struct cliente *cliente) // funziona ma rivedere il campo recapito telefonico
+void do_select_costumer(struct cliente *cliente) // funziona
 {	 
 	MYSQL_BIND param[8];  
 	MYSQL_TIME datadocumentazione;
@@ -591,7 +594,7 @@ void do_select_costumer(struct cliente *cliente) // funziona ma rivedere il camp
 }
 
 
-void do_select_reservation(struct prenotazione *prenotazione)//Funziona ma mostra più date
+void do_select_reservation(struct prenotazione *prenotazione)//Funziona
 {		
 	MYSQL_BIND param[5]; 
 	MYSQL_TIME datadiprenotazione; 
