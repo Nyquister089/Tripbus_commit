@@ -13,6 +13,7 @@ void ins_prenotation(struct prenotazione *prenotazione) //funziona
 			break;
 		fprintf(stderr, "Data errata!\n");
 	}
+
 	do_insert_reservation(prenotazione); 
 }
 

@@ -126,8 +126,8 @@ void validate_reservation(struct prenotazione *prenotazione, struct postoprenota
     do_select_reservation(prenotazione); 
 	show_reservation(prenotazione); 
 
- 	bool answer_update = yes_or_no("\n\n Vuoi confermare questa prenotazione? (s/n) ",'s','n',false,false);
-	if(!answer_update) {
+ 	bool ans = yes_or_no("\n\n Vuoi confermare questa prenotazione? (s/n) ",'s','n',false,false);
+	if(!ans) {
 		return;
 		}
 
@@ -148,22 +148,22 @@ void validate_reservation(struct prenotazione *prenotazione, struct postoprenota
 		bool seat_ans, association_ans;   
 
 	do {
-		printf("** Associa un passeggero alla prenotazione ** \n"); 
+		printf("\n\n** Associa un passeggero alla prenotazione ** \n\n"); 
 
 		postoprenotato->prenotazioneassociata = prenotazione->numerodiprenotazione; 
-		printf(" Numero di prenotazione hostess %d \n\n", postoprenotato->prenotazioneassociata); 
+		printf(" Numero di prenotazione hostess %d \n", postoprenotato->prenotazioneassociata);
 
 		ins_seat(postoprenotato); 
 
-		do{	printf("** Associa camera al passeggero ** ");
-			 associata->ospite = postoprenotato->numerodiposto; 
-			ins_association(associata); 
-			association_ans= yes_or_no("\n\n Vuoi associare un'altra camera a questo passeggero? (s/n) ",'s','n',false,false);
-		
-		}while(association_ans);
-		
-		seat_ans = yes_or_no("\n\n Vuoi associare un altro passeggero a questa prenotazione? (s/n) ",'s','n',false,false);
-		} while(seat_ans); 
+		ans = yes_or_no("\n\n Vuoi associare una camera a questo passeggero? (s/n) ",'s','n',false,false);
+		if (ans)
+			do{	printf("** Associa camera al passeggero ** ");
+			 	associata->ospite = postoprenotato->numerodiposto; 
+				ins_association(associata); 
+				association_ans= yes_or_no("\n\n Vuoi associare un'altra camera a questo passeggero? (s/n) ",'s','n',false,false);
+			}while(association_ans);
+		seat_ans =yes_or_no("\n\n Vuoi associare un'altro passeggero a questa prenotazione ? (s/n) ",'s','n',false,false);
+	} while(seat_ans); 
 
 }
 

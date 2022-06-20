@@ -1,5 +1,5 @@
 CREATE DEFINER=`giordano`@`localhost` PROCEDURE `select_reservation`(
-    inout res int,
+    in res int,
     out cli varchar(45),
     out ddp date,
     out ddc date,
@@ -8,13 +8,17 @@ CREATE DEFINER=`giordano`@`localhost` PROCEDURE `select_reservation`(
 BEGIN
 
 
-SELECT NumeroDiprenotazione, ClientePrenotante, DataDiPrenotazione, DataDiConferma, DataSaldo
-FROM prenotazione
+SELECT
+ ClientePrenotante, 
+ DataDiPrenotazione,
+ DataDiConferma, 
+ DataSaldo
+INTO 
+	cli, 
+    ddp,
+    ddc, 
+    dds
+FROM prenotazione as p
+JOIN cliente as c on p.ClientePrenotante = c.EmailCliente
 WHERE NumeroDiPrenotazione = res;
-SET  res = NumeroDiprenotazione, 
-	 cli = ClientePrenotante, 
-     ddp = DataDiPrenotazione, 
-     ddc = DataDiConferma, 
-     dds = DataSaldo; 
-
 END

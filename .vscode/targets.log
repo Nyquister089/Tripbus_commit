@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Jun 20 09:08:15 2022
+# Make data base, printed on Mon Jun 20 16:26:53 2022
 
 # Variables
 
@@ -23,7 +23,7 @@ SSH_AGENT_LAUNCHER = gnome-keyring
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-86b7ff33-558e-4c17-962e-ab39c22931a1.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-8db389d6-0019-4776-b726-685ad1d7c2b6.sock
 # environment
 VSCODE_CWD = /home/giordano
 # default
@@ -91,7 +91,7 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 6991
+VSCODE_PID = 29828
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
@@ -177,7 +177,7 @@ MAKE_VERSION := 4.3
 # environment
 MANAGERPID = 1080
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 6991
+GIO_LAUNCHED_DESKTOP_FILE_PID = 29828
 # environment
 _ = /usr/share/code/code
 # environment
@@ -277,6 +277,6 @@ all:
 # strcache performance: lookups = 32 / hit rate = 18%
 # hash-table stats:
 # Load=26/8192=0%, Rehash=0, Collisions=1/32=3%
-# Finished Make data base on Mon Jun 20 09:08:15 2022
+# Finished Make data base on Mon Jun 20 16:26:53 2022
 
  

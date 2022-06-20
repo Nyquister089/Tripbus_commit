@@ -42,7 +42,7 @@ extern void db_switch_to_administrator(void);
 struct associata{
 	int  cameraprenotata; 				//FK //Corretto trasformandolo da carattere a puntatore di carattere
 	int  ospite; 						//FK //Corretto trasformandolo da carattere a puntatore di carattere
-	int albergoinquestione; 			//FK //Corretto trasformandolo da carattere a puntatore di carattere
+	int  albergoinquestione; 			//FK //Corretto trasformandolo da carattere a puntatore di carattere
 	char datainiziosoggiorno[DATE_LEN]; 
 	char datafinesoggiorno[DATE_LEN];
 }; 
