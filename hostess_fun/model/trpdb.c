@@ -113,7 +113,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(select_costumer, "Unable to initialize select costumer statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&select_reservation, "call select_reservation(?)", conn)) {
+			if(!setup_prepared_stmt(&select_reservation, "call select_reservation(?, ?, ?, ?, ?)", conn)) {
 				print_stmt_error(select_reservation, "Unable to initialize select reservation statement\n");
 				return false;
 			}
@@ -497,15 +497,15 @@ void do_select_trip(struct viaggio *viaggio) //Funziona
 	if(bind_exe(select_trip,param,"select_trip") == -1)
 		goto stop; 
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tou, VARCHAR_LEN);
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &con, NUM_LEN);
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &acc, VARCHAR_LEN);
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mez, VARCHAR_LEN);
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tou, strlen(tou));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &con, sizeof(con));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &acc, sizeof(acc));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mez, strlen(mez));
 	set_binding_param(&param[4], MYSQL_TYPE_DATE, &ddp, DATE_LEN);
 	set_binding_param(&param[5], MYSQL_TYPE_DATE, &ddr, DATE_LEN);
-	set_binding_param(&param[6], MYSQL_TYPE_FLOAT, &cos, NUM_LEN);
-	set_binding_param(&param[7], MYSQL_TYPE_LONG, &nkm, NUM_LEN);
-	set_binding_param(&param[8], MYSQL_TYPE_LONG, &pds, NUM_LEN);
+	set_binding_param(&param[6], MYSQL_TYPE_FLOAT, &cos, sizeof(cos));
+	set_binding_param(&param[7], MYSQL_TYPE_LONG, &nkm, sizeof(nkm));
+	set_binding_param(&param[8], MYSQL_TYPE_LONG, &pds, sizeof(pds));
 	set_binding_param(&param[9], MYSQL_TYPE_DATE, &dda, DATE_LEN);
 
 	if(take_result(select_trip,param, "select_trip") == -1)
@@ -513,14 +513,16 @@ void do_select_trip(struct viaggio *viaggio) //Funziona
 
 		strcpy(viaggio->tourassociato, tou);
 		strcpy(viaggio->mezzoimpiegato, mez);
+
 		viaggio->conducente = con; 
 		viaggio->accompagnatrice = acc; 
 		viaggio->numerodikm = nkm; 
 		viaggio->postidisponibili = pds; 
+		viaggio->costodelviaggio = cos; 
 
-		mysql_timestamp_to_string(&ddp, viaggio->datadipartenzaviaggio);
-		mysql_timestamp_to_string(&ddr, viaggio->datadiritornoviaggio); 
-        mysql_timestamp_to_string(&dda, viaggio->datadiannullamento);
+		mysql_date_to_string(&ddp, viaggio->datadipartenzaviaggio);
+		mysql_date_to_string(&ddr, viaggio->datadiritornoviaggio); 
+        mysql_date_to_string(&dda, viaggio->datadiannullamento);
 
 	stop: 
 
@@ -577,7 +579,7 @@ void do_select_costumer(struct cliente *cliente) // funziona ma rivedere il camp
     strcpy(cliente->indirizzocliente, ind);
     strcpy(cliente->recapitotelefonico,tel); 
     strcpy(cliente->fax, fax); 
-    mysql_timestamp_to_string(&ddc, cliente->datadocumentazione);
+    mysql_date_to_string(&ddc, cliente->datadocumentazione);
 		
     stop:
 	mysql_stmt_free_result(select_costumer);
@@ -606,9 +608,9 @@ void do_select_reservation(struct prenotazione *prenotazione)//Funziona ma mostr
 	date_to_mysql_time(prenotazione->datadiconferma, &datadiconferma);
 	date_to_mysql_time(prenotazione->datasaldo, &datasaldo);
 
-	init_mysql_timestamp(&ddp); 
-	init_mysql_timestamp(&ddc); 
-	init_mysql_timestamp(&dds); 
+	init_mysql_date(&ddp); 
+	init_mysql_date(&ddc); 
+	init_mysql_date(&dds); 
 	
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerodiprenotazione, sizeof(numerodiprenotazione));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, strlen(prenotazione->clienteprenotante));
@@ -628,11 +630,11 @@ void do_select_reservation(struct prenotazione *prenotazione)//Funziona ma mostr
 	if(take_result(select_reservation,param,"select_reservation")== -1) 
 		goto stop; 
 
-	strcpy(prenotazione->clienteprenotante, cli); 
 	prenotazione->numerodiprenotazione = ndp; 
-	mysql_timestamp_to_string(&ddp, prenotazione->datadiprenotazione); 
-	mysql_timestamp_to_string(&ddc, prenotazione->datadiconferma); 
-	mysql_timestamp_to_string(&dds, prenotazione->datasaldo); 
+	strcpy(prenotazione->clienteprenotante, cli);
+	mysql_date_to_string(&ddp, prenotazione->datadiprenotazione); 
+	mysql_date_to_string(&ddc, prenotazione->datadiconferma); 
+	mysql_date_to_string(&dds, prenotazione->datasaldo); 
 
 	stop: 
 	mysql_stmt_free_result(select_reservation);

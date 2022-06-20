@@ -103,6 +103,13 @@ void init_mysql_timestamp(MYSQL_TIME *time)
 	time->time_type = MYSQL_TIMESTAMP_DATETIME;
 }
 
+void init_mysql_date(MYSQL_TIME *time)
+{
+	memset(time, 0, sizeof (*time));
+	time->time_type = MYSQL_TIMESTAMP_DATE;
+}
+
+
 void mysql_timestamp_to_string(MYSQL_TIME *time, char *str)
 {
 	snprintf(str, DATETIME_LEN, "%4d-%02d-%02d %02d:%02d", time->year, time->month, time->day, time->hour, time->minute);
@@ -144,10 +151,16 @@ int take_result(MYSQL_STMT *procedure, MYSQL_BIND *param, char *buff)
 		printf("(%s)", buff); 
 		return -1;
 	}
-	
-	mysql_stmt_fetch(procedure);
-    if (status == 1 || status == MYSQL_NO_DATA)
-		return -1;  
 
+	while (true) {
+		status = mysql_stmt_fetch(procedure);
+		if (status == MYSQL_NO_DATA)
+			break; 
+		if (status == 1 ){
+			print_stmt_error(procedure, "\nImpossibile eseguire il fetch del result set ");
+			printf("(%s)", buff); 
+			return -1;
+			}
+	}
 	return 0;
 }

@@ -13,6 +13,7 @@ extern void fini_db(void);
 #define DATETIME_LEN (DATE_LEN + TIME_LEN)
 #define NUM_LEN 45
 #define DEC_LEN 45 
+#define TAR_LEN 10
 #define USERNAME_LEN 45
 #define PASSWORD_LEN 8
 #define PIC 45
@@ -141,7 +142,7 @@ struct mete_viaggio{
 }; 
 
 struct mezzo {
-	char targa[VARCHAR_LEN];
+	char targa[TAR_LEN];
 	char modellomezzo[NUM_LEN]; 					//FK //Corretto trasformandolo da carattere a puntatore di carattere
 	char ingombri[VARCHAR_LEN];	
 	char autonomia[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
@@ -261,7 +262,7 @@ struct viaggio {
 	char tourassociato[VARCHAR_LEN]; 
 	int conducente; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
 	int accompagnatrice; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
-	char mezzoimpiegato[VARCHAR_LEN]; 			// FK
+	char mezzoimpiegato[TAR_LEN]; 			// FK
 	char datadipartenzaviaggio[DATETIME_LEN]; 
 	char datadiritornoviaggio[DATETIME_LEN]; 
 	float costodelviaggio;  //Corretto trasformandolo da carattere a puntatore di carattere

@@ -144,13 +144,13 @@ void ins_association(struct associata *associata)
 	get_input("Inserisci l'albergo in cui è ubicata la camera: ", NUM_LEN, buff,false);	
 	associata->albergoinquestione = atoi(buff); 
 	while(true){
-	get_input("Inserici la data d'inizio del soggiorno: ",DATE_LEN, associata->datainiziosoggiorno,false); 
+	get_input("Inserici la data d'inizio del soggiorno [YYYY-MM-DD]: ",DATE_LEN, associata->datainiziosoggiorno,false); 
 	if(validate_date(associata->datainiziosoggiorno))
 			break;
 		fprintf(stderr, "Data errata!\n");
 	}
 	while(true){
-		get_input("Inserisci la data di fine soggiorno: ",DATE_LEN, associata->datafinesoggiorno, false);
+		get_input("Inserisci la data di fine soggiorno [YYYY-MM-DD]: ",DATE_LEN, associata->datafinesoggiorno, false);
 		if(validate_date(associata->datafinesoggiorno))
 				break;
 			fprintf(stderr, "Data errata!\n");
