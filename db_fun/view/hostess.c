@@ -59,7 +59,7 @@ int get_hstss_action(void)
 	puts("6) Modificare la data di invio degli ultimi documenti di un cliente"); 
 	puts("7) Esci");
 
-	op = multi_choice("Select an option", options, 7);
+	op = multi_choice("Scegli un opzione", options, 7);
 
 	return op -'1'; 
 }
