@@ -182,7 +182,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(select_tour, "Unable to initialize select_tour statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&select_all_tour, "call select_all_tour(?)", conn)) {
+			if(!setup_prepared_stmt(&select_all_tour, "call select_all_tour()", conn)) {
 				print_stmt_error(select_all_tour, "Unable to initialize select_all_tour statement\n");
 				return false;
 			}
@@ -802,147 +802,57 @@ void do_select_tour( struct tour *tour)
 
 void do_select_all_tour( struct tour *tour)
 {	
-	MYSQL_BIND param[7];
-
-	int minimopartecipanti; 
-	float assicurazionemedica; 
-	float bagaglio; 
-	float garanziaannullamento; 
-	signed char accompagnatrice; 
-	
+	MYSQL_BIND param[1];
+	struct tour_info *tour_info = NULL; 
 	char den [VARCHAR_LEN]; 
-	char des [DES_LEN]; 
-	int mip; 
-	float amd; 
-	float bgl; 
-	float gan; 
-	signed char acc; 
-	
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tour->denominazionetour, strlen(tour->denominazionetour));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tour->descrizionetour, strlen(tour->descrizionetour));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &minimopartecipanti, sizeof(minimopartecipanti));
-	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &assicurazionemedica, sizeof(assicurazionemedica));
-	set_binding_param(&param[4], MYSQL_TYPE_FLOAT, &bagaglio, sizeof(bagaglio));
-	set_binding_param(&param[5], MYSQL_TYPE_FLOAT, &garanziaannullamento, sizeof(garanziaannullamento));
-	set_binding_param(&param[6], MYSQL_TYPE_TINY, &accompagnatrice, sizeof(accompagnatrice));
-	
-	if(bind_exe(select_all_tour,param, "select_all_tour")== -1)
-		goto stop; 
+	size_t rows; 
+	int status; 
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, den, strlen(den));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, des, strlen(des));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &mip, sizeof(mip));
-	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &amd, sizeof(amd));
-	set_binding_param(&param[4], MYSQL_TYPE_FLOAT, &bgl, sizeof(bgl));
-	set_binding_param(&param[5], MYSQL_TYPE_FLOAT, &gan, sizeof(gan));
-	set_binding_param(&param[6], MYSQL_TYPE_TINY, &acc, sizeof(acc));
-	
-	if(take_result(select_all_tour, param, "select_all_tour")==-1)
+	if(mysql_stmt_execute(select_all_tour) != 0) {
+		print_stmt_error(select_all_tour, "\nImpossibile eseguire execute "); 
 		goto stop; 
-	
-	printf("Des %s", des); 
-	
+	}
+		
+	if( mysql_stmt_store_result(select_all_tour) != 0){
+		print_stmt_error(select_all_tour, "\nImpossibile eseguire store result");
+		goto stop; 
+	}
+	rows = mysql_stmt_num_rows(select_all_tour); 
 
-	strcpy(tour->denominazionetour, den);  
-	strcpy(tour->descrizionetour, des); 
-	tour->minimopartecipanti = mip; 
-	tour->assicurazionemedica = amd; 
-	tour->bagaglio = bgl; 
-	tour->garanziaannullamento = gan; 
-	tour->accompagnatrice = acc; 
+	printf("ROWS %ld\n\n", rows); 
+
+	tour_info = malloc((sizeof(struct tour)+sizeof(tour_info))*rows); 
+
+	if(tour_info == NULL){
+		printf("Impossibile eseguire la malloc su tour info"); 
+		goto stop; 
+	}
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, den, strlen(den)); 
+
+	if(mysql_stmt_bind_result(select_all_tour, param)) {
+		print_stmt_error(select_all_tour, "\n\n Impossibile eseguire il bind risult\n\n");
+		goto stop; 
+	}
+
+
+	while (true) {
+		status = mysql_stmt_fetch(select_all_tour);
+		if (status == MYSQL_NO_DATA)
+			break; 
+		if (status == 1 ){
+			print_stmt_error(select_all_tour, "\nImpossibile eseguire fetch");
+			}
+			strcpy(tour_info->tour_info[rows].denominazionetour, den);
+			rows++; 
+	}
 
 	stop: 
 	mysql_stmt_free_result(select_all_tour);
 	mysql_stmt_reset(select_all_tour);
 	
 }
-/*void do_select_all_tour( struct tour *tour)
-{	
-struct tour_info *do_get_tour_info(void)
-{
-	int status;
-	size_t row = 0;
-	MYSQL_BIND param[8];
-	MYSQL_TIME partenza;
-	MYSQL_TIME arrivo;
-	char idVolo[ID_LEN];
-	char cittaPart[CITTA_LEN];
-	char cittaArr[CITTA_LEN];
-	int prenotati;
-	int disponibili;
-	double occupazione;
-	struct tour_info *tour_info = NULL;
-
-	// Initialize timestamps
-	init_mysql_timestamp(&partenza);
-	init_mysql_timestamp(&arrivo);
-
-	// Run procedure
-	if(mysql_stmt_execute(get_tour_info) != 0) {
-		print_stmt_error(get_tour_info, "Could not execute get tour_info procedure");
-		goto out;
-	}
-
-	mysql_stmt_store_result(get_tour_info);
-
-	tour_info = malloc(sizeof(*tour_info) + sizeof(struct tour) * mysql_stmt_num_rows(get_tour_info));
-	if(tour_info == NULL)
-		goto out;
-	memset(tour_info, 0, sizeof(*tour_info) + sizeof(struct tour) * mysql_stmt_num_rows(get_tour_info));
-	tour_info->num_entries = mysql_stmt_num_rows(get_tour_info);
-
-	// Get bound parameters
-	mysql_stmt_store_result(get_tour_info);
-	/*char idVolo[ID_LEN];
-	char cittaPart[CITTA_LEN];
-	char partenza[DATETIME_LEN];
-	char cittaArr[CITTA_LEN];
-	char arrivo[DATETIME_LEN];
-	unsigned prenotati;
-	unsigned disponibili;
-	double occupazione;
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, idVolo, ID_LEN);
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cittaPart, CITTA_LEN);
-	set_binding_param(&param[2], MYSQL_TYPE_TIMESTAMP, &partenza, sizeof(partenza));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cittaArr, CITTA_LEN);
-	set_binding_param(&param[4], MYSQL_TYPE_TIMESTAMP, &arrivo, sizeof(arrivo));
-	set_binding_param(&param[5], MYSQL_TYPE_LONG, &prenotati, sizeof(prenotati));
-	set_binding_param(&param[6], MYSQL_TYPE_LONG, &disponibili, sizeof(disponibili));
-	set_binding_param(&param[7], MYSQL_TYPE_DOUBLE, &occupazione, sizeof(occupazione));
-
-	if(mysql_stmt_bind_result(get_tour_info, param)) {
-		print_stmt_error(get_tour_info, "Unable to bind output parameters for get tour_info\n");
-		free(tour_info);
-		tour_info = NULL;
-		goto out;
-	}
-
-	//assemble tour_info general information 
-	while (true) {
-		status = mysql_stmt_fetch(get_tour_info);
-
-		if (status == 1 || status == MYSQL_NO_DATA)
-			break;
-
-		strcpy(tour_info->tour_info[row].idVolo, idVolo);
-		strcpy(tour_info->tour_info[row].cittaPart, cittaPart);
-		strcpy(tour_info->tour_info[row].cittaArr, cittaArr);
-		mysql_timestamp_to_string(&partenza, tour_info->tour_info[row].partenza);
-		mysql_timestamp_to_string(&arrivo, tour_info->tour_info[row].arrivo);
-		tour_info->tour_info[row].prenotati = prenotati;
-		tour_info->tour_info[row].disponibili = disponibili;
-		tour_info->tour_info[row].occupazione = occupazione;
-
-		row++;
-	}
-    out:
-	mysql_stmt_free_result(get_tour_info);
-	mysql_stmt_reset(get_tour_info);
-	return tour_info;
-}
-}*/
-
-
+	
 void do_select_destination(struct meta *meta)
 { 	
 	MYSQL_BIND param[10]; 

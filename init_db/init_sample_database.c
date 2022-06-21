@@ -189,6 +189,7 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/insert_reservation.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/validate_reservation.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/select_tour.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/select_all_tour.sql");
      
 
 }
