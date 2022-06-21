@@ -11,7 +11,7 @@
 struct cliente *cliente; 
 struct prenotazione *prenotazione;
 struct postoprenotato *postoprenotato;
-struct  viaggio *viaggio;
+struct  viaggio *viaggio_hostess;
 struct associata * associata;
 
 void  allocation_hstss(void)
@@ -31,8 +31,8 @@ void  allocation_hstss(void)
 		{printf("Fallimento malloc su postoprenotato (hostess) \n\n"); 
 		 exit(0); 
 		}
-	viaggio = malloc(sizeof(struct viaggio)); 
-	if(viaggio == NULL)
+	viaggio_hostess = malloc(sizeof(struct viaggio)); 
+	if(viaggio_hostess == NULL)
 		{printf("Fallimento malloc su viaggio (hostess) \n\n"); 
 		 exit(0);
 		}
@@ -84,7 +84,7 @@ bool exe_hstss_act(char sel, struct cliente *cliente,struct prenotazione * preno
 				return true;
 				}
      		case POSTI_VIAGGIO:{
-     			mod_trip_seat(viaggio);
+     			mod_trip_seat();
 				return true; 
 				}
 			case CONFERMA_PRENOTAZIONE:{
@@ -114,16 +114,16 @@ void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura v
  	show_reservation( prenotazione); 
 }
 
-void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsonibili per viaggio 
+void mod_trip_seat(void) // Procedura modifica posti dipsonibili per viaggio 
 {
 	
 	char buffer[VARCHAR_LEN]; 
 	printf("** Procedura modifica posti viaggio **\n\n"); 
  	get_input("Inserisci il codice del viaggio : ", VARCHAR_LEN, buffer, false);
-	viaggio->idviaggio = atoi(buffer);
+	viaggio_hostess->idviaggio = atoi(buffer);
 
- 	do_select_trip(viaggio);
-	show_trip (viaggio);
+ 	do_select_trip(viaggio_hostess);
+	show_trip (viaggio_hostess);
 
 	bool ans = yes_or_no("\n\n Vuoi modificare i posti disponibili per questo viaggio? (s/n) ",'s','n',false,false);
 	if(!ans) {
@@ -131,9 +131,9 @@ void mod_trip_seat(struct  viaggio *viaggio) // Procedura modifica posti dipsoni
 	}
 
  	get_input ("Inserisci i nuovi posti disponibili :", NUM_LEN , buffer, false); 
-	viaggio->postidisponibili = atoi(buffer); 
+	viaggio_hostess->postidisponibili = atoi(buffer); 
 
-	do_update_trip_seat(viaggio); 
+	do_update_trip_seat(viaggio_hostess); 
 }
 
 void validate_reservation(struct prenotazione *prenotazione, struct postoprenotato *postoprenotato, struct associata *associata)
@@ -213,19 +213,15 @@ void update_d_doc(struct cliente  *cliente)
 
 void run_hstss_interface (void)
 { 	
-	char sel;  
-	struct cliente *cliente; 
-	struct prenotazione *prenotazione;
-	struct postoprenotato *postoprenotato;
-	struct  viaggio *viaggio;
-	struct associata * associata;
+	char sel;
 				
-	if(	cliente == NULL || prenotazione == NULL || postoprenotato == NULL ||viaggio == NULL||associata == NULL) 
-		allocation_hstss(); 
+	if(	cliente == NULL || prenotazione == NULL || postoprenotato == NULL ||viaggio_hostess == NULL||associata == NULL) 
+		{allocation_hstss(); 
+		printf("\n\nAllocazione avvenuta.\n\n"); }
 
 	while (true){
 	sel = get_hstss_action(); 
-	if (!exe_hstss_act(sel, cliente, prenotazione,postoprenotato, viaggio, associata))
+	if (!exe_hstss_act(sel, cliente, prenotazione,postoprenotato, viaggio_hostess, associata))
 		break; 
 	}
 

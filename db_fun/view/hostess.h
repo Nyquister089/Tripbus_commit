@@ -3,6 +3,8 @@
 #include <mysql/mysql.h>
 #include <assert.h>
 
+#include "../model/trpdb.h"
+
 typedef enum{
 	INFO_PRENOTAZIONI,
 	INSERT_CLIENTE,
@@ -15,7 +17,7 @@ typedef enum{
  
 
 extern void show_prenotation_details(struct prenotazione *prenotazione ); 
-extern void mod_trip_seat (struct viaggio *viaggio); 
+extern void mod_trip_seat (void); 
 extern void validate_reservation(struct prenotazione *prenotazione, struct postoprenotato *postoprenotato, struct associata *associata);
 extern void update_d_doc(struct cliente  *cliente); 
 extern void run_hstss_interface (void);

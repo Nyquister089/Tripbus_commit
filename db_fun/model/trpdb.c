@@ -173,10 +173,10 @@ static bool initialize_prepared_stmts(role_t for_role)
 			break;
 
 		case CLIENTE:
-			if(!setup_prepared_stmt(&select_tour, "call select_tour()", conn)) {
+			if(!setup_prepared_stmt(&select_tour, "call select_tour(?, ?, ?, ?, ?, ?, ?)", conn)) {
 				print_stmt_error(select_tour, "Unable to initialize select_tour statement\n");
 				return false;
-			}
+			}/*
 			if(!setup_prepared_stmt(&select_destination, "call select_destination()", conn)) {
 				print_stmt_error(select_destination, "Unable to initialize select_destination statement\n");
 				return false;
@@ -200,7 +200,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			if(!setup_prepared_stmt(&select_picture, "call select_picture()", conn)) {
 				print_stmt_error(select_picture, "Unable to initialize select_picture statement\n");
 				return false;
-			}
+			}*/
 			if(!setup_prepared_stmt(&select_trip, "call select_trip(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", conn)) {
 				print_stmt_error(select_trip, "Unable to initialize select_trip statement\n");
 				return false;
@@ -462,12 +462,6 @@ void do_insert_assoc(struct associata *associata) // Funziona
 	
 }
 
-
-
-					//*** Esecuzione update statement ***//
-	
-	
-	
 void do_validate_reservation(struct prenotazione *prenotazione) //Funziona
 {		
 	MYSQL_BIND param[3]; 
@@ -554,11 +548,11 @@ void do_select_trip(struct viaggio *viaggio) //Funziona
 	init_mysql_timestamp(&dda);
     
 	idviaggio = viaggio->idviaggio; 
-	conducente = viaggio->conducente; 				
+	/*conducente = viaggio->conducente; 				
 	accompagnatrice = viaggio->accompagnatrice ; 
 	costodelviaggio = viaggio->costodelviaggio;  
 	numerodikm = viaggio->numerodikm; 
-	postidisponibili = viaggio -> postidisponibili; 
+	postidisponibili = viaggio -> postidisponibili; */
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, strlen(viaggio->tourassociato));
@@ -742,7 +736,7 @@ void do_update_data_doc(struct cliente *cliente) //funziona
 }
 void do_select_tour( struct tour *tour)
 {	
-	MYSQL_BIND param[6];
+	MYSQL_BIND param[7];
 
 	int minimopartecipanti; 
 	float assicurazionemedica; 
@@ -779,6 +773,7 @@ void do_select_tour( struct tour *tour)
 	
 	if(take_result(select_tour, param, "select_tour")==-1)
 		goto stop; 
+
 	strcpy(tour->denominazionetour, den);  
 	strcpy(tour->descrizionetour, des); 
 	tour->minimopartecipanti = mip; 

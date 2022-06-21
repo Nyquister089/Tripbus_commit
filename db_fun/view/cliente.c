@@ -67,7 +67,7 @@ int get_cstmr_action(void)
 {
 	char options[6] = {'1','2','3','4','5','6'};
 	char op;
-	clear_screen();
+	//clear_screen();
 	puts("*********************************");
 	puts("*   Interfaccia cliente     *");
 	puts("*********************************\n");
@@ -144,7 +144,7 @@ void show_tour_information(struct tour *tour)
 /*void show_tour_destination(struct mete_tour *mete_tour, struct foto_mete *foto_mete)
 {	
 	//select_tour(TOUR_SEL); TODO: Da verificare l'utilizzo di questa istruzione
-	clear_screen();
+	//clear_screen();
 	printf("** Mete visitate dal tour **\n\n");
 	//  lancio procedura select mete tramite denominazione tour nella tabella me-to per passare a mete e  conteggio delle stesse  tale conteggio viene inserito in COUNT inoltre deve effettuare una select su foto relative ed un ulteriore conteggio da inserire in COUNT_PIC 
 	for(size_t i = 0; i < COUNT; i++) {
@@ -166,7 +166,7 @@ void show_tour_information(struct tour *tour)
 
 void show_trip_tour(struct viaggi_tour *viaggi_tour, struct viaggio *viaggio)
 {
-	clear_screen(); 
+	//clear_screen(); 
 	puts("** Inserire il periodo d'interesse **\n\n");
 
 	while(true) {
@@ -182,7 +182,7 @@ void show_trip_tour(struct viaggi_tour *viaggi_tour, struct viaggio *viaggio)
 			break;
 		fprintf(stderr, "Data errata !\n");
 	}// procedura select viaggi in base a tour richiesto e date indicate ed inserisca il numero dei viaggi trovati in COUNT
-	clear_screen();
+	//clear_screen();
 	char buffer[VARCHAR_LEN]; 
 	printf("** Viaggi realtivi al tour %s **\n\n", buffer);
 	for(size_t i = 0; i < COUNT; i++) {
@@ -197,11 +197,11 @@ void show_trip_tour(struct viaggi_tour *viaggi_tour, struct viaggio *viaggio)
 }
 
 void show_service_destination(struct servizi_albergo *servizi_albergo)
-{	clear_screen();
+{	//clear_screen();
 	char buffer[VARCHAR_LEN]; 
 	get_input("** Inserire il nome dell'albergo d'interesse **\n\n", VARCHAR_LEN, buffer, false);
 	//  lancio procedura select per individuare l'albergo d'interesse e restituisco i relativi servizi offerti, inserisco il numero degli ultimi nella variabile COUNT
-	clear_screen(); 
+	//clear_screen(); 
 	printf("** Servizi offerti da: %s \n\n", buffer);
 	for(size_t i = 0; i < COUNT; i++) {
 		printf("Nome servizio: %s \n Descrizione: %s \n\n",
@@ -213,7 +213,7 @@ void show_service_destination(struct servizi_albergo *servizi_albergo)
 }
 
 void show_comfort_model(struct comfort_mezzo *comfort_mezzo, struct elenco_modelli *elenco_modelli)
-{	clear_screen();
+{	//clear_screen();
 	char buffer[VARCHAR_LEN]; 
 	puts("** Elenco modelli **"); 
 	for(size_t i = 0; i < COUNT; i++) {
@@ -224,7 +224,7 @@ void show_comfort_model(struct comfort_mezzo *comfort_mezzo, struct elenco_model
 	}
 	get_input("** Inserire l'id del modello d'interesse **\n\n", VARCHAR_LEN, buffer, false);
 	//  lancio procedura select per individuare il modello d'interesse e restituisco i relativi servizi offerti, inserisco il numero degli ultimi nella variabile COUNT
-	clear_screen(); 
+	//clear_screen(); 
 	printf("** Comfort offerti dal bus modello : %s \n\n", buffer);
 	
 	for(size_t i = 0; i < COUNT; i++) {

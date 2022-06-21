@@ -27,6 +27,7 @@ bool ask_for_relogin(void)
 int main (void)
 {	
 	bool answer = false; 
+	bool ans = true; 
 
 	size_t role; 
 
@@ -37,10 +38,11 @@ int main (void)
 	init_db();
 
 	while (!answer){
-
-		view_login(cred); 
-		role = attempt_login(cred);
 		
+		if(ans){
+			view_login(cred); 
+			role = attempt_login(cred);
+		}
 
 		switch(role){
 			case AUTISTA: 
@@ -58,9 +60,13 @@ int main (void)
 			case QUIT: 
 				printf("Quit!\n");
 			}
-		answer = yes_or_no("\n\nVuoi chiudere il database? (s/n) ",'s','n',false,false);
-		if(answer){
-			fini_db();
+			
+			ans = ask_for_relogin(); 
+			if(!ans){
+				answer = yes_or_no("\n\nVuoi chiudere il database? (s/n) ",'s','n',false,false);
+					if(answer){
+						fini_db();
+					}
 			}
 	}
 	
