@@ -58,8 +58,12 @@ void show_tour(struct tour *tour)
 }
 void show_all_tour(struct tour_info *tour_info)
 {
-
+	printf("Show all\n\n");
+	/*La malloc su tour_info viene effettuata all'interno di trpdb.c -> do_select_all_tour()
+	 questo crea il problema, possibile soluzione creare una "funzione-struct"
+	dump core ->*/
 	for(size_t i = 0; i < tour_info->num_tour; i++) {
+		printf("I = %ld", i); 
 		printf("Tour %s \n",
 			tour_info->tour_info[i].denominazionetour);
 	}

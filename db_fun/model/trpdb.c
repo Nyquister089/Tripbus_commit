@@ -831,13 +831,13 @@ void do_select_all_tour( struct tour *tour)
 	}
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, den, strlen(den)); 
-
+	
 	if(mysql_stmt_bind_result(select_all_tour, param)) {
 		print_stmt_error(select_all_tour, "\n\n Impossibile eseguire il bind risult\n\n");
 		goto stop; 
 	}
 	tour_info->num_tour = rows; 
-
+	printf("Bind result\n\n");
 	while (true) {
 		status = mysql_stmt_fetch(select_all_tour);
 		if (status == MYSQL_NO_DATA)
@@ -848,7 +848,7 @@ void do_select_all_tour( struct tour *tour)
 			strcpy(tour_info->tour_info[rows].denominazionetour, den);
 			rows++; 
 	}
-
+	printf("Fetch\n\n");
 	stop: 
 	mysql_stmt_free_result(select_all_tour);
 	mysql_stmt_reset(select_all_tour);
