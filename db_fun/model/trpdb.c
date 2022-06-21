@@ -818,10 +818,12 @@ void do_select_all_tour( struct tour *tour)
 		goto stop; 
 	}
 	rows = mysql_stmt_num_rows(select_all_tour); 
+	
 
 	printf("ROWS %ld\n\n", rows); 
 
-	tour_info = malloc((sizeof(struct tour)+sizeof(tour_info))*rows); 
+	tour_info =malloc((sizeof(struct tour)+sizeof(tour_info))*rows);
+	memset(tour_info, 0, sizeof(*tour_info) + sizeof(struct tour)*rows);
 
 	if(tour_info == NULL){
 		printf("Impossibile eseguire la malloc su tour info"); 
@@ -834,7 +836,7 @@ void do_select_all_tour( struct tour *tour)
 		print_stmt_error(select_all_tour, "\n\n Impossibile eseguire il bind risult\n\n");
 		goto stop; 
 	}
-
+	tour_info->num_tour = rows; 
 
 	while (true) {
 		status = mysql_stmt_fetch(select_all_tour);

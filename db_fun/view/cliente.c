@@ -15,6 +15,7 @@ struct comfort *comfort;
 struct modello *modello; 
 struct documentazionefotografica *documentazionefotografica; 
 struct camera *camera; 
+struct tour_info *tour_info; 
 
 void allocation_cstmr(void)
 {
@@ -130,6 +131,7 @@ void show_tour_information(struct tour *tour)
 	//do_select_tour(tour); 
 	do_select_all_tour(tour); 
 	// seleziona il tour 
+	show_all_tour(tour_info); 
 	show_tour(tour); 
 	
 	

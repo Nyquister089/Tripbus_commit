@@ -56,3 +56,11 @@ void show_tour(struct tour *tour)
 		);
 
 }
+void show_all_tour(struct tour_info *tour_info)
+{
+
+	for(size_t i = 0; i < tour_info->num_tour; i++) {
+		printf("Tour %s \n",
+			tour_info->tour_info[i].denominazionetour);
+	}
+}
