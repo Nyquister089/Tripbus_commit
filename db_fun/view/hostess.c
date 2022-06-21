@@ -8,7 +8,6 @@
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
-
 struct cliente *cliente; 
 struct prenotazione *prenotazione;
 struct postoprenotato *postoprenotato;
@@ -66,8 +65,7 @@ int get_hstss_action(void)
 	return op -'1'; 
 }
 
-bool exe_hstss_act(char sel, struct cliente *cliente,struct prenotazione * prenotazione,
-	struct postoprenotato *postoprenotato, struct viaggio *viaggio, struct associata *associata)
+bool exe_hstss_act(char sel, struct cliente *cliente,struct prenotazione * prenotazione,struct postoprenotato *postoprenotato, struct viaggio *viaggio, struct associata *associata)
 {	
 
 	switch (sel)

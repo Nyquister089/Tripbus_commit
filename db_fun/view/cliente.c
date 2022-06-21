@@ -7,16 +7,14 @@
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
-struct tour *tour; 
-struct viaggio *viaggio; 
+struct tour *tour;  
 struct meta *meta; 
+struct viaggio *viaggio; 
 struct servizio *servizio; 
 struct comfort *comfort; 
 struct modello *modello; 
 struct documentazionefotografica *documentazionefotografica; 
 struct camera *camera; 
-
-
 
 void allocation_cstmr(void)
 {

@@ -3,8 +3,6 @@
 #include <mysql/mysql.h>
 #include <assert.h>
 
-#include "../model/trpdb.h"
-
 typedef enum{
 	INFO_PRENOTAZIONI,
 	INSERT_CLIENTE,
