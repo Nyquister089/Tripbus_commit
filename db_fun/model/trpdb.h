@@ -264,6 +264,8 @@ struct tour_info{
 	struct tour tour_info[]; 
 }; 
 
+
+
 struct viaggio {
 	int idviaggio; //Corretto trasformandolo da carattere a puntatore di carattere
 	char tourassociato[VARCHAR_LEN]; 
@@ -312,7 +314,9 @@ extern void do_select_trip(struct viaggio *viaggio);
 extern void do_select_costumer(struct cliente *cliente);
 extern void do_select_reservation(struct prenotazione *prenotazione);
 extern void do_select_tour( struct tour *tour);
-extern void do_select_all_tour(struct tour *tour); 
+//extern void do_select_all_tour(struct tour *tour); 
+
+extern struct tour_info *get_tour_info (void);
 
 extern void do_update_data_doc(struct cliente *cliente); 
 extern void do_validate_reservation(struct prenotazione *prenotazione); 

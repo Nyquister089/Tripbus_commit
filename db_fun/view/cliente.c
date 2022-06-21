@@ -15,7 +15,6 @@ struct comfort *comfort;
 struct modello *modello; 
 struct documentazionefotografica *documentazionefotografica; 
 struct camera *camera; 
-struct tour_info *tour_info; 
 
 void allocation_cstmr(void)
 {
@@ -126,22 +125,7 @@ struct documentazionefotografica *documentazionefotografica, struct camera * cam
 void show_tour_information(struct tour *tour)
 {	
 	printf("\n\n** Tour offerti  **\n\n"); 
-	get_input("Inserisci il codice d'interesse: ", VARCHAR_LEN, tour->denominazionetour, false); 
-	// seleziona i nominativi dei tour
-	//do_select_tour(tour); 
-	do_select_all_tour(tour); 
-	// seleziona il tour 
-	show_all_tour(tour_info); 
-	show_tour(tour); 
-	
-	
-	/*char buffer[VARCHAR_LEN]; 
-	//  lancio procedura select Tour tramite denominazione
-	printf("Descrizione %s \n\n Accompagnatrice %s \n Costo bagaglio %f\n Costo assicurazione medica : %f",
-			tour->descrizionetour, 
-			tour->accompagnatrice,
-			tour->bagaglio,
-			tour->assicurazionemedica);*/
+	get_tour_info (); 
 }
 
 /*void show_tour_destination(struct mete_tour *mete_tour, struct foto_mete *foto_mete)

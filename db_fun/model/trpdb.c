@@ -800,13 +800,15 @@ void do_select_tour( struct tour *tour)
 }
 
 
-void do_select_all_tour( struct tour *tour)
+//void do_select_all_tour( struct tour *tour)
+struct tour_info *get_tour_info (void)
 {	
-	MYSQL_BIND param[1];
+	MYSQL_BIND param[2];
 	struct tour_info *tour_info = NULL; 
 	char den [VARCHAR_LEN]; 
-	size_t rows; 
-	int status; 
+	char des [VARCHAR_LEN]; 
+	size_t rows, count = 0; 
+	int status;  
 
 	if(mysql_stmt_execute(select_all_tour) != 0) {
 		print_stmt_error(select_all_tour, "\nImpossibile eseguire execute "); 
@@ -818,9 +820,6 @@ void do_select_all_tour( struct tour *tour)
 		goto stop; 
 	}
 	rows = mysql_stmt_num_rows(select_all_tour); 
-	
-
-	printf("ROWS %ld\n\n", rows); 
 
 	tour_info =malloc((sizeof(struct tour)+sizeof(tour_info))*rows);
 	memset(tour_info, 0, sizeof(*tour_info) + sizeof(struct tour)*rows);
@@ -830,14 +829,15 @@ void do_select_all_tour( struct tour *tour)
 		goto stop; 
 	}
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, den, strlen(den)); 
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, den, VARCHAR_LEN);
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, des, DES_LEN); 
+
 	
 	if(mysql_stmt_bind_result(select_all_tour, param)) {
 		print_stmt_error(select_all_tour, "\n\n Impossibile eseguire il bind risult\n\n");
 		goto stop; 
 	}
 	tour_info->num_tour = rows; 
-	printf("Bind result\n\n");
 	while (true) {
 		status = mysql_stmt_fetch(select_all_tour);
 		if (status == MYSQL_NO_DATA)
@@ -845,10 +845,18 @@ void do_select_all_tour( struct tour *tour)
 		if (status == 1 ){
 			print_stmt_error(select_all_tour, "\nImpossibile eseguire fetch");
 			}
-			strcpy(tour_info->tour_info[rows].denominazionetour, den);
-			rows++; 
+			strcpy(tour_info->tour_info[count].denominazionetour, den);
+			strcpy(tour_info->tour_info[count].descrizionetour, des);
+			printf("%s 	\n", tour_info->tour_info[count].denominazionetour);
+			printf("%s 	\n",tour_info->tour_info[count].descrizionetour);
+			printf("%d 	\n",tour_info->tour_info[count].minimopartecipanti);
+			printf("%f 	\n",tour_info->tour_info[count].assicurazionemedica);	
+			printf("%f 	\n",tour_info->tour_info[count].bagaglio);
+			printf("%f 	\n",tour_info->tour_info[count].garanziaannullamento);
+			printf("%d 	\n",tour_info->tour_info[count].accompagnatrice); 
+			printf("\n\n"); 
+			count++; 
 	}
-	printf("Fetch\n\n");
 	stop: 
 	mysql_stmt_free_result(select_all_tour);
 	mysql_stmt_reset(select_all_tour);
