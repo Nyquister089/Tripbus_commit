@@ -12,8 +12,9 @@ typedef enum{
 	POSTI_VIAGGIO,
 	CONFERMA_PRENOTAZIONE, 
 	UPDATE_DATA_DOC,
-	QUIT
+	QUIT_HSST
 } hstss_act;
+ 
 
 extern void show_prenotation_details(struct prenotazione *prenotazione ); 
 extern void mod_trip_seat (struct viaggio *viaggio); 

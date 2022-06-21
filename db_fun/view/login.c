@@ -4,6 +4,7 @@
 
 #include "login.h"
 #include "hostess.h"
+#include "cliente.h"
 #include "../utils/io.h"
 
 void view_login(struct credentials *cred)
@@ -59,9 +60,7 @@ int main (void)
 			}
 		answer = yes_or_no("\n\nVuoi chiudere il database? (s/n) ",'s','n',false,false);
 		if(answer){
-		
-			fini_db(); 
-
+			fini_db();
 			}
 	}
 	

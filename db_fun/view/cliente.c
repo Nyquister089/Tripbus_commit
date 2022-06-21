@@ -3,6 +3,7 @@
 #include"cliente.h"
 #include "ins.h"
 #include "show.h"
+
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
@@ -14,6 +15,7 @@ struct comfort *comfort;
 struct modello *modello; 
 struct documentazionefotografica *documentazionefotografica; 
 struct camera *camera; 
+
 
 
 void allocation_cstmr(void)
@@ -79,11 +81,13 @@ int get_cstmr_action(void)
 	puts("5) Consulta i comfort presenti su un modello");
 	puts("6) Esci ");
 
-	op = multi_choice("Select an option", options, 6);
+	op = multi_choice("Scegli un opzione? ", options, 6);
 	return op - '1';
 }
 
-bool exe_cstmr_act(cstmr_act sel)
+bool exe_cstmr_act(cstmr_act sel, struct tour *tour,struct viaggio *viaggio, 
+struct meta *meta,struct servizio *servizio,struct comfort *comfort,struct modello *modello,
+struct documentazionefotografica *documentazionefotografica, struct camera * camera)
 {
 	switch (sel)
 		{case TOUR_INFO:{
@@ -92,26 +96,26 @@ bool exe_cstmr_act(cstmr_act sel)
 		}
 		
 		case METE_TOUR:{
-		show_tour_destination(mete_tour, foto_mete); 
+		//show_tour_destination(mete_tour, foto_mete); 
 		return true;
 		}
 		
      	case VIAGGI_TOUR:{
-     	show_trip (viaggi_tour, viaggio);
+     	//show_trip_tour(viaggi_tour,viaggio);
 		return true; 
 		 }
 
 	 	case SERVIZI_ALBERGO:{
-		show_service(servizi_albergo);
+		//show_service_destination(servizi_albergo);
 		return true;
 		 }
 
 	 	case COMFORT_MODELLO:{
-		show_comfort(comfort_mezzo, elenco_modelli);
+		//show_comfort_model(comfort_mezzo, elenco_modelli);
 		return true; 
 		 }
 		
-		case QUIT:
+		case QUIT_CSTMR:
 		return false;
 	}
 
@@ -123,22 +127,23 @@ bool exe_cstmr_act(cstmr_act sel)
 void show_tour_information(struct tour *tour)
 {	
 	printf("** Tour offerti  **\n\n"); 
+	get_input("Inserisci il codice d'interesse: ", VARCHAR_LEN, tour->denominazionetour, false); 
 	// seleziona i nominativi dei tour
 	do_select_tour(tour); 
 	// seleziona il tour 
 	show_tour(tour); 
 	
 	
-	char buffer[VARCHAR_LEN]; 
+	/*char buffer[VARCHAR_LEN]; 
 	//  lancio procedura select Tour tramite denominazione
-	printf("Descrizione %s \n\n Accompagnatrice %s \n Costo bagaglio %s\n Costo assicurazione medica : %s ",
+	printf("Descrizione %s \n\n Accompagnatrice %s \n Costo bagaglio %f\n Costo assicurazione medica : %f",
 			tour->descrizionetour, 
 			tour->accompagnatrice,
 			tour->bagaglio,
-			tour->assicurazionemedica);
+			tour->assicurazionemedica);*/
 }
 
-void show_tour_destination(struct mete_tour *mete_tour, struct foto_mete *foto_mete)
+/*void show_tour_destination(struct mete_tour *mete_tour, struct foto_mete *foto_mete)
 {	
 	//select_tour(TOUR_SEL); TODO: Da verificare l'utilizzo di questa istruzione
 	clear_screen();
@@ -161,7 +166,7 @@ void show_tour_destination(struct mete_tour *mete_tour, struct foto_mete *foto_m
 
 }
 
-void show_trip(struct viaggi_tour *viaggi_tour, struct viaggio *viaggio)
+void show_trip_tour(struct viaggi_tour *viaggi_tour, struct viaggio *viaggio)
 {
 	clear_screen(); 
 	puts("** Inserire il periodo d'interesse **\n\n");
@@ -193,7 +198,7 @@ void show_trip(struct viaggi_tour *viaggi_tour, struct viaggio *viaggio)
  	
 }
 
-void show_service(struct servizi_albergo *servizi_albergo)
+void show_service_destination(struct servizi_albergo *servizi_albergo)
 {	clear_screen();
 	char buffer[VARCHAR_LEN]; 
 	get_input("** Inserire il nome dell'albergo d'interesse **\n\n", VARCHAR_LEN, buffer, false);
@@ -209,7 +214,7 @@ void show_service(struct servizi_albergo *servizi_albergo)
 
 }
 
-void show_comfort(struct comfort_mezzo *comfort_mezzo, struct elenco_modelli *elenco_modelli)
+void show_comfort_model(struct comfort_mezzo *comfort_mezzo, struct elenco_modelli *elenco_modelli)
 {	clear_screen();
 	char buffer[VARCHAR_LEN]; 
 	puts("** Elenco modelli **"); 
@@ -229,15 +234,15 @@ void show_comfort(struct comfort_mezzo *comfort_mezzo, struct elenco_modelli *el
 			comfort_mezzo->comfort_mezzo[i].nomecomfort,
 			comfort_mezzo->comfort_mezzo[i].descrizionecomfort); 
 	}
-}
+}*/
 
 void run_cstmr_interface (void)
 { 	char sel; 
-	if(	tour == NULL || viaggio == NULL || meta == NULL || servizio == NULL|| comfort == NULL || documentazionefotografica == NULL || cmaera == NULL ) 
+	if(	tour == NULL || viaggio == NULL || meta == NULL || servizio == NULL|| comfort == NULL || documentazionefotografica == NULL || camera == NULL ) 
 		allocation_cstmr();
 	while (true){
 	sel = get_cstmr_action(); 
-	if (!exe_cstmr_act(sel, tour,viaggio,  meta, servizio, comfort, modelli, documentazionefotografica, camere))
+	if (!exe_cstmr_act(sel, tour,viaggio,  meta, servizio, comfort, modello, documentazionefotografica, camera))
 		break; 
 	}
 }

@@ -118,7 +118,8 @@ static void close_prepared_stmts(void)
 }
 
 static bool initialize_prepared_stmts(role_t for_role)
-{
+{ 
+	printf("For role %d\n\n", for_role); 
 	switch(for_role) {
 
 		case LOGIN_ROLE:
@@ -170,7 +171,8 @@ static bool initialize_prepared_stmts(role_t for_role)
 				return false;
 			}
 			break;
-			case CLIENTE:
+
+		case CLIENTE:
 			if(!setup_prepared_stmt(&select_tour, "call select_tour()", conn)) {
 				print_stmt_error(select_tour, "Unable to initialize select_tour statement\n");
 				return false;
@@ -282,14 +284,14 @@ role_t attempt_login(struct credentials *cred)
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &role, sizeof(role));
 
 	if(mysql_stmt_bind_result(login_procedure, param)) {
-		print_stmt_error(login_procedure, "Could not retrieve output parameter");
+		print_stmt_error(login_procedure, "Bind_result non riuscito");
 		role = FAILED_LOGIN;
 		goto out;
 	}
 
 	// Retrieve output parameter
 	if(mysql_stmt_fetch(login_procedure)) {
-		print_stmt_error(login_procedure, "Could not buffer results");
+		print_stmt_error(login_procedure, "Fetch non riuscito");
 		role = FAILED_LOGIN;
 		goto out;
 	}
@@ -745,26 +747,47 @@ void do_select_tour( struct tour *tour)
 	int minimopartecipanti; 
 	float assicurazionemedica; 
 	float bagaglio; 
-	signed char accompagnatrice; 
-
-
+	float garanziaannullamento; 
+	signed char accompagnatrice;
+	
+	char den [VARCHAR_LEN]; 
+	char des [DES_LEN]; 
+	int mip; 
+	float amd; 
+	float bgl; 
+	float gan; 
+	signed char acc; 
+	
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tour->denominazionetour, strlen(tour->denominazionetour));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tour->descrizionetour, strlen(tour->descrizionetour));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &minimopartecipanti, sizeof(minimopartecipanti));
 	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &assicurazionemedica, sizeof(assicurazionemedica));
 	set_binding_param(&param[4], MYSQL_TYPE_FLOAT, &bagaglio, sizeof(bagaglio));
-	set_binding_param(&param[5], MYSQL_TYPE_TINY, &accompagnatrice, sizeof(accompagnatrice));
+	set_binding_param(&param[5], MYSQL_TYPE_FLOAT, &garanziaannullamento, sizeof(garanziaannullamento));
+	set_binding_param(&param[6], MYSQL_TYPE_TINY, &accompagnatrice, sizeof(accompagnatrice));
 	
+	if(bind_exe(select_tour,param, "select_tour")== -1)
+		goto stop; 
 
-	if(mysql_stmt_bind_param(select_tour, param) != 0) {
-		print_stmt_error(select_tour, "Could not bind parameters for select_tour");
-		return;
-	}
-	if(mysql_stmt_execute(select_tour) != 0) {
-		print_stmt_error(select_tour, "Could not execute select_tour");
-		return;
-		}
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, den, strlen(den));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, des, strlen(des));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &mip, sizeof(mip));
+	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &amd, sizeof(assicurazionemedica));
+	set_binding_param(&param[4], MYSQL_TYPE_FLOAT, &bgl, sizeof(bgl));
+	set_binding_param(&param[5], MYSQL_TYPE_FLOAT, &gan, sizeof(gan));
+	set_binding_param(&param[6], MYSQL_TYPE_TINY, &acc, sizeof(acc));
+	
+	if(take_result(select_tour, param, "select_tour")==-1)
+		goto stop; 
+	strcpy(tour->denominazionetour, den);  
+	strcpy(tour->descrizionetour, des); 
+	tour->minimopartecipanti = mip; 
+	tour->assicurazionemedica = amd; 
+	tour->bagaglio = bgl; 
+	tour->garanziaannullamento = gan; 
+	tour->assicurazionemedica = acc;
 
+	stop: 
 	mysql_stmt_free_result(select_tour);
 	mysql_stmt_reset(select_tour);
 	

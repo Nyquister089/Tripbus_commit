@@ -73,7 +73,7 @@ static MYSQL_STMT *update_data_doc; //Ok  HOSTESS
 static MYSQL_STMT *select_assigned_trip; //  OK AUTISTA procedura che seleziona i viaggi in base alla data ed il conducente
 static MYSQL_STMT *select_trip_destination; //OK AUTISTA procedura che seleziona tutte le mete relative ad un viaggio
 static MYSQL_STMT *select_visit_details; // procedure che selezione la visita e le foto ad essa associate in base a meta e data del viaggio 
-static MYSQL_STMT *select_tour_destination; // procedura che seleziona le mete relative ad un tour 
+static MYSQL_STMT *select_all_tour; // procedura che seleziona le mete relative ad un tour 
 static MYSQL_STMT *select_model_comfort;  // procedura che seleziona le mete relative 
 static MYSQL_STMT *select_hotel_service;  // procedura che seleziona i servizi offerti da un albergo 
 static MYSQL_STMT *select_expired_review; // procedura che seleziona i mezzi che hanno effettuato una revisione ordinaria da più di 6 mesi 
@@ -135,9 +135,9 @@ static void close_prepared_stmts(void)
 		update_pullman_km = NULL;
 	}
 	
-	if(select_tour_destination) {			// Procedura di visualiazzazione mete incluse in un tour(CLIENTE) 
-		mysql_stmt_close(select_tour_destination);
-		select_tour_destination= NULL;
+	if(select_all_tour) {			// Procedura di visualiazzazione mete incluse in un tour(CLIENTE) 
+		mysql_stmt_close(select_all_tour);
+		select_all_tour= NULL;
 	}
 	if(select_model_comfort) {			// Procedura di visualiazzazione comfort di un modello (CLIENTE) 
 		mysql_stmt_close(select_model_comfort);
@@ -313,8 +313,8 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(select_visit_details, "Unable to initialize select_visit_details statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&select_tour_destination, "call select_tour_destination()", conn)) {
-				print_stmt_error(select_tour_destination, "Unable to initialize select_tour_destination statement\n");
+			if(!setup_prepared_stmt(&select_all_tour, "call select_all_tour()", conn)) {
+				print_stmt_error(select_all_tour, "Unable to initialize select_all_tour statement\n");
 				return false;
 			}
 			if(!setup_prepared_stmt(&select_model_comfort, "call select_model_comfort()", conn)) {
@@ -1678,7 +1678,7 @@ void do_select_assigned_trip(struct viaggio *viaggio)
 	
 }
  
-void do_select_tour_destination(struct tour *tour, struct meta *meta, struct documentazionefotografica *documentazionefotografica)
+void do_select_all_tour(struct tour *tour, struct meta *meta, struct documentazionefotografica *documentazionefotografica)
 {	
 	MYSQL_BIND param[18]; 
 	MYSQL_TIME orariodiapertura;
@@ -1714,17 +1714,17 @@ void do_select_tour_destination(struct tour *tour, struct meta *meta, struct doc
 	set_binding_param(&param[17], MYSQL_TYPE_VAR_STRING, meta->localitadiappartenenza, strlen(meta->localitadiappartenenza));
 	
 
-	if(mysql_stmt_bind_param(select_tour_destination, param) != 0) {
-		print_stmt_error(select_tour_destination, "Could not bind parameters for select_tour_destination");
+	if(mysql_stmt_bind_param(select_all_tour, param) != 0) {
+		print_stmt_error(select_all_tour, "Could not bind parameters for select_all_tour");
 		return;
 		}
-	if(mysql_stmt_execute(select_tour_destination) != 0) {
-		print_stmt_error(select_tour_destination, "Could not execute select_tour_destination");
+	if(mysql_stmt_execute(select_all_tour) != 0) {
+		print_stmt_error(select_all_tour, "Could not execute select_all_tour");
 		return;
 		}
 
-	mysql_stmt_free_result(select_tour_destination);
-	mysql_stmt_reset(select_tour_destination);
+	mysql_stmt_free_result(select_all_tour);
+	mysql_stmt_reset(select_all_tour);
 	
 }
 

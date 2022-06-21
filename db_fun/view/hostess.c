@@ -4,13 +4,15 @@
 #include "hostess.h"
 #include "ins.h"
 #include "show.h"
+
 #include "../utils/io.h"
 #include "../utils/validation.h"
+
 
 struct cliente *cliente; 
 struct prenotazione *prenotazione;
 struct postoprenotato *postoprenotato;
-struct  viaggio *viaggio; 
+struct  viaggio *viaggio;
 struct associata * associata;
 
 void  allocation_hstss(void)
@@ -97,7 +99,7 @@ bool exe_hstss_act(char sel, struct cliente *cliente,struct prenotazione * preno
 				return true;
 				}
 		
-			case QUIT: 
+			case QUIT_HSST: 
 				return false; 
 		
 	}
@@ -214,6 +216,11 @@ void update_d_doc(struct cliente  *cliente)
 void run_hstss_interface (void)
 { 	
 	char sel;  
+	struct cliente *cliente; 
+	struct prenotazione *prenotazione;
+	struct postoprenotato *postoprenotato;
+	struct  viaggio *viaggio;
+	struct associata * associata;
 				
 	if(	cliente == NULL || prenotazione == NULL || postoprenotato == NULL ||viaggio == NULL||associata == NULL) 
 		allocation_hstss(); 

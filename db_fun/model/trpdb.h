@@ -32,6 +32,7 @@ typedef enum {
 	CLIENTE,
 	HOSTESS,
 	MECCANICO,
+	QUIT,
 	FAILED_LOGIN
 } role_t;
 
@@ -305,6 +306,7 @@ extern void do_update_trip_seat(struct viaggio *viaggio);
 extern void do_select_trip(struct viaggio *viaggio);
 extern void do_select_costumer(struct cliente *cliente);
 extern void do_select_reservation(struct prenotazione *prenotazione);
+extern void do_select_tour( struct tour *tour);
 
 extern void do_update_data_doc(struct cliente *cliente); 
 extern void do_validate_reservation(struct prenotazione *prenotazione); 
