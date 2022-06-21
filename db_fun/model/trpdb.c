@@ -766,13 +766,19 @@ void do_select_tour( struct tour *tour)
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, den, strlen(den));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, des, strlen(des));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &mip, sizeof(mip));
-	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &amd, sizeof(assicurazionemedica));
+	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &amd, sizeof(amd));
 	set_binding_param(&param[4], MYSQL_TYPE_FLOAT, &bgl, sizeof(bgl));
 	set_binding_param(&param[5], MYSQL_TYPE_FLOAT, &gan, sizeof(gan));
 	set_binding_param(&param[6], MYSQL_TYPE_TINY, &acc, sizeof(acc));
 	
 	if(take_result(select_tour, param, "select_tour")==-1)
 		goto stop; 
+	
+	printf("Tour %s: ", tour->denominazionetour); 
+	printf("Des %s\n\n", tour->descrizionetour); 
+	
+	printf("Tour %s: ", den); 
+	printf("Des %s\n\n", des); 
 
 	strcpy(tour->denominazionetour, den);  
 	strcpy(tour->descrizionetour, des); 
