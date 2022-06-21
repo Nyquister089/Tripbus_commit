@@ -256,7 +256,12 @@ struct tour {
 	float assicurazionemedica; //Corretto trasformandolo da carattere a puntatore di carattere
 	float bagaglio; //Corretto trasformandolo da carattere a puntatore di carattere
 	float garanziaannullamento; 
-	char accompagnatrice[VARCHAR_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	signed char accompagnatrice; //Corretto trasformandolo da carattere a puntatore di carattere
+}; 
+
+struct tour_info{
+	size_t num_tour; 
+	struct tour tour_info[]; 
 }; 
 
 struct viaggio {
@@ -307,6 +312,7 @@ extern void do_select_trip(struct viaggio *viaggio);
 extern void do_select_costumer(struct cliente *cliente);
 extern void do_select_reservation(struct prenotazione *prenotazione);
 extern void do_select_tour( struct tour *tour);
+extern void do_select_all_tour(struct tour *tour); 
 
 extern void do_update_data_doc(struct cliente *cliente); 
 extern void do_validate_reservation(struct prenotazione *prenotazione); 

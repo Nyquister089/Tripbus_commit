@@ -152,3 +152,38 @@ data_field = mysql_stmt_result_metadata(select_costumer);
 		memcpy(values, ((char*)param[offset].buffer),param[num_fields].buffer_length); 
 		fprintf(stdout,"%s: %s\n\n",field->name,((char*)param[offset].buffer) );
 		num_fields++;*/
+
+int take_result(MYSQL_STMT *procedure, MYSQL_BIND *param, char *buff)
+{ 	
+	int status; 
+	size_t rows; 
+	if(mysql_stmt_bind_result(procedure, param)) {
+		print_stmt_error(procedure, "\n\n Impossibile eseguire il bind dei risultati \n\n");
+		printf("(%s)",buff); 
+		return -1; 
+	}
+	
+
+	if( mysql_stmt_store_result(procedure) != 0){
+		print_stmt_error(procedure, "\nImpossibile eseguire lo store del result set ");
+		printf("(%s)", buff); 
+		return -1;
+	}
+
+	rows = mysql_stmt_num_rows(procedure); 
+
+	while (true) {
+		status = mysql_stmt_fetch(procedure);
+		if (status == MYSQL_NO_DATA)
+			break; 
+		if (status == 1 ){
+			print_stmt_error(procedure, "\nImpossibile eseguire il fetch del result set ");
+			printf("(%s)", buff); 
+			return -1;
+			}
+		if(rows>1){
+			
+		}
+	}
+	return 0;
+}

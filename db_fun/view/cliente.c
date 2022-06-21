@@ -124,10 +124,11 @@ struct documentazionefotografica *documentazionefotografica, struct camera * cam
 
 void show_tour_information(struct tour *tour)
 {	
-	printf("** Tour offerti  **\n\n"); 
+	printf("\n\n** Tour offerti  **\n\n"); 
 	get_input("Inserisci il codice d'interesse: ", VARCHAR_LEN, tour->denominazionetour, false); 
 	// seleziona i nominativi dei tour
-	do_select_tour(tour); 
+	//do_select_tour(tour); 
+	do_select_all_tour(tour); 
 	// seleziona il tour 
 	show_tour(tour); 
 	
