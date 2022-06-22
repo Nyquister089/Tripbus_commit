@@ -271,8 +271,8 @@ role_t attempt_login(struct credentials *cred)
 	int role = 0;
 
 	// Prepare parameters
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cred->username, strlen(cred->username));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cred->password, strlen(cred->password));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cred->username, sizeof(cred->username));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cred->password, sizeof(cred->password));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &role, sizeof(role));
 
 	if(mysql_stmt_bind_param(login_procedure, param) != 0) { // Note _param
@@ -359,14 +359,14 @@ void do_insert_costumer(struct cliente *cliente ) // funziona
 	
 	date_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, strlen(cliente->nomecliente));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, strlen(cliente->cognomecliente));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, strlen(cliente->indirizzocliente));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, strlen(cliente->codicefiscale));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, sizeof(cliente->emailcliente));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, sizeof(cliente->nomecliente));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, sizeof(cliente->cognomecliente));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, sizeof(cliente->indirizzocliente));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, sizeof(cliente->codicefiscale));
 	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadocumentazione, sizeof(datadocumentazione));
-	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, strlen(cliente->recapitotelefonico));
-	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, cliente->fax, strlen(cliente->fax));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, sizeof(cliente->recapitotelefonico));
+	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, cliente->fax, sizeof(cliente->fax));
 	
 	if(mysql_stmt_bind_param(insert_costumer, param) != 0) {
 		print_stmt_error(insert_costumer, "Could not bind parameters for insert_costumer");
@@ -392,7 +392,7 @@ void do_insert_reservation(struct prenotazione *prenotazione)// funziona
 
 	date_to_mysql_time(prenotazione->datadiprenotazione, &datadiprenotazione);
 	
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, strlen(prenotazione->clienteprenotante));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, sizeof(prenotazione->clienteprenotante));
 	set_binding_param(&param[1], MYSQL_TYPE_DATE, &datadiprenotazione,sizeof(datadiprenotazione));
 	
 	if(mysql_stmt_bind_param(insert_reservation, param) != 0) {
@@ -430,8 +430,8 @@ void do_insert_seat(struct postoprenotato *postoprenotato) //Funziona
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &viaggioassociato, sizeof(viaggioassociato));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &prenotazioneassociata,sizeof(prenotazioneassociata));
 	set_binding_param(&param[3], MYSQL_TYPE_LONG, &etapasseggero, sizeof(etapasseggero));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, postoprenotato->nomepasseggero, strlen(postoprenotato->nomepasseggero));
-	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, postoprenotato->cognomepasseggero, strlen(postoprenotato->cognomepasseggero));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, postoprenotato->nomepasseggero, sizeof(postoprenotato->nomepasseggero));
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, postoprenotato->cognomepasseggero, sizeof(postoprenotato->cognomepasseggero));
 	
     bind_exe(insert_seat,param, "insert_seat"); 
 
@@ -563,10 +563,10 @@ void do_select_trip(struct viaggio *viaggio) //Funziona
 	postidisponibili = viaggio -> postidisponibili; */
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, strlen(viaggio->tourassociato));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, sizeof(viaggio->tourassociato));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
 	set_binding_param(&param[3], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, strlen(viaggio->mezzoimpiegato));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, sizeof(viaggio->mezzoimpiegato));
 	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
 	set_binding_param(&param[6], MYSQL_TYPE_DATE, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
 	set_binding_param(&param[7], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
@@ -577,10 +577,10 @@ void do_select_trip(struct viaggio *viaggio) //Funziona
 	if(bind_exe(select_trip,param,"select_trip") == -1)
 		goto stop; 
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tou, strlen(tou));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tou, sizeof(tou));
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &con, sizeof(con));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &acc, sizeof(acc));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mez, strlen(mez));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mez, sizeof(mez));
 	set_binding_param(&param[4], MYSQL_TYPE_DATE, &ddp, DATE_LEN);
 	set_binding_param(&param[5], MYSQL_TYPE_DATE, &ddr, DATE_LEN);
 	set_binding_param(&param[6], MYSQL_TYPE_FLOAT, &cos, sizeof(cos));
@@ -628,14 +628,14 @@ void do_select_costumer(struct cliente *cliente) // funziona
 	date_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
     init_mysql_timestamp(&ddc);
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, strlen(cliente->nomecliente));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, strlen(cliente->cognomecliente));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, strlen(cliente->indirizzocliente));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, strlen(cliente->codicefiscale));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, sizeof(cliente->emailcliente));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, sizeof(cliente->nomecliente));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, sizeof(cliente->cognomecliente));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, sizeof(cliente->indirizzocliente));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, sizeof(cliente->codicefiscale));
 	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadocumentazione, sizeof(datadocumentazione));
-	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, strlen(cliente->recapitotelefonico));
-	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, cliente->fax, strlen(cliente->fax));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, sizeof(cliente->recapitotelefonico));
+	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, cliente->fax, sizeof(cliente->fax));
 
 	if(bind_exe(select_costumer,param,"select_costumer") == -1)
 		goto stop; 
@@ -692,7 +692,7 @@ void do_select_reservation(struct prenotazione *prenotazione)//Funziona
 	init_mysql_date(&dds); 
 	
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerodiprenotazione, sizeof(numerodiprenotazione));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, strlen(prenotazione->clienteprenotante));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, sizeof(prenotazione->clienteprenotante));
 	set_binding_param(&param[2], MYSQL_TYPE_DATE, &datadiprenotazione,sizeof(datadiprenotazione));
 	set_binding_param(&param[3], MYSQL_TYPE_DATE, &datadiconferma, sizeof(datadiconferma));
 	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datasaldo, sizeof(datasaldo));
@@ -722,12 +722,13 @@ void do_select_reservation(struct prenotazione *prenotazione)//Funziona
 
 
 void do_update_data_doc(struct cliente *cliente) //funziona
-{	MYSQL_BIND param[2]; 
+{	
+	MYSQL_BIND param[2]; 
 	MYSQL_TIME datadocumentazione; 
 
 	date_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
 	
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, sizeof(cliente->emailcliente));
 	set_binding_param(&param[1], MYSQL_TYPE_DATETIME, &datadocumentazione, sizeof(datadocumentazione));
 	
 	if(mysql_stmt_bind_param(update_data_doc, param) != 0) {
@@ -760,8 +761,8 @@ void do_select_tour( struct tour *tour)
 	float gan; 
 	signed char acc; 
 	
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tour->denominazionetour, strlen(tour->denominazionetour));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tour->descrizionetour, strlen(tour->descrizionetour));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tour->denominazionetour, sizeof(tour->denominazionetour));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tour->descrizionetour, sizeof(tour->descrizionetour));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &minimopartecipanti, sizeof(minimopartecipanti));
 	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &assicurazionemedica, sizeof(assicurazionemedica));
 	set_binding_param(&param[4], MYSQL_TYPE_FLOAT, &bagaglio, sizeof(bagaglio));
@@ -771,8 +772,8 @@ void do_select_tour( struct tour *tour)
 	if(bind_exe(select_tour,param, "select_tour")== -1)
 		goto stop; 
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, den, strlen(den));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, des, strlen(des));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, den, sizeof(den));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, des, sizeof(des));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &mip, sizeof(mip));
 	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &amd, sizeof(amd));
 	set_binding_param(&param[4], MYSQL_TYPE_FLOAT, &bgl, sizeof(bgl));
@@ -803,12 +804,17 @@ void do_select_tour( struct tour *tour)
 //void do_select_all_tour( struct tour *tour)
 struct tour_info *get_tour_info (void)
 {	
-	MYSQL_BIND param[2];
+	MYSQL_BIND param[7];
 	struct tour_info *tour_info = NULL; 
-	char den [VARCHAR_LEN]; 
-	char des [VARCHAR_LEN]; 
+	char dnm[VARCHAR_LEN]; 
+	char dsc[DES_LEN]; 
+	int mnp; 
+	float mdc; 
+	float bgl;
+	float gnl; 
+	signed char acm;
 	size_t rows, count = 0; 
-	int status;  
+	int status; 
 
 	if(mysql_stmt_execute(select_all_tour) != 0) {
 		print_stmt_error(select_all_tour, "\nImpossibile eseguire execute "); 
@@ -829,10 +835,14 @@ struct tour_info *get_tour_info (void)
 		goto stop; 
 	}
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, den, VARCHAR_LEN);
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, des, DES_LEN); 
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, dnm, sizeof(dnm));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, dsc, sizeof(dsc)); 
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &mnp, sizeof(mnp)); 
+	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &mdc, sizeof(mdc)); 
+	set_binding_param(&param[4], MYSQL_TYPE_FLOAT, &bgl, sizeof(bgl)); 
+	set_binding_param(&param[5], MYSQL_TYPE_FLOAT, &gnl, sizeof(gnl)); 
+	set_binding_param(&param[6], MYSQL_TYPE_TINY, &acm, sizeof(acm)); 
 
-	
 	if(mysql_stmt_bind_result(select_all_tour, param)) {
 		print_stmt_error(select_all_tour, "\n\n Impossibile eseguire il bind risult\n\n");
 		goto stop; 
@@ -845,8 +855,14 @@ struct tour_info *get_tour_info (void)
 		if (status == 1 ){
 			print_stmt_error(select_all_tour, "\nImpossibile eseguire fetch");
 			}
-			strcpy(tour_info->tour_info[count].denominazionetour, den);
-			strcpy(tour_info->tour_info[count].descrizionetour, des);
+			strcpy(tour_info->tour_info[count].denominazionetour, dnm);
+			strcpy(tour_info->tour_info[count].descrizionetour, dsc);
+			tour_info->tour_info[count].minimopartecipanti = mnp; 
+			tour_info->tour_info[count].assicurazionemedica = mdc; 
+			tour_info->tour_info[count].bagaglio = bgl; 
+			tour_info->tour_info[count].garanziaannullamento = gnl; 
+			tour_info->tour_info[count].accompagnatrice = acm;
+
 			printf("%s 	\n", tour_info->tour_info[count].denominazionetour);
 			printf("%s 	\n",tour_info->tour_info[count].descrizionetour);
 			printf("%d 	\n",tour_info->tour_info[count].minimopartecipanti);
@@ -875,15 +891,15 @@ void do_select_destination(struct meta *meta)
 	time_to_mysql_time(meta->orariodiapertura, &orariodiapertura);
 	
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idmeta, sizeof(idmeta));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, meta->nomemeta, strlen(meta->nomemeta));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, meta->emailmeta, strlen(meta->emailmeta));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, meta->nomemeta, sizeof(meta->nomemeta));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, meta->emailmeta, sizeof(meta->emailmeta));
 	set_binding_param(&param[3], MYSQL_TYPE_LONG, &telefonometa, sizeof(telefonometa));
 	set_binding_param(&param[4], MYSQL_TYPE_LONG, &faxmeta, sizeof(faxmeta));
-	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, meta->indirizzo, strlen(meta->indirizzo));
-	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, meta->tipologiameta, strlen(meta->tipologiameta));
-	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, meta->categoriaalbergo, strlen(meta->categoriaalbergo));
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, meta->indirizzo, sizeof(meta->indirizzo));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, meta->tipologiameta, sizeof(meta->tipologiameta));
+	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, meta->categoriaalbergo, sizeof(meta->categoriaalbergo));
 	set_binding_param(&param[8], MYSQL_TYPE_TIME, &orariodiapertura, sizeof(orariodiapertura));
-	set_binding_param(&param[9], MYSQL_TYPE_VAR_STRING, meta->localitadiappartenenza, strlen(meta->localitadiappartenenza));
+	set_binding_param(&param[9], MYSQL_TYPE_VAR_STRING, meta->localitadiappartenenza, sizeof(meta->localitadiappartenenza));
 	
 	
 	if(mysql_stmt_bind_param(select_destination, param) != 0) {
@@ -906,8 +922,8 @@ void do_select_service(struct servizio *servizio)
 	int idservizio; 
 	
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, servizio->idservizio, sizeof(idservizio));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, servizio->nomeservizio, strlen(servizio->nomeservizio));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, servizio->descrizioneservizio, strlen(servizio->descrizioneservizio));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, servizio->nomeservizio, sizeof(servizio->nomeservizio));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, servizio->descrizioneservizio, sizeof(servizio->descrizioneservizio));
 	
 	
 	if(mysql_stmt_bind_param(select_service, param) != 0) {
@@ -930,8 +946,8 @@ void do_select_comfort(struct comfort *comfort)
 	int idcomfort; 
 	
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, comfort->idcomfort, sizeof(idcomfort));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, comfort->nomecomfort, strlen(comfort->nomecomfort));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, comfort->descrizionecomfort, strlen(comfort->descrizionecomfort));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, comfort->nomecomfort, sizeof(comfort->nomecomfort));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, comfort->descrizionecomfort, sizeof(comfort->descrizionecomfort));
 	
 	
 	if(mysql_stmt_bind_param(select_comfort, param) != 0) {
@@ -955,9 +971,9 @@ void do_select_model(struct modello *modello)
 	int numerodiposti;  
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idmodello, sizeof(idmodello));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, modello->nomemodello, strlen(modello->nomemodello));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, modello->datitecnici, strlen(modello->datitecnici));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, modello->casacostruttrice, strlen(modello->casacostruttrice));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, modello->nomemodello, sizeof(modello->nomemodello));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, modello->datitecnici, sizeof(modello->datitecnici));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, modello->casacostruttrice, sizeof(modello->casacostruttrice));
 	set_binding_param(&param[4], MYSQL_TYPE_LONG, &numerodiposti, sizeof(numerodiposti));
 	
 
@@ -981,7 +997,7 @@ void do_select_picture(struct documentazionefotografica *documentazionefotografi
 
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idfoto, sizeof(idfoto));
-	set_binding_param(&param[1], MYSQL_TYPE_BLOB, documentazionefotografica->foto, strlen(documentazionefotografica->foto));
+	set_binding_param(&param[1], MYSQL_TYPE_BLOB, documentazionefotografica->foto, sizeof(documentazionefotografica->foto));
 	
 	
 	if(mysql_stmt_bind_param(select_picture, param) != 0) {
@@ -1007,7 +1023,7 @@ void do_select_room(struct camera *camera)
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerocamera, sizeof(numerocamera));
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &albergoinquestione, sizeof(albergoinquestione));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, camera->tipologia, strlen(camera->tipologia));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, camera->tipologia, sizeof(camera->tipologia));
 	set_binding_param(&param[3], MYSQL_TYPE_LONG, &costo , sizeof(costo));
 	
 	
