@@ -36,7 +36,9 @@ static MYSQL_STMT *select_room; // Cliente
 static MYSQL_STMT *select_model; //Cliente
 static MYSQL_STMT *select_comfort;// Cliente
 static MYSQL_STMT *select_service; // Cliente 
+
 static MYSQL_STMT *select_all_tour; // Cliente
+static MYSQL_STMT *select_tour_trip; // Cliente
 
 static MYSQL_STMT *update_trip_seat; //ok HOSTESS
 static MYSQL_STMT *validate_reservation; //ok  HOSTESS
@@ -80,6 +82,10 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(select_room);
 		select_room = NULL;
 	}	
+	if(select_tour_trip) {				// Procedura di select viaggi realtivi ai tour
+		mysql_stmt_close(select_tour_trip);
+		select_tour_trip = NULL;
+	}				
 	if(select_trip) {				// Procedura di select viaggi
 		mysql_stmt_close(select_trip);
 		select_trip = NULL;
@@ -125,6 +131,7 @@ static void close_prepared_stmts(void)
 static bool initialize_prepared_stmts(role_t for_role)
 { 
 	printf("For role %d\n\n", for_role); 
+
 	switch(for_role) {
 
 		case LOGIN_ROLE:
@@ -184,6 +191,10 @@ static bool initialize_prepared_stmts(role_t for_role)
 			}
 			if(!setup_prepared_stmt(&select_all_tour, "call select_all_tour()", conn)) {
 				print_stmt_error(select_all_tour, "Unable to initialize select_all_tour statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&select_tour_trip, "call select_tour_trip(?)", conn)) {
+				print_stmt_error(select_tour_trip, "Unable to initialize select tour trip statement\n");
 				return false;
 			}
 			/*
@@ -271,8 +282,8 @@ role_t attempt_login(struct credentials *cred)
 	int role = 0;
 
 	// Prepare parameters
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cred->username, sizeof(cred->username));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cred->password, sizeof(cred->password));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cred->username, strlen(cred->username));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cred->password, strlen(cred->password));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &role, sizeof(role));
 
 	if(mysql_stmt_bind_param(login_procedure, param) != 0) { // Note _param
@@ -303,7 +314,7 @@ role_t attempt_login(struct credentials *cred)
 		role = FAILED_LOGIN;
 		goto out;
 	}
-
+	printf("ROLE %d \n", role);
     out:
 	// Consume the possibly-returned table for the output parameter
 	while(mysql_stmt_next_result(login_procedure) != -1) {}
@@ -312,7 +323,7 @@ role_t attempt_login(struct credentials *cred)
 	mysql_stmt_reset(login_procedure);
 	 
 	initialize_prepared_stmts(role); 
-	
+	printf("ROLE %d \n", role);
 	return role;
 }
 
@@ -800,12 +811,83 @@ void do_select_tour( struct tour *tour)
 	
 }
 
+struct viaggi_info *get_viaggi_info(struct viaggio *viaggio)
+{		
+	MYSQL_BIND param[4]; 
+	MYSQL_TIME datadipartenzaviaggio; 
+	MYSQL_TIME datadiritornoviaggio;
+	MYSQL_TIME ddp; 
+	MYSQL_TIME ddr; 
 
-//void do_select_all_tour( struct tour *tour)
-struct tour_info *get_tour_info (void)
+	struct viaggi_info *viaggi_info = NULL; 
+	int status; 
+	size_t rows, count; 
+	count = 0; 
+
+	float cos;
+	int pds;
+	
+	init_mysql_timestamp(&ddp); 
+	init_mysql_timestamp(&ddr); 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, sizeof(viaggio->tourassociato));
+	bind_exe(select_tour_trip, param, "select_toir_trip"); 
+	rows = take_rows(select_tour_trip, "select_tour_trip"); 
+	if (rows == -1)
+		goto stop; 
+
+	viaggi_info =malloc((sizeof(struct viaggio)+sizeof(viaggi_info))*rows);
+	memset(viaggi_info, 0, sizeof(*viaggi_info) + sizeof(struct viaggio)*rows);
+
+	if(viaggi_info == NULL){
+		printf("Impossibile eseguire la malloc su viaggi info"); 
+		goto stop; 
+	}
+
+	set_binding_param(&param[0], MYSQL_TYPE_DATE, &ddp, sizeof(ddp));
+	set_binding_param(&param[1], MYSQL_TYPE_DATE, &ddr, sizeof(ddr));
+	set_binding_param(&param[2], MYSQL_TYPE_FLOAT, &cos, sizeof(cos));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &pds, sizeof(pds));
+
+	if(mysql_stmt_bind_result(select_tour_trip, param)) {
+		print_stmt_error(select_tour_trip, "\n\n Impossibile eseguire il bind risult\n\n");
+		goto stop; 
+	}
+
+	viaggi_info->num_viaggi = rows;
+
+	while (true) {
+		status = mysql_stmt_fetch(select_tour_trip);
+		if (status == MYSQL_NO_DATA)
+			break; 
+		if (status == 1 ){
+			print_stmt_error(select_tour_trip, "\nImpossibile eseguire fetch");
+			}
+			
+			mysql_date_to_string(&ddp,viaggi_info->viaggi_info[count].datadipartenzaviaggio);
+			mysql_date_to_string(&ddr,viaggi_info->viaggi_info[count].datadiritornoviaggio);
+
+			viaggi_info->viaggi_info[count].costodelviaggio = cos; 
+			viaggi_info->viaggi_info[count].postidisponibili = pds; 
+
+			printf("Data di partenza:	%s 	\n",viaggi_info->viaggi_info[count].datadipartenzaviaggio);
+			printf("Data di riotrno:	%s 	\n",viaggi_info->viaggi_info[count].datadiritornoviaggio);
+			printf("Prezzo:	%f 	\n",viaggi_info->viaggi_info[count].costodelviaggio);
+			printf("Posti disponibili: %d 	\n",viaggi_info->viaggi_info[count].postidisponibili);	 
+			printf("\n\n"); 
+			count++; 
+	}
+	stop: 
+
+	mysql_stmt_free_result(select_tour_trip);
+	mysql_stmt_reset(select_tour_trip);	
+}
+
+struct tour_info *get_tour_info (struct viaggio *viaggio)
 {	
 	MYSQL_BIND param[7];
 	struct tour_info *tour_info = NULL; 
+	char *buff = "get_tour_info";
 	char dnm[VARCHAR_LEN]; 
 	char dsc[DES_LEN]; 
 	int mnp; 
@@ -813,20 +895,12 @@ struct tour_info *get_tour_info (void)
 	float bgl;
 	float gnl; 
 	signed char acm;
-	size_t rows, count = 0; 
-	int status; 
+	size_t rows, count;   
+	int status;
+	count = 0; 
 
-	if(mysql_stmt_execute(select_all_tour) != 0) {
-		print_stmt_error(select_all_tour, "\nImpossibile eseguire execute "); 
-		goto stop; 
-	}
+	rows  = take_rows(select_all_tour, "select_all_tour");
 		
-	if( mysql_stmt_store_result(select_all_tour) != 0){
-		print_stmt_error(select_all_tour, "\nImpossibile eseguire store result");
-		goto stop; 
-	}
-	rows = mysql_stmt_num_rows(select_all_tour); 
-
 	tour_info =malloc((sizeof(struct tour)+sizeof(tour_info))*rows);
 	memset(tour_info, 0, sizeof(*tour_info) + sizeof(struct tour)*rows);
 
@@ -857,20 +931,24 @@ struct tour_info *get_tour_info (void)
 			}
 			strcpy(tour_info->tour_info[count].denominazionetour, dnm);
 			strcpy(tour_info->tour_info[count].descrizionetour, dsc);
+			strcpy(viaggio->tourassociato,dnm); 
+
 			tour_info->tour_info[count].minimopartecipanti = mnp; 
 			tour_info->tour_info[count].assicurazionemedica = mdc; 
 			tour_info->tour_info[count].bagaglio = bgl; 
 			tour_info->tour_info[count].garanziaannullamento = gnl; 
 			tour_info->tour_info[count].accompagnatrice = acm;
 
-			printf("%s 	\n", tour_info->tour_info[count].denominazionetour);
-			printf("%s 	\n",tour_info->tour_info[count].descrizionetour);
-			printf("%d 	\n",tour_info->tour_info[count].minimopartecipanti);
-			printf("%f 	\n",tour_info->tour_info[count].assicurazionemedica);	
-			printf("%f 	\n",tour_info->tour_info[count].bagaglio);
-			printf("%f 	\n",tour_info->tour_info[count].garanziaannullamento);
-			printf("%d 	\n",tour_info->tour_info[count].accompagnatrice); 
-			printf("\n\n"); 
+			printf("* %s *\n",tour_info->tour_info[count].denominazionetour);
+			printf("Descrizione tour:	%s 	\n",tour_info->tour_info[count].descrizionetour);
+			printf("Minimo partecipanti:	 %d 	\n",tour_info->tour_info[count].minimopartecipanti);
+			printf("Diritti iscrizione: \n");
+			printf("Assicurazione medica:	 %f euro\n",tour_info->tour_info[count].assicurazionemedica);	
+			printf("Bagaglio:		 %f euro\n",tour_info->tour_info[count].bagaglio);
+			printf("Garanzia di annullamento:%f euro\n",tour_info->tour_info[count].garanziaannullamento);
+			printf("\n-Accompagnatrice prevista:%d 	\n",tour_info->tour_info[count].accompagnatrice); 
+			printf("\n\n");
+			get_viaggi_info(viaggio);  
 			count++; 
 	}
 	stop: 

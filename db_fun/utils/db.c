@@ -123,14 +123,14 @@ void mysql_date_to_string(MYSQL_TIME *date, char *str)
 int bind_exe(MYSQL_STMT *procedure, MYSQL_BIND *param, char * buff){
 
 if(mysql_stmt_bind_param(procedure, param) != 0) {
-		print_stmt_error(procedure, "\nImpossibile eseguire bind param");
 		printf("Procedura : %s \n", buff);
+		print_stmt_error(procedure, "\nImpossibile eseguire bind param");
 		return-1;
 	}
 
 	if(mysql_stmt_execute(procedure) != 0) {
+		printf("Procedura : %s \n", buff);
 		print_stmt_error(procedure, "\nImpossibile eseguire execute ");
-		printf("%s\n",buff); 
 		return -1;
 	}
 	return 0; 
@@ -141,15 +141,15 @@ int take_result(MYSQL_STMT *procedure, MYSQL_BIND *param, char *buff)
 	int status; 
  
 	if(mysql_stmt_bind_result(procedure, param)) {
+		printf("Procedura : %s ",buff);
 		print_stmt_error(procedure, "\n\n Impossibile eseguire il bind risult\n\n");
-		printf("Procedura : %s ",buff); 
 		return -1; 
 	}
 	
 
 	if( mysql_stmt_store_result(procedure) != 0){
-		print_stmt_error(procedure, "\nImpossibile eseguire store result");
 		printf("Procedura : %s", buff); 
+		print_stmt_error(procedure, "\nImpossibile eseguire store result");
 		return -1;
 	}
 
@@ -158,10 +158,26 @@ int take_result(MYSQL_STMT *procedure, MYSQL_BIND *param, char *buff)
 		if (status == MYSQL_NO_DATA)
 			break; 
 		if (status == 1 ){
+			printf("Procedura : %s", buff);
 			print_stmt_error(procedure, "\nImpossibile eseguire fetch ");
-			printf("Procedura : %s", buff); 
 			return -1;
 			}
 	}
 	return 0;
+}
+
+size_t take_rows(MYSQL_STMT *procedure, char *buff)
+{
+	if(mysql_stmt_execute(procedure) != 0) {
+		printf("Procedura : %s", buff);
+		print_stmt_error(procedure, " \nImpossibile eseguire execute "); 
+		return -1; 
+	}
+		
+	if( mysql_stmt_store_result(procedure) != 0){
+		printf("Procedura : %s", buff);
+		print_stmt_error(procedure, "\nImpossibile eseguire store result");
+		return -1; 
+	}
+	return mysql_stmt_num_rows(procedure);
 }

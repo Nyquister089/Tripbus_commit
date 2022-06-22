@@ -1,7 +1,7 @@
 CREATE DEFINER=`giordano`@`localhost` PROCEDURE `select_all_tour`(
  )
 BEGIN
-select distinct DenominazioneTour
+select distinct *
 from tour; 
 
 /*declare done int default false;

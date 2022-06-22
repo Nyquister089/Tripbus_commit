@@ -279,15 +279,12 @@ struct viaggio {
 	int postidisponibili; //Corretto trasformandolo da carattere a puntatore di carattere
 	char datadiannullamento[DATETIME_LEN]; 
 };
-struct viaggi_tour{
+
+struct viaggi_info{
 	size_t num_viaggi; 
-	struct viaggio viaggi_tour[]; 
+	struct viaggio viaggi_info[]; 
 };
-struct assigned_trip{
-	size_t num_entries; //Corretto trasformandolo da carattere a puntatore di carattere
-	struct viaggio assigned_trip[]; 
-	
-};
+
 
 struct visita {
 	char idvisita[NUM_LEN];  //Corretto trasformandolo da carattere a puntatore di carattere
@@ -315,7 +312,8 @@ extern void do_select_costumer(struct cliente *cliente);
 extern void do_select_reservation(struct prenotazione *prenotazione);
 extern void do_select_tour( struct tour *tour);
 
-extern struct tour_info *get_tour_info (void);
+extern struct tour_info *get_tour_info (struct viaggio *viaggio);
+extern struct viaggi_info *get_viaggi_info(struct viaggio *viaggio);
 
 extern void do_update_data_doc(struct cliente *cliente); 
 extern void do_validate_reservation(struct prenotazione *prenotazione); 
