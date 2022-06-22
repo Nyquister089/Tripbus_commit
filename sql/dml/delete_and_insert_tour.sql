@@ -18,8 +18,8 @@ INSERT INTO `tripdb`.`tour`
 `CostoGaranziaAnnullamento`,
 `Accompagnatrice`)
 VALUES
-('Cinque terre',
-'Tour che segue il percorso delle 5 terre',
+('Roma tour',
+'Tour che si svolge presso le piazze di Roma ',
 '58',
 '90.00' ,
 '10.00',
@@ -35,8 +35,8 @@ INSERT INTO `tripdb`.`tour`
 `Accompagnatrice`)
 VALUES
 (
-'Costiera amalfitana',
-'NON CREDO DI DOVERTELO SPIEGARE',
+'Milano tour',
+'Tour per le strade di Milano',
 '54',
 '90.00' ,
 '10.00',
