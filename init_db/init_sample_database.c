@@ -172,6 +172,11 @@ void populate_tables()
     execute_query_from_file_sql("../sql/dml/delete_and_insert_prenotazione.sql"); 
     execute_query_from_file_sql("../sql/dml/delete_and_insert_tome.sql"); 
     execute_query_from_file_sql("../sql/dml/delete_and_insert_visite.sql"); 
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_offre.sql"); 
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_presenti.sql");
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_foto.sql");
+    
+
 }
 
 void drop_procedures(){

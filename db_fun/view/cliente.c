@@ -7,7 +7,6 @@
 #include "../utils/io.h"
 #include "../utils/validation.h"
  
-struct meta *meta; 
 struct viaggio *viaggio; 
 struct servizio *servizio; 
 struct comfort *comfort; 
@@ -20,11 +19,6 @@ void allocation_cstmr(void)
 	viaggio = malloc(sizeof(struct viaggio)); 
 	if(viaggio == NULL){
 		printf("Fallimento malloc su viaggio (cliente) \n\n"); 
-		exit(0); 
-	}
-	meta = malloc (sizeof(struct meta )); 
-	if(meta == NULL){
-		printf("Fallimento malloc su meta (cliente) \n\n"); 
 		exit(0); 
 	}
 	servizio = malloc (sizeof(struct servizio));
@@ -77,7 +71,7 @@ int get_cstmr_action(void)
 }
 
 bool exe_cstmr_act(cstmr_act sel,struct viaggio *viaggio, 
-struct meta *meta,struct servizio *servizio,struct comfort *comfort,struct modello *modello,
+struct servizio *servizio,struct comfort *comfort,struct modello *modello,
 struct documentazionefotografica *documentazionefotografica, struct camera * camera)
 {
 	switch (sel)
@@ -168,11 +162,11 @@ void show_comfort_model(struct comfort_mezzo *comfort_mezzo, struct elenco_model
 
 void run_cstmr_interface (void)
 { 	char sel; 
-	if(	 viaggio == NULL || meta == NULL || servizio == NULL|| comfort == NULL || documentazionefotografica == NULL || camera == NULL ) 
+	if(	 viaggio == NULL || servizio == NULL|| comfort == NULL || documentazionefotografica == NULL || camera == NULL ) 
 		allocation_cstmr();
 	while (true){
 	sel = get_cstmr_action(); 
-	if (!exe_cstmr_act(sel, viaggio,  meta, servizio, comfort, modello, documentazionefotografica, camera))
+	if (!exe_cstmr_act(sel, viaggio, servizio, comfort, modello, documentazionefotografica, camera))
 		break; 
 	}
 }

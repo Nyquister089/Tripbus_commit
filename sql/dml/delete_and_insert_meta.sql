@@ -117,7 +117,7 @@ INSERT INTO `tripdb`.`meta` (
         's@gmail.com', 
         '123', 
         'via albergo', 
-        'albergo', 
+        'Albergo', 
         '4 stelle', 
         '-');
 

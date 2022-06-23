@@ -1,8 +1,7 @@
 CREATE TABLE IF NOT EXISTS `tripdb`.`offre` (
-  `idOfferta` int NOT NULL,
   `IdServizio` int NOT NULL,
   `IdAlbergo` int unsigned NOT NULL,
-  PRIMARY KEY (`idOfferta`),
+  PRIMARY KEY (`IdServizio`,`IdAlbergo`),
   KEY `FK_IdServizio_idx` (`IdServizio`),
   KEY `FK_IdAlbergo_idx` (`IdAlbergo`),
   CONSTRAINT `FK_IdAlbergo` FOREIGN KEY (`IdAlbergo`) REFERENCES `meta` (`IdMeta`),

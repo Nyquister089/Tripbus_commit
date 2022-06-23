@@ -11,7 +11,6 @@ typedef enum  {
 } cstmr_act;
 
 
-//extern char select_tour(struct tour *tour);
 extern void show_tour_information(void);
 extern void show_tour_destination(void);
 /*extern void show_trip_tour(struct viaggi_tour *viaggi_tour, struct viaggio *viaggio);
