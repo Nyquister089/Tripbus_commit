@@ -115,6 +115,11 @@ void mysql_timestamp_to_string(MYSQL_TIME *time, char *str)
 	snprintf(str, DATETIME_LEN, "%4d-%02d-%02d %02d:%02d", time->year, time->month, time->day, time->hour, time->minute);
 }
 
+void mysql_time_to_string(MYSQL_TIME *time, char *str)
+{
+	snprintf(str, TIME_LEN, "%02d:%02d", time->hour, time->minute);
+}
+
 void mysql_date_to_string(MYSQL_TIME *date, char *str)
 {
 	snprintf(str, DATE_LEN, "%4d-%02d-%02d", date->year, date->month, date->day);
@@ -146,7 +151,6 @@ int take_result(MYSQL_STMT *procedure, MYSQL_BIND *param, char *buff)
 		return -1; 
 	}
 	
-
 	if( mysql_stmt_store_result(procedure) != 0){
 		printf("Procedura : %s", buff); 
 		print_stmt_error(procedure, "\nImpossibile eseguire store result");

@@ -132,11 +132,6 @@ struct meta {
 	char localitadiappartenenza[VARCHAR_LEN]; 		//FK
 };
 
-struct mete_tour{ 
-	size_t num_met; 
-  	struct  meta mete_tour [];
-};
-
 struct mete_viaggio{	
 	size_t num_vme; 
 	struct meta mete_viaggio[]; 
@@ -259,10 +254,6 @@ struct tour {
 	signed char accompagnatrice; //Corretto trasformandolo da carattere a puntatore di carattere
 }; 
 
-
-
-
-
 struct viaggio {
 	int idviaggio; //Corretto trasformandolo da carattere a puntatore di carattere
 	char tourassociato[VARCHAR_LEN]; 
@@ -298,18 +289,35 @@ struct tour_info{
 
 
 struct visita {
-	char idvisita[NUM_LEN];  //Corretto trasformandolo da carattere a puntatore di carattere
-	char viaggiorelativo[NUM_LEN]; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
-	char metavisitata[NUM_LEN]; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
+	int idvisita;  //Corretto trasformandolo da carattere a puntatore di carattere
+	int viaggiorelativo; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
+	int metavisitata; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
 	char datadiarrivo[DATE_LEN]; 
 	char datadipartenza[DATE_LEN]; 
 	char oradiarrivo[TIME_LEN]; 
 	char oradipartenza[TIME_LEN]; 
-	char guida[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
-	char supplemento[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	signed char guida; //Corretto trasformandolo da carattere a puntatore di carattere
+	float supplemento; //Corretto trasformandolo da carattere a puntatore di carattere
 	char trattamentoalberghiero[VARCHAR_LEN]; 
 }; 
+struct mete_tour{
+	char nome[VARCHAR_LEN];
+	char darrivo[DATE_LEN];
+	char oarrivo[TIME_LEN];
+	char dpartenza[DATE_LEN];
+   	char opartenza[TIME_LEN];
+   	float supplemento;
+	char tipologiameta[VARCHAR_LEN];
+	signed char guida;
+   	char oapertura[TIME_LEN];
+   	char trattamento[VARCHAR_LEN];
+	char categoriaalbergo[VARCHAR_LEN];
+}; 
 
+struct info_mete{
+	size_t num_mete; 
+	struct mete_tour info_mete[]; 
+};
 
 extern void do_insert_costumer(struct cliente *cliente);
 extern void do_insert_reservation(struct prenotazione *prenotazione);
@@ -324,7 +332,7 @@ extern void do_select_reservation(struct prenotazione *prenotazione);
 extern void do_select_tour( struct tour *tour);
 
 extern struct tour_info *get_tour_info (void);
-//extern struct viaggi_info *get_viaggi_info(struct viaggio *viaggio);
+extern struct info_mete *get_mete_info(int idv);
 
 extern void do_update_data_doc(struct cliente *cliente); 
 extern void do_validate_reservation(struct prenotazione *prenotazione); 

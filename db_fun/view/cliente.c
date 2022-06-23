@@ -6,8 +6,7 @@
 
 #include "../utils/io.h"
 #include "../utils/validation.h"
-
-struct tour *tour;  
+ 
 struct meta *meta; 
 struct viaggio *viaggio; 
 struct servizio *servizio; 
@@ -18,11 +17,6 @@ struct camera *camera;
 
 void allocation_cstmr(void)
 {
-	tour = malloc(sizeof(struct tour)); 
-	if(tour == NULL){
-		printf("Fallimento malloc su tour (cliente) \n\n"); 
-		exit(0); 
-	}
 	viaggio = malloc(sizeof(struct viaggio)); 
 	if(viaggio == NULL){
 		printf("Fallimento malloc su viaggio (cliente) \n\n"); 
@@ -65,43 +59,37 @@ void allocation_cstmr(void)
 
 int get_cstmr_action(void)
 {
-	char options[6] = {'1','2','3','4','5','6'};
+	char options[5] = {'1','2','3','4','5'};
 	char op;
 	//clear_screen();
 	puts("*********************************");
 	puts("*   Interfaccia cliente     *");
 	puts("*********************************\n");
 	puts("*** Quale operazione vorresti eseguire? ***\n");
-	puts("1) Consulta le informazioni relative tour");
+	puts("1) Visualizza i tour disponibili ed i relativi viaggi previsti");
 	puts("2) Consulta le mete relative ad un tour");
-	puts("3) Consulta i viaggi relativi ad un tour");
-	puts("4) Consulta i servizi offerti da un albergo");
-	puts("5) Consulta i comfort presenti su un modello");
-	puts("6) Esci ");
+	puts("3) Consulta i servizi offerti da un albergo");
+	puts("4) Consulta i comfort presenti su un modello");
+	puts("5) Esci ");
 
-	op = multi_choice("Scegli un opzione? ", options, 6);
+	op = multi_choice("Scegli un opzione? ", options, 5);
 	return op - '1';
 }
 
-bool exe_cstmr_act(cstmr_act sel, struct tour *tour,struct viaggio *viaggio, 
+bool exe_cstmr_act(cstmr_act sel,struct viaggio *viaggio, 
 struct meta *meta,struct servizio *servizio,struct comfort *comfort,struct modello *modello,
 struct documentazionefotografica *documentazionefotografica, struct camera * camera)
 {
 	switch (sel)
 		{case TOUR_INFO:{
-		show_tour_information(tour); 
+		show_tour_information(); 
 		return true; 
 		}
 		
 		case METE_TOUR:{
-		//show_tour_destination(mete_tour, foto_mete); 
+		show_tour_destination(); 
 		return true;
 		}
-		
-     	case VIAGGI_TOUR:{
-     	//show_trip_tour(viaggi_tour,viaggio);
-		return true; 
-		 }
 
 	 	case SERVIZI_ALBERGO:{
 		//show_service_destination(servizi_albergo);
@@ -122,67 +110,24 @@ struct documentazionefotografica *documentazionefotografica, struct camera * cam
 
 
 
-void show_tour_information(struct tour *tour)
+void show_tour_information(void)
 {	
 	printf("\n\n** Tour offerti  **\n\n"); 
 	get_tour_info (); 
 }
 
-/*void show_tour_destination(struct mete_tour *mete_tour, struct foto_mete *foto_mete)
+void show_tour_destination(void)
 {	
-	//select_tour(TOUR_SEL); TODO: Da verificare l'utilizzo di questa istruzione
-	//clear_screen();
-	printf("** Mete visitate dal tour **\n\n");
-	//  lancio procedura select mete tramite denominazione tour nella tabella me-to per passare a mete e  conteggio delle stesse  tale conteggio viene inserito in COUNT inoltre deve effettuare una select su foto relative ed un ulteriore conteggio da inserire in COUNT_PIC 
-	for(size_t i = 0; i < COUNT; i++) {
-		printf("ID: %s \n %s\n Tipologia: %s \n Località di appartenenza: %s \n Categoria albergo: %s \n Orario di apertura: %s \n",
-			mete_tour->mete_tour[i].idmeta,
-			mete_tour->mete_tour[i].nomemeta,
-			mete_tour->mete_tour[i].tipologiameta,
-			mete_tour->mete_tour[i].localitadiappartenenza,
-			mete_tour->mete_tour[i].categoriaalbergo,
-			mete_tour->mete_tour[i].orariodiapertura
-			);
-			for (size_t j = 0; j < COUNT_PIC; j++){
-				printf("%s    ", 
-					foto_mete->foto_mete[j].foto); 
-		}
-	}
-
+	char buff[VARCHAR_LEN]; 
+	int idv; 
+	printf("\n\n ** Esplora le destinazioni dei viaggi **\n\n"); 
+	get_input("Inserisca il numero del viaggio a cui è interessato: ", VARCHAR_LEN, buff, false); 
+	printf("\n\n"); 
+	idv = atoi(buff); 
+	get_mete_info(idv); 
 }
 
-void show_trip_tour(struct viaggi_tour *viaggi_tour, struct viaggio *viaggio)
-{
-	//clear_screen(); 
-	puts("** Inserire il periodo d'interesse **\n\n");
-
-	while(true) {
-		get_input("Inserisci la data di partenza [YYYY-MM-DD]: ", DATE_LEN, DATE_D, false);
-		if(validate_date(viaggio->datadipartenzaviaggio))
-			break; 
-		fprintf(stderr, "Data errata !\n");
-	}
-
-	while(true) {
-		get_input("Inserisci la data di ritorno [YYYY-MM-DD]: ", DATE_LEN, DATE_R, false);
-		if(validate_date(viaggio->datadiritornoviaggio))
-			break;
-		fprintf(stderr, "Data errata !\n");
-	}// procedura select viaggi in base a tour richiesto e date indicate ed inserisca il numero dei viaggi trovati in COUNT
-	//clear_screen();
-	char buffer[VARCHAR_LEN]; 
-	printf("** Viaggi realtivi al tour %s **\n\n", buffer);
-	for(size_t i = 0; i < COUNT; i++) {
-		printf("Partenza %s Ritorno: %s  Prezzo: %sPosti disponibili: %s\n data annulamento: %s \n\n",
-			viaggi_tour->viaggi_tour[i].datadipartenzaviaggio,
-			viaggi_tour->viaggi_tour[i].datadiritornoviaggio,
-			viaggi_tour->viaggi_tour[i].costodelviaggio,
-			viaggi_tour->viaggi_tour[i].postidisponibili,
-			viaggi_tour->viaggi_tour[i].datadiannullamento);
-	}
- 	
-}
-
+/*
 void show_service_destination(struct servizi_albergo *servizi_albergo)
 {	//clear_screen();
 	char buffer[VARCHAR_LEN]; 
@@ -223,11 +168,11 @@ void show_comfort_model(struct comfort_mezzo *comfort_mezzo, struct elenco_model
 
 void run_cstmr_interface (void)
 { 	char sel; 
-	if(	tour == NULL || viaggio == NULL || meta == NULL || servizio == NULL|| comfort == NULL || documentazionefotografica == NULL || camera == NULL ) 
+	if(	 viaggio == NULL || meta == NULL || servizio == NULL|| comfort == NULL || documentazionefotografica == NULL || camera == NULL ) 
 		allocation_cstmr();
 	while (true){
 	sel = get_cstmr_action(); 
-	if (!exe_cstmr_act(sel, tour,viaggio,  meta, servizio, comfort, modello, documentazionefotografica, camera))
+	if (!exe_cstmr_act(sel, viaggio,  meta, servizio, comfort, modello, documentazionefotografica, camera))
 		break; 
 	}
 }
