@@ -280,6 +280,7 @@ struct tour_viaggi{
 	char datadiritornoviaggio[DATETIME_LEN]; 
 	float costodelviaggio;
 	int postidisponibili;
+	int codiceviaggio; 
 }; 
 
 struct tour_info{

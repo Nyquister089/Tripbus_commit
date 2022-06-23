@@ -813,7 +813,7 @@ void do_select_tour( struct tour *tour)
 
 struct tour_info *get_tour_info (void)
 {	
-	MYSQL_BIND param[11];
+	MYSQL_BIND param[12];
 	MYSQL_TIME dpv; 
 	MYSQL_TIME drv; 
 
@@ -824,6 +824,7 @@ struct tour_info *get_tour_info (void)
 	int mnp;
 	int pds; 
 	int cmpr;
+	int cdv; 
 	int status;
 	float mdc; 
 	float bgl;
@@ -858,6 +859,8 @@ struct tour_info *get_tour_info (void)
 	set_binding_param(&param[8], MYSQL_TYPE_DATE, &drv, sizeof(drv));
 	set_binding_param(&param[9], MYSQL_TYPE_FLOAT, &csv, sizeof(csv));
 	set_binding_param(&param[10], MYSQL_TYPE_LONG, &pds, sizeof(pds));
+	set_binding_param(&param[11], MYSQL_TYPE_LONG, &cdv, sizeof(cdv)); 
+	
 
 
 	if(mysql_stmt_bind_result(select_all_tour, param)) {
@@ -880,6 +883,7 @@ struct tour_info *get_tour_info (void)
 			tour_info->tour_info[count].bagaglio = bgl; 
 			tour_info->tour_info[count].garanziaannullamento = gnl; 
 			tour_info->tour_info[count].accompagnatrice = acm;
+			tour_info->tour_info[count].codiceviaggio = cdv; 
 
 			cmpr = strcmp(tour_info->tour_info[count].denominazionetour, tour_info->tour_info[count-1].denominazionetour );
 			
@@ -899,6 +903,9 @@ struct tour_info *get_tour_info (void)
 			mysql_date_to_string(&drv,tour_info->tour_info[count].datadiritornoviaggio);
 			tour_info->tour_info[count].costodelviaggio = csv; 
 			tour_info->tour_info[count].postidisponibili = pds; 
+			tour_info->tour_info[count].codiceviaggio = cdv; 
+
+			printf("Codice viaggio: 	%d \n",tour_info->tour_info[count].codiceviaggio); 
 			printf("Data di partenza:	%s 	\n",tour_info->tour_info[count].datadipartenzaviaggio);
 			printf("Data di riotrno:	%s 	\n",tour_info->tour_info[count].datadiritornoviaggio);
 			printf("Prezzo:			%f euro	\n",tour_info->tour_info[count].costodelviaggio);

@@ -11,7 +11,8 @@ select distinct t.DenominazioneTour,
  v.DataPartenzaViaggio, 
  v.DataRitornoViaggio, 
  v.CostoDelViaggio, 
- v.PostiDisponibili 
+ v.PostiDisponibili,
+ v.idviaggio
 from tour as t
 join viaggio as v on t.DenominazioneTour = v.TourAssociato
 where v.DataPartenzaViaggio > curdate(); 

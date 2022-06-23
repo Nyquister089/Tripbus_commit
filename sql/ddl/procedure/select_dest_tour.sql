@@ -15,6 +15,6 @@ select
    m.CategoriaAlbergo
 from visita as v
 join meta as m on v.MetaVisitata = m.IdMeta
-join viaggio as vi on m.ViaggioRelativo = vi.idviaggio
-where m.ViaggioRelativo = idv;
+join viaggio as vi on v.ViaggioRelativo = vi.idviaggio
+where v.ViaggioRelativo = idv;
 END
