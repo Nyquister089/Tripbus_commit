@@ -1,18 +1,18 @@
 CREATE DEFINER=`giordano`@`localhost` PROCEDURE `select_all_tour`(
  )
 BEGIN
-select distinct *
-from tour; 
-
-/*declare done int default false;
-declare cur cursor for select distinct DenominazioneTour from tour;
-declare continue handler for not found set done = true;
-open cur; 
-read_loop: loop
-	fetch cur into den;
-	if done then
-		leave read_loop;
-	end if;
-end loop;
-close cur;*/
-end
+select distinct t.DenominazioneTour,
+ t.DescrizioneTour,
+ t.Minimopartecipanti, 
+ t.CostoAssicurazioneMedica, 
+ t.CostoBagaglio, 
+ t.CostoGaranziaAnnullamento, 
+ t.Accompagnatrice,
+ v.DataPartenzaViaggio, 
+ v.DataRitornoViaggio, 
+ v.CostoDelViaggio, 
+ v.PostiDisponibili 
+from tour as t
+join viaggio as v on t.DenominazioneTour = v.TourAssociato
+where v.DataPartenzaViaggio > curdate(); 
+END

@@ -259,10 +259,7 @@ struct tour {
 	signed char accompagnatrice; //Corretto trasformandolo da carattere a puntatore di carattere
 }; 
 
-struct tour_info{
-	size_t num_tour; 
-	struct tour tour_info[]; 
-}; 
+
 
 
 
@@ -280,10 +277,24 @@ struct viaggio {
 	char datadiannullamento[DATETIME_LEN]; 
 };
 
-struct viaggi_info{
-	size_t num_viaggi; 
-	struct viaggio viaggi_info[]; 
-};
+struct tour_viaggi{
+	char denominazionetour[VARCHAR_LEN]; 
+	char descrizionetour[DES_LEN]; 
+	int minimopartecipanti; //Corretto trasformandolo da carattere a puntatore di carattere
+	float assicurazionemedica; //Corretto trasformandolo da carattere a puntatore di carattere
+	float bagaglio; //Corretto trasformandolo da carattere a puntatore di carattere
+	float garanziaannullamento; 
+	signed char accompagnatrice;
+	char datadipartenzaviaggio[DATETIME_LEN]; 
+	char datadiritornoviaggio[DATETIME_LEN]; 
+	float costodelviaggio;
+	int postidisponibili;
+}; 
+
+struct tour_info{
+	size_t num_tour; 
+	struct tour_viaggi tour_info[]; 
+}; 
 
 
 struct visita {
@@ -312,8 +323,8 @@ extern void do_select_costumer(struct cliente *cliente);
 extern void do_select_reservation(struct prenotazione *prenotazione);
 extern void do_select_tour( struct tour *tour);
 
-extern struct tour_info *get_tour_info (struct viaggio *viaggio);
-extern struct viaggi_info *get_viaggi_info(struct viaggio *viaggio);
+extern struct tour_info *get_tour_info (void);
+//extern struct viaggi_info *get_viaggi_info(struct viaggio *viaggio);
 
 extern void do_update_data_doc(struct cliente *cliente); 
 extern void do_validate_reservation(struct prenotazione *prenotazione); 
