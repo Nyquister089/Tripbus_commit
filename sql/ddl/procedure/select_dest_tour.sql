@@ -1,7 +1,7 @@
 CREATE DEFINER=`giordano`@`localhost` PROCEDURE `select_dest_tour`(
 in idv int)
 BEGIN
-select 
+select distinct
    m.NomeMeta,
    v.DataArrivo,
    v.OraArrivo,
@@ -12,9 +12,15 @@ select
    v.Guida,
    m.OrarioDiApertura,
    v.Trattamento,
-   m.CategoriaAlbergo
+   m.CategoriaAlbergo,
+   d.DescrizioneFoto,
+   d.Immagine
+   
+   
 from visita as v
 join meta as m on v.MetaVisitata = m.IdMeta
 join viaggio as vi on v.ViaggioRelativo = vi.idviaggio
+join fme as f on m.IdMeta = f.MetaRappresentata
+join documentazionefotografica as d on f.FotoMeta = d.idDocumentazioneFotografica
 where v.ViaggioRelativo = idv;
 END

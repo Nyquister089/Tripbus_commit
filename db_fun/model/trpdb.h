@@ -12,8 +12,9 @@ extern void fini_db(void);
 #define TIME_LEN 6
 #define DATETIME_LEN (DATE_LEN + TIME_LEN)
 #define NUM_LEN 45
-#define DEC_LEN 45 
+#define DEC_LEN 10 
 #define TAR_LEN 10
+#define BLOB_LEN 45
 #define USERNAME_LEN 45
 #define PASSWORD_LEN 8
 #define PIC 45
@@ -276,6 +277,7 @@ struct tour_viaggi{
 	float bagaglio; //Corretto trasformandolo da carattere a puntatore di carattere
 	float garanziaannullamento; 
 	signed char accompagnatrice;
+	char nomemodello[VARCHAR_LEN];
 	char datadipartenzaviaggio[DATETIME_LEN]; 
 	char datadiritornoviaggio[DATETIME_LEN]; 
 	float costodelviaggio;
@@ -308,6 +310,8 @@ struct mete_tour{
 	char dpartenza[DATE_LEN];
    	char opartenza[TIME_LEN];
    	float supplemento;
+	char desfoto[VARCHAR_LEN]; 
+	char foto[BLOB_LEN]; 
 	char tipologiameta[VARCHAR_LEN];
 	signed char guida;
    	char oapertura[TIME_LEN];

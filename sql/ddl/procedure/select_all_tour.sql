@@ -8,6 +8,7 @@ select distinct t.DenominazioneTour,
  t.CostoBagaglio, 
  t.CostoGaranziaAnnullamento, 
  t.Accompagnatrice,
+ mo.NomeModello, 
  v.DataPartenzaViaggio, 
  v.DataRitornoViaggio, 
  v.CostoDelViaggio, 
@@ -15,5 +16,7 @@ select distinct t.DenominazioneTour,
  v.idviaggio
 from tour as t
 join viaggio as v on t.DenominazioneTour = v.TourAssociato
+join mezzo as m on v.TargaMezzoImpiegato = m.Targa
+join modello as mo on m.ModelloMezzo = mo.NomeModello
 where v.DataPartenzaViaggio > curdate(); 
 END

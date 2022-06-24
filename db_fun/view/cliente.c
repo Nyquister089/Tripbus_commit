@@ -107,7 +107,7 @@ struct documentazionefotografica *documentazionefotografica, struct camera * cam
 void show_tour_information(void)
 {	
 	printf("\n\n** Tour offerti  **\n\n"); 
-	get_tour_info (); 
+	get_tour_info(); 
 }
 
 void show_tour_destination(void)
