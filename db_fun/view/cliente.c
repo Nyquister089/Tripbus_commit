@@ -12,7 +12,6 @@ int get_cstmr_action(void)
 {
 	char options[5] = {'1','2','3','4','5'};
 	char op;
-	//clear_screen();
 	puts("*********************************");
 	puts("*   Interfaccia cliente     *");
 	puts("*********************************\n");

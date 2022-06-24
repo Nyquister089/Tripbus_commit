@@ -5,8 +5,6 @@
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
-#define KM 50000; 
-
 int get_mch_action(void)
 {
 	char options[9] = {'1','2','3','4','5','6','7','8','9'};
@@ -75,19 +73,16 @@ bool exe_mch_act(mch_act sel)
 		return true; 
 		}
 		
-		case QUIT:
+		case QUIT_MCH:
 		return false;
 		
 	break;
-		default:
-			fprintf(stderr, "Il carattere digitato non corrisponde a nessuna azione \n");
-			exit(EXIT_FAILURE);
 	}
 
 	return true; 
 }
 
-
+/*
 void show_expired_revisions (struct revisioni_scadute *revisioni_scadute) // Procedura visualizazzione revisioni scadute
 {clear_screen();
 	int count; 
@@ -137,16 +132,14 @@ void update_sparepart_number(struct ricambio *ricambio)
 		return;
 		}
 	get_input("Modifica quantità di pezzi disponili: ", NUM_LEN, ricambio-> quantitainmagazzino, false);
-}
+}*/
 void run_mch_interface (void)
-{ 	
-	mch_act sel; 
+{ 
+		char sel; 
 	while (true){
-	get_mch_action(); 
-	if(!exe_mch_act(sel))
+	sel = get_mch_action(); 
+	if (!exe_mch_act(sel))
 		break; 
-	
 	}
 }
-
 

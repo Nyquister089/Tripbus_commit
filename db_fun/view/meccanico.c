@@ -5,7 +5,6 @@
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
-#define KM 50000; 
 
 int get_mch_action(void)
 {
@@ -38,55 +37,52 @@ bool exe_mch_act(mch_act sel)
 	switch (sel)
 		{case REVISIONI_SCADUTE:{
 		struct revisioni_scadute *revisioni_scadute;
-		show_expired_revisions (revisioni_scadute);
+		//show_expired_revisions (revisioni_scadute);
 		return true;   
 		}
 		
 		case CONSULTA_MAGAZZINO: {
-		show_sparepart (ricambio);
+		//show_sparepart (ricambio);
 		return true; 
 		}
  
 		case INSERT_MODELLO:{
 		struct modello *modello;
-		ins_model (modello); 
+		//ins_model (modello); 
 		return true;   
 		}
      	
      	case INSERT_RICAMBIO:{
-     	ins_sparepart(ricambio);
+     	//ins_sparepart(ricambio);
 		return true; 
 		 }
 
 	 	case INSERT_MEZZO:{
 	 	struct mezzo *mezzo;		
-		ins_bus(mezzo); 
+		//ins_bus(mezzo); 
 		return true;  
 		 }
 
 		case INSERT_TAGLIANDO:	{
 		struct tagliando *tagliando;	
-		ins_certify(tagliando); 
+		//ins_certify(tagliando); 
 		return true; 
 		}
 		
 		case MODIFICA_RICAMBIO:	{
-		update_sparepart_number (ricambio);
+		//update_sparepart_number (ricambio);
 		return true; 
 		}
 		
-		case QUIT:
+		case QUIT_MCH:
 		return false;
 		
 	break;
-		default:
-			fprintf(stderr, "Il carattere digitato non corrisponde a nessuna azione \n");
-			exit(EXIT_FAILURE);
 	}
 
 	return true; 
 }
-
+/*
 
 void show_expired_revisions (struct revisioni_scadute *revisioni_scadute) // Procedura visualizazzione revisioni scadute
 {clear_screen();
@@ -137,16 +133,17 @@ void update_sparepart_number(struct ricambio *ricambio)
 		return;
 		}
 	get_input("Modifica quantità di pezzi disponili: ", NUM_LEN, ricambio-> quantitainmagazzino, false);
-}
+}*/
 void run_mch_interface (void)
 { 	
-	mch_act sel; 
+	char sel;  
 	while (true){
-	get_mch_action(); 
+	sel = get_mch_action(); 
 	if(!exe_mch_act(sel))
 		break; 
 	
 	}
 }
+
 
 

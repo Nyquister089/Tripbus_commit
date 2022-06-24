@@ -4,7 +4,7 @@
 
 #include "../utils/validation.h"
 #include "../model/trpdb.h"
-
+/*
 void update_tour(struct tour *tour);
 void update_destination(struct meta *meta);
 void update_trip(struct viaggio *viaggio);
@@ -23,5 +23,5 @@ void update_bus(struct mezzo *mezzo);
 void update_model(struct modello *modello);
 void update_certify(struct tagliando *tagliando);
 void update_comfort(struct comfort  *comfort);
-void update_service(struct servizio *servizio);
+void update_service(struct servizio *servizio);*/
 

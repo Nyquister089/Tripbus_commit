@@ -2,7 +2,7 @@
 #include<stdlib.h>
 
 #include "upd.h"
-
+/*
 void update_trip(struct viaggio *viaggio)
 {	clear_screen();
 	char buffer[VARCHAR_LEN]; 
@@ -129,6 +129,6 @@ void update_prenotation(struct prenotazione *prenotazione)
 		fprintf(stderr, "Data errata!\n");
 	}
 	
-}
+}*/
 
 

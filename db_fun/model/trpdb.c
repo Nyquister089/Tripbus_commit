@@ -41,9 +41,6 @@ static MYSQL_STMT *select_service; //
 static MYSQL_STMT *select_bus; // Meccanico
 
 
-
-
-
 static MYSQL_STMT *select_all_tour; //ok Cliente
 static MYSQL_STMT *select_dest_tour; //ok Cliente
 static MYSQL_STMT *select_hotel_service; //ok Cliente
@@ -256,7 +253,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			}
 			break;
 			case MECCANICO:
-
+			/*if(!setup_prepared_stmt(&insert_review, "call insert_review(?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
+				print_stmt_error(insert_review, "Unable to initialize insert review statement\n");
+				return false;
+			}
+			
 			if(!setup_prepared_stmt(&select_expired_review, "call select_expired_review(?, ?, ?, ?, ?)", conn)) {
 				print_stmt_error(select_expired_review, "Unable to initialize select_expired_review statement\n");
 				return false;
@@ -264,7 +265,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			if(!setup_prepared_stmt(&insert_review, "call insert_review(?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
 				print_stmt_error(insert_review, "Unable to initialize insert review statement\n");
 				return false;
-			}/*
+			}
 			if(!setup_prepared_stmt(&insert_model, "call insert_model(?, ?, ?, ?, ?, ?, ?)", conn)) {
 				print_stmt_error(insert_model, "Unable to initialize insert model statement\n");
 				return false;
@@ -284,7 +285,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			if(!setup_prepared_stmt(&update_sparepart_number, "call update_sparepart_number(?, ?, ?, ?, ?, ?, ?)", conn)) {
 				print_stmt_error(update_sparepart_number, "Unable to initialize update certify statement\n");
 				return false;
-			}*/
+			}
 			if(!setup_prepared_stmt(&select_review, "call select_review(?, ?, ?, ?, ?, ?, ?)", conn)) {	
 				print_stmt_error(select_review, "Unable to initialize select review statement\n");
 				return false;
@@ -304,7 +305,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			if(!setup_prepared_stmt(&select_certify, "call select_certify(?, ?, ?, ?, ?, ?, ?)", conn)) {
 				print_stmt_error(select_certify, "Unable to initialize select certify statement\n");
 				return false;
-			}
+			}*/
 			break;
 
 		default:
