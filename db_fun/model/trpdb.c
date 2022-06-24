@@ -24,6 +24,8 @@ static MYSQL_STMT *insert_costumer; //OK HOSTESS
 static MYSQL_STMT *insert_reservation; // OK HOSTESS
 static MYSQL_STMT *insert_seat; //OK HOSTESS
 static MYSQL_STMT *insert_assoc; //OK HOSTESS
+static MYSQL_STMT *insert_review; // Meccanico
+static MYSQL_STMT *insert_sostitution; // Meccanico
 
 static MYSQL_STMT *select_trip; //ok HOSTESS
 static MYSQL_STMT *select_costumer; //Ok HOSTESS
@@ -33,20 +35,26 @@ static MYSQL_STMT *select_tour; //
 static MYSQL_STMT *select_destination;// 
 static MYSQL_STMT *select_picture; // 
 static MYSQL_STMT *select_room; // 
-static MYSQL_STMT *select_model; //Cliente
-static MYSQL_STMT *select_comfort;// Cliente
+static MYSQL_STMT *select_model; // Meccanico
+static MYSQL_STMT *select_comfort;//
 static MYSQL_STMT *select_service; // 
+static MYSQL_STMT *select_bus; // Meccanico
+
+
+
 
 
 static MYSQL_STMT *select_all_tour; //ok Cliente
 static MYSQL_STMT *select_dest_tour; //ok Cliente
 static MYSQL_STMT *select_hotel_service; //ok Cliente
-static MYSQL_STMT *select_model_comfort; // Cliente
+static MYSQL_STMT *select_model_comfort; // ok Cliente
+static MYSQL_STMT *select_expired_review; // Meccanico
 
 
 static MYSQL_STMT *update_trip_seat; //ok HOSTESS
 static MYSQL_STMT *validate_reservation; //ok  HOSTESS
 static MYSQL_STMT *update_data_doc; //Ok  HOSTESS
+
 
 static void close_prepared_stmts(void)
 {
@@ -244,6 +252,57 @@ static bool initialize_prepared_stmts(role_t for_role)
 			}*/
 			if(!setup_prepared_stmt(&select_trip, "call select_trip(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", conn)) {
 				print_stmt_error(select_trip, "Unable to initialize select_trip statement\n");
+				return false;
+			}
+			break;
+			case MECCANICO:
+
+			if(!setup_prepared_stmt(&select_expired_review, "call select_expired_review(?, ?, ?, ?, ?)", conn)) {
+				print_stmt_error(select_expired_review, "Unable to initialize select_expired_review statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&insert_review, "call insert_review(?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
+				print_stmt_error(insert_review, "Unable to initialize insert review statement\n");
+				return false;
+			}/*
+			if(!setup_prepared_stmt(&insert_model, "call insert_model(?, ?, ?, ?, ?, ?, ?)", conn)) {
+				print_stmt_error(insert_model, "Unable to initialize insert model statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&insert_sparepart, "call insert_sparepart(?, ?, ?, ?, ?, ?, ?)", conn)) {
+				print_stmt_error(insert_sparepart, "Unable to initialize insert sparepart statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&insert_bus, "call insert_bus(?, ?, ?, ?, ?, ?, ?)", conn)) {
+				print_stmt_error(insert_bus, "Unable to initialize insert bus statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&insert_certify, "call insert_certify(?, ?, ?, ?, ?, ?, ?)", conn)) {
+				print_stmt_error(insert_certify, "Unable to initialize insert certify statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&update_sparepart_number, "call update_sparepart_number(?, ?, ?, ?, ?, ?, ?)", conn)) {
+				print_stmt_error(update_sparepart_number, "Unable to initialize update certify statement\n");
+				return false;
+			}*/
+			if(!setup_prepared_stmt(&select_review, "call select_review(?, ?, ?, ?, ?, ?, ?)", conn)) {	
+				print_stmt_error(select_review, "Unable to initialize select review statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&select_model, "call select_model(?, ?, ?, ?, ?, ?, ?)", conn)) {
+				print_stmt_error(select_model, "Unable to initialize select model statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&select_sparepart, "call select_sparepart(?, ?, ?, ?, ?, ?, ?)", conn)) {
+				print_stmt_error(select_sparepart, "Unable to initialize select sparepart statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&select_bus, "call select_bus(?, ?, ?, ?, ?, ?, ?)", conn)) {
+				print_stmt_error(select_bus, "Unable to initialize select bus statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&select_certify, "call select_certify(?, ?, ?, ?, ?, ?, ?)", conn)) {
+				print_stmt_error(select_certify, "Unable to initialize select certify statement\n");
 				return false;
 			}
 			break;

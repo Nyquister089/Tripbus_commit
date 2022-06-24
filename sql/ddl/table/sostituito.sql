@@ -1,0 +1,12 @@
+
+
+CREATE TABLE IF NOT EXISTS `tripdb`.`sostituito` (
+  `RevisioneAssociata` int unsigned NOT NULL AUTO_INCREMENT,
+  `CodiceRicambioSostituito` varchar(45) NOT NULL,
+  `QuantitàSostituita` int default '1',
+  PRIMARY KEY (`RevisioneAssociata`,`CodiceRicambioSostituito`),
+  KEY `sostituito_ricambio_idx` (`CodiceRicambioSostituito`),
+  KEY `sostituito_revisione_idx`(`RevisioneAssociata`),
+  CONSTRAINT `FK_revisione` FOREIGN KEY (`RevisioneAssociata`) REFERENCES `revisione` (`IdRevisione`),
+  CONSTRAINT `FK_tagliando` FOREIGN KEY (`CodiceRicambioSostituito`) REFERENCES `ricambio` (`Codice`)
+) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci;

@@ -138,6 +138,8 @@ void create_tables()
     execute_query_from_file_sql("../sql/ddl/table/mappa.sql");
     execute_query_from_file_sql("../sql/ddl/table/visita.sql");
     execute_query_from_file_sql("../sql/ddl/table/utente.sql");
+    execute_query_from_file_sql("../sql/ddl/table/sostituito.sql");
+    
 }
 
 void drop_views()
