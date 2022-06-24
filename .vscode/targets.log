@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
 # GNU Make 4.3
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2020 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Jun 23 09:53:22 2022
+# Make data base, printed on Fri Jun 24 11:01:46 2022
 
 # Variables
 
@@ -21,7 +23,7 @@ SSH_AGENT_LAUNCHER = gnome-keyring
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-07f3b678-895a-4b36-a11d-caffe6837f91.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-ab9a36b7-f0ed-4314-bc6a-c4689d22284b.sock
 # environment
 VSCODE_CWD = /home/giordano
 # default
@@ -51,7 +53,7 @@ VSCODE_CODE_CACHE_PATH = /home/giordano/.config/Code/CachedData/4af164ea3a06f701
 # environment
 LANG = C
 # environment
-XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.JYXAO1
+XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.69U2N1
 # default
 .LOADED := 
 # default
@@ -89,13 +91,13 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 2900
+VSCODE_PID = 3906
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/oem-Aspire-E5-553G:@/tmp/.ICE-unix/1181,unix/oem-Aspire-E5-553G:/tmp/.ICE-unix/1181
+SESSION_MANAGER = local/oem-Aspire-E5-553G:@/tmp/.ICE-unix/1176,unix/oem-Aspire-E5-553G:/tmp/.ICE-unix/1176
 # automatic
 *F = $(notdir $*)
 # environment
@@ -133,7 +135,7 @@ MAKEFILES :=
 # automatic
 ^F = $(notdir $^)
 # environment
-INVOCATION_ID = c64a55010452405a998e987484cf7d22
+INVOCATION_ID = 88229fe8f12b45c4afa5ec27975c3d6d
 # environment
 VSCODE_LOG_NATIVE = false
 # environment
@@ -163,7 +165,7 @@ GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # makefile
 .DEFAULT_GOAL := compile
 # environment
-SYSTEMD_EXEC_PID = 1212
+SYSTEMD_EXEC_PID = 1203
 # environment
 DISPLAY = :0
 # environment
@@ -173,15 +175,15 @@ GTK_MODULES = gail:atk-bridge
 # default
 MAKE_VERSION := 4.3
 # environment
-MANAGERPID = 1042
+MANAGERPID = 1026
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 2900
+GIO_LAUNCHED_DESKTOP_FILE_PID = 3906
 # environment
 _ = /usr/share/code/code
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
-JOURNAL_STREAM = 8:33961
+JOURNAL_STREAM = 8:33423
 # environment
 XDG_SESSION_CLASS = user
 # environment
@@ -275,8 +277,6 @@ all:
 # strcache performance: lookups = 32 / hit rate = 18%
 # hash-table stats:
 # Load=26/8192=0%, Rehash=0, Collisions=1/32=3%
-# Finished Make data base on Thu Jun 23 09:53:22 2022
+# Finished Make data base on Fri Jun 24 11:01:46 2022
 
  
-make: *** No rule to make target 'all'.  Stop.
-

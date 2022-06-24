@@ -175,7 +175,11 @@ void populate_tables()
     execute_query_from_file_sql("../sql/dml/delete_and_insert_offre.sql"); 
     execute_query_from_file_sql("../sql/dml/delete_and_insert_presenti.sql");
     execute_query_from_file_sql("../sql/dml/delete_and_insert_foto.sql");
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_fmo.sql");
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_fme.sql");
     
+
+
 
 }
 
