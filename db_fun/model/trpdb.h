@@ -149,16 +149,25 @@ struct mezzo {
 };
 
 struct modello {
-	char idmodello[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 	char nomemodello[VARCHAR_LEN];
 	char datitecnici[DES_LEN]; 
 	char casacostruttrice[VARCHAR_LEN];
 	char numeroposti[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 }; 
 
-struct elenco_modelli {
+struct modelli_comfort {
+	char casacostruttrice[VARCHAR_LEN];
+	int numeroposti;
+	char nomecomfort[VARCHAR_LEN]; 
+	char descrizionecomfort[DES_LEN];
+	char foto [PIC]; 
+	char descrizionefoto[DES_LEN]; 
+	int idfoto; 
+}; 
+
+struct info_modelli {
 	size_t num_modelli; 
-	struct modello elenco_modelli[]; 
+	struct modelli_comfort info_modelli[]; 
 };
 
 struct offre {
@@ -185,7 +194,7 @@ struct prenotazione {
 
 struct presenti {
 	char comfortpresenti[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
-	char modelloassciato[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	char modelloassciato[VARCHAR_LEN]; 
 };
 
 struct revisione {
@@ -218,7 +227,7 @@ struct rt {
 }; 
 
 struct servizio {
-	char idservizio[NUM_LEN]; 
+	int idservizio; 
 	char nomeservizio[VARCHAR_LEN];
 	char descrizioneservizio[DES_LEN]; 
 }; 
@@ -317,6 +326,7 @@ struct mete_tour{
    	char oapertura[TIME_LEN];
    	char trattamento[VARCHAR_LEN];
 	char categoriaalbergo[VARCHAR_LEN];
+	int codicealbergo; 
 }; 
 
 struct info_mete{
@@ -338,6 +348,8 @@ extern void do_select_tour( struct tour *tour);
 
 extern struct tour_info *get_tour_info (void);
 extern struct info_mete *get_mete_info(int idv);
+extern struct servizi_albergo *get_servizi_albergo(int idh ); 
+extern struct info_modelli *get_info_modello(char *nmd);
 
 extern void do_update_data_doc(struct cliente *cliente); 
 extern void do_validate_reservation(struct prenotazione *prenotazione); 

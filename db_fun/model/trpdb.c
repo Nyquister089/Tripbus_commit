@@ -25,20 +25,24 @@ static MYSQL_STMT *insert_reservation; // OK HOSTESS
 static MYSQL_STMT *insert_seat; //OK HOSTESS
 static MYSQL_STMT *insert_assoc; //OK HOSTESS
 
-static MYSQL_STMT *select_trip; //ok HOSTESS, CLIENTE
+static MYSQL_STMT *select_trip; //ok HOSTESS
 static MYSQL_STMT *select_costumer; //Ok HOSTESS
 static MYSQL_STMT *select_reservation; //ok HOSTESS
 
-static MYSQL_STMT *select_tour; //Cliente
-static MYSQL_STMT *select_destination;// Cliente
-static MYSQL_STMT *select_picture; // Cliente
-static MYSQL_STMT *select_room; // Cliente
+static MYSQL_STMT *select_tour; //
+static MYSQL_STMT *select_destination;// 
+static MYSQL_STMT *select_picture; // 
+static MYSQL_STMT *select_room; // 
 static MYSQL_STMT *select_model; //Cliente
 static MYSQL_STMT *select_comfort;// Cliente
-static MYSQL_STMT *select_service; // Cliente 
+static MYSQL_STMT *select_service; // 
 
-static MYSQL_STMT *select_all_tour; // Cliente
-static MYSQL_STMT *select_dest_tour; // Cliente
+
+static MYSQL_STMT *select_all_tour; //ok Cliente
+static MYSQL_STMT *select_dest_tour; //ok Cliente
+static MYSQL_STMT *select_hotel_service; //ok Cliente
+static MYSQL_STMT *select_model_comfort; // Cliente
+
 
 static MYSQL_STMT *update_trip_seat; //ok HOSTESS
 static MYSQL_STMT *validate_reservation; //ok  HOSTESS
@@ -54,7 +58,11 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(select_tour);
 		select_tour = NULL;
 	}	
-	if(select_all_tour) {					// Procedura di select della denominazione di tutti i tour
+	if(select_hotel_service) {					// Procedura di select dei servizi relativi ad un albergo
+		mysql_stmt_close(select_hotel_service);
+		select_hotel_service = NULL;
+	}	
+	if(select_all_tour) {					// Procedura di select di tutti i tour
 		mysql_stmt_close(select_all_tour);
 		select_all_tour = NULL;
 	}	
@@ -82,10 +90,14 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(select_room);
 		select_room = NULL;
 	}	
-	if(select_dest_tour) {				// Procedura di select viaggi realtivi ai tour
+	if(select_model_comfort) {				// Procedura di select di un  modello e di foto e comfort ad esso associate
+		mysql_stmt_close(select_model_comfort);
+		select_model_comfort = NULL;
+	}	
+	if(select_dest_tour) {				// Procedura di select delle mete relative ad un viaggio
 		mysql_stmt_close(select_dest_tour);
 		select_dest_tour = NULL;
-	}				
+	}						
 	if(select_trip) {				// Procedura di select viaggi
 		mysql_stmt_close(select_trip);
 		select_trip = NULL;
@@ -189,8 +201,16 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(select_tour, "Unable to initialize select_tour statement\n");
 				return false;
 			}
+			if(!setup_prepared_stmt(&select_hotel_service, "call select_hotel_service(?)", conn)) {
+				print_stmt_error(select_hotel_service, "Unable to initialize select_hotel_service statement\n");
+				return false;
+			}
 			if(!setup_prepared_stmt(&select_all_tour, "call select_all_tour()", conn)) {
 				print_stmt_error(select_all_tour, "Unable to initialize select_all_tour statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&select_model_comfort, "call select_model_comfort(?)", conn)) {
+				print_stmt_error(select_model_comfort, "Unable to initialize select dest tour statement\n");
 				return false;
 			}
 			if(!setup_prepared_stmt(&select_dest_tour, "call select_dest_tour(?)", conn)) {
@@ -925,19 +945,20 @@ struct tour_info *get_tour_info (void)
 
 struct info_mete *get_mete_info(int idv)
 {	
-	MYSQL_BIND param[13];
+	MYSQL_BIND param[14];
 	MYSQL_TIME darrivo; 
 	MYSQL_TIME dpartenza;
 	MYSQL_TIME oarrivo; 
 	MYSQL_TIME opartenza; 
 	MYSQL_TIME oapertura; 
-
+	printf("Malloc"); 
 	struct info_mete *info_mete = NULL;
 	int status;  
 	int cmpr; 
 	char *buff = "select_dest_tour"; 
 	char nome[VARCHAR_LEN];
    	float supplemento;
+	int codicealbergo;
 	char tipologiameta[VARCHAR_LEN];
 	char desfoto[VARCHAR_LEN]; 
 	char foto[BLOB_LEN]; 
@@ -958,8 +979,8 @@ struct info_mete *get_mete_info(int idv)
 	bind_exe(select_dest_tour,param,buff); 
 
 	rows = mysql_stmt_num_rows(select_dest_tour); 
-
-	info_mete =malloc((sizeof(struct mete_tour)+sizeof(info_mete))*rows);
+	
+	info_mete = malloc((sizeof(struct mete_tour)+sizeof(info_mete))*rows);
 	memset(info_mete, 0, sizeof(*info_mete) + sizeof(struct mete_tour)*rows);
 
 	if(info_mete == NULL){
@@ -980,6 +1001,8 @@ struct info_mete *get_mete_info(int idv)
 	set_binding_param(&param[10], MYSQL_TYPE_VAR_STRING, categoriaalbergo,sizeof(categoriaalbergo));
 	set_binding_param(&param[11], MYSQL_TYPE_VAR_STRING, desfoto, sizeof(desfoto));
 	set_binding_param(&param[12], MYSQL_TYPE_BLOB, foto,sizeof(foto));
+	set_binding_param(&param[13], MYSQL_TYPE_LONG, &codicealbergo, sizeof(codicealbergo));
+	
 
 	if(mysql_stmt_bind_result(select_dest_tour, param)) {
 		printf("Procedura: %s", buff); 
@@ -994,7 +1017,7 @@ struct info_mete *get_mete_info(int idv)
 	while (true) {
 		status = mysql_stmt_fetch(select_dest_tour);
 		if (status == MYSQL_NO_DATA){
-			printf("Nodata\n");
+			 printf("...\n"); 
 			break; 
 			}
 		if (status == 1 ){
@@ -1009,6 +1032,7 @@ struct info_mete *get_mete_info(int idv)
 			mysql_time_to_string(&oapertura, info_mete->info_mete[count].oapertura); 
 		
 			info_mete->info_mete[count].supplemento = supplemento; 
+			info_mete->info_mete[count].codicealbergo = codicealbergo; 
 
 			strcpy(info_mete->info_mete[count].trattamento, trattamento);
 			strcpy(info_mete->info_mete[count].categoriaalbergo, categoriaalbergo);
@@ -1032,6 +1056,7 @@ struct info_mete *get_mete_info(int idv)
 				else{
 					printf("Trattamento:		%s \n",info_mete->info_mete[count].trattamento);
 					printf("Categoria:		%s 	\n",info_mete->info_mete[count].categoriaalbergo);
+					printf("Codice albergo:		%d \n",info_mete->info_mete[count].codicealbergo); 
 				}
 			} 
 			printf("\n"); 
@@ -1088,10 +1113,9 @@ void do_select_service(struct servizio *servizio)
 
 	int idservizio; 
 	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, servizio->idservizio, sizeof(idservizio));
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idservizio, sizeof(idservizio));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, servizio->nomeservizio, sizeof(servizio->nomeservizio));
 	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, servizio->descrizioneservizio, sizeof(servizio->descrizioneservizio));
-	
 	
 	if(mysql_stmt_bind_param(select_service, param) != 0) {
 		print_stmt_error(select_service, "Could not bind parameters for select_service");
@@ -1103,6 +1127,64 @@ void do_select_service(struct servizio *servizio)
 		}
 	mysql_stmt_free_result(select_service);
 	mysql_stmt_reset(select_service);
+	
+}
+
+struct servizi_albergo *get_servizi_albergo(int idh )
+{		
+	MYSQL_BIND param[2]; 
+
+
+	struct servizi_albergo *info_servizi = NULL; 
+	char *buff = "select_hotel_service"; 
+	char nomeservizio[VARCHAR_LEN]; 
+	char descrizioneservizio[DES_LEN];
+	size_t rows;
+	int count,status; 
+	count = 0; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idh, sizeof(idh));
+
+	bind_exe(select_hotel_service,param,buff); 
+	rows = mysql_stmt_num_rows(select_hotel_service); 
+	
+	info_servizi = malloc((sizeof(struct servizi_albergo)+sizeof(info_servizi))*rows);
+	memset(info_servizi, 0, sizeof(*info_servizi) + sizeof(struct servizi_albergo)*rows);
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, nomeservizio, sizeof(nomeservizio));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, descrizioneservizio, sizeof(descrizioneservizio));
+	
+	if(mysql_stmt_bind_result(select_hotel_service, param)) {
+		printf("Procedura: %s", buff); 
+		print_stmt_error(select_hotel_service, "\n\n Impossibile eseguire il bind risult\n\n");
+		free(info_servizi);
+		info_servizi = NULL;
+		goto stop; 
+	}
+
+	info_servizi->num_servizi = rows; 
+
+	while (true) {
+		status = mysql_stmt_fetch(select_hotel_service);
+		if (status == MYSQL_NO_DATA){
+			 printf("...\n"); 
+			break; 
+			}
+		if (status == 1 ){
+			printf("Procedura: %s", buff); 
+			print_stmt_error(select_hotel_service, "\nImpossibile eseguire fetch");
+			}
+	strcpy(info_servizi->servizi_albergo[count].nomeservizio, nomeservizio);
+	strcpy(info_servizi->servizi_albergo[count].descrizioneservizio, descrizioneservizio);
+				
+	printf("* %s *\n",info_servizi->servizi_albergo[count].nomeservizio);
+	printf("Descrizione:		%s	",info_servizi->servizi_albergo[count].descrizioneservizio);
+			
+	count++; 
+	}
+	stop: 
+	mysql_stmt_free_result(select_hotel_service);
+	mysql_stmt_reset(select_hotel_service);
 	
 }
 
@@ -1155,6 +1237,92 @@ void do_select_model(struct modello *modello)
 	mysql_stmt_free_result(select_model);
 	mysql_stmt_reset(select_model);
 }
+struct info_modelli *get_info_modello(char *nmd)
+{
+	MYSQL_BIND param[7];
+
+	struct info_modelli *info_modello = NULL; 
+	char *buff = "select_model_comfort";
+	char casacostruttrice[VARCHAR_LEN];
+	int numeroposti;
+	char nomecomfort[VARCHAR_LEN]; 
+	char descrizionecomfort[DES_LEN];
+	char foto [PIC]; 
+	char descrizionefoto[DES_LEN];
+	int idfoto; 
+	size_t rows, count;   
+	count = 0;  
+	int cmpr, status; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, nmd, strlen(nmd));
+
+	bind_exe(select_model_comfort,param,buff); 
+
+	info_modello =malloc((sizeof(struct info_modelli)+sizeof(info_modello))*rows);
+	memset(info_modello, 0, sizeof(*info_modello) + sizeof(struct info_modelli)*rows);
+
+	if(info_modello == NULL){
+		printf("Impossibile eseguire la malloc su tour info"); 
+		goto stop; 
+	}
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, casacostruttrice, sizeof(casacostruttrice));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &numeroposti, sizeof(numeroposti)); 
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, nomecomfort, sizeof(nomecomfort)); 
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, descrizionecomfort, sizeof(descrizionecomfort)); 
+	set_binding_param(&param[4], MYSQL_TYPE_BLOB,foto, sizeof(foto)); 
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING,descrizionefoto, sizeof(descrizionefoto)); 
+	set_binding_param(&param[6], MYSQL_TYPE_LONG,&idfoto, sizeof(idfoto)); 
+	
+	
+	if(mysql_stmt_bind_result(select_model_comfort, param)) {
+		print_stmt_error(select_model_comfort, "\n\n Impossibile eseguire il bind risult\n\n");
+		free(info_modello);
+		info_modello = NULL;
+		goto stop; 
+	}
+
+	info_modello->num_modelli = rows; 
+
+	while (true) {
+		status = mysql_stmt_fetch(select_model_comfort);
+		if (status == MYSQL_NO_DATA){
+			printf("...\n"); 
+			break; 
+		}
+		if (status == 1 ){
+			print_stmt_error(select_model_comfort, "\nImpossibile eseguire fetch");
+			}
+		
+			strcpy(info_modello->info_modelli[count].casacostruttrice, casacostruttrice);
+			info_modello->info_modelli[count].numeroposti = numeroposti; 
+			strcpy(info_modello->info_modelli[count].nomecomfort,nomecomfort);
+			strcpy(info_modello->info_modelli[count].descrizionecomfort,descrizionecomfort);
+			strcpy(info_modello->info_modelli[count].foto, foto);
+			strcpy(info_modello->info_modelli[count].descrizionefoto, descrizionefoto); 
+			info_modello->info_modelli[count].idfoto = idfoto; 
+
+			cmpr = strcmp(info_modello->info_modelli[count].casacostruttrice, info_modello->info_modelli[count-1].casacostruttrice);
+			
+			if(cmpr!= 0){
+				printf("Casa costruttrice:	%s \n",info_modello->info_modelli[count].casacostruttrice);
+				printf("Numero di posti:	%d	\n",info_modello->info_modelli[count].numeroposti);
+			}
+			printf("Comfort:	 %s \n",info_modello->info_modelli[count].nomecomfort);
+			printf("%s \n",info_modello->info_modelli[count].descrizionecomfort);	
+
+			if(info_modello->info_modelli[count].idfoto != info_modello->info_modelli[count-1].idfoto){
+				printf("%s\n",info_modello->info_modelli[count].foto);
+				printf("Descrizione foto:%s\n",info_modello->info_modelli[count].descrizionefoto);
+			}
+			count++; 
+	}
+	stop: 
+	mysql_stmt_free_result(select_model_comfort);
+	mysql_stmt_reset(select_model_comfort);
+}; 
+
+ 
 
 void do_select_picture(struct documentazionefotografica *documentazionefotografica)
 {	

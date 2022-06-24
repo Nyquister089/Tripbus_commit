@@ -14,7 +14,8 @@ select distinct
    v.Trattamento,
    m.CategoriaAlbergo,
    d.DescrizioneFoto,
-   d.Immagine
+   d.Immagine, 
+   m.IdMeta
    
    
 from visita as v

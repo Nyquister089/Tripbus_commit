@@ -10,10 +10,8 @@ typedef enum  {
 	QUIT_CSTMR
 } cstmr_act;
 
-
 extern void show_tour_information(void);
 extern void show_tour_destination(void);
-/*extern void show_trip_tour(struct viaggi_tour *viaggi_tour, struct viaggio *viaggio);
-extern void show_service_destination(struct servizi_albergo *servizi_albergo);
-extern void show_comfort_model(struct comfort_mezzo *comfort_mezzo, struct elenco_modelli *elenco_modelli);*/
+extern void show_service_destination(void);
+extern void show_comfort_model(void); 
 extern void run_cstmr_interface (void);

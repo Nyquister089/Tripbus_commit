@@ -152,7 +152,6 @@ void create_views()
     execute_query_from_file_sql("../sql/ddl/view/Cliente_modello_info.sql");
     execute_query_from_file_sql("../sql/ddl/view/Meccanico_pianifica_revisione.sql");
     execute_query_from_file_sql("../sql/ddl/view/Hostess_clienti_prenotazioni.sql");
-    execute_query_from_file_sql("../sql/ddl/view/Cliente_servizi_albergo.sql");
 }
 
 void populate_tables()
@@ -202,6 +201,9 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/select_tour.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/select_all_tour.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/select_dest_tour.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/select_hotel_service.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/select_model_comfort.sql"); 
+
 }
 
 int main(int argc, char *argv[])
