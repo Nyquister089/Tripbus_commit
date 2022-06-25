@@ -5,18 +5,28 @@
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
+struct revisione *revisione_mch; 
+
+int allocation_mch(void)
+{
+	revisione_mch = malloc(sizeof( struct revisione)); 
+	if(revisione_mch == NULL){
+		printf("Impossibile eseguire malloc su revisone"); 
+		return -1; 
+	}
+}
 
 int get_mch_action(void)
 {
 	char options[9] = {'1','2','3','4','5','6','7','8','9'};
 	char op;
 			
-	clear_screen();
+	//clear_screen();
 	puts("*********************************");
 	puts("*   INTERFACCIA MECCANICO    *");
 	puts("*********************************\n");
 	puts("*** Quale operazione vorresti eseguire? ***\n");
-	puts("1) Consultare le revisioni scadute");
+	puts("1) Inserisci una nuova revisione");
 	puts("2) Consultare la presenza di un ricambio in magazzino");
 	puts("3) Inserire una revisione effettuata");
 	puts("4) Inserire un nuovo modello");
@@ -32,12 +42,10 @@ int get_mch_action(void)
 
 bool exe_mch_act(mch_act sel)
 {	
-	struct ricambio *ricambio;
 	 
-	switch (sel)
-		{case REVISIONI_SCADUTE:{
-		struct revisioni_scadute *revisioni_scadute;
-		//show_expired_revisions (revisioni_scadute);
+	switch (sel){
+		case INS_REVISIONE:{
+		ins_review(revisione_mch); 
 		return true;   
 		}
 		
@@ -82,6 +90,8 @@ bool exe_mch_act(mch_act sel)
 
 	return true; 
 }
+
+
 /*
 
 void show_expired_revisions (struct revisioni_scadute *revisioni_scadute) // Procedura visualizazzione revisioni scadute
@@ -136,7 +146,9 @@ void update_sparepart_number(struct ricambio *ricambio)
 }*/
 void run_mch_interface (void)
 { 	
-	char sel;  
+	char sel; 
+	if(revisione_mch == NULL) 
+		allocation_mch(); 
 	while (true){
 	sel = get_mch_action(); 
 	if(!exe_mch_act(sel))

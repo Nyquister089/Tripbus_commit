@@ -205,7 +205,7 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/select_dest_tour.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_hotel_service.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_model_comfort.sql"); 
-
+    execute_query_from_file_sql("../sql/ddl/procedure/insert_review.sql"); 
 }
 
 int main(int argc, char *argv[])

@@ -115,6 +115,10 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(insert_reservation);
 		insert_reservation= NULL;
 	}
+	if(insert_review) {				// Procedura di insert posto prenotato (HOSTESS) 
+		mysql_stmt_close(insert_review);
+		insert_review= NULL;
+	}
 	if(insert_seat) {				// Procedura di insert posto prenotato (HOSTESS) 
 		mysql_stmt_close(insert_seat);
 		insert_seat= NULL;
@@ -253,11 +257,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			}
 			break;
 			case MECCANICO:
-			/*if(!setup_prepared_stmt(&insert_review, "call insert_review(?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
+			if(!setup_prepared_stmt(&insert_review, "call insert_review(?, ?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
 				print_stmt_error(insert_review, "Unable to initialize insert review statement\n");
 				return false;
 			}
-			
+			/*
 			if(!setup_prepared_stmt(&select_expired_review, "call select_expired_review(?, ?, ?, ?, ?)", conn)) {
 				print_stmt_error(select_expired_review, "Unable to initialize select_expired_review statement\n");
 				return false;
@@ -445,8 +449,6 @@ void do_insert_costumer(struct cliente *cliente ) // funziona
 {	
 	MYSQL_BIND param[8]; 
 	MYSQL_TIME datadocumentazione; 
-	int recapitotelefonico;
-	int fax; 
 	
 	date_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
 
@@ -535,8 +537,9 @@ void do_insert_assoc(struct associata *associata) // Funziona
 {		
 	MYSQL_BIND param[5];
 	MYSQL_TIME datafinesoggiorno;
-	MYSQL_TIME datainiziosoggiorno; 
+	MYSQL_TIME datainiziosoggiorno;
 
+	char *buff = "insert_assoc";  
 	int cameraprenotata; 
 	int ospite; 
 	int albergoinquestione; 
@@ -554,11 +557,42 @@ void do_insert_assoc(struct associata *associata) // Funziona
 	set_binding_param(&param[3], MYSQL_TYPE_DATE, &datainiziosoggiorno, sizeof(datainiziosoggiorno)); 
 	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datafinesoggiorno, sizeof(datafinesoggiorno));
 	
-	bind_exe(insert_assoc, param, "insert_assoc"); 
+	bind_exe(insert_assoc, param, buff); 
 
 	mysql_stmt_free_result(insert_assoc);
 	mysql_stmt_reset(insert_assoc);
 	
+}
+
+void do_insert_review(struct revisione *revisione)
+{		
+	MYSQL_BIND param[8]; 
+	MYSQL_TIME datainizio;
+	MYSQL_TIME datafine; 
+
+	char *buff = "insert_review"; 
+	int addettoallarevisione; 
+	int chilometraggio; 
+
+	date_to_mysql_time(revisione->datainizio, &datainizio);
+	date_to_mysql_time(revisione->datafine, &datafine); 
+
+	addettoallarevisione = revisione->addettoallarevisione; 
+	chilometraggio = revisione->chilometraggio; 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, revisione->mezzorevisionato, strlen(revisione->mezzorevisionato));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &addettoallarevisione,sizeof(addettoallarevisione));
+	set_binding_param(&param[2], MYSQL_TYPE_DATE, &datainizio, sizeof(datainizio));
+	set_binding_param(&param[3], MYSQL_TYPE_DATE, &datafine, sizeof(datafine));
+	set_binding_param(&param[4], MYSQL_TYPE_LONG, &chilometraggio, sizeof(chilometraggio));
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, revisione->operazionieseguite, strlen(revisione->operazionieseguite));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, revisione->tipologiarevisione, strlen(revisione->tipologiarevisione));
+	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, revisione->motivazione, strlen(revisione->motivazione));
+	
+	bind_exe(insert_review,param,buff); 
+
+	mysql_stmt_free_result(insert_review);
+	mysql_stmt_reset(insert_review);	
 }
 
 void do_validate_reservation(struct prenotazione *prenotazione) //Funziona

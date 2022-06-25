@@ -2,7 +2,7 @@
 #include "../model/trpdb.h"
 
 typedef enum {
-	REVISIONI_SCADUTE,
+	INS_REVISIONE,
 	CONSULTA_MAGAZZINO,
 	INSERT_MODELLO,
 	INSERT_RICAMBIO,

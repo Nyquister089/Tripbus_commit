@@ -198,15 +198,15 @@ struct presenti {
 };
 
 struct revisione {
-	char idrevisione[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	int idrevisione; //Corretto trasformandolo da carattere a puntatore di carattere
 	char mezzorevisionato[VARCHAR_LEN]; 			// Fk
-	char addettoallarevisione[NUM_LEN];  				// Fk //Corretto trasformandolo da carattere a puntatore di carattere
+	int addettoallarevisione;  				// Fk //Corretto trasformandolo da carattere a puntatore di carattere
 	char datainizio[DATE_LEN]; 
 	char datafine[DATE_LEN]; 
-	char chilometraggio[NUM_LEN];//Corretto trasformandolo da carattere a puntatore di carattere
+	int chilometraggio;//Corretto trasformandolo da carattere a puntatore di carattere
 	char operazionieseguite[DES_LEN]; 
 	char tipologiarevisione[VARCHAR_LEN]; 
-	char motivazione[VARCHAR_LEN]; 
+	char motivazione[DES_LEN]; 
 };
 struct revisioni_scadute {
 	size_t num_revisione; 
@@ -338,6 +338,7 @@ extern void do_insert_costumer(struct cliente *cliente);
 extern void do_insert_reservation(struct prenotazione *prenotazione);
 extern void do_insert_seat(struct postoprenotato *postoprenotato);
 extern void do_insert_assoc(struct associata *associata);
+extern void do_insert_review(struct revisione *revisione);
 
 extern void do_update_trip_seat(struct viaggio *viaggio);
 

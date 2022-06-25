@@ -38,12 +38,15 @@ void ins_seat(struct postoprenotato *postoprenotato)
 }
 
 void ins_review(struct revisione *revisione)
-{
+{	
+	char buff[NUM_LEN]; 
 	printf("\n** Dettagli inserimento revisione **\n\n");
-	get_input("Inserisci l'ID del mezzo revisionato : ", NUM_LEN, revisione->mezzorevisionato, false);
-	get_input("Inserisci l'ID del meccanico che ha eseguito la revisione : ", NUM_LEN, revisione-> addettoallarevisione, false);
+	get_input("Inserisci la targa del mezzo revisionato : ", VARCHAR_LEN, revisione->mezzorevisionato, false);
+	get_input("Inserisci l'ID del meccanico che ha eseguito la revisione : ", NUM_LEN, buff, false);
+	revisione->addettoallarevisione = atoi(buff); 
 	get_input("Inserisci la descrizione delle operazioni eseguite (massimo 5000 caratteri): ", DES_LEN, revisione-> operazionieseguite, false);
-	get_input("Inserisci il numero di km presenti sul conta chilometri del mezzo revisionato : ", VARCHAR_LEN, revisione-> chilometraggio, false);
+	get_input("Inserisci il numero di km presenti sul conta chilometri del mezzo revisionato : ",NUM_LEN, buff, false);
+	revisione-> chilometraggio = atoi(buff); 
 	get_input("Inserisci la tipologia(ordinaria o straordinaria) : ", VARCHAR_LEN, revisione-> tipologiarevisione, false);
 	if(strcmp(revisione->tipologiarevisione,"straordinaria") == 0)
 		get_input("Inserisci la motivazione della revisione straordinaria (massimo 5000 caratteri) : ", DES_LEN, revisione-> motivazione, false);
@@ -59,8 +62,7 @@ void ins_review(struct revisione *revisione)
 			break;
 		fprintf(stderr, "Data errata!\n");
 	}
-
-
+do_insert_review(revisione);
 }
 
 void ins_costumer(struct cliente *cliente) // funziona ma smashing stack su inserimento interi3

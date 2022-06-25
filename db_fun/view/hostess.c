@@ -14,32 +14,32 @@ struct postoprenotato *postoprenotato;
 struct  viaggio *viaggio_hostess;
 struct associata * associata;
 
-void  allocation_hstss(void)
+int allocation_hstss(void)
 {
 	cliente = malloc(sizeof(struct cliente)); 
 	if(cliente == NULL)
 		{printf("Fallimento malloc su cliente (hostess) \n\n"); 
-		 exit(0); 
+		 return -1; 
 		}
 	prenotazione = malloc(sizeof(struct prenotazione)); 
 	if(prenotazione == NULL)
 		{printf("Fallimento malloc su prenotazione (hostess) \n\n");
-		 exit(0); 
+		 return -1; 
 		}
 	postoprenotato = malloc(sizeof(struct postoprenotato));
 	if(postoprenotato == NULL)
 		{printf("Fallimento malloc su postoprenotato (hostess) \n\n"); 
-		 exit(0); 
+		 return -1; 
 		}
 	viaggio_hostess = malloc(sizeof(struct viaggio)); 
 	if(viaggio_hostess == NULL)
 		{printf("Fallimento malloc su viaggio (hostess) \n\n"); 
-		 exit(0);
+		 return -1;
 		}
 	associata = malloc(sizeof(struct associata));
 	if(associata == NULL)
 		{printf("Fallimento malloc associata (hostess) \n\n"); 
-		 exit(0); 
+		 return -1; 
 		 }
 }
 
@@ -215,8 +215,8 @@ void run_hstss_interface (void)
 { 	
 	char sel;
 				
-	if(	cliente == NULL || prenotazione == NULL || postoprenotato == NULL ||viaggio_hostess == NULL||associata == NULL) 
-		{allocation_hstss(); 
+	if(	cliente == NULL || prenotazione == NULL || postoprenotato == NULL ||viaggio_hostess == NULL||associata == NULL) {
+		allocation_hstss();
 		printf("\n\nAllocazione avvenuta.\n\n"); }
 
 	while (true){

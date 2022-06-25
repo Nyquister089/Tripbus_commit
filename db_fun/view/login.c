@@ -5,6 +5,7 @@
 #include "login.h"
 #include "hostess.h"
 #include "cliente.h"
+#include "meccanico.h"
 #include "../utils/io.h"
 
 void view_login(struct credentials *cred)
@@ -55,7 +56,7 @@ int main (void)
 				run_hstss_interface(); 
 				break; 
 			case MECCANICO: 
-				printf("Meccanico\n"); 
+				run_mch_interface();  
 				break; 
 			case QUIT: 
 				printf("Quit!\n");
