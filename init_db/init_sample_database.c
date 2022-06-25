@@ -178,9 +178,8 @@ void populate_tables()
     execute_query_from_file_sql("../sql/dml/delete_and_insert_foto.sql");
     execute_query_from_file_sql("../sql/dml/delete_and_insert_fmo.sql");
     execute_query_from_file_sql("../sql/dml/delete_and_insert_fme.sql");
-    
-
-
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_revisione.sql");
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_ricambio.sql");
 
 }
 
@@ -206,6 +205,7 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/select_hotel_service.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_model_comfort.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/insert_review.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/select_expired_review.sql"); 
 }
 
 int main(int argc, char *argv[])
