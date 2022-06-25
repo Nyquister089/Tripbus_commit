@@ -154,6 +154,7 @@ void create_views()
     execute_query_from_file_sql("../sql/ddl/view/Cliente_modello_info.sql");
     execute_query_from_file_sql("../sql/ddl/view/Meccanico_pianifica_revisione.sql");
     execute_query_from_file_sql("../sql/ddl/view/Hostess_clienti_prenotazioni.sql");
+    execute_query_from_file_sql("../sql/ddl/view/Mezzi_Con_Revisione_Scaduta.sql");
 }
 
 void populate_tables()
