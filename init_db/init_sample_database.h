@@ -21,4 +21,3 @@ void drop_views();
 void create_views();
 void populate_tables();
 void show_mysql_error();
-void finish_init_db_with_error();
