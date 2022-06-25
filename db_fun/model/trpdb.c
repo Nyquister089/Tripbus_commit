@@ -99,7 +99,11 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(select_model_comfort);
 		select_model_comfort = NULL;
 	}	
-	if(select_dest_tour) {				// Procedura di select delle mete relative ad un viaggio
+	if(select_expired_review) {				// Procedura di select delle mete relative ad un viaggio
+		mysql_stmt_close(select_expired_review);
+		select_expired_review = NULL;
+	}					
+	if(select_dest_tour) {				// Procedura di select delle targhe dei mezzi aventi revsioni scadute
 		mysql_stmt_close(select_dest_tour);
 		select_dest_tour = NULL;
 	}						
@@ -261,11 +265,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(insert_review, "Unable to initialize insert review statement\n");
 				return false;
 			}
-			/*
-			if(!setup_prepared_stmt(&select_expired_review, "call select_expired_review(?, ?, ?, ?, ?)", conn)) {
+			
+			if(!setup_prepared_stmt(&select_expired_review, "call select_expired_review()", conn)) {
 				print_stmt_error(select_expired_review, "Unable to initialize select_expired_review statement\n");
 				return false;
-			}
+			}/*
 			if(!setup_prepared_stmt(&insert_review, "call insert_review(?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
 				print_stmt_error(insert_review, "Unable to initialize insert review statement\n");
 				return false;
@@ -1331,6 +1335,7 @@ void do_select_model(struct modello *modello)
 	mysql_stmt_free_result(select_model);
 	mysql_stmt_reset(select_model);
 }
+
 struct info_modelli *get_info_modello(char *nmd)
 {
 	MYSQL_BIND param[7];
@@ -1415,6 +1420,74 @@ struct info_modelli *get_info_modello(char *nmd)
 	mysql_stmt_free_result(select_model_comfort);
 	mysql_stmt_reset(select_model_comfort);
 }; 
+
+struct revisioni_scadute *get_info_revisioni(void)
+{
+	MYSQL_BIND param[4]; 
+	MYSQL_TIME datafine;
+
+	struct revisioni_scadute *info_revisioni = NULL; 
+	char *buff = "select_expired_review"; 
+	char mezzorevisionato[VARCHAR_LEN]; 
+	int chilometraggio; 
+	int valorekm; 
+
+	size_t rows;
+	int count,status; 
+	count = 0; 
+	
+	init_mysql_timestamp(&datafine); 
+
+	rows = take_rows(select_expired_review, buff);  
+	
+	info_revisioni = malloc((sizeof(struct revisioni_scadute)+sizeof(info_revisioni))*rows);
+	memset(info_revisioni, 0, sizeof(*info_revisioni) + sizeof(struct revisioni_scadute)*rows);
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mezzorevisionato, sizeof(mezzorevisionato));
+	set_binding_param(&param[1], MYSQL_TYPE_DATE, &datafine, sizeof(datafine));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &chilometraggio,sizeof(chilometraggio));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &valorekm,sizeof(valorekm));
+
+	if(mysql_stmt_bind_result(select_expired_review, param)) {
+		printf("Procedura: %s", buff); 
+		print_stmt_error(select_expired_review, "\n\n Impossibile eseguire il bind risult\n\n");
+		free(info_revisioni);
+		info_revisioni = NULL;
+		goto stop; 
+	}
+
+	info_revisioni->num_revisione = rows; 
+
+	while (true) {
+		status = mysql_stmt_fetch(select_expired_review);
+		if (status == MYSQL_NO_DATA){
+			 printf("...\n"); 
+			break; 
+			}
+		if (status == 1 ){
+			printf("Procedura: %s", buff); 
+			print_stmt_error(select_expired_review, "\nImpossibile eseguire fetch");
+			}
+	strcpy(info_revisioni->revisioni_scadute[count].mezzorevisionato, mezzorevisionato);
+	mysql_date_to_string( &datafine, info_revisioni->revisioni_scadute[count].datafine);
+	info_revisioni->revisioni_scadute[count].chilometraggio = chilometraggio; 
+	info_revisioni->revisioni_scadute[count].idrevisione = valorekm; 
+				
+	printf("*Targa mezzo:  %s \n",info_revisioni->revisioni_scadute[count].mezzorevisionato);
+	printf("Data ultima revisione:	%s	\n",info_revisioni->revisioni_scadute[count].datafine);
+	printf("Chilometri revisone:	%d \n",info_revisioni->revisioni_scadute[count].chilometraggio);
+	printf("Chilometri attuali:	%d	\n\n",info_revisioni->revisioni_scadute[count].idrevisione);
+	
+			
+			
+	count++; 
+	}
+	stop: 
+	mysql_stmt_free_result(select_expired_review);
+	mysql_stmt_reset(select_expired_review);
+	return info_revisioni; 	
+};
+
 
  
 

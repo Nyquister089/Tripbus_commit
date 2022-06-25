@@ -66,3 +66,9 @@ void show_service (struct servizio * servizio)
 		servizio->descrizioneservizio
 		);
 }
+
+void show_expired_review (void) 
+{
+	printf("** Ecco i mezzi le cui revisioni risultano scadute o in scadenza**\n\n");
+	get_info_revisioni();
+}

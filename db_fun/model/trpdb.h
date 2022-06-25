@@ -208,10 +208,12 @@ struct revisione {
 	char tipologiarevisione[VARCHAR_LEN]; 
 	char motivazione[DES_LEN]; 
 };
+
 struct revisioni_scadute {
 	size_t num_revisione; 
 	struct revisione revisioni_scadute [];
 };
+
 struct ricambio {
 	char codice [VARCHAR_LEN]; 
 	char costounitario[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
@@ -351,6 +353,8 @@ extern struct tour_info *get_tour_info (void);
 extern struct info_mete *get_mete_info(int idv);
 extern struct servizi_albergo *get_servizi_albergo(int idh ); 
 extern struct info_modelli *get_info_modello(char *nmd);
+extern struct revisioni_scadute *get_info_revisioni(void); 
+
 
 extern void do_update_data_doc(struct cliente *cliente); 
 extern void do_validate_reservation(struct prenotazione *prenotazione); 

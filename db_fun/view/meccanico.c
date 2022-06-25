@@ -2,6 +2,7 @@
 
 #include "meccanico.h"
 #include "ins.h"
+#include "show.h"
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
@@ -16,6 +17,7 @@ int allocation_mch(void)
 	}
 }
 
+
 int get_mch_action(void)
 {
 	char options[9] = {'1','2','3','4','5','6','7','8','9'};
@@ -27,7 +29,7 @@ int get_mch_action(void)
 	puts("*********************************\n");
 	puts("*** Quale operazione vorresti eseguire? ***\n");
 	puts("1) Inserisci una nuova revisione");
-	puts("2) Consultare la presenza di un ricambio in magazzino");
+	puts("2) Consulta le revisioni scadute");
 	puts("3) Inserire una revisione effettuata");
 	puts("4) Inserire un nuovo modello");
 	puts("5) Inserire un nuovo ricambio");
@@ -45,12 +47,12 @@ bool exe_mch_act(mch_act sel)
 	 
 	switch (sel){
 		case INS_REVISIONE:{
-		ins_review(revisione_mch); 
+			ins_review(revisione_mch); 
 		return true;   
 		}
 		
-		case CONSULTA_MAGAZZINO: {
-		//show_sparepart (ricambio);
+		case PIANIFICA_REVISIONE: {
+			show_expired_review(); 
 		return true; 
 		}
  
@@ -92,20 +94,8 @@ bool exe_mch_act(mch_act sel)
 }
 
 
+
 /*
-
-void show_expired_revisions (struct revisioni_scadute *revisioni_scadute) // Procedura visualizazzione revisioni scadute
-{clear_screen();
-	int count; 
-	printf("** Ecco i mezzi le cui revisioni risultano in scadenza o scadute **\n\n");
-	// eseguire una select che utilizzi come parametri sia la data (revisione annuale) e sia il chilometraggio dei mezzi presenti in archivio(confrontandolo con il km segnato sulla revisione) e conti il numero di mezzi che rispettano i parametri ed inserisca tale numero in COUNT 
-for(size_t i = 0; i < count; i++) {
-		printf("Targa mezzo: %s Data ultima revisione %s \n\n",
-			revisioni_scadute->revisioni_scadute[i].mezzorevisionato,
-			revisioni_scadute->revisioni_scadute[i].datafine);
-	}	
-}
-
 void show_sparepart (struct ricambio *ricambio) // procedura visualizazzione ricambio
 {
 	clear_screen();
