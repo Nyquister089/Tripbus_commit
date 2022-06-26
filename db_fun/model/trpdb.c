@@ -39,7 +39,8 @@ static MYSQL_STMT *select_model; // Meccanico
 static MYSQL_STMT *select_comfort;//
 static MYSQL_STMT *select_service; // 
 static MYSQL_STMT *select_bus; // Meccanico
-
+static MYSQL_STMT *select_review; // Meccanico
+static MYSQL_STMT *select_spareparts; // Meccanico
 
 static MYSQL_STMT *select_all_tour; //ok Cliente
 static MYSQL_STMT *select_dest_tour; //ok Cliente
@@ -51,6 +52,7 @@ static MYSQL_STMT *select_expired_review; // Meccanico
 static MYSQL_STMT *update_trip_seat; //ok HOSTESS
 static MYSQL_STMT *validate_reservation; //ok  HOSTESS
 static MYSQL_STMT *update_data_doc; //Ok  HOSTESS
+static MYSQL_STMT *update_spareparts_number; //Meccanico
 
 
 static void close_prepared_stmts(void)
@@ -91,6 +93,14 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(select_picture);
 		select_picture = NULL;
 	}
+	if(select_review) {						// Procedura di select revisione 
+		mysql_stmt_close(select_review);
+		select_review = NULL;
+	}	
+	if(select_spareparts) {						// Procedura di select ricambio
+		mysql_stmt_close(select_spareparts);
+		select_spareparts = NULL;
+	}	
 	if(select_room) {						// Procedura di select camera
 		mysql_stmt_close(select_room);
 		select_room = NULL;
@@ -119,9 +129,17 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(insert_reservation);
 		insert_reservation= NULL;
 	}
-	if(insert_review) {				// Procedura di insert posto prenotato (HOSTESS) 
+	if(insert_review) {				// Procedura di insert revisioni(MECCANICO)
 		mysql_stmt_close(insert_review);
 		insert_review= NULL;
+	}
+	if( update_spareparts_number) {				// Procedura di insert posto prenotato (HOSTESS) 
+		mysql_stmt_close( update_spareparts_number);
+		 update_spareparts_number= NULL;
+	}
+	if(insert_sostitution) {			// Procedura di insert sostituzione (MECCANICO)
+		mysql_stmt_close(insert_sostitution);
+		insert_sostitution= NULL;
 	}
 	if(insert_seat) {				// Procedura di insert posto prenotato (HOSTESS) 
 		mysql_stmt_close(insert_seat);
@@ -261,11 +279,26 @@ static bool initialize_prepared_stmts(role_t for_role)
 			}
 			break;
 			case MECCANICO:
+			if(!setup_prepared_stmt(& update_spareparts_number, "call  update_spareparts_number(?)", conn)) {		//Insert
+				print_stmt_error( update_spareparts_number, "Unable to initialize insert review statement\n");
+				return false;
+			}
 			if(!setup_prepared_stmt(&insert_review, "call insert_review(?, ?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
 				print_stmt_error(insert_review, "Unable to initialize insert review statement\n");
 				return false;
 			}
-			
+			if(!setup_prepared_stmt(&insert_sostitution, "call insert_sostitution(?,?)", conn)) {
+				print_stmt_error(insert_sostitution, "Unable to initialize insert_sostitution statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&select_spareparts, "call select_spareparts(?)", conn)) {
+				print_stmt_error(select_spareparts, "Unable to initialize select_spareparts statement\n");
+				return false;
+			}
+			if(!setup_prepared_stmt(&select_review, "call select_review(?)", conn)) {
+				print_stmt_error(select_review, "Unable to initialize select_review statement\n");
+				return false;
+			}
 			if(!setup_prepared_stmt(&select_expired_review, "call select_expired_review()", conn)) {
 				print_stmt_error(select_expired_review, "Unable to initialize select_expired_review statement\n");
 				return false;
@@ -624,6 +657,27 @@ void do_validate_reservation(struct prenotazione *prenotazione) //Funziona
 	
 }
 
+void do_insert_sostitution (struct sostituito *sostituito)
+{		
+	MYSQL_BIND param[3]; 
+
+	int revisioneassociata;
+	int quantititasostituita; 
+
+	revisioneassociata  = sostituito->revisioneassociata;
+	quantititasostituita = sostituito->quantitàsostituita;
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &revisioneassociata, sizeof(revisioneassociata));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, sostituito->ricambioutilizzato,strlen(sostituito->ricambioutilizzato));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &quantititasostituita, sizeof(quantititasostituita));
+	
+	
+	bind_exe(insert_sostitution,param,"insert_sostitution"); 
+
+	mysql_stmt_free_result(insert_sostitution);
+	mysql_stmt_reset(insert_sostitution);
+	
+}
 								// Esecuzione statment update speciali
 
 
@@ -648,6 +702,140 @@ void do_update_trip_seat(struct viaggio *viaggio) //Funziona
 	mysql_stmt_reset(update_trip_seat);
 }
 
+void do_select_sparepart(struct ricambio *ricambio) //Funziona
+{		
+	MYSQL_BIND param[11]; 
+	MYSQL_TIME datadipartenzaviaggio; 
+	MYSQL_TIME datadiritornoviaggio;
+	MYSQL_TIME datadiannullamento;
+	MYSQL_TIME ddp; 
+	MYSQL_TIME ddr; 
+	MYSQL_TIME dda; 
+
+	char codice [VARCHAR_LEN]; 
+	float costounitario; //Corretto trasformandolo da carattere a puntatore di carattere
+	int quantitadiriordino; //Corretto trasformandolo da carattere a puntatore di carattere
+	char descrizione[DES_LEN]; 
+	int scortaminima; //Corretto trasformandolo da carattere a puntatore di carattere
+	int quantitainmagazzino;  //Corretto trasformandolo da carattere a puntatore di carattere
+
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, sizeof(viaggio->tourassociato));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, sizeof(viaggio->mezzoimpiegato));
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
+	set_binding_param(&param[6], MYSQL_TYPE_DATE, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
+	set_binding_param(&param[7], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
+	set_binding_param(&param[8], MYSQL_TYPE_LONG, &numerodikm, sizeof(numerodikm));
+	set_binding_param(&param[9], MYSQL_TYPE_LONG, &postidisponibili, sizeof(postidisponibili));
+	set_binding_param(&param[10], MYSQL_TYPE_DATE, &datadiannullamento, sizeof(datadiannullamento));
+	
+	if(bind_exe(select_trip,param,"select_trip") == -1)
+		goto stop; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tou, sizeof(tou));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &con, sizeof(con));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &acc, sizeof(acc));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mez, sizeof(mez));
+	set_binding_param(&param[4], MYSQL_TYPE_DATE, &ddp, DATE_LEN);
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &ddr, DATE_LEN);
+	set_binding_param(&param[6], MYSQL_TYPE_FLOAT, &cos, sizeof(cos));
+	set_binding_param(&param[7], MYSQL_TYPE_LONG, &nkm, sizeof(nkm));
+	set_binding_param(&param[8], MYSQL_TYPE_LONG, &pds, sizeof(pds));
+	set_binding_param(&param[9], MYSQL_TYPE_DATE, &dda, DATE_LEN);
+
+	if(take_result(select_trip,param, "select_trip") == -1)
+		goto stop; 
+
+		strcpy(viaggio->tourassociato, tou);
+		strcpy(viaggio->mezzoimpiegato, mez);
+
+		viaggio->conducente = con; 
+		viaggio->accompagnatrice = acc; 
+		viaggio->numerodikm = nkm; 
+		viaggio->postidisponibili = pds; 
+		viaggio->costodelviaggio = cos; 
+
+		mysql_date_to_string(&ddp, viaggio->datadipartenzaviaggio);
+		mysql_date_to_string(&ddr, viaggio->datadiritornoviaggio); 
+        mysql_date_to_string(&dda, viaggio->datadiannullamento);
+
+	stop: 
+
+	mysql_stmt_free_result(select_trip);
+	mysql_stmt_reset(select_trip);	
+}
+
+
+void do_select_review(struct revisione *revisone)
+{		
+	MYSQL_BIND param[11]; 
+	MYSQL_TIME datadipartenzaviaggio; 
+	MYSQL_TIME datadiritornoviaggio;
+	MYSQL_TIME datadiannullamento;
+	MYSQL_TIME ddp; 
+	MYSQL_TIME ddr; 
+	MYSQL_TIME dda; 
+
+	int idrevisione; //Corretto trasformandolo da carattere a puntatore di carattere
+	char mezzorevisionato[VARCHAR_LEN]; 			// Fk
+	int addettoallarevisione;  				// Fk //Corretto trasformandolo da carattere a puntatore di carattere
+	char datainizio[DATE_LEN]; 
+	char datafine[DATE_LEN]; 
+	int chilometraggio;//Corretto trasformandolo da carattere a puntatore di carattere
+	char operazionieseguite[DES_LEN]; 
+	char tipologiarevisione[VARCHAR_LEN]; 
+	char motivazione[DES_LEN];  
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, sizeof(viaggio->tourassociato));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, sizeof(viaggio->mezzoimpiegato));
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
+	set_binding_param(&param[6], MYSQL_TYPE_DATE, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
+	set_binding_param(&param[7], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
+	set_binding_param(&param[8], MYSQL_TYPE_LONG, &numerodikm, sizeof(numerodikm));
+	set_binding_param(&param[9], MYSQL_TYPE_LONG, &postidisponibili, sizeof(postidisponibili));
+	set_binding_param(&param[10], MYSQL_TYPE_DATE, &datadiannullamento, sizeof(datadiannullamento));
+	
+	if(bind_exe(select_trip,param,"select_trip") == -1)
+		goto stop; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tou, sizeof(tou));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &con, sizeof(con));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &acc, sizeof(acc));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mez, sizeof(mez));
+	set_binding_param(&param[4], MYSQL_TYPE_DATE, &ddp, DATE_LEN);
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &ddr, DATE_LEN);
+	set_binding_param(&param[6], MYSQL_TYPE_FLOAT, &cos, sizeof(cos));
+	set_binding_param(&param[7], MYSQL_TYPE_LONG, &nkm, sizeof(nkm));
+	set_binding_param(&param[8], MYSQL_TYPE_LONG, &pds, sizeof(pds));
+	set_binding_param(&param[9], MYSQL_TYPE_DATE, &dda, DATE_LEN);
+
+	if(take_result(select_trip,param, "select_trip") == -1)
+		goto stop; 
+
+		strcpy(viaggio->tourassociato, tou);
+		strcpy(viaggio->mezzoimpiegato, mez);
+
+		viaggio->conducente = con; 
+		viaggio->accompagnatrice = acc; 
+		viaggio->numerodikm = nkm; 
+		viaggio->postidisponibili = pds; 
+		viaggio->costodelviaggio = cos; 
+
+		mysql_date_to_string(&ddp, viaggio->datadipartenzaviaggio);
+		mysql_date_to_string(&ddr, viaggio->datadiritornoviaggio); 
+        mysql_date_to_string(&dda, viaggio->datadiannullamento);
+
+	stop: 
+
+	mysql_stmt_free_result(select_trip);
+	mysql_stmt_reset(select_trip);	
+}
 
 
 void do_select_trip(struct viaggio *viaggio) //Funziona
@@ -685,12 +873,7 @@ void do_select_trip(struct viaggio *viaggio) //Funziona
 	init_mysql_timestamp(&dda);
     
 	idviaggio = viaggio->idviaggio; 
-	/*conducente = viaggio->conducente; 				
-	accompagnatrice = viaggio->accompagnatrice ; 
-	costodelviaggio = viaggio->costodelviaggio;  
-	numerodikm = viaggio->numerodikm; 
-	postidisponibili = viaggio -> postidisponibili; */
-
+	
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, sizeof(viaggio->tourassociato));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
@@ -929,118 +1112,396 @@ void do_select_tour( struct tour *tour)
 	
 }
 
-struct tour_info *get_tour_info (void)
+	
+void do_select_destination(struct meta *meta)
+{ 	
+	MYSQL_BIND param[10]; 
+	MYSQL_TIME orariodiapertura; 
+
+	int idmeta; 
+	int telefonometa; 
+	int faxmeta; 
+	
+	time_to_mysql_time(meta->orariodiapertura, &orariodiapertura);
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idmeta, sizeof(idmeta));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, meta->nomemeta, sizeof(meta->nomemeta));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, meta->emailmeta, sizeof(meta->emailmeta));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &telefonometa, sizeof(telefonometa));
+	set_binding_param(&param[4], MYSQL_TYPE_LONG, &faxmeta, sizeof(faxmeta));
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, meta->indirizzo, sizeof(meta->indirizzo));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, meta->tipologiameta, sizeof(meta->tipologiameta));
+	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, meta->categoriaalbergo, sizeof(meta->categoriaalbergo));
+	set_binding_param(&param[8], MYSQL_TYPE_TIME, &orariodiapertura, sizeof(orariodiapertura));
+	set_binding_param(&param[9], MYSQL_TYPE_VAR_STRING, meta->localitadiappartenenza, sizeof(meta->localitadiappartenenza));
+	
+	
+	if(mysql_stmt_bind_param(select_destination, param) != 0) {
+		print_stmt_error(select_destination, "Could not bind parameters for select_destination");
+		return;
+	}
+	// Run procedure
+	if(mysql_stmt_execute(select_destination) != 0) {
+		print_stmt_error(select_destination, "Could not execute select_destination");
+		return;
+		}
+	mysql_stmt_free_result(select_destination);
+	mysql_stmt_reset(select_destination);
+	
+}
+
+
+void do_select_service(struct servizio *servizio)
+{		
+	MYSQL_BIND param[3]; 
+
+	int idservizio; 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idservizio, sizeof(idservizio));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, servizio->nomeservizio, sizeof(servizio->nomeservizio));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, servizio->descrizioneservizio, sizeof(servizio->descrizioneservizio));
+	
+	if(mysql_stmt_bind_param(select_service, param) != 0) {
+		print_stmt_error(select_service, "Could not bind parameters for select_service");
+		return;
+	}
+	if(mysql_stmt_execute(select_service) != 0) {
+		print_stmt_error(select_service, "Could not execute select_service");
+		return;
+		}
+	mysql_stmt_free_result(select_service);
+	mysql_stmt_reset(select_service);
+	
+}
+
+void do_select_comfort(struct comfort *comfort)
+{		
+	MYSQL_BIND param[3]; 
+
+	int idcomfort; 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, comfort->idcomfort, sizeof(idcomfort));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, comfort->nomecomfort, sizeof(comfort->nomecomfort));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, comfort->descrizionecomfort, sizeof(comfort->descrizionecomfort));
+	
+	
+	if(mysql_stmt_bind_param(select_comfort, param) != 0) {
+		print_stmt_error(select_comfort, "Could not bind parameters for select_comfort");
+		return;
+	}
+	if(mysql_stmt_execute(select_comfort) != 0) {
+		print_stmt_error(select_comfort, "Could not execute select_comfort");
+		return;
+		}
+	mysql_stmt_free_result(select_comfort);
+	mysql_stmt_reset(select_comfort);
+	
+}
+
+void do_select_model(struct modello *modello)
+{		
+	MYSQL_BIND param[6]; 
+	
+	int idmodello;
+	int numerodiposti;  
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idmodello, sizeof(idmodello));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, modello->nomemodello, sizeof(modello->nomemodello));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, modello->datitecnici, sizeof(modello->datitecnici));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, modello->casacostruttrice, sizeof(modello->casacostruttrice));
+	set_binding_param(&param[4], MYSQL_TYPE_LONG, &numerodiposti, sizeof(numerodiposti));
+	
+
+	if(mysql_stmt_bind_param(select_model, param) != 0) {
+		print_stmt_error(select_model, "Could not bind parameters for select_model");
+		return;
+	}
+	if(mysql_stmt_execute(select_model) != 0) {
+		print_stmt_error(select_model, "Could not execute select_model");
+		return;
+		}
+	mysql_stmt_free_result(select_model);
+	mysql_stmt_reset(select_model);
+}
+
+
+void do_select_picture(struct documentazionefotografica *documentazionefotografica)
 {	
-	MYSQL_BIND param[13];
-	MYSQL_TIME dpv; 
-	MYSQL_TIME drv; 
+	MYSQL_BIND param[2]; 
 
-	struct tour_info *tour_info = NULL; 
-	char *buff = "get_tour_info";
-	char dnm[VARCHAR_LEN]; 
-	char dsc[DES_LEN]; 
-	char nmd[VARCHAR_LEN]; 
-	int mnp;
-	int pds; 
-	int cmpr;
-	int cdv; 
-	int status;
-	float mdc; 
-	float bgl;
-	float gnl;
-	float csv;  
-	signed char acm;
+	int idfoto; 
+
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idfoto, sizeof(idfoto));
+	set_binding_param(&param[1], MYSQL_TYPE_BLOB, documentazionefotografica->foto, sizeof(documentazionefotografica->foto));
+	
+	
+	if(mysql_stmt_bind_param(select_picture, param) != 0) {
+		print_stmt_error(select_picture, "Could not bind parameters for select_picture");
+		return;
+	}
+	if(mysql_stmt_execute(select_picture) != 0) {
+		print_stmt_error(select_picture, "Could not execute select_picture");
+		return;
+		}
+	mysql_stmt_free_result(select_picture);
+	mysql_stmt_reset(select_picture);
+	
+}
+
+void do_select_room(struct camera *camera)
+{		
+	MYSQL_BIND param[4]; 
+
+	int numerocamera; 
+	int albergoinquestione;
+	int costo;  
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerocamera, sizeof(numerocamera));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &albergoinquestione, sizeof(albergoinquestione));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, camera->tipologia, sizeof(camera->tipologia));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &costo , sizeof(costo));
+	
+	
+	if(mysql_stmt_bind_param(select_room, param) != 0) {
+		print_stmt_error(select_room, "Could not bind parameters for select_room");
+		return;
+	}
+	if(mysql_stmt_execute(select_room) != 0) {
+		print_stmt_error(select_room, "Could not execute select_room");
+		return;
+		}
+	mysql_stmt_free_result(select_room);
+	mysql_stmt_reset(select_room);
+}
+
+
+void do_update_spareparts_number(int qnt)
+{	
+	MYSQL_BIND param[1]; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &qnt, sizeof(qnt));
+	bind_exe(update_spareparts_number,param,"update_spareparts_number"); 
+	mysql_stmt_free_result(update_spareparts_number);
+	mysql_stmt_reset(update_spareparts_number);
+	
+}
+
+
+
+struct info_modelli *get_info_modello(char *nmd)
+{
+	MYSQL_BIND param[7];
+
+	struct info_modelli *info_modello = NULL; 
+	char *buff = "select_model_comfort";
+	char casacostruttrice[VARCHAR_LEN];
+	int numeroposti;
+	char nomecomfort[VARCHAR_LEN]; 
+	char descrizionecomfort[DES_LEN];
+	char foto [PIC]; 
+	char descrizionefoto[DES_LEN];
+	int idfoto; 
 	size_t rows, count;   
-	count = 0; 
+	count = 0;  
+	int cmpr, status; 
 
-	init_mysql_timestamp(&dpv); 
-	init_mysql_timestamp(&drv); 
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, nmd, strlen(nmd));
 
-	rows  = take_rows(select_all_tour, "select_all_tour");
-		
-	tour_info =malloc((sizeof(struct tour_viaggi)+sizeof(tour_info))*rows);
-	memset(tour_info, 0, sizeof(*tour_info) + sizeof(struct tour_viaggi)*rows);
+	bind_exe(select_model_comfort,param,buff); 
 
-	if(tour_info == NULL){
+	info_modello =malloc((sizeof(struct info_modelli)+sizeof(info_modello))*rows);
+	memset(info_modello, 0, sizeof(*info_modello) + sizeof(struct info_modelli)*rows);
+
+	if(info_modello == NULL){
 		printf("Impossibile eseguire la malloc su tour info"); 
 		goto stop; 
 	}
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, dnm, sizeof(dnm));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, dsc, sizeof(dsc)); 
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &mnp, sizeof(mnp)); 
-	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &mdc, sizeof(mdc)); 
-	set_binding_param(&param[4], MYSQL_TYPE_FLOAT, &bgl, sizeof(bgl)); 
-	set_binding_param(&param[5], MYSQL_TYPE_FLOAT, &gnl, sizeof(gnl)); 
-	set_binding_param(&param[6], MYSQL_TYPE_TINY, &acm, sizeof(acm)); 
-	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, nmd, sizeof(nmd));
-	set_binding_param(&param[8], MYSQL_TYPE_DATE, &dpv, sizeof(dpv));
-	set_binding_param(&param[9], MYSQL_TYPE_DATE, &drv, sizeof(drv));
-	set_binding_param(&param[10], MYSQL_TYPE_FLOAT, &csv, sizeof(csv));
-	set_binding_param(&param[11], MYSQL_TYPE_LONG, &pds, sizeof(pds));
-	set_binding_param(&param[12], MYSQL_TYPE_LONG, &cdv, sizeof(cdv)); 
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, casacostruttrice, sizeof(casacostruttrice));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &numeroposti, sizeof(numeroposti)); 
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, nomecomfort, sizeof(nomecomfort)); 
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, descrizionecomfort, sizeof(descrizionecomfort)); 
+	set_binding_param(&param[4], MYSQL_TYPE_BLOB,foto, sizeof(foto)); 
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING,descrizionefoto, sizeof(descrizionefoto)); 
+	set_binding_param(&param[6], MYSQL_TYPE_LONG,&idfoto, sizeof(idfoto)); 
 	
-	if(mysql_stmt_bind_result(select_all_tour, param)) {
-		print_stmt_error(select_all_tour, "\n\n Impossibile eseguire il bind risult\n\n");
-		free(tour_info);
-		tour_info = NULL;
+	
+	if(mysql_stmt_bind_result(select_model_comfort, param)) {
+		print_stmt_error(select_model_comfort, "\n\n Impossibile eseguire il bind risult\n\n");
+		free(info_modello);
+		info_modello = NULL;
 		goto stop; 
 	}
 
-	tour_info->num_tour = rows; 
+	info_modello->num_modelli = rows; 
 
 	while (true) {
-		status = mysql_stmt_fetch(select_all_tour);
-		if (status == MYSQL_NO_DATA)
+		status = mysql_stmt_fetch(select_model_comfort);
+		if (status == MYSQL_NO_DATA){
+			printf("...\n"); 
 			break; 
+		}
 		if (status == 1 ){
-			print_stmt_error(select_all_tour, "\nImpossibile eseguire fetch");
+			print_stmt_error(select_model_comfort, "\nImpossibile eseguire fetch");
 			}
-			strcpy(tour_info->tour_info[count].denominazionetour, dnm);
-			strcpy(tour_info->tour_info[count].descrizionetour, dsc); 
-			
-			tour_info->tour_info[count].minimopartecipanti = mnp; 
-			tour_info->tour_info[count].assicurazionemedica = mdc; 
-			tour_info->tour_info[count].bagaglio = bgl; 
-			tour_info->tour_info[count].garanziaannullamento = gnl; 
-			tour_info->tour_info[count].accompagnatrice = acm;
-			tour_info->tour_info[count].codiceviaggio = cdv; 
+		
+			strcpy(info_modello->info_modelli[count].casacostruttrice, casacostruttrice);
+			info_modello->info_modelli[count].numeroposti = numeroposti; 
+			strcpy(info_modello->info_modelli[count].nomecomfort,nomecomfort);
+			strcpy(info_modello->info_modelli[count].descrizionecomfort,descrizionecomfort);
+			strcpy(info_modello->info_modelli[count].foto, foto);
+			strcpy(info_modello->info_modelli[count].descrizionefoto, descrizionefoto); 
+			info_modello->info_modelli[count].idfoto = idfoto; 
 
-			cmpr = strcmp(tour_info->tour_info[count].denominazionetour, tour_info->tour_info[count-1].denominazionetour );
+			cmpr = strcmp(info_modello->info_modelli[count].casacostruttrice, info_modello->info_modelli[count-1].casacostruttrice);
 			
 			if(cmpr!= 0){
-				printf("* %s *\n",tour_info->tour_info[count].denominazionetour);
-				printf("Descrizione tour:	%s 	\n",tour_info->tour_info[count].descrizionetour);
-				printf("Minimo partecipanti:	 %d 	\n",tour_info->tour_info[count].minimopartecipanti);
-				printf("Diritti iscrizione: \n");
-				printf("Assicurazione medica:	 %f euro\n",tour_info->tour_info[count].assicurazionemedica);	
-				printf("Bagaglio:		 %f euro\n",tour_info->tour_info[count].bagaglio);
-				printf("Garanzia di annullamento:%f euro\n",tour_info->tour_info[count].garanziaannullamento);
-				printf("\n-Accompagnatrice prevista:%d 	\n",tour_info->tour_info[count].accompagnatrice); 
-				printf("\n\nViaggi previsti :\n");
+				printf("Casa costruttrice:	%s \n",info_modello->info_modelli[count].casacostruttrice);
+				printf("Numero di posti:	%d	\n",info_modello->info_modelli[count].numeroposti);
 			}
-			strcpy(tour_info->tour_info[count].nomemodello, nmd); 
-			mysql_date_to_string(&dpv,tour_info->tour_info[count].datadipartenzaviaggio);
-			mysql_date_to_string(&drv,tour_info->tour_info[count].datadiritornoviaggio);
-			tour_info->tour_info[count].costodelviaggio = csv; 
-			tour_info->tour_info[count].postidisponibili = pds; 
-			tour_info->tour_info[count].codiceviaggio = cdv; 
+			printf("Comfort:	 %s \n",info_modello->info_modelli[count].nomecomfort);
+			printf("%s \n",info_modello->info_modelli[count].descrizionecomfort);	
 
-			printf("Modello pullman:	%s \n",tour_info->tour_info[count].nomemodello); 
-			printf("Codice viaggio: 	%d \n",tour_info->tour_info[count].codiceviaggio); 
-			printf("Data di partenza:	%s 	\n",tour_info->tour_info[count].datadipartenzaviaggio);
-			printf("Data di riotrno:	%s 	\n",tour_info->tour_info[count].datadiritornoviaggio);
-			printf("Prezzo:			%f euro	\n",tour_info->tour_info[count].costodelviaggio);
-			printf("Posti disponibili:	%d 	\n",tour_info->tour_info[count].postidisponibili);	 
-			printf("\n"); 
+			if(info_modello->info_modelli[count].idfoto != info_modello->info_modelli[count-1].idfoto){
+				printf("%s\n",info_modello->info_modelli[count].foto);
+				printf("Descrizione foto:%s\n",info_modello->info_modelli[count].descrizionefoto);
+			}
 			count++; 
 	}
 	stop: 
-	mysql_stmt_free_result(select_all_tour);
-	mysql_stmt_reset(select_all_tour);
-	free(tour_info); 
+	mysql_stmt_free_result(select_model_comfort);
+	mysql_stmt_reset(select_model_comfort);
+	free(info_modello); 
+}; 
+
+struct revisioni_scadute *get_info_revisioni(void)
+{
+	MYSQL_BIND param[4]; 
+	MYSQL_TIME datafine;
+
+	struct revisioni_scadute *info_revisioni = NULL; 
+	char *buff = "select_expired_review"; 
+	char mezzorevisionato[VARCHAR_LEN]; 
+	int chilometraggio; 
+	int valorekm; 
+
+	size_t rows;
+	int count,status,cmpr; 
+	count = 0; 
 	
-}
+	init_mysql_timestamp(&datafine); 
+
+	rows = take_rows(select_expired_review, buff);  
+	
+	info_revisioni = malloc((sizeof(struct revisioni_scadute)+sizeof(info_revisioni))*rows);
+	memset(info_revisioni, 0, sizeof(*info_revisioni) + sizeof(struct revisioni_scadute)*rows);
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mezzorevisionato, sizeof(mezzorevisionato));
+	set_binding_param(&param[1], MYSQL_TYPE_DATE, &datafine, sizeof(datafine));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &chilometraggio,sizeof(chilometraggio));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &valorekm,sizeof(valorekm));
+
+	if(mysql_stmt_bind_result(select_expired_review, param)) {
+		printf("Procedura: %s", buff); 
+		print_stmt_error(select_expired_review, "\n\n Impossibile eseguire il bind risult\n\n");
+		free(info_revisioni);
+		info_revisioni = NULL;
+		goto stop; 
+	}
+
+	info_revisioni->num_revisione = rows; 
+
+	while (true) {
+		status = mysql_stmt_fetch(select_expired_review);
+		if (status == MYSQL_NO_DATA){
+			 printf("...\n"); 
+			break; 
+			}
+		if (status == 1 ){
+			printf("Procedura: %s", buff); 
+			print_stmt_error(select_expired_review, "\nImpossibile eseguire fetch");
+			}
+	strcpy(info_revisioni->revisioni_scadute[count].mezzorevisionato, mezzorevisionato);
+	mysql_date_to_string( &datafine, info_revisioni->revisioni_scadute[count].datafine);
+	info_revisioni->revisioni_scadute[count].chilometraggio = chilometraggio; 
+	info_revisioni->revisioni_scadute[count].idrevisione = valorekm; 
+	cmpr = strcmp(info_revisioni->revisioni_scadute[count].mezzorevisionato,info_revisioni->revisioni_scadute[count-1].mezzorevisionato);
+	if( cmpr != 0){
+		printf("*Targa mezzo:  %s \n",info_revisioni->revisioni_scadute[count].mezzorevisionato);
+		printf("Data ultima revisione:	%s	\n",info_revisioni->revisioni_scadute[count].datafine);
+		printf("Chilometri revisone:	%d \n",info_revisioni->revisioni_scadute[count].chilometraggio);
+		printf("Chilometri attuali:	%d	\n\n",info_revisioni->revisioni_scadute[count].idrevisione);
+	}
+	
+			
+			
+	count++; 
+	}
+	stop: 
+	mysql_stmt_free_result(select_expired_review);
+	mysql_stmt_reset(select_expired_review);
+	free(info_revisioni); 	
+};
+
+struct servizi_albergo *get_servizi_albergo(int idh )
+{		
+	MYSQL_BIND param[2]; 
+
+
+	struct servizi_albergo *info_servizi = NULL; 
+	char *buff = "select_hotel_service"; 
+	char nomeservizio[VARCHAR_LEN]; 
+	char descrizioneservizio[DES_LEN];
+	size_t rows;
+	int count,status; 
+	count = 0; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idh, sizeof(idh));
+
+	bind_exe(select_hotel_service,param,buff); 
+	rows = mysql_stmt_num_rows(select_hotel_service); 
+	
+	info_servizi = malloc((sizeof(struct servizi_albergo)+sizeof(info_servizi))*rows);
+	memset(info_servizi, 0, sizeof(*info_servizi) + sizeof(struct servizi_albergo)*rows);
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, nomeservizio, sizeof(nomeservizio));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, descrizioneservizio, sizeof(descrizioneservizio));
+	
+	if(mysql_stmt_bind_result(select_hotel_service, param)) {
+		printf("Procedura: %s", buff); 
+		print_stmt_error(select_hotel_service, "\n\n Impossibile eseguire il bind risult\n\n");
+		free(info_servizi);
+		info_servizi = NULL;
+		goto stop; 
+	}
+
+	info_servizi->num_servizi = rows; 
+
+	while (true) {
+		status = mysql_stmt_fetch(select_hotel_service);
+		if (status == MYSQL_NO_DATA){
+			 printf("...\n"); 
+			break; 
+			}
+		if (status == 1 ){
+			printf("Procedura: %s", buff); 
+			print_stmt_error(select_hotel_service, "\nImpossibile eseguire fetch");
+			}
+	strcpy(info_servizi->servizi_albergo[count].nomeservizio, nomeservizio);
+	strcpy(info_servizi->servizi_albergo[count].descrizioneservizio, descrizioneservizio);
+				
+	printf("* %s *\n",info_servizi->servizi_albergo[count].nomeservizio);
+	printf("Descrizione:		%s	",info_servizi->servizi_albergo[count].descrizioneservizio);
+			
+	count++; 
+	}
+	stop: 
+	mysql_stmt_free_result(select_hotel_service);
+	mysql_stmt_reset(select_hotel_service);
+	
+};
+
 
 struct info_mete *get_mete_info(int idv)
 {	
@@ -1169,377 +1630,122 @@ struct info_mete *get_mete_info(int idv)
 	mysql_stmt_reset(select_dest_tour);
 	free(info_mete); 
 	
-}
-	
-void do_select_destination(struct meta *meta)
-{ 	
-	MYSQL_BIND param[10]; 
-	MYSQL_TIME orariodiapertura; 
-
-	int idmeta; 
-	int telefonometa; 
-	int faxmeta; 
-	
-	time_to_mysql_time(meta->orariodiapertura, &orariodiapertura);
-	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idmeta, sizeof(idmeta));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, meta->nomemeta, sizeof(meta->nomemeta));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, meta->emailmeta, sizeof(meta->emailmeta));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &telefonometa, sizeof(telefonometa));
-	set_binding_param(&param[4], MYSQL_TYPE_LONG, &faxmeta, sizeof(faxmeta));
-	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, meta->indirizzo, sizeof(meta->indirizzo));
-	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, meta->tipologiameta, sizeof(meta->tipologiameta));
-	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, meta->categoriaalbergo, sizeof(meta->categoriaalbergo));
-	set_binding_param(&param[8], MYSQL_TYPE_TIME, &orariodiapertura, sizeof(orariodiapertura));
-	set_binding_param(&param[9], MYSQL_TYPE_VAR_STRING, meta->localitadiappartenenza, sizeof(meta->localitadiappartenenza));
-	
-	
-	if(mysql_stmt_bind_param(select_destination, param) != 0) {
-		print_stmt_error(select_destination, "Could not bind parameters for select_destination");
-		return;
-	}
-	// Run procedure
-	if(mysql_stmt_execute(select_destination) != 0) {
-		print_stmt_error(select_destination, "Could not execute select_destination");
-		return;
-		}
-	mysql_stmt_free_result(select_destination);
-	mysql_stmt_reset(select_destination);
-	
-}
-void do_select_service(struct servizio *servizio)
-{		
-	MYSQL_BIND param[3]; 
-
-	int idservizio; 
-	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idservizio, sizeof(idservizio));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, servizio->nomeservizio, sizeof(servizio->nomeservizio));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, servizio->descrizioneservizio, sizeof(servizio->descrizioneservizio));
-	
-	if(mysql_stmt_bind_param(select_service, param) != 0) {
-		print_stmt_error(select_service, "Could not bind parameters for select_service");
-		return;
-	}
-	if(mysql_stmt_execute(select_service) != 0) {
-		print_stmt_error(select_service, "Could not execute select_service");
-		return;
-		}
-	mysql_stmt_free_result(select_service);
-	mysql_stmt_reset(select_service);
-	
-}
-
-struct servizi_albergo *get_servizi_albergo(int idh )
-{		
-	MYSQL_BIND param[2]; 
+};
 
 
-	struct servizi_albergo *info_servizi = NULL; 
-	char *buff = "select_hotel_service"; 
-	char nomeservizio[VARCHAR_LEN]; 
-	char descrizioneservizio[DES_LEN];
-	size_t rows;
-	int count,status; 
+
+struct tour_info *get_tour_info (void)
+{	
+	MYSQL_BIND param[13];
+	MYSQL_TIME dpv; 
+	MYSQL_TIME drv; 
+
+	struct tour_info *tour_info = NULL; 
+	char *buff = "get_tour_info";
+	char dnm[VARCHAR_LEN]; 
+	char dsc[DES_LEN]; 
+	char nmd[VARCHAR_LEN]; 
+	int mnp;
+	int pds; 
+	int cmpr;
+	int cdv; 
+	int status;
+	float mdc; 
+	float bgl;
+	float gnl;
+	float csv;  
+	signed char acm;
+	size_t rows, count;   
 	count = 0; 
 
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idh, sizeof(idh));
+	init_mysql_timestamp(&dpv); 
+	init_mysql_timestamp(&drv); 
 
-	bind_exe(select_hotel_service,param,buff); 
-	rows = mysql_stmt_num_rows(select_hotel_service); 
-	
-	info_servizi = malloc((sizeof(struct servizi_albergo)+sizeof(info_servizi))*rows);
-	memset(info_servizi, 0, sizeof(*info_servizi) + sizeof(struct servizi_albergo)*rows);
+	rows  = take_rows(select_all_tour, "select_all_tour");
+		
+	tour_info =malloc((sizeof(struct tour_viaggi)+sizeof(tour_info))*rows);
+	memset(tour_info, 0, sizeof(*tour_info) + sizeof(struct tour_viaggi)*rows);
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, nomeservizio, sizeof(nomeservizio));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, descrizioneservizio, sizeof(descrizioneservizio));
-	
-	if(mysql_stmt_bind_result(select_hotel_service, param)) {
-		printf("Procedura: %s", buff); 
-		print_stmt_error(select_hotel_service, "\n\n Impossibile eseguire il bind risult\n\n");
-		free(info_servizi);
-		info_servizi = NULL;
-		goto stop; 
-	}
-
-	info_servizi->num_servizi = rows; 
-
-	while (true) {
-		status = mysql_stmt_fetch(select_hotel_service);
-		if (status == MYSQL_NO_DATA){
-			 printf("...\n"); 
-			break; 
-			}
-		if (status == 1 ){
-			printf("Procedura: %s", buff); 
-			print_stmt_error(select_hotel_service, "\nImpossibile eseguire fetch");
-			}
-	strcpy(info_servizi->servizi_albergo[count].nomeservizio, nomeservizio);
-	strcpy(info_servizi->servizi_albergo[count].descrizioneservizio, descrizioneservizio);
-				
-	printf("* %s *\n",info_servizi->servizi_albergo[count].nomeservizio);
-	printf("Descrizione:		%s	",info_servizi->servizi_albergo[count].descrizioneservizio);
-			
-	count++; 
-	}
-	stop: 
-	mysql_stmt_free_result(select_hotel_service);
-	mysql_stmt_reset(select_hotel_service);
-	
-}
-
-void do_select_comfort(struct comfort *comfort)
-{		
-	MYSQL_BIND param[3]; 
-
-	int idcomfort; 
-	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, comfort->idcomfort, sizeof(idcomfort));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, comfort->nomecomfort, sizeof(comfort->nomecomfort));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, comfort->descrizionecomfort, sizeof(comfort->descrizionecomfort));
-	
-	
-	if(mysql_stmt_bind_param(select_comfort, param) != 0) {
-		print_stmt_error(select_comfort, "Could not bind parameters for select_comfort");
-		return;
-	}
-	if(mysql_stmt_execute(select_comfort) != 0) {
-		print_stmt_error(select_comfort, "Could not execute select_comfort");
-		return;
-		}
-	mysql_stmt_free_result(select_comfort);
-	mysql_stmt_reset(select_comfort);
-	
-}
-
-void do_select_model(struct modello *modello)
-{		
-	MYSQL_BIND param[6]; 
-	
-	int idmodello;
-	int numerodiposti;  
-
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idmodello, sizeof(idmodello));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, modello->nomemodello, sizeof(modello->nomemodello));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, modello->datitecnici, sizeof(modello->datitecnici));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, modello->casacostruttrice, sizeof(modello->casacostruttrice));
-	set_binding_param(&param[4], MYSQL_TYPE_LONG, &numerodiposti, sizeof(numerodiposti));
-	
-
-	if(mysql_stmt_bind_param(select_model, param) != 0) {
-		print_stmt_error(select_model, "Could not bind parameters for select_model");
-		return;
-	}
-	if(mysql_stmt_execute(select_model) != 0) {
-		print_stmt_error(select_model, "Could not execute select_model");
-		return;
-		}
-	mysql_stmt_free_result(select_model);
-	mysql_stmt_reset(select_model);
-}
-
-struct info_modelli *get_info_modello(char *nmd)
-{
-	MYSQL_BIND param[7];
-
-	struct info_modelli *info_modello = NULL; 
-	char *buff = "select_model_comfort";
-	char casacostruttrice[VARCHAR_LEN];
-	int numeroposti;
-	char nomecomfort[VARCHAR_LEN]; 
-	char descrizionecomfort[DES_LEN];
-	char foto [PIC]; 
-	char descrizionefoto[DES_LEN];
-	int idfoto; 
-	size_t rows, count;   
-	count = 0;  
-	int cmpr, status; 
-
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, nmd, strlen(nmd));
-
-	bind_exe(select_model_comfort,param,buff); 
-
-	info_modello =malloc((sizeof(struct info_modelli)+sizeof(info_modello))*rows);
-	memset(info_modello, 0, sizeof(*info_modello) + sizeof(struct info_modelli)*rows);
-
-	if(info_modello == NULL){
+	if(tour_info == NULL){
 		printf("Impossibile eseguire la malloc su tour info"); 
 		goto stop; 
 	}
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, casacostruttrice, sizeof(casacostruttrice));
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &numeroposti, sizeof(numeroposti)); 
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, nomecomfort, sizeof(nomecomfort)); 
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, descrizionecomfort, sizeof(descrizionecomfort)); 
-	set_binding_param(&param[4], MYSQL_TYPE_BLOB,foto, sizeof(foto)); 
-	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING,descrizionefoto, sizeof(descrizionefoto)); 
-	set_binding_param(&param[6], MYSQL_TYPE_LONG,&idfoto, sizeof(idfoto)); 
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, dnm, sizeof(dnm));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, dsc, sizeof(dsc)); 
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &mnp, sizeof(mnp)); 
+	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &mdc, sizeof(mdc)); 
+	set_binding_param(&param[4], MYSQL_TYPE_FLOAT, &bgl, sizeof(bgl)); 
+	set_binding_param(&param[5], MYSQL_TYPE_FLOAT, &gnl, sizeof(gnl)); 
+	set_binding_param(&param[6], MYSQL_TYPE_TINY, &acm, sizeof(acm)); 
+	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, nmd, sizeof(nmd));
+	set_binding_param(&param[8], MYSQL_TYPE_DATE, &dpv, sizeof(dpv));
+	set_binding_param(&param[9], MYSQL_TYPE_DATE, &drv, sizeof(drv));
+	set_binding_param(&param[10], MYSQL_TYPE_FLOAT, &csv, sizeof(csv));
+	set_binding_param(&param[11], MYSQL_TYPE_LONG, &pds, sizeof(pds));
+	set_binding_param(&param[12], MYSQL_TYPE_LONG, &cdv, sizeof(cdv)); 
 	
-	
-	if(mysql_stmt_bind_result(select_model_comfort, param)) {
-		print_stmt_error(select_model_comfort, "\n\n Impossibile eseguire il bind risult\n\n");
-		free(info_modello);
-		info_modello = NULL;
+	if(mysql_stmt_bind_result(select_all_tour, param)) {
+		print_stmt_error(select_all_tour, "\n\n Impossibile eseguire il bind risult\n\n");
+		free(tour_info);
+		tour_info = NULL;
 		goto stop; 
 	}
 
-	info_modello->num_modelli = rows; 
+	tour_info->num_tour = rows; 
 
 	while (true) {
-		status = mysql_stmt_fetch(select_model_comfort);
-		if (status == MYSQL_NO_DATA){
-			printf("...\n"); 
+		status = mysql_stmt_fetch(select_all_tour);
+		if (status == MYSQL_NO_DATA)
 			break; 
-		}
 		if (status == 1 ){
-			print_stmt_error(select_model_comfort, "\nImpossibile eseguire fetch");
+			print_stmt_error(select_all_tour, "\nImpossibile eseguire fetch");
 			}
-		
-			strcpy(info_modello->info_modelli[count].casacostruttrice, casacostruttrice);
-			info_modello->info_modelli[count].numeroposti = numeroposti; 
-			strcpy(info_modello->info_modelli[count].nomecomfort,nomecomfort);
-			strcpy(info_modello->info_modelli[count].descrizionecomfort,descrizionecomfort);
-			strcpy(info_modello->info_modelli[count].foto, foto);
-			strcpy(info_modello->info_modelli[count].descrizionefoto, descrizionefoto); 
-			info_modello->info_modelli[count].idfoto = idfoto; 
+			strcpy(tour_info->tour_info[count].denominazionetour, dnm);
+			strcpy(tour_info->tour_info[count].descrizionetour, dsc); 
+			
+			tour_info->tour_info[count].minimopartecipanti = mnp; 
+			tour_info->tour_info[count].assicurazionemedica = mdc; 
+			tour_info->tour_info[count].bagaglio = bgl; 
+			tour_info->tour_info[count].garanziaannullamento = gnl; 
+			tour_info->tour_info[count].accompagnatrice = acm;
+			tour_info->tour_info[count].codiceviaggio = cdv; 
 
-			cmpr = strcmp(info_modello->info_modelli[count].casacostruttrice, info_modello->info_modelli[count-1].casacostruttrice);
+			cmpr = strcmp(tour_info->tour_info[count].denominazionetour, tour_info->tour_info[count-1].denominazionetour );
 			
 			if(cmpr!= 0){
-				printf("Casa costruttrice:	%s \n",info_modello->info_modelli[count].casacostruttrice);
-				printf("Numero di posti:	%d	\n",info_modello->info_modelli[count].numeroposti);
+				printf("* %s *\n",tour_info->tour_info[count].denominazionetour);
+				printf("Descrizione tour:	%s 	\n",tour_info->tour_info[count].descrizionetour);
+				printf("Minimo partecipanti:	 %d 	\n",tour_info->tour_info[count].minimopartecipanti);
+				printf("Diritti iscrizione: \n");
+				printf("Assicurazione medica:	 %f euro\n",tour_info->tour_info[count].assicurazionemedica);	
+				printf("Bagaglio:		 %f euro\n",tour_info->tour_info[count].bagaglio);
+				printf("Garanzia di annullamento:%f euro\n",tour_info->tour_info[count].garanziaannullamento);
+				printf("\n-Accompagnatrice prevista:%d 	\n",tour_info->tour_info[count].accompagnatrice); 
+				printf("\n\nViaggi previsti :\n");
 			}
-			printf("Comfort:	 %s \n",info_modello->info_modelli[count].nomecomfort);
-			printf("%s \n",info_modello->info_modelli[count].descrizionecomfort);	
+			strcpy(tour_info->tour_info[count].nomemodello, nmd); 
+			mysql_date_to_string(&dpv,tour_info->tour_info[count].datadipartenzaviaggio);
+			mysql_date_to_string(&drv,tour_info->tour_info[count].datadiritornoviaggio);
+			tour_info->tour_info[count].costodelviaggio = csv; 
+			tour_info->tour_info[count].postidisponibili = pds; 
+			tour_info->tour_info[count].codiceviaggio = cdv; 
 
-			if(info_modello->info_modelli[count].idfoto != info_modello->info_modelli[count-1].idfoto){
-				printf("%s\n",info_modello->info_modelli[count].foto);
-				printf("Descrizione foto:%s\n",info_modello->info_modelli[count].descrizionefoto);
-			}
+			printf("Modello pullman:	%s \n",tour_info->tour_info[count].nomemodello); 
+			printf("Codice viaggio: 	%d \n",tour_info->tour_info[count].codiceviaggio); 
+			printf("Data di partenza:	%s 	\n",tour_info->tour_info[count].datadipartenzaviaggio);
+			printf("Data di riotrno:	%s 	\n",tour_info->tour_info[count].datadiritornoviaggio);
+			printf("Prezzo:			%f euro	\n",tour_info->tour_info[count].costodelviaggio);
+			printf("Posti disponibili:	%d 	\n",tour_info->tour_info[count].postidisponibili);	 
+			printf("\n"); 
 			count++; 
 	}
 	stop: 
-	mysql_stmt_free_result(select_model_comfort);
-	mysql_stmt_reset(select_model_comfort);
-	free(info_modello); 
-}; 
-
-struct revisioni_scadute *get_info_revisioni(void)
-{
-	MYSQL_BIND param[4]; 
-	MYSQL_TIME datafine;
-
-	struct revisioni_scadute *info_revisioni = NULL; 
-	char *buff = "select_expired_review"; 
-	char mezzorevisionato[VARCHAR_LEN]; 
-	int chilometraggio; 
-	int valorekm; 
-
-	size_t rows;
-	int count,status; 
-	count = 0; 
+	mysql_stmt_free_result(select_all_tour);
+	mysql_stmt_reset(select_all_tour);
+	free(tour_info); 
 	
-	init_mysql_timestamp(&datafine); 
-
-	rows = take_rows(select_expired_review, buff);  
-	
-	info_revisioni = malloc((sizeof(struct revisioni_scadute)+sizeof(info_revisioni))*rows);
-	memset(info_revisioni, 0, sizeof(*info_revisioni) + sizeof(struct revisioni_scadute)*rows);
-
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mezzorevisionato, sizeof(mezzorevisionato));
-	set_binding_param(&param[1], MYSQL_TYPE_DATE, &datafine, sizeof(datafine));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &chilometraggio,sizeof(chilometraggio));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &valorekm,sizeof(valorekm));
-
-	if(mysql_stmt_bind_result(select_expired_review, param)) {
-		printf("Procedura: %s", buff); 
-		print_stmt_error(select_expired_review, "\n\n Impossibile eseguire il bind risult\n\n");
-		free(info_revisioni);
-		info_revisioni = NULL;
-		goto stop; 
-	}
-
-	info_revisioni->num_revisione = rows; 
-
-	while (true) {
-		status = mysql_stmt_fetch(select_expired_review);
-		if (status == MYSQL_NO_DATA){
-			 printf("...\n"); 
-			break; 
-			}
-		if (status == 1 ){
-			printf("Procedura: %s", buff); 
-			print_stmt_error(select_expired_review, "\nImpossibile eseguire fetch");
-			}
-	strcpy(info_revisioni->revisioni_scadute[count].mezzorevisionato, mezzorevisionato);
-	mysql_date_to_string( &datafine, info_revisioni->revisioni_scadute[count].datafine);
-	info_revisioni->revisioni_scadute[count].chilometraggio = chilometraggio; 
-	info_revisioni->revisioni_scadute[count].idrevisione = valorekm; 
-				
-	printf("*Targa mezzo:  %s \n",info_revisioni->revisioni_scadute[count].mezzorevisionato);
-	printf("Data ultima revisione:	%s	\n",info_revisioni->revisioni_scadute[count].datafine);
-	printf("Chilometri revisone:	%d \n",info_revisioni->revisioni_scadute[count].chilometraggio);
-	printf("Chilometri attuali:	%d	\n\n",info_revisioni->revisioni_scadute[count].idrevisione);
-	
-			
-			
-	count++; 
-	}
-	stop: 
-	mysql_stmt_free_result(select_expired_review);
-	mysql_stmt_reset(select_expired_review);
-	free(info_revisioni); 	
-};
+}
 
 
  
-
-void do_select_picture(struct documentazionefotografica *documentazionefotografica)
-{	
-	MYSQL_BIND param[2]; 
-
-	int idfoto; 
-
-
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idfoto, sizeof(idfoto));
-	set_binding_param(&param[1], MYSQL_TYPE_BLOB, documentazionefotografica->foto, sizeof(documentazionefotografica->foto));
-	
-	
-	if(mysql_stmt_bind_param(select_picture, param) != 0) {
-		print_stmt_error(select_picture, "Could not bind parameters for select_picture");
-		return;
-	}
-	if(mysql_stmt_execute(select_picture) != 0) {
-		print_stmt_error(select_picture, "Could not execute select_picture");
-		return;
-		}
-	mysql_stmt_free_result(select_picture);
-	mysql_stmt_reset(select_picture);
-	
-}
-
-void do_select_room(struct camera *camera)
-{		
-	MYSQL_BIND param[4]; 
-
-	int numerocamera; 
-	int albergoinquestione;
-	int costo;  
-
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerocamera, sizeof(numerocamera));
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &albergoinquestione, sizeof(albergoinquestione));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, camera->tipologia, sizeof(camera->tipologia));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &costo , sizeof(costo));
-	
-	
-	if(mysql_stmt_bind_param(select_room, param) != 0) {
-		print_stmt_error(select_room, "Could not bind parameters for select_room");
-		return;
-	}
-	if(mysql_stmt_execute(select_room) != 0) {
-		print_stmt_error(select_room, "Could not execute select_room");
-		return;
-		}
-	mysql_stmt_free_result(select_room);
-	mysql_stmt_reset(select_room);
-}

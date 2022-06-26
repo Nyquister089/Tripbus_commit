@@ -37,9 +37,10 @@ void ins_seat(struct postoprenotato *postoprenotato)
 	do_insert_seat(postoprenotato); 
 }
 
-void ins_review(struct revisione *revisione)
+void ins_review(struct revisione *revisione, struct sostituito *sostituito)
 {	
 	char buff[NUM_LEN]; 
+	bool ans;
 	printf("\n** Dettagli inserimento revisione **\n\n");
 	get_input("Inserisci la targa del mezzo revisionato : ", VARCHAR_LEN, revisione->mezzorevisionato, false);
 	get_input("Inserisci l'ID del meccanico che ha eseguito la revisione : ", NUM_LEN, buff, false);
@@ -63,6 +64,13 @@ void ins_review(struct revisione *revisione)
 		fprintf(stderr, "Data errata!\n");
 	}
 do_insert_review(revisione);
+
+ans = yes_or_no("In questa revisione sono statti sostituiti dei ricambi? ",'s','n',false, false); 
+if(ans)
+	{
+		ins_sostiution(sostituito); 
+	}
+
 }
 
 void ins_costumer(struct cliente *cliente) // funziona ma smashing stack su inserimento interi3
@@ -160,4 +168,19 @@ void ins_association(struct associata *associata)
 			fprintf(stderr, "Data errata!\n");
 		} 
 	do_insert_assoc(associata); 
+}
+
+void ins_sostitution( struct sostituito *sostituito)
+{	
+	char buff[NUM_LEN]; 
+	int num; 
+	printf("\n** Dettagli sostituzione ricambio**\n\n");
+	get_input("Inserisci il numero della revsione in questione: ",NUM_LEN, buff, false);
+	sostituito->revisioneassociata = atoi(buff); 
+	get_input("Inserisci il codice del ricambio utilizzato : ", NUM_LEN, buff,false);
+	get_input("Inserisci la quantità di ricambi sostituiti : ",NUM_LEN, buff, false);
+	sostituito->quantitàsostituita = atoi(buff); 
+	do_insert_sostitution(sostituito); 	
+	//do_update_spareparts_number(num);
+
 }

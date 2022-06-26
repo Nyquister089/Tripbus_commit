@@ -216,11 +216,11 @@ struct revisioni_scadute {
 
 struct ricambio {
 	char codice [VARCHAR_LEN]; 
-	char costounitario[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
-	char quantitadiriordino[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	float costounitario; //Corretto trasformandolo da carattere a puntatore di carattere
+	int quantitadiriordino; //Corretto trasformandolo da carattere a puntatore di carattere
 	char descrizione[DES_LEN]; 
-	char scortaminima[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
-	char quantitainmagazzino[NUM_LEN];  //Corretto trasformandolo da carattere a puntatore di carattere
+	int scortaminima; //Corretto trasformandolo da carattere a puntatore di carattere
+	int quantitainmagazzino;  //Corretto trasformandolo da carattere a puntatore di carattere
 }; 
 
 struct rt {
@@ -240,8 +240,9 @@ struct  servizi_albergo{
 };
 
 struct sostituito{
-	char revisioneassociata[NUM_LEN]; 				//FK //Corretto trasformandolo da carattere a puntatore di carattere
+	int revisioneassociata; 				//FK //Corretto trasformandolo da carattere a puntatore di carattere
 	char ricambioutilizzato [VARCHAR_LEN]; 			//FK
+	int quantitasostituita; 
 }; 
 
 
