@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`postoprenotato` (
   `NumeroDiPosto` int unsigned NOT NULL,
   `ViaggioAssociato` int NOT NULL,
   `PrenotazioneAssociata` int unsigned NOT NULL,
-  `EtaPasseggero` int NOT NULL,
+  `EtaPasseggero` int unsigned NOT NULL,
   `NomePasseggero` varchar(45) NOT NULL,
   `CognomePasseggero` varchar(45) NOT NULL,
   PRIMARY KEY (`NumeroDiPosto`,`ViaggioAssociato`),

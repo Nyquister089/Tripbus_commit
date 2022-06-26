@@ -3,7 +3,7 @@
 CREATE TABLE IF NOT EXISTS `tripdb`.`sostituito` (
   `RevisioneAssociata` int unsigned NOT NULL AUTO_INCREMENT,
   `CodiceRicambioSostituito` varchar(45) NOT NULL,
-  `QuantitàSostituita` int default '1',
+  `QuantitàSostituita` int unsigned default '1',
   PRIMARY KEY (`RevisioneAssociata`,`CodiceRicambioSostituito`),
   KEY `sostituito_ricambio_idx` (`CodiceRicambioSostituito`),
   KEY `sostituito_revisione_idx`(`RevisioneAssociata`),
