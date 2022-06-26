@@ -1038,6 +1038,7 @@ struct tour_info *get_tour_info (void)
 	stop: 
 	mysql_stmt_free_result(select_all_tour);
 	mysql_stmt_reset(select_all_tour);
+	free(tour_info); 
 	
 }
 
@@ -1166,6 +1167,7 @@ struct info_mete *get_mete_info(int idv)
 	stop: 
 	mysql_stmt_free_result(select_dest_tour);
 	mysql_stmt_reset(select_dest_tour);
+	free(info_mete); 
 	
 }
 	
@@ -1419,6 +1421,7 @@ struct info_modelli *get_info_modello(char *nmd)
 	stop: 
 	mysql_stmt_free_result(select_model_comfort);
 	mysql_stmt_reset(select_model_comfort);
+	free(info_modello); 
 }; 
 
 struct revisioni_scadute *get_info_revisioni(void)
@@ -1485,7 +1488,7 @@ struct revisioni_scadute *get_info_revisioni(void)
 	stop: 
 	mysql_stmt_free_result(select_expired_review);
 	mysql_stmt_reset(select_expired_review);
-	return info_revisioni; 	
+	free(info_revisioni); 	
 };
 
 
