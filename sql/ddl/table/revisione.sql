@@ -14,5 +14,5 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`revisione` (
   KEY `Fk_revisione_dipendente_idx`(`AddettoAllaRevisione`),
   CONSTRAINT `FK_revisione_mezzo` FOREIGN KEY (`MezzoRevisionato`) REFERENCES `mezzo` (`Targa`),
   CONSTRAINT `FK_revisione_dipendente` FOREIGN KEY (`AddettoAllaRevisione`) REFERENCES `dipendente` (`IdDipendente`)
-
+  CONSTRAINT `DataFineCannotBeLesserThanDataInizio` CHECK (`DataFine` >= `DataInizio`)
 ) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci;
