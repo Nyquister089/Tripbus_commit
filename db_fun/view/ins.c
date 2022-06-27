@@ -68,7 +68,7 @@ do_insert_review(revisione);
 ans = yes_or_no("In questa revisione sono statti sostituiti dei ricambi? ",'s','n',false, false); 
 if(ans)
 	{
-		ins_sostiution(sostituito); 
+		ins_sostitution(sostituito); 
 	}
 
 }
@@ -98,13 +98,18 @@ void ins_costumer(struct cliente *cliente) // funziona ma smashing stack su inse
 
 void ins_sparepart(struct ricambio *ricambio)
 {	
+	char buff[NUM_LEN]; 
 	printf("\n** Dettagli inserimento ricambio **\n\n");
 	get_input("Inserisci il codice: ", VARCHAR_LEN, ricambio->codice, false);
-	get_input("Inserisci il costo unitario: ", DEC_LEN, ricambio->costounitario, false);
-	get_input("Inserisci la quantita' minima: ", NUM_LEN, ricambio->quantitadiriordino, false);
+	get_input("Inserisci il costo unitario: ", NUM_LEN, buff, false);
+	ricambio->costounitario = atof(buff);
+	get_input("Inserisci la quantità minima di riordino : ", NUM_LEN, buff, false);
+	ricambio->quantitadiriordino= atoi(buff); 
 	get_input("Inserisci la descrizione (massimo 5000 caratteri) : ", DES_LEN, ricambio-> descrizione, false);
-	get_input("Inserisci la scorta minima: ", NUM_LEN, ricambio-> scortaminima, false);
-	get_input("Inserisci quantita' di pezzi disponibili: ", NUM_LEN, ricambio-> quantitainmagazzino, false);
+	get_input("Inserisci la scorta minima: ", NUM_LEN, buff, false);
+	ricambio->scortaminima = atoi(buff); 
+	get_input("Inserisci quantita' di pezzi disponibili: ", NUM_LEN, buff, false);
+	ricambio->quantitainmagazzino = atoi(buff);
 }
 
 void ins_bus(struct mezzo *mezzo)
@@ -179,7 +184,7 @@ void ins_sostitution( struct sostituito *sostituito)
 	sostituito->revisioneassociata = atoi(buff); 
 	get_input("Inserisci il codice del ricambio utilizzato : ", NUM_LEN, buff,false);
 	get_input("Inserisci la quantità di ricambi sostituiti : ",NUM_LEN, buff, false);
-	sostituito->quantitàsostituita = atoi(buff); 
+	sostituito->quantitasostituita = atoi(buff); 
 	do_insert_sostitution(sostituito); 	
 	//do_update_spareparts_number(num);
 

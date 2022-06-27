@@ -40,7 +40,7 @@ static MYSQL_STMT *select_comfort;//
 static MYSQL_STMT *select_service; // 
 static MYSQL_STMT *select_bus; // Meccanico
 static MYSQL_STMT *select_review; // Meccanico
-static MYSQL_STMT *select_spareparts; // Meccanico
+static MYSQL_STMT *select_sparepart; // Meccanico
 
 static MYSQL_STMT *select_all_tour; //ok Cliente
 static MYSQL_STMT *select_dest_tour; //ok Cliente
@@ -97,9 +97,9 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(select_review);
 		select_review = NULL;
 	}	
-	if(select_spareparts) {						// Procedura di select ricambio
-		mysql_stmt_close(select_spareparts);
-		select_spareparts = NULL;
+	if(select_sparepart) {						// Procedura di select ricambio
+		mysql_stmt_close(select_sparepart);
+		select_sparepart = NULL;
 	}	
 	if(select_room) {						// Procedura di select camera
 		mysql_stmt_close(select_room);
@@ -279,7 +279,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			}
 			break;
 			case MECCANICO:
-			if(!setup_prepared_stmt(& update_spareparts_number, "call  update_spareparts_number(?)", conn)) {		//Insert
+			if(!setup_prepared_stmt(&update_spareparts_number, "call  update_spareparts_number(?)", conn)) {		//Insert
 				print_stmt_error( update_spareparts_number, "Unable to initialize insert review statement\n");
 				return false;
 			}
@@ -287,12 +287,12 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(insert_review, "Unable to initialize insert review statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&insert_sostitution, "call insert_sostitution(?,?)", conn)) {
+			if(!setup_prepared_stmt(&insert_sostitution, "call insert_sostitution(?,?,?)", conn)) {
 				print_stmt_error(insert_sostitution, "Unable to initialize insert_sostitution statement\n");
 				return false;
 			}
-			if(!setup_prepared_stmt(&select_spareparts, "call select_spareparts(?)", conn)) {
-				print_stmt_error(select_spareparts, "Unable to initialize select_spareparts statement\n");
+			if(!setup_prepared_stmt(&select_sparepart, "call select_sparepart(?)", conn)) {
+				print_stmt_error(select_sparepart, "Unable to initialize select_sparepart statement\n");
 				return false;
 			}
 			if(!setup_prepared_stmt(&select_review, "call select_review(?)", conn)) {
@@ -665,7 +665,7 @@ void do_insert_sostitution (struct sostituito *sostituito)
 	int quantititasostituita; 
 
 	revisioneassociata  = sostituito->revisioneassociata;
-	quantititasostituita = sostituito->quantitàsostituita;
+	quantititasostituita = sostituito->quantitasostituita;
 	
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &revisioneassociata, sizeof(revisioneassociata));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, sostituito->ricambioutilizzato,strlen(sostituito->ricambioutilizzato));
@@ -702,139 +702,67 @@ void do_update_trip_seat(struct viaggio *viaggio) //Funziona
 	mysql_stmt_reset(update_trip_seat);
 }
 
-void do_select_sparepart(struct ricambio *ricambio) //Funziona
+void do_select_sparepart(struct ricambio *ricambio) 
 {		
-	MYSQL_BIND param[11]; 
-	MYSQL_TIME datadipartenzaviaggio; 
-	MYSQL_TIME datadiritornoviaggio;
-	MYSQL_TIME datadiannullamento;
-	MYSQL_TIME ddp; 
-	MYSQL_TIME ddr; 
-	MYSQL_TIME dda; 
-
-	char codice [VARCHAR_LEN]; 
-	float costounitario; //Corretto trasformandolo da carattere a puntatore di carattere
-	int quantitadiriordino; //Corretto trasformandolo da carattere a puntatore di carattere
-	char descrizione[DES_LEN]; 
-	int scortaminima; //Corretto trasformandolo da carattere a puntatore di carattere
-	int quantitainmagazzino;  //Corretto trasformandolo da carattere a puntatore di carattere
-
-
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, sizeof(viaggio->tourassociato));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, sizeof(viaggio->mezzoimpiegato));
-	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
-	set_binding_param(&param[6], MYSQL_TYPE_DATE, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
-	set_binding_param(&param[7], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
-	set_binding_param(&param[8], MYSQL_TYPE_LONG, &numerodikm, sizeof(numerodikm));
-	set_binding_param(&param[9], MYSQL_TYPE_LONG, &postidisponibili, sizeof(postidisponibili));
-	set_binding_param(&param[10], MYSQL_TYPE_DATE, &datadiannullamento, sizeof(datadiannullamento));
+	MYSQL_BIND param[6]; 
 	
-	if(bind_exe(select_trip,param,"select_trip") == -1)
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, ricambio->codice, strlen(ricambio->codice));
+	
+	
+	if(bind_exe(select_sparepart,param,"select_sparepart") == -1)
 		goto stop; 
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tou, sizeof(tou));
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &con, sizeof(con));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &acc, sizeof(acc));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mez, sizeof(mez));
-	set_binding_param(&param[4], MYSQL_TYPE_DATE, &ddp, DATE_LEN);
-	set_binding_param(&param[5], MYSQL_TYPE_DATE, &ddr, DATE_LEN);
-	set_binding_param(&param[6], MYSQL_TYPE_FLOAT, &cos, sizeof(cos));
-	set_binding_param(&param[7], MYSQL_TYPE_LONG, &nkm, sizeof(nkm));
-	set_binding_param(&param[8], MYSQL_TYPE_LONG, &pds, sizeof(pds));
-	set_binding_param(&param[9], MYSQL_TYPE_DATE, &dda, DATE_LEN);
+	printf("bind_exe1\n"); 
 
-	if(take_result(select_trip,param, "select_trip") == -1)
-		goto stop; 
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, ricambio->codice, sizeof(ricambio->codice));
+	set_binding_param(&param[1], MYSQL_TYPE_FLOAT,  &ricambio->costounitario, sizeof(ricambio->costounitario));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG,  &ricambio->quantitadiriordino, sizeof(ricambio->quantitadiriordino));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, ricambio->descrizione, sizeof(ricambio->descrizione));
+	set_binding_param(&param[4], MYSQL_TYPE_LONG,  &ricambio->scortaminima, sizeof(ricambio->scortaminima));
+	set_binding_param(&param[5], MYSQL_TYPE_LONG,  &ricambio->quantitainmagazzino, sizeof(ricambio->quantitainmagazzino));
 
-		strcpy(viaggio->tourassociato, tou);
-		strcpy(viaggio->mezzoimpiegato, mez);
-
-		viaggio->conducente = con; 
-		viaggio->accompagnatrice = acc; 
-		viaggio->numerodikm = nkm; 
-		viaggio->postidisponibili = pds; 
-		viaggio->costodelviaggio = cos; 
-
-		mysql_date_to_string(&ddp, viaggio->datadipartenzaviaggio);
-		mysql_date_to_string(&ddr, viaggio->datadiritornoviaggio); 
-        mysql_date_to_string(&dda, viaggio->datadiannullamento);
+	take_result(select_sparepart,param, "select_sparepart");
 
 	stop: 
 
-	mysql_stmt_free_result(select_trip);
-	mysql_stmt_reset(select_trip);	
+	mysql_stmt_free_result(select_sparepart);
+	mysql_stmt_reset(select_sparepart);	
 }
 
 
 void do_select_review(struct revisione *revisone)
 {		
-	MYSQL_BIND param[11]; 
-	MYSQL_TIME datadipartenzaviaggio; 
-	MYSQL_TIME datadiritornoviaggio;
-	MYSQL_TIME datadiannullamento;
-	MYSQL_TIME ddp; 
-	MYSQL_TIME ddr; 
-	MYSQL_TIME dda; 
+	MYSQL_BIND param[9]; 
+	MYSQL_TIME datainizio; 
+	MYSQL_TIME datafine; 
+	char *buff = "select_review";
 
-	int idrevisione; //Corretto trasformandolo da carattere a puntatore di carattere
-	char mezzorevisionato[VARCHAR_LEN]; 			// Fk
-	int addettoallarevisione;  				// Fk //Corretto trasformandolo da carattere a puntatore di carattere
-	char datainizio[DATE_LEN]; 
-	char datafine[DATE_LEN]; 
-	int chilometraggio;//Corretto trasformandolo da carattere a puntatore di carattere
-	char operazionieseguite[DES_LEN]; 
-	char tipologiarevisione[VARCHAR_LEN]; 
-	char motivazione[DES_LEN];  
+	init_mysql_timestamp(&datainizio); 
+	init_mysql_timestamp(&datafine);
 	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, sizeof(viaggio->tourassociato));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, sizeof(viaggio->mezzoimpiegato));
-	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
-	set_binding_param(&param[6], MYSQL_TYPE_DATE, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
-	set_binding_param(&param[7], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
-	set_binding_param(&param[8], MYSQL_TYPE_LONG, &numerodikm, sizeof(numerodikm));
-	set_binding_param(&param[9], MYSQL_TYPE_LONG, &postidisponibili, sizeof(postidisponibili));
-	set_binding_param(&param[10], MYSQL_TYPE_DATE, &datadiannullamento, sizeof(datadiannullamento));
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &revisione->idrevisione , sizeof(revisione->idrevisione));
 	
-	if(bind_exe(select_trip,param,"select_trip") == -1)
+	if(bind_exe( select_review,param,buff) == -1)
 		goto stop; 
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tou, sizeof(tou));
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &con, sizeof(con));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &acc, sizeof(acc));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mez, sizeof(mez));
-	set_binding_param(&param[4], MYSQL_TYPE_DATE, &ddp, DATE_LEN);
-	set_binding_param(&param[5], MYSQL_TYPE_DATE, &ddr, DATE_LEN);
-	set_binding_param(&param[6], MYSQL_TYPE_FLOAT, &cos, sizeof(cos));
-	set_binding_param(&param[7], MYSQL_TYPE_LONG, &nkm, sizeof(nkm));
-	set_binding_param(&param[8], MYSQL_TYPE_LONG, &pds, sizeof(pds));
-	set_binding_param(&param[9], MYSQL_TYPE_DATE, &dda, DATE_LEN);
-
-	if(take_result(select_trip,param, "select_trip") == -1)
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &revisione->idrevisione , sizeof(revisione->idrevisione));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, revisione->mezzorevisionato, sizeof(revisone->mezzorevisionato));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &revisione->addettoallarevisione sizeof(revisione->addettoallarevisione));
+	set_binding_param(&param[3], MYSQL_TYPE_DATE, &datainizio, sizeof(datainizio));
+	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datafine, sizeof(datafine));
+	set_binding_param(&param[5], MYSQL_TYPE_LONG, &revisione->chilometraggio, sizeof(revisione->chilometraggio));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, revisione->operazionieseguite, sizeof(revisione->operazionieseguite));
+	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, revisione->tipologiarevisione, sizeof(revisione->tipologiarevision));
+	set_binding_param(&param[8], MYSQL_TYPE_VAR_STRING, revisione->motivazione ,sizeof(revisione->motivazione));
+	
+	if(take_result( select_review,param,buff)==-1)
 		goto stop; 
-
-		strcpy(viaggio->tourassociato, tou);
-		strcpy(viaggio->mezzoimpiegato, mez);
-
-		viaggio->conducente = con; 
-		viaggio->accompagnatrice = acc; 
-		viaggio->numerodikm = nkm; 
-		viaggio->postidisponibili = pds; 
-		viaggio->costodelviaggio = cos; 
-
-		mysql_date_to_string(&ddp, viaggio->datadipartenzaviaggio);
-		mysql_date_to_string(&ddr, viaggio->datadiritornoviaggio); 
-        mysql_date_to_string(&dda, viaggio->datadiannullamento);
-
+	mysql_date_to_string(&datainizio, revisione->datainizio);
+	mysql_date_to_string(&datafine, revisione->datafine);  
 	stop: 
 
-	mysql_stmt_free_result(select_trip);
-	mysql_stmt_reset(select_trip);	
+	mysql_stmt_free_result( select_review);
+	mysql_stmt_reset( select_review);	
 }
 
 
@@ -940,7 +868,7 @@ void do_select_costumer(struct cliente *cliente) // funziona
 	date_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
     init_mysql_timestamp(&ddc);
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, sizeof(cliente->emailcliente));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, sizeof(cliente->nomecliente));
 	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, sizeof(cliente->cognomecliente));
 	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, sizeof(cliente->indirizzocliente));

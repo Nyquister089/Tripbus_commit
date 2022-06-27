@@ -8,6 +8,7 @@
 
 struct revisione *revisione_mch; 
 struct sostituito *sostituito_mch; 
+struct ricambio *ricambio_mch; 
 
 int allocation_mch(void)
 {
@@ -19,10 +20,21 @@ int allocation_mch(void)
 
 	sostituito_mch = malloc(sizeof(struct sostituito));
 	if(sostituito_mch == NULL){
-		printf("Impossibile eseguire malloc su sostituito\n")
+		printf("Impossibile eseguire malloc su sostituito\n"); 
 		return -1;
 	} 
 
+	ricambio_mch = malloc(sizeof(struct ricambio));
+	if(ricambio_mch == NULL){
+		printf("Impossibile eseguire malloc su ricambio\n"); 
+		return -1;
+	}
+}
+
+void selection (void)
+{get_input("Inserisci il codice ricambio : ", VARCHAR_LEN, ricambio_mch->codice, false); 
+do_select_sparepart(ricambio_mch); 
+show_sparepart(ricambio_mch); 
 }
 
 
@@ -48,7 +60,8 @@ bool exe_mch_act(mch_act sel)
 	 
 	switch (sel){
 		case INS_REVISIONE:{
-			ins_review(revisione_mch, sostituito_mch); 
+			selection(); 
+			//ins_review(revisione_mch, sostituito_mch); 
 		return true;   
 		}
 		
@@ -68,7 +81,7 @@ bool exe_mch_act(mch_act sel)
 void run_mch_interface (void)
 { 	
 	char sel; 
-	if(revisione_mch == NULL) 
+	if(revisione_mch == NULL || sostituito_mch == NULL || ricambio_mch == NULL) 
 		allocation_mch(); 
 	while (true){
 	sel = get_mch_action(); 

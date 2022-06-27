@@ -182,6 +182,7 @@ void populate_tables()
     execute_query_from_file_sql("../sql/dml/delete_and_insert_revisione.sql");
     execute_query_from_file_sql("../sql/dml/delete_and_insert_ricambio.sql");
 
+
 }
 
 void drop_procedures(){
@@ -207,6 +208,10 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/select_model_comfort.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/insert_review.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_expired_review.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/select_sparepart.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/update_spareparts_number.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/insert_sostitution.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/select_review.sql"); 
 }
 
 int main(int argc, char *argv[])

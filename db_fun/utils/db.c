@@ -125,14 +125,15 @@ void mysql_date_to_string(MYSQL_TIME *date, char *str)
 	snprintf(str, DATE_LEN, "%4d-%02d-%02d", date->year, date->month, date->day);
 }
 
-int bind_exe(MYSQL_STMT *procedure, MYSQL_BIND *param, char * buff){
-
+int bind_exe(MYSQL_STMT *procedure, MYSQL_BIND *param, char * buff)
+{
+printf("bind\n");
 if(mysql_stmt_bind_param(procedure, param) != 0) {
 		printf("Procedura : %s \n", buff);
 		print_stmt_error(procedure, "\nImpossibile eseguire bind param");
 		return-1;
 	}
-
+printf("exe\n");
 	if(mysql_stmt_execute(procedure) != 0) {
 		printf("Procedura : %s \n", buff);
 		print_stmt_error(procedure, "\nImpossibile eseguire execute ");

@@ -59,12 +59,40 @@ void show_tour(struct tour *tour)
 
 void show_service (struct servizio * servizio)
 {
-	printf("\n\n**  Dettagli servizio** \n\n");
+	printf("\n\n**  Dettagli servizio ** \n\n");
 		printf("\n ID:  	%d\n Nome:		   %s \n Descrizione : 	%s \n", 
 		servizio->idservizio, 
 		servizio->nomeservizio, 
 		servizio->descrizioneservizio
 		);
+}
+
+void show_sparepart(struct ricambio *ricambio)
+{	
+	printf("\n\n**  Dettagli ricambio ** \n\n");
+		printf("\n Codice:		%s \n Costo unitario:	%f \n Quatità di Riordino: 	%d \n Scorta Minima:		%d \n Quantità in magazzino:	%d \n Descrizione:		%s \n", 
+		ricambio->codice,
+		ricambio->costounitario,
+		ricambio->quantitadiriordino,
+		ricambio->scortaminima,
+		ricambio->quantitainmagazzino,
+		ricambio->descrizione
+		);
+}
+
+void show_review (struct revisione *revisione)
+{
+printf("\n\n** Dettagli prenotazione **\n\n");
+ 	printf(" Prenotazione numero: 	%d \n E-mail cliente: 	%s \n Data di prenotazione: 	%s \n Data di conferma: 	%s \n Data Saldo: 		%s \n\n",
+		int idrevisione; //Corretto trasformandolo da carattere a puntatore di carattere
+	char mezzorevisionato[VARCHAR_LEN]; 			// Fk
+	int addettoallarevisione;  				// Fk //Corretto trasformandolo da carattere a puntatore di carattere
+	char datainizio[DATE_LEN]; 
+	char datafine[DATE_LEN]; 
+	int chilometraggio;//Corretto trasformandolo da carattere a puntatore di carattere
+	char operazionieseguite[DES_LEN]; 
+	char tipologiarevisione[VARCHAR_LEN]; 
+	char motivazione); 
 }
 
 void show_expired_review (void) 
