@@ -190,6 +190,7 @@ void drop_procedures(){
 }
 
 void create_procedures(){
+    
     execute_query_from_file_sql("../sql/ddl/procedure/login.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/insert_assoc.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/insert_costumer.sql");
@@ -213,7 +214,8 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/insert_sostitution.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_review.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_max_idreview.sql"); 
-    
+    execute_query_from_file_sql("../sql/ddl/procedure/select_assigned_trip.sql"); 
+ 
 }
 
 int main(int argc, char *argv[])

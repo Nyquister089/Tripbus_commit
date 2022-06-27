@@ -337,6 +337,24 @@ struct info_mete{
 	struct mete_tour info_mete[]; 
 };
 
+struct viaggi_mezzi{
+	char tour[VARCHAR_LEN];
+	int viaggio; 
+	char modello[VARCHAR_LEN];
+	char targa[TAR_LEN];
+	int autonomia; 
+	char ingombri [VARCHAR_LEN]; 
+	int contakm; 
+	char partenza[DATE_LEN]; 
+	char ritorno[DATE_LEN]; 
+};
+
+struct viaggi_assegnati{
+	size_t num_viaggi; 
+	struct viaggi_mezzi viaggi_assegnati[]; 
+};
+
+
 extern void do_insert_costumer(struct cliente *cliente);
 extern void do_insert_reservation(struct prenotazione *prenotazione);
 extern void do_insert_seat(struct postoprenotato *postoprenotato);
@@ -358,6 +376,7 @@ extern struct info_mete *get_mete_info(int idv);
 extern struct servizi_albergo *get_servizi_albergo(int idh); 
 extern struct info_modelli *get_info_modello(char *nmd);
 extern struct revisioni_scadute *get_info_revisioni(void); 
+extern struct viaggi_assegnati *get_viaggi_assegnati(int dvr);
 
 extern void do_update_data_doc(struct cliente *cliente); 
 extern void do_validate_reservation(struct prenotazione *prenotazione);

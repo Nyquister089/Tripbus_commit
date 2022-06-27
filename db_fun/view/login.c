@@ -6,6 +6,7 @@
 #include "hostess.h"
 #include "cliente.h"
 #include "meccanico.h"
+#include "autista.h"
 #include "../utils/io.h"
 
 void view_login(struct credentials *cred)
@@ -47,7 +48,7 @@ int main (void)
 
 		switch(role){
 			case AUTISTA: 
-				printf("Autista\n"); 
+				run_drvr_interface();  
 				break;
 			case CLIENTE:
 				run_cstmr_interface(); 

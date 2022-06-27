@@ -43,67 +43,6 @@ int allocation_hstss(void)
 		 }
 }
 
-int get_hstss_action(void)
-{
-	char options[7] = {'1','2','3','4','5','6','7'};
-	char op;
-	
-	puts("*********************************");
-	puts("*   INTERFACCIA HOSTESS    *");
-	puts("*********************************\n");
-	puts("*** Quale operazione vorresti eseguire? ***\n");
-	puts("1) Consultare prenotazioni");
-	puts("2) Inserire un nuovo cliente");
-	puts("3) Inserire una nuova prenotazione");  
-	puts("4) Modifica posti disponibili per un viaggio");
-	puts("5) Conferma prenotazione ed intestazione posti");
-	puts("6) Modificare la data di invio degli ultimi documenti di un cliente"); 
-	puts("7) Esci");
-
-	op = multi_choice("Scegli un opzione", options, 7);
-
-	return op -'1'; 
-}
-
-bool exe_hstss_act(char sel, struct cliente *cliente,struct prenotazione * prenotazione,struct postoprenotato *postoprenotato, struct viaggio *viaggio, struct associata *associata)
-{	
-
-	switch (sel)
-		{	
-			case INFO_PRENOTAZIONI: {
-				show_prenotation_details(prenotazione); 
-				return true;
-				}
-			case INSERT_CLIENTE:{
-				ins_costumer(cliente); 
-				return true; 
-				}
-		
-			case INSERT_PRENOTAZIONE:{
-				ins_prenotation(prenotazione); 
-				return true;
-				}
-     		case POSTI_VIAGGIO:{
-     			mod_trip_seat();
-				return true; 
-				}
-			case CONFERMA_PRENOTAZIONE:{
-				validate_reservation (prenotazione, postoprenotato, associata); 
-				return true;
-		 		}
-
-			case UPDATE_DATA_DOC:{
-				update_d_doc(cliente); 
-				return true;
-				}
-		
-			case QUIT_HSST: 
-				return false; 
-		
-	}
-	return true;
-}
-
 void show_prenotation_details(struct prenotazione *prenotazione ) // Procedura visualizzazione dettagli prenotazione
 {	
 	char buff[VARCHAR_LEN]; 
@@ -209,6 +148,69 @@ void update_d_doc(struct cliente  *cliente)
 	do_update_data_doc(cliente); 
 
 }
+
+int get_hstss_action(void)
+{
+	char options[7] = {'1','2','3','4','5','6','7'};
+	char op;
+	
+	puts("*********************************");
+	puts("*   INTERFACCIA HOSTESS    *");
+	puts("*********************************\n");
+	puts("*** Quale operazione vorresti eseguire? ***\n");
+	puts("1) Consultare prenotazioni");
+	puts("2) Inserire un nuovo cliente");
+	puts("3) Inserire una nuova prenotazione");  
+	puts("4) Modifica posti disponibili per un viaggio");
+	puts("5) Conferma prenotazione ed intestazione posti");
+	puts("6) Modificare la data di invio degli ultimi documenti di un cliente"); 
+	puts("7) Esci");
+
+	op = multi_choice("Scegli un opzione", options, 7);
+
+	return op -'1'; 
+}
+
+bool exe_hstss_act(char sel, struct cliente *cliente,struct prenotazione * prenotazione,struct postoprenotato *postoprenotato, struct viaggio *viaggio, struct associata *associata)
+{	
+
+	switch (sel)
+		{	
+			case INFO_PRENOTAZIONI: {
+				show_prenotation_details(prenotazione); 
+				return true;
+				}
+			case INSERT_CLIENTE:{
+				ins_costumer(cliente); 
+				return true; 
+				}
+		
+			case INSERT_PRENOTAZIONE:{
+				ins_prenotation(prenotazione); 
+				return true;
+				}
+     		case POSTI_VIAGGIO:{
+     			mod_trip_seat();
+				return true; 
+				}
+			case CONFERMA_PRENOTAZIONE:{
+				validate_reservation (prenotazione, postoprenotato, associata); 
+				return true;
+		 		}
+
+			case UPDATE_DATA_DOC:{
+				update_d_doc(cliente); 
+				return true;
+				}
+		
+			case QUIT_HSST: 
+				return false; 
+		
+	}
+	return true;
+}
+
+
 
 
 void run_hstss_interface (void)

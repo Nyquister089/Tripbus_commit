@@ -18,6 +18,6 @@ extern void mysql_time_to_string(MYSQL_TIME *time, char *str);
 
 extern int exe_proc(MYSQL_STMT *procedure,  char * buff); 
 extern int take_result(MYSQL_STMT *procedure, MYSQL_BIND *param, char *buff); 
-extern int bind_exe(MYSQL_STMT *procedure, MYSQL_BIND *param, char * buff);
+extern size_t bind_exe(MYSQL_STMT *procedure, MYSQL_BIND *param, char * buff);
 extern void init_mysql_date(MYSQL_TIME *time); 
 extern size_t take_rows(MYSQL_STMT *procedure, char *buff); 

@@ -6,7 +6,7 @@ INSERT INTO `tripdb`.`utente`
  VALUES 
  ('1',
   '1',
-  '4');
+  '1');
   INSERT INTO `tripdb`.`utente` 
 (`EmailUtente`,
   `Pswrd`,

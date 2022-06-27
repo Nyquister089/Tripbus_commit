@@ -135,7 +135,7 @@ if(mysql_stmt_execute(procedure) != 0) {
 	return 0; 
 }
 
-int bind_exe(MYSQL_STMT *procedure, MYSQL_BIND *param, char * buff)
+size_t bind_exe(MYSQL_STMT *procedure, MYSQL_BIND *param, char * buff)
 {
 
 if(mysql_stmt_bind_param(procedure, param) != 0) {
@@ -149,7 +149,13 @@ if(mysql_stmt_bind_param(procedure, param) != 0) {
 		print_stmt_error(procedure, "\nImpossibile eseguire execute ");
 		return -1;
 	}
-	return 0; 
+	if( mysql_stmt_store_result(procedure) != 0){
+		printf("Procedura : %s", buff);
+		print_stmt_error(procedure, "\nImpossibile eseguire store result");
+		return -1; 
+	}
+
+return mysql_stmt_num_rows(procedure);
 }
 
 int take_result(MYSQL_STMT *procedure, MYSQL_BIND *param, char *buff)

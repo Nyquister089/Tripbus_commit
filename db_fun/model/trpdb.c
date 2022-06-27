@@ -47,12 +47,13 @@ static MYSQL_STMT *select_hotel_service;  // ok Cliente
 static MYSQL_STMT *select_model_comfort;  // ok Cliente
 static MYSQL_STMT *select_expired_review; // ok Meccanico
 static MYSQL_STMT *select_max_idreview;   // ok Meccanico
-
+static MYSQL_STMT *select_assigned_trip; // AUTISTA 
 
 static MYSQL_STMT *update_trip_seat;		 // ok HOSTESS
 static MYSQL_STMT *validate_reservation;	 // ok  HOSTESS
 static MYSQL_STMT *update_data_doc;			 // Ok  HOSTESS
-static MYSQL_STMT *update_spareparts_number; // Meccanico
+static MYSQL_STMT *update_spareparts_number; // ok Meccanico
+
 
 static void close_prepared_stmts(void)
 {
@@ -136,6 +137,10 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(select_max_idreview);
 		select_max_idreview = NULL;
 	}
+	if(select_assigned_trip) {			// Procedura di visualizzazione viaggi assegnati (AUTISTA)
+		mysql_stmt_close(select_assigned_trip);
+		select_assigned_trip = NULL;
+	}
 	if (select_trip)
 	{ // Procedura di select viaggi
 		mysql_stmt_close(select_trip);
@@ -217,6 +222,13 @@ static bool initialize_prepared_stmts(role_t for_role)
 			return false;
 		}
 		break;
+
+	case AUTISTA:
+			if(!setup_prepared_stmt(&select_assigned_trip, "call select_assigned_trip(?)", conn)) {
+				print_stmt_error(select_assigned_trip, "Unable to initialize select_assigned_trip statement\n");
+				return false;
+			}
+		break; 
 
 	case HOSTESS:
 		if (!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?, ?)", conn))
@@ -1751,4 +1763,106 @@ stop:
 	mysql_stmt_free_result(select_all_tour);
 	mysql_stmt_reset(select_all_tour);
 	free(tour_info);
+}
+
+struct viaggi_assegnati *get_viaggi_assegnati(int dvr) //funziona
+{
+	MYSQL_BIND param[9];
+	MYSQL_TIME ddp;
+	MYSQL_TIME ddr;
+
+	struct viaggi_assegnati *viaggi_assegnati = NULL;
+	char *buff = "select_assigned_trip";
+	int status; 
+	size_t rows, count;
+	count = 0;
+
+	char tour[VARCHAR_LEN];
+	int viaggio; 
+	char modello[VARCHAR_LEN];
+	char targa[TAR_LEN];
+	int autonomia; 
+	char ingombri [VARCHAR_LEN]; 
+	int contakm; 
+
+	init_mysql_timestamp(&ddp);
+	init_mysql_timestamp(&ddr);
+
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &dvr, sizeof(dvr));
+
+
+	 
+	rows = bind_exe(select_assigned_trip, param, buff);
+	if(rows == -1)
+		goto stop; 
+
+	viaggi_assegnati = malloc((sizeof(struct viaggi_mezzi) + sizeof(viaggi_assegnati)) * rows);
+	memset(viaggi_assegnati, 0, sizeof(*viaggi_assegnati) + sizeof(struct viaggi_mezzi) * rows);
+
+	if (viaggi_assegnati == NULL)
+	{
+		printf("Impossibile eseguire la malloc su tour info");
+		goto stop;
+	}
+
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tour,  sizeof(tour));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &viaggio, sizeof(viaggio));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, modello, sizeof(modello));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, targa, sizeof(targa));
+	set_binding_param(&param[4], MYSQL_TYPE_LONG, &autonomia, sizeof(autonomia));
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, ingombri, sizeof(ingombri));
+	set_binding_param(&param[6], MYSQL_TYPE_LONG, &contakm, sizeof(contakm));
+	set_binding_param(&param[7], MYSQL_TYPE_DATE, &ddp, sizeof(ddp));
+	set_binding_param(&param[8], MYSQL_TYPE_DATE, &ddr, sizeof(ddr));
+	
+	if (mysql_stmt_bind_result(select_assigned_trip, param))
+	{
+		print_stmt_error(select_assigned_trip, "\n\n Impossibile eseguire il bind risult\n\n");
+		free(viaggi_assegnati);
+		viaggi_assegnati = NULL;
+		goto stop;
+	}
+
+	viaggi_assegnati->num_viaggi = rows;
+
+	while (true)
+	{
+		status = mysql_stmt_fetch(select_assigned_trip);
+		if (status == MYSQL_NO_DATA)
+			break;
+		if (status == 1)
+		{
+			print_stmt_error(select_assigned_trip, "\nImpossibile eseguire fetch");
+		}
+
+		strcpy(viaggi_assegnati->viaggi_assegnati[count].tour, tour);
+		strcpy(viaggi_assegnati->viaggi_assegnati[count].modello, modello);
+		strcpy(viaggi_assegnati->viaggi_assegnati[count].targa, targa);
+		strcpy(viaggi_assegnati->viaggi_assegnati[count].ingombri, ingombri);
+		mysql_date_to_string(&ddp,viaggi_assegnati->viaggi_assegnati[count].partenza ); 
+		mysql_date_to_string(&ddr,viaggi_assegnati->viaggi_assegnati[count].ritorno);
+
+
+		viaggi_assegnati->viaggi_assegnati[count].viaggio = viaggio;
+		viaggi_assegnati->viaggi_assegnati[count].autonomia= autonomia;
+		viaggi_assegnati->viaggi_assegnati[count].contakm = contakm;
+
+		printf("* %s *\n", viaggi_assegnati->viaggi_assegnati[count].tour);
+		printf("Codice viaggio: 	%d \n", viaggi_assegnati->viaggi_assegnati[count].viaggio);
+		printf("Data di partenza:	%s 	\n", viaggi_assegnati->viaggi_assegnati[count].partenza);
+		printf("Data di riotrno:	%s 	\n\n", viaggi_assegnati->viaggi_assegnati[count].ritorno);
+		printf("Mezzo impiegato\n");
+		printf("Modello pullman:	%s \n", viaggi_assegnati->viaggi_assegnati[count].modello);
+		printf("Targa:			%s 	\n", viaggi_assegnati->viaggi_assegnati[count].targa);
+		printf("Autonomia mezzo:	%d km	\n", viaggi_assegnati->viaggi_assegnati[count].autonomia);
+		printf("Ingombri:		%s \n", viaggi_assegnati->viaggi_assegnati[count].ingombri);	
+		printf("Valore conta km:	%d 	\n\n", viaggi_assegnati->viaggi_assegnati[count].contakm);
+		count++;
+	}
+stop:
+	mysql_stmt_free_result(select_assigned_trip);
+	mysql_stmt_reset(select_assigned_trip);
+	free(viaggi_assegnati);
 }
