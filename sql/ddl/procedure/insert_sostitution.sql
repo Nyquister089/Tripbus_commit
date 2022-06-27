@@ -4,8 +4,8 @@ in rcm varchar(45),
 in qnt int
 )
 BEGIN
-insert into postoprenotato 
-			( RevisioneAssociata,
+insert into sostituito 
+			(RevisioneAssociata,
              CodiceRicambioSostituito,
              QuantitàSostituita)
 values

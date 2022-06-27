@@ -5,10 +5,10 @@ BEGIN
 SELECT  
    Codice,
    CostoUnitario,
-   QuantitàDiRiordino,
+   QuantitaDiRiordino,
    Descrizione,
    ScortaMinima,
-   QuantitàMagazzino
+   QuantitaMagazzino
 FROM ricambio
 WHERE Codice = cdc; 
 END

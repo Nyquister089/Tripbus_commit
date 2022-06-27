@@ -343,14 +343,15 @@ extern void do_insert_seat(struct postoprenotato *postoprenotato);
 extern void do_insert_assoc(struct associata *associata);
 extern void do_insert_review(struct revisione *revisione);
 extern void do_insert_sostitution (struct sostituito *sostituito); 
-extern void do_select_sparepart(struct ricambio *ricambio); 
-
-extern void do_update_trip_seat(struct viaggio *viaggio);
 
 extern void do_select_trip(struct viaggio *viaggio);
 extern void do_select_costumer(struct cliente *cliente);
 extern void do_select_reservation(struct prenotazione *prenotazione);
 extern void do_select_tour( struct tour *tour);
+extern void do_select_sparepart(struct ricambio *ricambio); 
+extern void do_select_review(struct revisione *revisione);
+
+extern void do_select_max_idreview(struct revisione *revisione ); 
 
 extern struct tour_info *get_tour_info (void);
 extern struct info_mete *get_mete_info(int idv);
@@ -358,6 +359,8 @@ extern struct servizi_albergo *get_servizi_albergo(int idh);
 extern struct info_modelli *get_info_modello(char *nmd);
 extern struct revisioni_scadute *get_info_revisioni(void); 
 
-
 extern void do_update_data_doc(struct cliente *cliente); 
-extern void do_validate_reservation(struct prenotazione *prenotazione); 
+extern void do_validate_reservation(struct prenotazione *prenotazione);
+extern void do_update_trip_seat(struct viaggio *viaggio);
+extern void do_update_spareparts_number(struct ricambio *ricambio); 
+

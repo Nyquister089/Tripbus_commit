@@ -83,16 +83,17 @@ void show_sparepart(struct ricambio *ricambio)
 void show_review (struct revisione *revisione)
 {
 printf("\n\n** Dettagli prenotazione **\n\n");
- 	printf(" Prenotazione numero: 	%d \n E-mail cliente: 	%s \n Data di prenotazione: 	%s \n Data di conferma: 	%s \n Data Saldo: 		%s \n\n",
-		int idrevisione; //Corretto trasformandolo da carattere a puntatore di carattere
-	char mezzorevisionato[VARCHAR_LEN]; 			// Fk
-	int addettoallarevisione;  				// Fk //Corretto trasformandolo da carattere a puntatore di carattere
-	char datainizio[DATE_LEN]; 
-	char datafine[DATE_LEN]; 
-	int chilometraggio;//Corretto trasformandolo da carattere a puntatore di carattere
-	char operazionieseguite[DES_LEN]; 
-	char tipologiarevisione[VARCHAR_LEN]; 
-	char motivazione); 
+ 	printf(" *ID:			%d *\n Mezzo revsionato:	%s \n Id adetto: 		%d \n Data inizio: 		%s \n Data fine: 		%s\n Chilometraggio:	%d\n Operazioni eseguite:	%s \n Tipologia revsione:	%s \n Motivazione:	%s \n\n",
+	revisione->idrevisione,
+	revisione->mezzorevisionato,
+	revisione->addettoallarevisione,
+	revisione->datainizio,
+	revisione->datafine,
+	revisione->chilometraggio,
+	revisione->operazionieseguite,
+	revisione->tipologiarevisione,
+	revisione->motivazione
+	); 
 }
 
 void show_expired_review (void) 

@@ -212,6 +212,8 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/update_spareparts_number.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/insert_sostitution.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_review.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/select_max_idreview.sql"); 
+    
 }
 
 int main(int argc, char *argv[])

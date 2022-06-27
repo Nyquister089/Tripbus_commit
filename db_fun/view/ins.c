@@ -37,7 +37,7 @@ void ins_seat(struct postoprenotato *postoprenotato)
 	do_insert_seat(postoprenotato); 
 }
 
-void ins_review(struct revisione *revisione, struct sostituito *sostituito)
+void ins_review(struct revisione *revisione, struct sostituito *sostituito, struct ricambio *ricambio)
 {	
 	char buff[NUM_LEN]; 
 	bool ans;
@@ -65,10 +65,13 @@ void ins_review(struct revisione *revisione, struct sostituito *sostituito)
 	}
 do_insert_review(revisione);
 
+
 ans = yes_or_no("In questa revisione sono statti sostituiti dei ricambi? ",'s','n',false, false); 
 if(ans)
-	{
-		ins_sostitution(sostituito); 
+	{	do_select_max_idreview(revisione); 
+		sostituito->revisioneassociata = revisione->idrevisione; 
+		
+		ins_sostitution(sostituito, ricambio ); 
 	}
 
 }
@@ -175,17 +178,26 @@ void ins_association(struct associata *associata)
 	do_insert_assoc(associata); 
 }
 
-void ins_sostitution( struct sostituito *sostituito)
+void ins_sostitution( struct sostituito *sostituito, struct ricambio *ricambio)
 {	
 	char buff[NUM_LEN]; 
 	int num; 
 	printf("\n** Dettagli sostituzione ricambio**\n\n");
-	get_input("Inserisci il numero della revsione in questione: ",NUM_LEN, buff, false);
-	sostituito->revisioneassociata = atoi(buff); 
-	get_input("Inserisci il codice del ricambio utilizzato : ", NUM_LEN, buff,false);
+	if(&sostituito->revisioneassociata == NULL){
+		get_input("Inserisci il numero della revsione in questione: ",NUM_LEN, buff, false);
+		sostituito->revisioneassociata = atoi(buff);
+	} 
+	get_input("Inserisci il codice del ricambio utilizzato : ", NUM_LEN, sostituito->ricambioutilizzato,false);
 	get_input("Inserisci la quantità di ricambi sostituiti : ",NUM_LEN, buff, false);
 	sostituito->quantitasostituita = atoi(buff); 
-	do_insert_sostitution(sostituito); 	
-	//do_update_spareparts_number(num);
+	strcpy(ricambio->codice, sostituito->ricambioutilizzato);
+
+	do_insert_sostitution(sostituito); 
+	do_select_sparepart(ricambio); 	
+
+	num = ricambio->quantitainmagazzino - sostituito->quantitasostituita; 
+	ricambio->quantitainmagazzino = num; 
+
+	do_update_spareparts_number(ricambio);
 
 }

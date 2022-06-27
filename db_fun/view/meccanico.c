@@ -32,9 +32,12 @@ int allocation_mch(void)
 }
 
 void selection (void)
-{get_input("Inserisci il codice ricambio : ", VARCHAR_LEN, ricambio_mch->codice, false); 
-do_select_sparepart(ricambio_mch); 
-show_sparepart(ricambio_mch); 
+{
+char buff[NUM_LEN];
+get_input("Inserisci il codice ricambio : ", VARCHAR_LEN, buff, false); 
+revisione_mch->idrevisione = atoi(buff);
+do_select_review(revisione_mch); 
+show_review(revisione_mch); 
 }
 
 
@@ -60,8 +63,7 @@ bool exe_mch_act(mch_act sel)
 	 
 	switch (sel){
 		case INS_REVISIONE:{
-			selection(); 
-			//ins_review(revisione_mch, sostituito_mch); 
+			ins_review(revisione_mch, sostituito_mch, ricambio_mch); 
 		return true;   
 		}
 		
