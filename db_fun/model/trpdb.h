@@ -354,6 +354,20 @@ struct viaggi_assegnati{
 	struct viaggi_mezzi viaggi_assegnati[]; 
 };
 
+struct meta_visita{
+	char meta [VARCHAR_LEN]; 
+	char tipologia[VARCHAR_LEN]; 
+	char arrivo[DATE_LEN];
+	char ingresso[TIME_LEN]; 
+	char partenza[DATE_LEN]; 
+	char uscita[TIME_LEN]; 
+};
+
+struct mete_visite{
+	size_t num_visite; 
+	struct meta_visita mete_visite[]; 
+};
+
 
 extern void do_insert_costumer(struct cliente *cliente);
 extern void do_insert_reservation(struct prenotazione *prenotazione);
@@ -377,6 +391,7 @@ extern struct servizi_albergo *get_servizi_albergo(int idh);
 extern struct info_modelli *get_info_modello(char *nmd);
 extern struct revisioni_scadute *get_info_revisioni(void); 
 extern struct viaggi_assegnati *get_viaggi_assegnati(int dvr);
+extern struct mete_visite *get_mete_visite(int idv);
 
 extern void do_update_data_doc(struct cliente *cliente); 
 extern void do_validate_reservation(struct prenotazione *prenotazione);

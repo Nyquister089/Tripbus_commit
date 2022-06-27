@@ -215,6 +215,7 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/select_review.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_max_idreview.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_assigned_trip.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/select_dest_time.sql"); 
  
 }
 

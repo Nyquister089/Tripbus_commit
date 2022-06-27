@@ -1866,3 +1866,137 @@ stop:
 	mysql_stmt_reset(select_assigned_trip);
 	free(viaggi_assegnati);
 }
+
+extern struct mete_visite *get_mete_visite(int idv)
+{
+	MYSQL_BIND param[14];
+	MYSQL_TIME darrivo;
+	MYSQL_TIME dpartenza;
+	MYSQL_TIME oarrivo;
+	MYSQL_TIME opartenza;
+	MYSQL_TIME oapertura;
+
+	struct mete_visite *mete_visite = NULL;
+	int status;
+	int cmpr;
+	char *buff = "select_dest_tour";
+
+	char meta [VARCHAR_LEN]; 
+	char tipologia[VARCHAR_LEN]; 
+	char arrivo[DATE_LEN];
+	char ingresso[TIME_LEN]; 
+	char partenza[DATE_LEN]; 
+	char uscita[TIME_LEN]; 
+	
+	size_t rows, count;
+	count = 0;
+
+	init_mysql_timestamp(&darrivo);
+	init_mysql_timestamp(&dpartenza);
+	init_mysql_timestamp(&oarrivo);
+	init_mysql_timestamp(&opartenza);
+	init_mysql_timestamp(&oapertura);
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idv, sizeof(idv));
+
+	bind_exe(select_dest_tour, param, buff);
+
+	rows = mysql_stmt_num_rows(select_dest_tour);
+
+	info_mete = malloc((sizeof(struct mete_tour) + sizeof(info_mete)) * rows);
+	memset(info_mete, 0, sizeof(*info_mete) + sizeof(struct mete_tour) * rows);
+
+	if (info_mete == NULL)
+	{
+		printf("Impossibile eseguire la malloc su %s", buff);
+		goto stop;
+	}
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, nome, sizeof(nome));
+	set_binding_param(&param[1], MYSQL_TYPE_DATE, &darrivo, sizeof(darrivo));
+	set_binding_param(&param[2], MYSQL_TYPE_TIME, &oarrivo, sizeof(oarrivo));
+	set_binding_param(&param[3], MYSQL_TYPE_DATE, &dpartenza, sizeof(dpartenza));
+	set_binding_param(&param[4], MYSQL_TYPE_TIME, &opartenza, sizeof(opartenza));
+	set_binding_param(&param[5], MYSQL_TYPE_FLOAT, &supplemento, sizeof(supplemento));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, &tipologiameta, sizeof(tipologiameta));
+	set_binding_param(&param[7], MYSQL_TYPE_TINY, &guida, sizeof(guida));
+	set_binding_param(&param[8], MYSQL_TYPE_TIME, &oapertura, sizeof(oapertura));
+	set_binding_param(&param[9], MYSQL_TYPE_VAR_STRING, trattamento, sizeof(trattamento));
+	set_binding_param(&param[10], MYSQL_TYPE_VAR_STRING, categoriaalbergo, sizeof(categoriaalbergo));
+	set_binding_param(&param[11], MYSQL_TYPE_VAR_STRING, desfoto, sizeof(desfoto));
+	set_binding_param(&param[12], MYSQL_TYPE_BLOB, foto, sizeof(foto));
+	set_binding_param(&param[13], MYSQL_TYPE_LONG, &codicealbergo, sizeof(codicealbergo));
+
+	if (mysql_stmt_bind_result(select_dest_tour, param))
+	{
+		printf("Procedura: %s", buff);
+		print_stmt_error(select_dest_tour, "\n\n Impossibile eseguire il bind risult\n\n");
+		free(info_mete);
+		info_mete = NULL;
+		goto stop;
+	}
+
+	info_mete->num_mete = rows;
+
+	while (true)
+	{
+		status = mysql_stmt_fetch(select_dest_tour);
+		if (status == MYSQL_NO_DATA)
+		{
+			printf("...\n");
+			break;
+		}
+		if (status == 1)
+		{
+			print_stmt_error(select_dest_tour, "\nImpossibile eseguire fetch");
+		}
+		strcpy(info_mete->info_mete[count].nome, nome);
+		strcpy(info_mete->info_mete[count].tipologiameta, tipologiameta);
+		mysql_date_to_string(&darrivo, info_mete->info_mete[count].darrivo);
+		mysql_date_to_string(&dpartenza, info_mete->info_mete[count].dpartenza);
+		mysql_time_to_string(&oarrivo, info_mete->info_mete[count].oarrivo);
+		mysql_time_to_string(&opartenza, info_mete->info_mete[count].opartenza);
+		mysql_time_to_string(&oapertura, info_mete->info_mete[count].oapertura);
+
+		info_mete->info_mete[count].supplemento = supplemento;
+		info_mete->info_mete[count].codicealbergo = codicealbergo;
+
+		strcpy(info_mete->info_mete[count].trattamento, trattamento);
+		strcpy(info_mete->info_mete[count].categoriaalbergo, categoriaalbergo);
+		strcpy(info_mete->info_mete[count].desfoto, desfoto);
+		strcpy(info_mete->info_mete[count].foto, foto);
+
+		cmpr = strcmp(info_mete->info_mete[count].nome, info_mete->info_mete[count - 1].nome);
+		if (cmpr != 0)
+		{
+			printf("* %s *\n", info_mete->info_mete[count].nome);
+			printf("Data di arrivo:		%s	", info_mete->info_mete[count].darrivo);
+			printf("Ora di arrivo:	  	%s \n", info_mete->info_mete[count].oarrivo);
+			printf("Data di partenza:	%s	", info_mete->info_mete[count].dpartenza);
+			printf("Ora di partenza: 	%s \n", info_mete->info_mete[count].opartenza);
+			printf("Supplemento:		%f euro\n", info_mete->info_mete[count].supplemento);
+			printf("Tipologia meta:		%s 	\n", info_mete->info_mete[count].tipologiameta);
+
+			if (strcmp(info_mete->info_mete[count].tipologiameta, "Bene") == 0)
+			{
+				printf("Orario di apertura:	%s 	\n", info_mete->info_mete[count].oapertura);
+				printf("Guida prevista:		%d 	\n", info_mete->info_mete[count].guida);
+			}
+			else
+			{
+				printf("Trattamento:		%s \n", info_mete->info_mete[count].trattamento);
+				printf("Categoria:		%s 	\n", info_mete->info_mete[count].categoriaalbergo);
+				printf("Codice albergo:		%d \n", info_mete->info_mete[count].codicealbergo);
+			}
+		}
+		printf("\n");
+		printf("Foto:  %s	\n", info_mete->info_mete[count].foto);
+		printf("Descrizione foto:	%s \n\n", info_mete->info_mete[count].desfoto);
+
+		count++;
+	}
+stop:
+	mysql_stmt_free_result(select_dest_tour);
+	mysql_stmt_reset(select_dest_tour);
+	free(info_mete);
+};

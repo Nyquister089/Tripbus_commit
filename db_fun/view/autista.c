@@ -15,14 +15,13 @@ int get_drvr_action(void)
 	puts("*********************************\n");
 	puts("*** Quale operazione vorresti eseguire? ***\n");
 	puts("1) Consulta i viaggi ed i mezzi a cui sei assegnato");
-	puts("2) Consulta le mete visitate durante un viaggio");
+	puts("2) Consulta i dati temporali delle mete previste per un viaggio");
 	puts("3) Consulta le mappe");
 	puts("4) Consulta l'orario di apertura dei beni tursitici");
 	puts("5) Aggiorna il valore del conta km dopo un viaggio"); 
 	puts("6) Esci");
 	/*Consultare i dati temporali relativi al viaggio : beni orario e giorno inizio, alberghi giorno e ora arrivo e partenza 
 	Consultare le località incluse in un viaggio in modo da tracciare il percorso
-	Consultare viaggi assegnati e relativi mezzi previsiti
 	Aggiornare il valore del contatore chilometrico del mezzo che ha utilizzato per  svolgere il viaggio
 	*/
 
