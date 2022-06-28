@@ -1397,8 +1397,9 @@ struct info_modelli *get_info_modello(char *nmd)
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, nmd, strlen(nmd));
 
 	bind_exe(select_model_comfort, param, buff);
-
 	rows = take_rows(select_model_comfort,buff); 
+	if(rows == -1)
+		goto stop;
 
 	info_modello = malloc((sizeof(struct info_modelli) + sizeof(info_modello)) * rows);
 	memset(info_modello, 0, sizeof(*info_modello) + sizeof(struct info_modelli) * rows);
@@ -1489,6 +1490,8 @@ struct revisioni_scadute *get_info_revisioni(void)
 	init_mysql_timestamp(&datafine);
 
 	rows = take_rows(select_expired_review, buff);
+	if(rows == -1)
+		goto stop;
 
 	info_revisioni = malloc((sizeof(struct revisioni_scadute) + sizeof(info_revisioni)) * rows);
 	memset(info_revisioni, 0, sizeof(*info_revisioni) + sizeof(struct revisioni_scadute) * rows);
@@ -1529,7 +1532,7 @@ struct revisioni_scadute *get_info_revisioni(void)
 		cmpr = strcmp(info_revisioni->revisioni_scadute[count].mezzorevisionato, info_revisioni->revisioni_scadute[count - 1].mezzorevisionato);
 		if (cmpr != 0)
 		{
-			printf("*Targa mezzo:  %s \n", info_revisioni->revisioni_scadute[count].mezzorevisionato);
+			printf("*Targa mezzo:		%s \n", info_revisioni->revisioni_scadute[count].mezzorevisionato);
 			printf("Data ultima revisione:	%s	\n", info_revisioni->revisioni_scadute[count].datafine);
 			printf("Chilometri revisone:	%d \n", info_revisioni->revisioni_scadute[count].chilometraggio);
 			printf("Chilometri attuali:	%d	\n\n", info_revisioni->revisioni_scadute[count].idrevisione);
@@ -1558,7 +1561,9 @@ struct servizi_albergo *get_servizi_albergo(int idh)
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idh, sizeof(idh));
 
 	bind_exe(select_hotel_service, param, buff);
-	rows = mysql_stmt_num_rows(select_hotel_service);
+	rows = take_rows(select_hotel_service, buff);
+	if(rows == -1)
+		goto stop;
 
 	info_servizi = malloc((sizeof(struct servizi_albergo) + sizeof(info_servizi)) * rows);
 	memset(info_servizi, 0, sizeof(*info_servizi) + sizeof(struct servizi_albergo) * rows);
@@ -1594,7 +1599,7 @@ struct servizi_albergo *get_servizi_albergo(int idh)
 		strcpy(info_servizi->servizi_albergo[count].descrizioneservizio, descrizioneservizio);
 
 		printf("* %s *\n", info_servizi->servizi_albergo[count].nomeservizio);
-		printf("Descrizione:		%s	", info_servizi->servizi_albergo[count].descrizioneservizio);
+		printf("Descrizione:		%s	\n\n", info_servizi->servizi_albergo[count].descrizioneservizio);
 
 		count++;
 	}
@@ -1639,7 +1644,9 @@ struct info_mete *get_mete_info(int idv)
 
 	bind_exe(select_dest_tour, param, buff);
 
-	rows = mysql_stmt_num_rows(select_dest_tour);
+	rows = take_rows(select_dest_tour, buff);
+	if(rows == -1)
+		goto stop;
 
 	info_mete = malloc((sizeof(struct mete_tour) + sizeof(info_mete)) * rows);
 	memset(info_mete, 0, sizeof(*info_mete) + sizeof(struct mete_tour) * rows);
@@ -1746,7 +1753,7 @@ struct tour_info *get_tour_info(void)
 	MYSQL_TIME drv;
 
 	struct tour_info *tour_info = NULL;
-	char *buff = "get_tour_info";
+	char *buff = "select_all_tour";
 	char dnm[VARCHAR_LEN];
 	char dsc[DES_LEN];
 	char nmd[VARCHAR_LEN];
@@ -1766,7 +1773,9 @@ struct tour_info *get_tour_info(void)
 	init_mysql_timestamp(&dpv);
 	init_mysql_timestamp(&drv);
 
-	rows = take_rows(select_all_tour, "select_all_tour");
+	rows = take_rows(select_all_tour, buff);
+	if(rows == -1)
+		goto stop;
 
 	tour_info = malloc((sizeof(struct tour_viaggi) + sizeof(tour_info)) * rows);
 	memset(tour_info, 0, sizeof(*tour_info) + sizeof(struct tour_viaggi) * rows);
@@ -1884,7 +1893,8 @@ struct viaggi_assegnati *get_viaggi_assegnati(int dvr) //funziona
 
 
 	 
-	rows = bind_exe(select_assigned_trip, param, buff);
+	 bind_exe(select_assigned_trip, param, buff);
+	 rows = take_rows(select_assigned_trip, buff);
 	if(rows == -1)
 		goto stop; 
 
@@ -1992,7 +2002,10 @@ struct mete_visite *get_mete_visite(int idv)
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idv, sizeof(idv));
 
-	rows = bind_exe(select_dest_time, param, buff);
+	bind_exe(select_dest_time, param, buff);
+	rows =take_rows(select_dest_time, buff); 
+	if(rows ==-1)
+		goto stop; 
 
 	mete_visite = malloc((sizeof(struct mete_visite) + sizeof(mete_visite)) * rows);
 	memset(mete_visite, 0, sizeof(*mete_visite) + sizeof(struct mete_visite) * rows);
@@ -2084,7 +2097,10 @@ extern struct mappe *get_mappe (char* nml)
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, nml, strlen(nml));
 
-	rows = bind_exe(select_dvr_map, param, buff);
+	bind_exe(select_dvr_map, param, buff);
+	rows = take_rows(select_dvr_map, buff);
+	if(rows == -1)
+		goto stop; 
 
 	mappe = malloc((sizeof(struct mappe) + sizeof(mappe)) * rows);
 
