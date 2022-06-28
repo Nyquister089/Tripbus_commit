@@ -1,4 +1,4 @@
-CREATE DEFINER=`giordano`@`localhost` PROCEDURE `select_assigned_trip`(
+Create procedure if not exists `tripdb`.`select_assigned_trip`(
 in dvr int
  )
 BEGIN

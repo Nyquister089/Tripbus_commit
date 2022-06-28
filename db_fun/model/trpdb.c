@@ -41,20 +41,21 @@ static MYSQL_STMT *select_bus;		   // Meccanico
 static MYSQL_STMT *select_review;	   // ok Meccanico
 static MYSQL_STMT *select_sparepart;   // ok Meccanico
 
-static MYSQL_STMT *select_all_tour;		  // ok Cliente
-static MYSQL_STMT *select_dest_tour;	  // ok Cliente
-static MYSQL_STMT *select_hotel_service;  // ok Cliente
-static MYSQL_STMT *select_model_comfort;  // ok Cliente
-static MYSQL_STMT *select_expired_review; // ok Meccanico
-static MYSQL_STMT *select_max_idreview;   // ok Meccanico
-static MYSQL_STMT *select_assigned_trip; // ok AUTISTA 
-static MYSQL_STMT *select_dest_time;	// ok AUTISTA
-static MYSQL_STMT *select_dvr_map; 	//AUTISTA
+static MYSQL_STMT *select_all_tour;		  	// ok Cliente
+static MYSQL_STMT *select_dest_tour;	  	// ok Cliente
+static MYSQL_STMT *select_hotel_service;  	// ok Cliente
+static MYSQL_STMT *select_model_comfort;  	// ok Cliente
+static MYSQL_STMT *select_expired_review; 	// ok Meccanico
+static MYSQL_STMT *select_max_idreview;   	// ok Meccanico
+static MYSQL_STMT *select_assigned_trip; 	// ok AUTISTA 
+static MYSQL_STMT *select_dest_time;		// ok AUTISTA
+static MYSQL_STMT *select_dvr_map; 			// ok AUTISTA
 
 static MYSQL_STMT *update_trip_seat;		 // ok HOSTESS
 static MYSQL_STMT *validate_reservation;	 // ok  HOSTESS
 static MYSQL_STMT *update_data_doc;			 // Ok  HOSTESS
 static MYSQL_STMT *update_spareparts_number; // ok Meccanico
+static MYSQL_STMT *update_km;				// Autista
 
 
 static void close_prepared_stmts(void)
@@ -152,6 +153,11 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(select_dvr_map);
 		select_dvr_map = NULL;
 	}
+	if (select_bus)
+	{ 									// Procedura di select mezzo
+		mysql_stmt_close(select_bus);
+		select_bus = NULL;
+	}
 	if (select_trip)
 	{ // Procedura di select viaggi
 		mysql_stmt_close(select_trip);
@@ -212,6 +218,11 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(update_data_doc);
 		update_data_doc = NULL;
 	}
+	if(update_km)
+	{ 										// Procedura update valore conta km 
+		mysql_stmt_close(update_km);
+		update_km = NULL;
+	}
 	if (insert_assoc)
 	{
 		mysql_stmt_close(insert_assoc);
@@ -244,10 +255,20 @@ static bool initialize_prepared_stmts(role_t for_role)
 				return false;
 			}
 			if (!setup_prepared_stmt(&select_dvr_map, "call select_dvr_map(?)", conn))
-		{
-			print_stmt_error(select_dvr_map, "Unable to initialize select trip statement\n");
+			{
+			print_stmt_error(select_dvr_map, "Unable to select_dvr_map statement\n");
 			return false;
-		}
+			}
+			if (!setup_prepared_stmt(&select_bus, "call select_bus(?)", conn))
+			{
+			print_stmt_error(select_bus, "Unable to initialize select_bus statement\n");
+			return false;
+			}
+			if (!setup_prepared_stmt(& update_km, "call  update_km(?,?)", conn))
+			{
+			print_stmt_error( update_km, "Unable to initialize update_km statement\n");
+			return false;
+			}
 		break; 
 
 	case HOSTESS:
@@ -787,6 +808,19 @@ void do_update_trip_seat(struct viaggio *viaggio) // Funziona
 	mysql_stmt_reset(update_trip_seat);
 }
 
+void do_update_km(struct mezzo *mezzo) 
+{
+	MYSQL_BIND param[2];
+	char *buff = "update_km"; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING ,mezzo->targa, strlen(mezzo->targa));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &mezzo->valorecontakm, sizeof(mezzo->valorecontakm));
+
+	bind_exe(update_km, param, buff);
+
+	mysql_stmt_free_result(update_km);
+	mysql_stmt_reset(update_km);
+}
 
 void do_select_sparepart(struct ricambio *ricambio) //FUNZIONA
 {
@@ -796,8 +830,6 @@ void do_select_sparepart(struct ricambio *ricambio) //FUNZIONA
 
 	if (bind_exe(select_sparepart, param, "select_sparepart") == -1)
 		goto stop;
-
-	printf("bind_exe1\n");
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, ricambio->codice, sizeof(ricambio->codice));
 	set_binding_param(&param[1], MYSQL_TYPE_FLOAT, &ricambio->costounitario, sizeof(ricambio->costounitario));
@@ -812,6 +844,33 @@ stop:
 
 	mysql_stmt_free_result(select_sparepart);
 	mysql_stmt_reset(select_sparepart);
+}
+
+void do_select_bus(struct mezzo *mezzo) //FUNZIONA
+{
+	MYSQL_BIND param[7];
+	char *buff = "select_bus"; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mezzo->targa, strlen(mezzo->targa));
+
+	if (bind_exe(select_bus, param, buff) == -1)
+		goto stop;
+
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mezzo->targa, sizeof(mezzo->targa));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, mezzo->modellomezzo, sizeof(mezzo->modellomezzo));
+	set_binding_param(&param[2], MYSQL_TYPE_DATE, &mezzo->dataultimarevisioneinmotorizzazione, sizeof(mezzo->dataultimarevisioneinmotorizzazione));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mezzo->ingombri, sizeof(mezzo->ingombri));
+	set_binding_param(&param[4], MYSQL_TYPE_LONG, &mezzo->autonomia, sizeof(mezzo->autonomia));
+	set_binding_param(&param[5], MYSQL_TYPE_LONG, &mezzo->valorecontakm, sizeof(mezzo->valorecontakm));
+	set_binding_param(&param[6], MYSQL_TYPE_DATE, &mezzo->dataimmatricolazione, sizeof(mezzo->dataimmatricolazione));
+
+	take_result(select_bus, param, buff);
+
+stop:
+
+	mysql_stmt_free_result(select_bus);
+	mysql_stmt_reset(select_bus);
 }
 
 void do_select_review(struct revisione *revisione) // FUNZIONA
@@ -2012,11 +2071,12 @@ extern struct mappe *get_mappe (char* nml)
 	size_t rows, count;
 	count = 0;
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, &nml, strlen(nml));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, nml, strlen(nml));
 
 	rows = bind_exe(select_dvr_map, param, buff);
-	// NON RIESCE AD ESEGUIRE LA MALLOC
+
 	mappe = malloc((sizeof(struct mappe) + sizeof(mappe)) * rows);
+
 	memset(mappe, 0, sizeof(*mappe) + sizeof(struct mappe) * rows);
 
 	if (mappe == NULL)
@@ -2028,7 +2088,7 @@ extern struct mappe *get_mappe (char* nml)
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, citta, sizeof(citta));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, dettaglio, sizeof(dettaglio));
 	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, zona, sizeof(zona));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, immagine, sizeof(immagine));
+	set_binding_param(&param[3], MYSQL_TYPE_BLOB, immagine, sizeof(immagine));
 	
 	
 	if (mysql_stmt_bind_result(select_dvr_map, param))
@@ -2062,7 +2122,7 @@ extern struct mappe *get_mappe (char* nml)
 		
 		printf("* %s *\n", mappe->mappe[count].citta);
 		printf("Dettaglio:		%s 	\n", mappe->mappe[count].dettaglio);
-		printf("Zona:		%s 	\n", mappe->mappe[count].zona);
+		printf("Zona:			%s 	\n", mappe->mappe[count].zona);
 		printf("Immagine:		%s 	\n\n", mappe->mappe[count].immagine);
 		
 		count++;

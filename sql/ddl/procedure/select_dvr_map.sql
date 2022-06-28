@@ -1,8 +1,9 @@
-CREATE DEFINER=`giordano`@`localhost` PROCEDURE `select_dvr_map`(
+CREATE PROCEDURE IF NOT EXISTS `tripdb`.`select_dvr_map`(
 in lcl varchar(45)
 )
 BEGIN
-SELECT m.Citta,
+SELECT distinct 
+    m.Citta,
 	m.Dettaglio,
     m.Zona,
     m.ImmagineMappa	

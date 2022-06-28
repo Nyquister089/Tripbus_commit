@@ -1,4 +1,5 @@
 #include <string.h>
+#include "../model/trpdb.h"
 #include "show.h" 
 
 void show_reservation (struct prenotazione * prenotazione)
@@ -96,8 +97,23 @@ printf("\n\n** Dettagli prenotazione **\n\n");
 	); 
 }
 
+void show_bus(struct mezzo *mezzo)
+{	
+	do_select_bus(mezzo); 
+	printf("\n\n** Dettagli mezzo **\n\n");
+ 	printf(" *Targa:			%s *\n Modello:	%s \n Data ultima revisone mtc: 		%s \n Ingombri: 		%s \n Autonomia: 		%d\n Chilometraggio:	%d\n Data immatricolazione:	%s \n\n",
+		mezzo->targa,
+		mezzo->modellomezzo,
+		mezzo->dataultimarevisioneinmotorizzazione, 
+		mezzo->ingombri, 
+		mezzo->autonomia,
+		mezzo->valorecontakm, 
+		mezzo->dataimmatricolazione); 
+
+}
+
 void show_expired_review (void) 
-{
+{	
 	printf("** Ecco i mezzi le cui revisioni risultano scadute o in scadenza**\n\n");
 	get_info_revisioni();
 }

@@ -117,13 +117,15 @@ void ins_sparepart(struct ricambio *ricambio)
 
 void ins_bus(struct mezzo *mezzo)
 {	
-	
+	char buff[VARCHAR_LEN]; 
 	printf("\n** Dettagli inserimento mezzo **\n\n");
 	get_input("Inserisci la targa : ", VARCHAR_LEN, mezzo->targa, false);
-	get_input("Inserisci l'ID del modello : ", NUM_LEN, mezzo->modellomezzo, false);
+	get_input("Inserisci l'ID del modello : ", VARCHAR_LEN, mezzo->modellomezzo, false);
 	get_input("Inserisci gli ingombri : ", VARCHAR_LEN, mezzo->ingombri, false);
-	get_input("Inserisci l'autonomia : ", NUM_LEN, mezzo-> autonomia, false);
-	get_input("Inserisci il valore attuale del conta chilometri: ", NUM_LEN, mezzo-> valorecontakm, false);
+	get_input("Inserisci l'autonomia : ", NUM_LEN, buff , false);
+	mezzo-> autonomia = atoi(buff); 
+	get_input("Inserisci il valore attuale del conta chilometri: ", NUM_LEN, buff, false);
+	mezzo-> valorecontakm = atoi(buff); 
 		while(true){
 		get_input("Inserisci la data dell'ultima revisione presso la motorizzazione [YYYY-MM-DD]: ", DATE_LEN, mezzo->dataultimarevisioneinmotorizzazione, false);
 		if(validate_date(mezzo->dataultimarevisioneinmotorizzazione))

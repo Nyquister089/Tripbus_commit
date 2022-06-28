@@ -1,9 +1,20 @@
 #include <stdio.h>
 
 #include "autista.h"
+#include "show.h"
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
+struct mezzo *mezzo_drvr;
+
+int drvr_allocation (void)
+{
+	mezzo_drvr = malloc (sizeof(struct mezzo));
+	if(mezzo_drvr == NULL){
+		printf("Fallimento malloc su mezzo (Autista)\n\n"); 
+		return -1; 
+	}
+}
 
 int get_drvr_action(void)
 {
@@ -60,6 +71,23 @@ void show_drvr_map(void)
 	get_mappe(buff); 
 }
 
+void update_km(void)
+{
+	char buff[VARCHAR_LEN];
+	bool ans; 
+	printf("** Selezione del mezzo d'interesse **\n\n");
+	get_input("Inserisci la targa :", VARCHAR_LEN, mezzo_drvr->targa, false);
+	printf("** Dettagli mezzo d'interesse **\n\n");
+	show_bus(mezzo_drvr); 
+	ans =yes_or_no("Vuoi modificare i km di questo mezzo ? ", 's', 'n', false, false); 
+	if(ans){
+		get_input("\nInserisci l'attuale numero di km : ",NUM_LEN, buff, false); 
+		mezzo_drvr->valorecontakm = atoi(buff); 
+		do_update_km(mezzo_drvr); 
+		}
+
+}
+
 
 bool exe_drvr_act(drvr_act sel)
 {	
@@ -80,12 +108,11 @@ bool exe_drvr_act(drvr_act sel)
 		 }
 
 	 	case AGGIORNA_KM:{ 
-		//update_km(mezzo);
+		update_km();
 		return true; 
 		 }
 
 		case QUIT_DRVR:
-		// gestire l'uscita dal Db (disconnessione e ritorno a schermata iniziale) 
 		return false; 
 		
 	break;
@@ -94,68 +121,10 @@ bool exe_drvr_act(drvr_act sel)
 	return true;
 }
 
-
-
-/*
-void show_opening_hour(struct meta *meta)
-{	clear_screen();	
-	char buffer[VARCHAR_LEN]; 
-	printf("** Visualizzazione orario di apertura **\n\n");
-	get_input("Inserisci l'ID della meta desiderata:", VARCHAR_LEN, buffer, false);
-	while(true) {
-	get_input("Inserisci la data di interesse [YYYY-MM-DD]: ", DATE_LEN, DATE, false);
-	if(validate_date(DATE))
-		break;
-	fprintf(stderr, "Data Errata!\n");
-	}
-	//esegui procedura di select sul meta e visita
-	printf(" Il bene turistico %s aprira' alle ore %s ",
-			meta->nomemeta, 
-			meta->orariodiapertura 
-			);
-}
-
-void show_map(struct mappa *mappa)
-{	clear_screen();	
-	char buffer[VARCHAR_LEN]; 
-	printf("** Visualizzazione mappa  **\n\n");
-	get_input("Inserisci l'ID della mappa desiderata:", VARCHAR_LEN, buffer, false);
-	//esegui procedura di select su mappa 
-	printf(" Ecco la mappa di  %s:  ",
-			mappa->citta  
-			);// come si visualizza un dato di tipo blob 
-}
-
-void update_km(struct mezzo *mezzo)
-{	
-	clear_screen();
-	char buffer[VARCHAR_LEN]; 	
-	printf("** Aggiornamento conta Km **\n\n");
-	get_input("Inserisci la targa del mezzo :", VARCHAR_LEN, TARGA, false);
-	//esegui procedura di select su mappa 
-	get_input("Inserisci il valore attuale del conta chilometri: ", VARCHAR_LEN, mezzo-> valorecontakm, false);
-
-}
-
-void show_destination (struct meta *meta, struct visita *visita, struct viaggio *viaggio)
-{
-	clear_screen();
-	printf("** Procedura visualizzazione mete viaggio **\n\n");
-	get_input("Inserisci l'ID del viaggio : ", NUM_LEN , ID_RSRC, false); 
-    do_select_trip_destination(meta, viaggio, visita); 
-    printf("ID  %s \n : Nome: %s \n Tipologia: %s \n Località: %s \n Indirizzo: %s \n", 
-			meta->idmeta,
-			meta->nomemeta,
-			meta->tipologiameta,
-			meta->localitadiappartenenza,
-			meta->indirizzo
-		);
-
-
-}*/
-
 void run_drvr_interface (void)
 { 	char sel; 
+	if(mezzo_drvr == NULL)
+		drvr_allocation(); 
 	while (true){
 	sel =  get_drvr_action(); 
 	if (!exe_drvr_act(sel))

@@ -140,10 +140,10 @@ struct mete_viaggio{
 
 struct mezzo {
 	char targa[TAR_LEN];
-	char modellomezzo[NUM_LEN]; 					//FK //Corretto trasformandolo da carattere a puntatore di carattere
+	char modellomezzo[VARCHAR_LEN]; 					
 	char ingombri[VARCHAR_LEN];	
-	char autonomia[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
-	char valorecontakm[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	int autonomia; //Corretto trasformandolo da carattere a puntatore di carattere
+	int valorecontakm; //Corretto trasformandolo da carattere a puntatore di carattere
 	char dataultimarevisioneinmotorizzazione[DATE_LEN]; 
 	char dataimmatricolazione[DATE_LEN]; 
 };
@@ -397,6 +397,7 @@ extern void do_select_reservation(struct prenotazione *prenotazione);
 extern void do_select_tour( struct tour *tour);
 extern void do_select_sparepart(struct ricambio *ricambio); 
 extern void do_select_review(struct revisione *revisione);
+extern void do_select_bus(struct mezzo *mezzo); 
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 
@@ -413,4 +414,5 @@ extern void do_update_data_doc(struct cliente *cliente);
 extern void do_validate_reservation(struct prenotazione *prenotazione);
 extern void do_update_trip_seat(struct viaggio *viaggio);
 extern void do_update_spareparts_number(struct ricambio *ricambio); 
+extern void do_update_km(struct mezzo *mezzo); 
 
