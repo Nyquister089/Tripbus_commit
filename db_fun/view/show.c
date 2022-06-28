@@ -99,9 +99,8 @@ printf("\n\n** Dettagli prenotazione **\n\n");
 
 void show_bus(struct mezzo *mezzo)
 {	
-	do_select_bus(mezzo); 
 	printf("\n\n** Dettagli mezzo **\n\n");
- 	printf(" *Targa:			%s *\n Modello:	%s \n Data ultima revisone mtc: 		%s \n Ingombri: 		%s \n Autonomia: 		%d\n Chilometraggio:	%d\n Data immatricolazione:	%s \n\n",
+ 	printf(" *Targa:		%s *\n Modello:		%s \n Ultima revisone mtc: 	%s \n Ingombri: 		%s \n Autonomia: 		%d\n Chilometraggio:	%d\n Data immatricolazione:	%s \n\n",
 		mezzo->targa,
 		mezzo->modellomezzo,
 		mezzo->dataultimarevisioneinmotorizzazione, 

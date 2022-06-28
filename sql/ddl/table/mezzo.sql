@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `tripdb`.`mezzo` (
   `Targa` varchar(10) NOT NULL,
   `ModelloMezzo` varchar(45) NOT NULL,
-  `DataRevisioneMotorizzazione` varchar(45) NOT NULL,
+  `DataRevisioneMotorizzazione`DATE NOT NULL,
   `Autonomia` int unsigned NOT NULL,
   `ValoreContaKm` int unsigned NOT NULL,
   `Ingombri` varchar(45) NOT NULL,

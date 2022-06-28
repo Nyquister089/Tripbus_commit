@@ -140,11 +140,11 @@ struct mete_viaggio{
 
 struct mezzo {
 	char targa[TAR_LEN];
-	char modellomezzo[VARCHAR_LEN]; 					
+	char modellomezzo[VARCHAR_LEN]; 
+	char dataultimarevisioneinmotorizzazione[DATE_LEN]; 					
 	char ingombri[VARCHAR_LEN];	
 	int autonomia; //Corretto trasformandolo da carattere a puntatore di carattere
 	int valorecontakm; //Corretto trasformandolo da carattere a puntatore di carattere
-	char dataultimarevisioneinmotorizzazione[DATE_LEN]; 
 	char dataimmatricolazione[DATE_LEN]; 
 };
 

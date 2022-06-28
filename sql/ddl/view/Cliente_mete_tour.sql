@@ -11,7 +11,7 @@ VIEW `Cliente_mete_tour` AS
         ((((`meta` `m`
         JOIN `fme` ON ((`m`.`IdMeta` = `fme`.`MetaRappresentata`)))
         JOIN `documentazionefotografica` `d` ON ((`fme`.`FotoMeta` = `d`.`Immagine`)))
-        JOIN `tome` ON ((`m`.`IdMeta` = `tome`.`Meta`)))
-        JOIN `tour` `t` ON ((`tome`.`Tour` = `t`.`DenominazioneTour`)))
+        JOIN `tome` ON ((`m`.`IdMeta` = `tome`.`MetaInclusa`)))
+        JOIN `tour` `t` ON ((`tome`.`TourRelativo` = `t`.`DenominazioneTour`)))
     WHERE
         (`t`.`DenominazioneTour` = 'Den')

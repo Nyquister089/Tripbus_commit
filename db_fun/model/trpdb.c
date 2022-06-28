@@ -29,6 +29,8 @@ static MYSQL_STMT *insert_sostitution; // Meccanico
 static MYSQL_STMT *select_trip;		   // ok HOSTESS
 static MYSQL_STMT *select_costumer;	   // Ok HOSTESS
 static MYSQL_STMT *select_reservation; // ok HOSTESS
+static MYSQL_STMT *select_review;	   // ok Meccanico
+static MYSQL_STMT *select_sparepart;   // ok Meccanico
 
 static MYSQL_STMT *select_tour;		   //
 static MYSQL_STMT *select_destination; //
@@ -38,8 +40,6 @@ static MYSQL_STMT *select_model;	   // Meccanico
 static MYSQL_STMT *select_comfort;	   //
 static MYSQL_STMT *select_service;	   //
 static MYSQL_STMT *select_bus;		   // Meccanico
-static MYSQL_STMT *select_review;	   // ok Meccanico
-static MYSQL_STMT *select_sparepart;   // ok Meccanico
 
 static MYSQL_STMT *select_all_tour;		  	// ok Cliente
 static MYSQL_STMT *select_dest_tour;	  	// ok Cliente
@@ -52,8 +52,8 @@ static MYSQL_STMT *select_dest_time;		// ok AUTISTA
 static MYSQL_STMT *select_dvr_map; 			// ok AUTISTA
 
 static MYSQL_STMT *update_trip_seat;		 // ok HOSTESS
-static MYSQL_STMT *validate_reservation;	 // ok  HOSTESS
-static MYSQL_STMT *update_data_doc;			 // Ok  HOSTESS
+static MYSQL_STMT *validate_reservation;	 // ok HOSTESS
+static MYSQL_STMT *update_data_doc;			 // Ok HOSTESS
 static MYSQL_STMT *update_spareparts_number; // ok Meccanico
 static MYSQL_STMT *update_km;				// Autista
 
@@ -846,28 +846,35 @@ stop:
 	mysql_stmt_reset(select_sparepart);
 }
 
-void do_select_bus(struct mezzo *mezzo) //FUNZIONA
+void do_select_bus(struct mezzo *mezzo)
 {
-	MYSQL_BIND param[7];
-	char *buff = "select_bus"; 
+	MYSQL_BIND param[6];
+	MYSQL_TIME dataultimarevisioneinmotorizzazione;
+	MYSQL_TIME dataimmatricolazione;
+
+	char *buff = "select_bus";  
+
+	date_to_mysql_time(mezzo->dataultimarevisioneinmotorizzazione, &dataultimarevisioneinmotorizzazione);
+	date_to_mysql_time(mezzo->dataimmatricolazione, &dataimmatricolazione);
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mezzo->targa, strlen(mezzo->targa));
 
 	if (bind_exe(select_bus, param, buff) == -1)
 		goto stop;
 
-
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mezzo->targa, sizeof(mezzo->targa));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, mezzo->modellomezzo, sizeof(mezzo->modellomezzo));
-	set_binding_param(&param[2], MYSQL_TYPE_DATE, &mezzo->dataultimarevisioneinmotorizzazione, sizeof(mezzo->dataultimarevisioneinmotorizzazione));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mezzo->ingombri, sizeof(mezzo->ingombri));
-	set_binding_param(&param[4], MYSQL_TYPE_LONG, &mezzo->autonomia, sizeof(mezzo->autonomia));
-	set_binding_param(&param[5], MYSQL_TYPE_LONG, &mezzo->valorecontakm, sizeof(mezzo->valorecontakm));
-	set_binding_param(&param[6], MYSQL_TYPE_DATE, &mezzo->dataimmatricolazione, sizeof(mezzo->dataimmatricolazione));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mezzo->modellomezzo, sizeof(mezzo->modellomezzo));
+	set_binding_param(&param[1], MYSQL_TYPE_DATE, &dataultimarevisioneinmotorizzazione, sizeof(dataultimarevisioneinmotorizzazione));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, mezzo->ingombri, sizeof(mezzo->ingombri));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &mezzo->autonomia, sizeof(mezzo->autonomia));
+	set_binding_param(&param[4], MYSQL_TYPE_LONG, &mezzo->valorecontakm, sizeof(mezzo->valorecontakm));
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &dataimmatricolazione, sizeof(dataimmatricolazione));
 
 	take_result(select_bus, param, buff);
 
-stop:
+   	stop:
+
+	mysql_date_to_string(&dataultimarevisioneinmotorizzazione, mezzo->dataultimarevisioneinmotorizzazione);
+	mysql_date_to_string(&dataimmatricolazione, mezzo->dataimmatricolazione);
 
 	mysql_stmt_free_result(select_bus);
 	mysql_stmt_reset(select_bus);
@@ -1374,6 +1381,7 @@ struct info_modelli *get_info_modello(char *nmd)
 
 	struct info_modelli *info_modello = NULL;
 	char *buff = "select_model_comfort";
+
 	char casacostruttrice[VARCHAR_LEN];
 	int numeroposti;
 	char nomecomfort[VARCHAR_LEN];
@@ -1381,6 +1389,7 @@ struct info_modelli *get_info_modello(char *nmd)
 	char foto[PIC];
 	char descrizionefoto[DES_LEN];
 	int idfoto;
+
 	size_t rows, count;
 	count = 0;
 	int cmpr, status;
@@ -1388,6 +1397,8 @@ struct info_modelli *get_info_modello(char *nmd)
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, nmd, strlen(nmd));
 
 	bind_exe(select_model_comfort, param, buff);
+
+	rows = take_rows(select_model_comfort,buff); 
 
 	info_modello = malloc((sizeof(struct info_modelli) + sizeof(info_modello)) * rows);
 	memset(info_modello, 0, sizeof(*info_modello) + sizeof(struct info_modelli) * rows);
@@ -1442,15 +1453,15 @@ struct info_modelli *get_info_modello(char *nmd)
 		if (cmpr != 0)
 		{
 			printf("Casa costruttrice:	%s \n", info_modello->info_modelli[count].casacostruttrice);
-			printf("Numero di posti:	%d	\n", info_modello->info_modelli[count].numeroposti);
+			printf("Numero di posti:	%d	\n\n", info_modello->info_modelli[count].numeroposti);
 		}
-		printf("Comfort:	 %s \n", info_modello->info_modelli[count].nomecomfort);
+		printf("Comfort:	 	%s \n", info_modello->info_modelli[count].nomecomfort);
 		printf("%s \n", info_modello->info_modelli[count].descrizionecomfort);
 
 		if (info_modello->info_modelli[count].idfoto != info_modello->info_modelli[count - 1].idfoto)
 		{
 			printf("%s\n", info_modello->info_modelli[count].foto);
-			printf("Descrizione foto:%s\n", info_modello->info_modelli[count].descrizionefoto);
+			printf("Descrizione foto:%s\n\n", info_modello->info_modelli[count].descrizionefoto);
 		}
 		count++;
 	}
