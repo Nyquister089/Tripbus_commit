@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS `tripdb`.`tome` (
-  `Meta` int unsigned NOT NULL,
-  `Tour` varchar(45) NOT NULL,
-  PRIMARY KEY (`Meta`,`Tour`),
-  KEY `Tour_idx` (`Tour`),
-  CONSTRAINT `Meta` FOREIGN KEY (`Meta`) REFERENCES `meta` (`IdMeta`),
-  CONSTRAINT `Tour` FOREIGN KEY (`Tour`) REFERENCES `tour` (`DenominazioneTour`)
+  `MetaInclusa` int unsigned NOT NULL,
+  `TourRelativo` varchar(45) NOT NULL,
+  PRIMARY KEY (`MetaInclusa`,`TourRelativo`),
+  KEY `TourRelativo_idx` (`TourRelativo`),
+  CONSTRAINT `MetaInclusa` FOREIGN KEY (`MetaInclusa`) REFERENCES `meta` (`IdMeta`),
+  CONSTRAINT `TourRelativo` FOREIGN KEY (`TourRelativo`) REFERENCES `tour` (`DenominazioneTour`)
 ) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci;

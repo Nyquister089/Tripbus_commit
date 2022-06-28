@@ -48,7 +48,8 @@ static MYSQL_STMT *select_model_comfort;  // ok Cliente
 static MYSQL_STMT *select_expired_review; // ok Meccanico
 static MYSQL_STMT *select_max_idreview;   // ok Meccanico
 static MYSQL_STMT *select_assigned_trip; // ok AUTISTA 
-static MYSQL_STMT *select_dest_time;	// AUTISTA
+static MYSQL_STMT *select_dest_time;	// ok AUTISTA
+static MYSQL_STMT *select_dvr_map; 	//AUTISTA
 
 static MYSQL_STMT *update_trip_seat;		 // ok HOSTESS
 static MYSQL_STMT *validate_reservation;	 // ok  HOSTESS
@@ -138,13 +139,18 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(select_max_idreview);
 		select_max_idreview = NULL;
 	}
-	if(select_dest_time) {			// Procedura di visualizzazione viaggi assegnati (AUTISTA)
+	if(select_dest_time) {			// Procedura di visualizzazione dati temporali mete visitate da viaggio (AUTISTA)
 		mysql_stmt_close(select_dest_time);
 		select_dest_time = NULL;
 	}
 	if(select_assigned_trip) {			// Procedura di visualizzazione viaggi assegnati (AUTISTA)
 		mysql_stmt_close(select_assigned_trip);
 		select_assigned_trip = NULL;
+	}
+	if (select_dvr_map)			// Procedura di visualizzazione mappe relative ad una località (AUTISTA)
+	{ 
+		mysql_stmt_close(select_dvr_map);
+		select_dvr_map = NULL;
 	}
 	if (select_trip)
 	{ // Procedura di select viaggi
@@ -237,6 +243,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 				print_stmt_error(select_dest_time, "Unable to initialize select_dest_time statement\n");
 				return false;
 			}
+			if (!setup_prepared_stmt(&select_dvr_map, "call select_dvr_map(?)", conn))
+		{
+			print_stmt_error(select_dvr_map, "Unable to initialize select trip statement\n");
+			return false;
+		}
 		break; 
 
 	case HOSTESS:
@@ -1877,9 +1888,9 @@ stop:
 	free(viaggi_assegnati);
 }
 
-extern struct mete_visite *get_mete_visite(int idv)
+struct mete_visite *get_mete_visite(int idv)
 {
-	MYSQL_BIND param[7];
+	MYSQL_BIND param[9];
 	MYSQL_TIME darrivo;
 	MYSQL_TIME dpartenza;
 	MYSQL_TIME oarrivo;
@@ -1893,6 +1904,8 @@ extern struct mete_visite *get_mete_visite(int idv)
 
 	char nome [VARCHAR_LEN]; 
 	char tipologia[VARCHAR_LEN]; 
+	char localita[VARCHAR_LEN];
+	char regione[VARCHAR_LEN]; 
 	char indirizzo[VARCHAR_LEN];
 	char arrivo[DATE_LEN];
 	char ingresso[TIME_LEN]; 
@@ -1924,11 +1937,13 @@ extern struct mete_visite *get_mete_visite(int idv)
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, nome, sizeof(nome));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tipologia, sizeof(tipologia));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, indirizzo, sizeof(indirizzo));
-	set_binding_param(&param[3], MYSQL_TYPE_DATE, &darrivo, sizeof(darrivo));
-	set_binding_param(&param[4], MYSQL_TYPE_TIME, &oarrivo, sizeof(oarrivo));
-	set_binding_param(&param[5], MYSQL_TYPE_DATE, &dpartenza, sizeof(dpartenza));
-	set_binding_param(&param[6], MYSQL_TYPE_TIME, &opartenza, sizeof(opartenza));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, localita, sizeof(localita));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, regione, sizeof(regione));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, indirizzo, sizeof(indirizzo));
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &darrivo, sizeof(darrivo));
+	set_binding_param(&param[6], MYSQL_TYPE_TIME, &oarrivo, sizeof(oarrivo));
+	set_binding_param(&param[7], MYSQL_TYPE_DATE, &dpartenza, sizeof(dpartenza));
+	set_binding_param(&param[8], MYSQL_TYPE_TIME, &opartenza, sizeof(opartenza));
 	
 	if (mysql_stmt_bind_result(select_dest_time, param))
 	{
@@ -1955,6 +1970,8 @@ extern struct mete_visite *get_mete_visite(int idv)
 		}
 		strcpy(mete_visite->mete_visite[count].nome, nome);
 		strcpy(mete_visite->mete_visite[count].tipologia, tipologia);
+		strcpy(mete_visite->mete_visite[count].localita, localita);
+		strcpy(mete_visite->mete_visite[count].regione, regione);
 		strcpy(mete_visite->mete_visite[count].indirizzo, indirizzo);
 		mysql_date_to_string(&darrivo, mete_visite->mete_visite[count].arrivo);
 		mysql_date_to_string(&dpartenza, mete_visite->mete_visite[count].partenza);
@@ -1963,6 +1980,8 @@ extern struct mete_visite *get_mete_visite(int idv)
 		
 		printf("* %s *\n", mete_visite->mete_visite[count].nome);
 		printf("Tipologia meta:		%s 	\n", mete_visite->mete_visite[count].tipologia);
+		printf("Località:		%s 	\n", mete_visite->mete_visite[count].localita);
+		printf("Regione:		%s 	\n", mete_visite->mete_visite[count].regione);
 		printf("Indirizzo:		%s 	\n", mete_visite->mete_visite[count].indirizzo);
 		printf("Data di arrivo:		%s	", mete_visite->mete_visite[count].arrivo);
 		printf("Ora di arrivo:	  	%s \n", mete_visite->mete_visite[count].ingresso);
@@ -1976,3 +1995,84 @@ stop:
 	mysql_stmt_reset(select_dest_time);
 	free(mete_visite);
 };
+
+
+extern struct mappe *get_mappe (char* nml)
+{
+	MYSQL_BIND param[4];
+
+	struct mappe *mappe = NULL;
+	int status;
+	int cmpr;
+	char *buff = "select_dvr_map";
+
+	char citta[VARCHAR_LEN];
+	char dettaglio[VARCHAR_LEN];
+	char zona[VARCHAR_LEN];
+	char immagine[VARCHAR_LEN];	
+
+	size_t rows, count;
+	count = 0;
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, &nml, sizeof(nml));
+
+	bind_exe(select_dvr_map, param, buff);
+
+	rows = mysql_stmt_num_rows(select_dvr_map);
+
+	mappe = malloc((sizeof(struct mappe) + sizeof(mappe)) * rows);
+	memset(mappe, 0, sizeof(*mappe) + sizeof(struct mappe) * rows);
+
+	if (mappe == NULL)
+	{
+		printf("Impossibile eseguire la malloc su %s", buff);
+		goto stop;
+	}
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, citta, sizeof(citta));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, dettaglio, sizeof(dettaglio));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, zona, sizeof(zona));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, immagine, sizeof(immagine));
+	
+	
+	if (mysql_stmt_bind_result(select_dvr_map, param))
+	{
+		printf("Procedura: %s", buff);
+		print_stmt_error(select_dvr_map, "\n\n Impossibile eseguire il bind risult\n\n");
+		free(mappe);
+		mappe = NULL;
+		goto stop;
+	}
+
+	mappe->num_mappe = rows;
+
+	while (true)
+	{
+		status = mysql_stmt_fetch(select_dvr_map);
+		if (status == MYSQL_NO_DATA)
+		{
+			printf("...\n");
+			break;
+		}
+		if (status == 1)
+		{
+			print_stmt_error(select_dvr_map, "\nImpossibile eseguire fetch");
+		}
+
+		strcpy(mappe->mappe[count].citta, citta);
+		strcpy(mappe->mappe[count].dettaglio, dettaglio);
+		strcpy(mappe->mappe[count].zona, zona);
+		strcpy(mappe->mappe[count].immagine, immagine);
+		
+		printf("* %s *\n", mappe->mappe[count].citta);
+		printf("Dettaglio:		%s 	\n", mappe->mappe[count].dettaglio);
+		printf("Zona:		%s 	\n", mappe->mappe[count].zona);
+		printf("Immagine:		%s 	\n\n", mappe->mappe[count].immagine);
+		
+		count++;
+	}
+stop:
+	mysql_stmt_free_result(select_dvr_map);
+	mysql_stmt_reset(select_dvr_map);
+	free(mappe);
+}

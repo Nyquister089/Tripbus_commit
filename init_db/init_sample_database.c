@@ -181,6 +181,8 @@ void populate_tables()
     execute_query_from_file_sql("../sql/dml/delete_and_insert_fme.sql");
     execute_query_from_file_sql("../sql/dml/delete_and_insert_revisione.sql");
     execute_query_from_file_sql("../sql/dml/delete_and_insert_ricambio.sql");
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_mappa.sql");
+    
 
 
 }
@@ -216,6 +218,8 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/select_max_idreview.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_assigned_trip.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_dest_time.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/select_dvr_map.sql"); 
+    
  
 }
 

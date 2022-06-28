@@ -115,7 +115,7 @@ struct localita {
 struct mappa {
 	char idmappa[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 	char citta[VARCHAR_LEN];
-	char livellodidettaglio[VARCHAR_LEN];
+	char dettaglio[VARCHAR_LEN];
 	char zona[VARCHAR_LEN];
 	char localitarappresentata[VARCHAR_LEN]; 		//FK
 };
@@ -357,6 +357,8 @@ struct viaggi_assegnati{
 struct meta_visita{
 	char nome [VARCHAR_LEN]; 
 	char tipologia[VARCHAR_LEN]; 
+	char localita[VARCHAR_LEN];
+	char regione[VARCHAR_LEN]; 
 	char indirizzo[VARCHAR_LEN]; 
 	char arrivo[DATE_LEN];
 	char ingresso[TIME_LEN]; 
@@ -367,6 +369,18 @@ struct meta_visita{
 struct mete_visite{
 	size_t num_visite; 
 	struct meta_visita mete_visite[]; 
+};
+
+struct mappa_autista{
+	char citta[VARCHAR_LEN];
+	char dettaglio[VARCHAR_LEN];
+	char zona[VARCHAR_LEN];
+	char immagine[VARCHAR_LEN];	
+};
+
+struct mappe{
+	size_t num_mappe; 
+	struct mappa_autista mappe[]; 
 };
 
 
@@ -393,6 +407,7 @@ extern struct info_modelli *get_info_modello(char *nmd);
 extern struct revisioni_scadute *get_info_revisioni(void); 
 extern struct viaggi_assegnati *get_viaggi_assegnati(int dvr);
 extern struct mete_visite *get_mete_visite(int idv);
+extern struct mappe *get_mappe(char* nml); 
 
 extern void do_update_data_doc(struct cliente *cliente); 
 extern void do_validate_reservation(struct prenotazione *prenotazione);

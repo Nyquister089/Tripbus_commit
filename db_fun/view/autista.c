@@ -7,7 +7,7 @@
 
 int get_drvr_action(void)
 {
-	char options[6] = {'1','2','3','4','5','6'};
+	char options[5] = {'1','2','3','4','5'};
 	char op;
 
 	puts("*********************************");
@@ -15,17 +15,15 @@ int get_drvr_action(void)
 	puts("*********************************\n");
 	puts("*** Quale operazione vorresti eseguire? ***\n");
 	puts("1) Consulta i viaggi ed i mezzi a cui sei assegnato");
-	puts("2) Consulta i dati temporali delle mete previste per un viaggio");
+	puts("2) Consulta le località ed i dati temporali delle mete previste per un viaggio ");
 	puts("3) Consulta le mappe");
-	puts("4) Consulta l'orario di apertura dei beni tursitici");
-	puts("5) Aggiorna il valore del conta km dopo un viaggio"); 
-	puts("6) Esci");
-	/*Consultare i dati temporali relativi al viaggio : beni orario e giorno inizio, alberghi giorno e ora arrivo e partenza 
-	Consultare le località incluse in un viaggio in modo da tracciare il percorso
+	puts("4) Aggiorna il valore del conta km dopo un viaggio"); 
+	puts("5) Esci");
+	/*Consulta le mappe
 	Aggiornare il valore del contatore chilometrico del mezzo che ha utilizzato per  svolgere il viaggio
 	*/
 
-	op = multi_choice("Select an option", options, 6);
+	op = multi_choice("Select an option", options, 5);
 	return op - '1';
 }
 
@@ -53,6 +51,15 @@ void show_dest_time(void)
 	get_mete_visite(dvr); 
 }
 
+void show_drvr_map(void)
+{
+	char buff[NUM_LEN];
+	printf("** Ricerca la mappa d'interesse **\n\n");
+	get_input("Inserisci il nome della località:", VARCHAR_LEN, buff, false);
+	printf("** Dettagli mappe relative alla località inserita **\n\n");
+	get_mappe(buff); 
+}
+
 
 bool exe_drvr_act(drvr_act sel)
 {	
@@ -62,13 +69,13 @@ bool exe_drvr_act(drvr_act sel)
 		return true;
 		}
      	
-     	case ORARIO_APERTURA:{
+     	case ORARI_VISITE:{
      	show_dest_time();
 		return true; 
 		 }
 
 	 	case MAPPE:	{
-	 	//show_map(mappa); 
+	 	show_drvr_map(); 
 		return true;
 		 }
 
@@ -77,11 +84,6 @@ bool exe_drvr_act(drvr_act sel)
 		return true; 
 		 }
 
-		case METE_VISITATE: {
-		//show_destination(meta,NULL,NULL); 
-		return true; 
-		}
-		
 		case QUIT_DRVR:
 		// gestire l'uscita dal Db (disconnessione e ritorno a schermata iniziale) 
 		return false; 
