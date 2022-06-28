@@ -1922,9 +1922,7 @@ struct mete_visite *get_mete_visite(int idv)
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idv, sizeof(idv));
 
-	bind_exe(select_dest_time, param, buff);
-
-	rows = mysql_stmt_num_rows(select_dest_time);
+	rows = bind_exe(select_dest_time, param, buff);
 
 	mete_visite = malloc((sizeof(struct mete_visite) + sizeof(mete_visite)) * rows);
 	memset(mete_visite, 0, sizeof(*mete_visite) + sizeof(struct mete_visite) * rows);
@@ -2014,12 +2012,10 @@ extern struct mappe *get_mappe (char* nml)
 	size_t rows, count;
 	count = 0;
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, &nml, sizeof(nml));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, &nml, strlen(nml));
 
-	bind_exe(select_dvr_map, param, buff);
-
-	rows = mysql_stmt_num_rows(select_dvr_map);
-
+	rows = bind_exe(select_dvr_map, param, buff);
+	// NON RIESCE AD ESEGUIRE LA MALLOC
 	mappe = malloc((sizeof(struct mappe) + sizeof(mappe)) * rows);
 	memset(mappe, 0, sizeof(*mappe) + sizeof(struct mappe) * rows);
 

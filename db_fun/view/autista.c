@@ -53,7 +53,7 @@ void show_dest_time(void)
 
 void show_drvr_map(void)
 {
-	char buff[NUM_LEN];
+	char buff[VARCHAR_LEN];
 	printf("** Ricerca la mappa d'interesse **\n\n");
 	get_input("Inserisci il nome della località:", VARCHAR_LEN, buff, false);
 	printf("** Dettagli mappe relative alla località inserita **\n\n");

@@ -1,5 +1,5 @@
 CREATE DEFINER=`giordano`@`localhost` PROCEDURE `select_dvr_map`(
-in nml varchar(45)
+in lcl varchar(45)
 )
 BEGIN
 SELECT m.Citta,
@@ -9,7 +9,7 @@ SELECT m.Citta,
 from mappa as m
 join localita as l on m.LocalitaRappresentata = l.NomeLocalita
 join meta as me on l.NomeLocalita = me.LocalitaDiAppartenenza
-where l.NomeLocalita = nml;
+where m.LocalitaRappresentata = lcl;
 END
 
 
