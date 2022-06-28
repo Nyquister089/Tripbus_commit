@@ -40,7 +40,18 @@ void show_assigned_trip(void)
 	printf("** Dettagli del viaggio assegnato **\n\n");
 	get_viaggi_assegnati(dvr); 
 }
-	
+
+void show_dest_time(void)
+{	
+	char buff[NUM_LEN];
+	int dvr; 
+
+	printf("** Ricerca visite d'interesse **\n\n");
+	get_input("Inserisci l'ID del viaggio:", VARCHAR_LEN, buff, false);
+	dvr = atoi(buff); 
+	printf("** Dettagli temporali delle visite **\n\n");
+	get_mete_visite(dvr); 
+}
 
 
 bool exe_drvr_act(drvr_act sel)
@@ -52,7 +63,7 @@ bool exe_drvr_act(drvr_act sel)
 		}
      	
      	case ORARIO_APERTURA:{
-     	//show_opening_hour(meta);
+     	show_dest_time();
 		return true; 
 		 }
 

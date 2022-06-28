@@ -4,6 +4,7 @@ BEGIN
 select distinct
    m.NomeMeta,
    m.TipologiaMeta,
+   m.Indirizzo,
    v.DataArrivo,
    v.OraArrivo,
    v.DataPartenza,
@@ -11,5 +12,5 @@ select distinct
 from visita as v
 join meta as m on v.MetaVisitata = m.IdMeta
 join viaggio as vi on v.ViaggioRelativo = vi.idviaggio
-where v.idviaggio = vgg ;
+where vi.idviaggio = idv ;
 END

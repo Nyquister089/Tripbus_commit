@@ -355,8 +355,9 @@ struct viaggi_assegnati{
 };
 
 struct meta_visita{
-	char meta [VARCHAR_LEN]; 
+	char nome [VARCHAR_LEN]; 
 	char tipologia[VARCHAR_LEN]; 
+	char indirizzo[VARCHAR_LEN]; 
 	char arrivo[DATE_LEN];
 	char ingresso[TIME_LEN]; 
 	char partenza[DATE_LEN]; 
