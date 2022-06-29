@@ -1,4 +1,4 @@
-CREATE DEFINER=`giordano`@`localhost` PROCEDURE `insert_assoc`(
+CREATE PROCEDURE if not exists `tripdb`.`insert_assoc`(
 in cam int, 
 in osp int, 
 in alb int, 

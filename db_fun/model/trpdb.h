@@ -33,6 +33,7 @@ typedef enum {
 	CLIENTE,
 	HOSTESS,
 	MECCANICO,
+	MANAGER,
 	QUIT,
 	FAILED_LOGIN
 } role_t;
@@ -83,8 +84,8 @@ struct comfort_mezzo{
 };
 
 struct competenze {
-	char meccanicocompetente [NUM_LEN]; 				//FK //Corretto trasformandolo da carattere a puntatore di carattere
-	char modelloassociato [NUM_LEN]; 					//FK //Corretto trasformandolo da carattere a puntatore di carattere
+	int meccanicocompetente; 				//FK //Corretto trasformandolo da carattere a puntatore di carattere
+	int modelloassociato; 					//FK //Corretto trasformandolo da carattere a puntatore di carattere
 }; 
 
 struct dipendente{
@@ -100,6 +101,16 @@ struct documentazionefotografica {
 	 char foto [PIC]; 
 	 
 };
+
+struct fmo{
+	int foto; 
+	char modello[VARCHAR_LEN]; 
+};
+
+struct fme{
+	int foto; 
+	int meta; 
+}; 
 
 struct foto_mete {
 	size_t num_pic;
@@ -254,7 +265,7 @@ struct tagliando {
 
 struct tome {
 	char tourinquestione[VARCHAR_LEN]; 
-	char metainquestione[NUM_LEN];  //Corretto trasformandolo da carattere a puntatore di carattere
+	int metainquestione;  //Corretto trasformandolo da carattere a puntatore di carattere
 }; 
 
 struct tour {
@@ -302,6 +313,12 @@ struct tour_info{
 	struct tour_viaggi tour_info[]; 
 }; 
 
+struct utente {
+	int id; 
+	char email[VARCHAR_LEN];
+	char pswrd[PASSWORD_LEN]; 
+	int tipo;
+};
 
 struct visita {
 	int idvisita;  //Corretto trasformandolo da carattere a puntatore di carattere
@@ -398,6 +415,7 @@ extern void do_select_tour( struct tour *tour);
 extern void do_select_sparepart(struct ricambio *ricambio); 
 extern void do_select_review(struct revisione *revisione);
 extern void do_select_bus(struct mezzo *mezzo); 
+extern void do_select_assoc(struct associata *associata); 
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 

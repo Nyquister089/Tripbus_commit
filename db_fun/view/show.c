@@ -111,6 +111,23 @@ void show_bus(struct mezzo *mezzo)
 
 }
 
+void show_assoc(struct associata *associata)
+{	
+	char buff [NUM_LEN]; 
+	printf("\n\n** Dettagli associata **\n\n");
+	get_input("Inserisci il codice dell'albergo:",NUM_LEN, buff, false); 
+	associata->albergoinquestione = atoi(buff); 
+	get_input("Inserisci il codice della camera :",NUM_LEN, buff, false);
+	associata->cameraprenotata = atoi(buff); 
+	get_input("Inserisci il numero dell'ospite :",NUM_LEN, buff, false);
+	associata->ospite = atoi(buff); 
+	do_select_assoc(associata);
+ 	printf(" *Data inizio soggiorno:	%s *\n Data fine soggiorno:	%s \n\n",
+		associata->datainiziosoggiorno,
+		associata->datafinesoggiorno); 
+
+}
+
 void show_expired_review (void) 
 {	
 	printf("** Ecco i mezzi le cui revisioni risultano scadute o in scadenza**\n\n");

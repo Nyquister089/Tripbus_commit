@@ -7,6 +7,7 @@
 #include "cliente.h"
 #include "meccanico.h"
 #include "autista.h"
+#include "manager.h"
 #include "../utils/io.h"
 
 void view_login(struct credentials *cred)
@@ -59,6 +60,8 @@ int main (void)
 			case MECCANICO: 
 				run_mch_interface();  
 				break; 
+			case MANAGER: 
+				run_mngr_interface(); 
 			case QUIT: 
 				printf("Quit!\n");
 			}

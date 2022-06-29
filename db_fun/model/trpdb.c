@@ -31,6 +31,8 @@ static MYSQL_STMT *select_costumer;	   // Ok HOSTESS
 static MYSQL_STMT *select_reservation; // ok HOSTESS
 static MYSQL_STMT *select_review;	   // ok Meccanico
 static MYSQL_STMT *select_sparepart;   // ok Meccanico
+static MYSQL_STMT *select_assoc;   		// Manager
+
 
 static MYSQL_STMT *select_tour;		   //
 static MYSQL_STMT *select_destination; //
@@ -64,6 +66,11 @@ static void close_prepared_stmts(void)
 	{
 		mysql_stmt_close(login_procedure);
 		login_procedure = NULL;
+	}
+	if (select_assoc)
+	{
+		mysql_stmt_close(select_assoc);
+		select_assoc = NULL;
 	}
 	if (select_tour)
 	{ // Procedura di select tour
@@ -416,7 +423,15 @@ static bool initialize_prepared_stmts(role_t for_role)
 		{
 			print_stmt_error(select_expired_review, "Unable to initialize select_expired_review statement\n");
 			return false;
-		} /*
+		} 
+		break;
+		case MANAGER:
+		if (!setup_prepared_stmt(&select_assoc, "call  select_assoc(?,?,?)", conn))
+		{ 
+			print_stmt_error(select_assoc, "Unable to initialize select_assoc statement\n");
+			return false;
+		}
+		/*
 		 if(!setup_prepared_stmt(&insert_review, "call insert_review(?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
 			 print_stmt_error(insert_review, "Unable to initialize insert review statement\n");
 			 return false;
@@ -437,10 +452,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			 print_stmt_error(insert_certify, "Unable to initialize insert certify statement\n");
 			 return false;
 		 }
-		 if(!setup_prepared_stmt(&update_sparepart_number, "call update_sparepart_number(?, ?, ?, ?, ?, ?, ?)", conn)) {
-			 print_stmt_error(update_sparepart_number, "Unable to initialize update certify statement\n");
-			 return false;
-		 }
+
 		 if(!setup_prepared_stmt(&select_review, "call select_review(?, ?, ?, ?, ?, ?, ?)", conn)) {
 			 print_stmt_error(select_review, "Unable to initialize select review statement\n");
 			 return false;
@@ -461,7 +473,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			 print_stmt_error(select_certify, "Unable to initialize select certify statement\n");
 			 return false;
 		 }*/
-		break;
+		 break;
 
 	default:
 		fprintf(stderr, "[FATAL] Unexpected role to prepare statements.\n");
@@ -820,6 +832,38 @@ void do_update_km(struct mezzo *mezzo)
 
 	mysql_stmt_free_result(update_km);
 	mysql_stmt_reset(update_km);
+}
+
+void do_select_assoc(struct associata *associata)
+{
+	MYSQL_BIND param[3];
+	MYSQL_TIME datainiziosoggiorno; 
+	MYSQL_TIME datafinesoggiorno;
+
+	char *buff = "select_assoc";
+
+	date_to_mysql_time(associata->datainiziosoggiorno, &datainiziosoggiorno);
+	date_to_mysql_time(associata->datafinesoggiorno, &datafinesoggiorno);
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &associata->albergoinquestione, sizeof(associata->albergoinquestione));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &associata->cameraprenotata, sizeof(associata->cameraprenotata));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &associata->ospite, sizeof(associata->ospite));
+
+	if (bind_exe(select_assoc, param, buff) == -1)
+		goto stop;
+
+	set_binding_param(&param[0], MYSQL_TYPE_DATE, associata->datainiziosoggiorno, sizeof(associata->datainiziosoggiorno));
+	set_binding_param(&param[1], MYSQL_TYPE_DATE, &associata->datafinesoggiorno, sizeof(associata->datafinesoggiorno));
+
+	mysql_date_to_string(&datainiziosoggiorno, associata->datainiziosoggiorno); 
+	mysql_date_to_string(&datafinesoggiorno, associata->datafinesoggiorno); 
+	
+	take_result(select_assoc, param, buff);
+
+stop:
+
+	mysql_stmt_free_result(select_assoc);
+	mysql_stmt_reset(select_assoc);
 }
 
 void do_select_sparepart(struct ricambio *ricambio) //FUNZIONA

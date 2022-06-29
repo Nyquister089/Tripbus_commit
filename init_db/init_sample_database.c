@@ -182,8 +182,8 @@ void populate_tables()
     execute_query_from_file_sql("../sql/dml/delete_and_insert_revisione.sql");
     execute_query_from_file_sql("../sql/dml/delete_and_insert_ricambio.sql");
     execute_query_from_file_sql("../sql/dml/delete_and_insert_mappa.sql");
-    
-
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_postoprenotato.sql");
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_associata.sql");
 
 }
 
@@ -221,6 +221,7 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/select_dvr_map.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_bus.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/update_km.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/select_assoc.sql"); 
     
  
 }

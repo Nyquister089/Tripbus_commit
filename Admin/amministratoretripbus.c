@@ -1,9 +1,7 @@
 #include <stdio.h>
 // DA REALIZZARE: DELETE ED UPDATE
-#include "amministratore.h"
-#include "inserttripbus.h" // libreria contenente le operazioni di insert
-#include "updatetripbus.h" // libreria contenente le operazioni di update
-#include "deletetripbus.h" // libreria contenente le operazioni di delete
+#include "manager.h"
+
 #include "../utils/io.h"
 #include "../utils/validation.h"
 
@@ -119,6 +117,8 @@ int get_admin_table(void) //preleva il codice della tablla su cui si vuole esegu
 /**
  * Funzione d'avvio
  */
+}
+
 void run_action(void) 
 {	clear_screen();
 	COD_OP[1]=get_admin_section();// 1= dipendenti, 2= tour, 3= officina, 4= clienti
@@ -128,7 +128,7 @@ void run_action(void)
 	puts("*   INTERFACCIA AMMINISTRATORE    *");
 	puts("*********************************\n");
 	char op; 
-	switch(COD_OP[1])
+	switch(GESTIONE)
 		{
 			case 1:								 //Dipendenti
 			switch(COD_OP[3])					 //Operazione
