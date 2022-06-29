@@ -4,7 +4,7 @@ in cmp int,
 in spt int
 )
 begin
-select distinct
+select
 a.DataInizioSoggiorno,
 a.DataFineSoggiorno
 from associata as a 

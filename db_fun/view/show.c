@@ -122,7 +122,7 @@ void show_assoc(struct associata *associata)
 	get_input("Inserisci il numero dell'ospite :",NUM_LEN, buff, false);
 	associata->ospite = atoi(buff); 
 	do_select_assoc(associata);
- 	printf(" *Data inizio soggiorno:	%s *\n Data fine soggiorno:	%s \n\n",
+ 	printf("*Data inizio soggiorno:%s \n Data fine soggiorno:	%s \n\n",
 		associata->datainiziosoggiorno,
 		associata->datafinesoggiorno); 
 

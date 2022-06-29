@@ -843,7 +843,7 @@ void do_select_assoc(struct associata *associata)
 	char *buff = "select_assoc";
 
 	date_to_mysql_time(associata->datainiziosoggiorno, &datainiziosoggiorno);
-	date_to_mysql_time(associata->datafinesoggiorno, &datafinesoggiorno);
+	date_to_mysql_time(associata->datafinesoggiorno,&datafinesoggiorno);
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &associata->albergoinquestione, sizeof(associata->albergoinquestione));
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &associata->cameraprenotata, sizeof(associata->cameraprenotata));
@@ -852,15 +852,17 @@ void do_select_assoc(struct associata *associata)
 	if (bind_exe(select_assoc, param, buff) == -1)
 		goto stop;
 
-	set_binding_param(&param[0], MYSQL_TYPE_DATE, associata->datainiziosoggiorno, sizeof(associata->datainiziosoggiorno));
-	set_binding_param(&param[1], MYSQL_TYPE_DATE, &associata->datafinesoggiorno, sizeof(associata->datafinesoggiorno));
+	set_binding_param(&param[0], MYSQL_TYPE_DATE, &datainiziosoggiorno, sizeof(datainiziosoggiorno));
+	set_binding_param(&param[1], MYSQL_TYPE_DATE, &datafinesoggiorno, sizeof(datafinesoggiorno));
+	 
+	
+	if (take_result(select_assoc, param, buff)== -1)
+		goto stop; 
 
 	mysql_date_to_string(&datainiziosoggiorno, associata->datainiziosoggiorno); 
 	mysql_date_to_string(&datafinesoggiorno, associata->datafinesoggiorno); 
-	
-	take_result(select_assoc, param, buff);
 
-stop:
+	stop:
 
 	mysql_stmt_free_result(select_assoc);
 	mysql_stmt_reset(select_assoc);
@@ -913,7 +915,8 @@ void do_select_bus(struct mezzo *mezzo)
 	set_binding_param(&param[4], MYSQL_TYPE_LONG, &mezzo->valorecontakm, sizeof(mezzo->valorecontakm));
 	set_binding_param(&param[5], MYSQL_TYPE_DATE, &dataimmatricolazione, sizeof(dataimmatricolazione));
 
-	take_result(select_bus, param, buff);
+	if( take_result(select_bus, param, buff) == -1)
+		goto stop; 
 
    	stop:
 

@@ -139,6 +139,7 @@ void create_tables()
     execute_query_from_file_sql("../sql/ddl/table/visita.sql");
     execute_query_from_file_sql("../sql/ddl/table/utente.sql");
     execute_query_from_file_sql("../sql/ddl/table/sostituito.sql");
+    execute_query_from_file_sql("../sql/ddl/table/competenze.sql"); 
     
 }
 
@@ -184,6 +185,8 @@ void populate_tables()
     execute_query_from_file_sql("../sql/dml/delete_and_insert_mappa.sql");
     execute_query_from_file_sql("../sql/dml/delete_and_insert_postoprenotato.sql");
     execute_query_from_file_sql("../sql/dml/delete_and_insert_associata.sql");
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_competenze.sql");
+
 
 }
 

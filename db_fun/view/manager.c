@@ -10,7 +10,7 @@
 
 struct associata * associata;
 struct competenze *competenze; 
-struct dipendente*dipendente; 
+struct dipendente * dipendente; 
 struct fmo *fmo; 
 struct fme *fme; 
 struct offre *offre; 

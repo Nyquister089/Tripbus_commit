@@ -5,39 +5,39 @@ INSERT INTO `tripdb`.`associata`(
     `AlbergoInQuestione`,
     `DataInizioSoggiorno`, 
     `DataFineSoggiorno`)
-VALUES('1','1');
+VALUES('1','1','3','2022-07-12','2022-07-12');
 INSERT INTO `tripdb`.`associata`(
     `CameraPrenotata`,
     `Ospite`,
     `AlbergoInQuestione`,
     `DataInizioSoggiorno`, 
     `DataFineSoggiorno`)
-VALUES('2','1', '3');
+VALUES('2','1', '3','2022-07-12','2022-07-12');
 INSERT INTO `tripdb`.`associata`(
     `CameraPrenotata`,
     `Ospite`,
     `AlbergoInQuestione`,
     `DataInizioSoggiorno`, 
     `DataFineSoggiorno`)
-VALUES('3','2','3');
+VALUES('3','2','3','2022-07-12','2022-07-12');
 INSERT INTO `tripdb`.`associata`(
     `CameraPrenotata`,
     `Ospite`,
     `AlbergoInQuestione`,
     `DataInizioSoggiorno`, 
     `DataFineSoggiorno`)
-VALUES('1','3','3');
-INSERT INTO `tripdb`.`associata`(ù
-    `CameraPrenotata`,
-    `Ospite`,
-    `AlbergoInQuestione`,
-    `DataInizioSoggiorno`, 
-    `DataFineSoggiorno`)
-VALUES('2','2','6');
+VALUES('1','3','3','2022-07-12','2022-07-12');
 INSERT INTO `tripdb`.`associata`(
     `CameraPrenotata`,
     `Ospite`,
     `AlbergoInQuestione`,
     `DataInizioSoggiorno`, 
     `DataFineSoggiorno`)
-VALUES('3','3','6');
+VALUES('2','2','6','2022-07-12','2022-07-12');
+INSERT INTO `tripdb`.`associata`(
+    `CameraPrenotata`,
+    `Ospite`,
+    `AlbergoInQuestione`,
+    `DataInizioSoggiorno`, 
+    `DataFineSoggiorno`)
+VALUES('3','3','6','2022-07-12','2022-07-12');
