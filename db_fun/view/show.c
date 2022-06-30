@@ -141,6 +141,20 @@ void show_skills(struct competenze *competenze)
 		competenze->telefono); 
 }
 
+void show_employee(struct dipendente *dipendente)
+{	
+	char buff [NUM_LEN]; 
+	printf("\n\n** Dettagli Dipendente  **\n\n");
+	get_input("Inserisci l'id d'interesse:",NUM_LEN, buff, false); 
+	dipendente->iddipendente = atoi(buff); 
+	do_select_employee(dipendente);
+ 	printf("*Nome:		%s \n Cognome:	%s \n Tipologia:	%s \n Telefono:	%s \n\n",
+		dipendente->nomedipendente,
+		dipendente->cognomedipendente,
+		dipendente->tipologiadipendente,
+		dipendente->telefonoaziendale ); 
+}
+
 void show_expired_review (void) 
 {	
 	printf("** Ecco i mezzi le cui revisioni risultano scadute o in scadenza**\n\n");

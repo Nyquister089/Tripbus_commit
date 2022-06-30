@@ -226,6 +226,7 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/update_km.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_assoc.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_skills.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/select_employee.sql");  
     
  
 }

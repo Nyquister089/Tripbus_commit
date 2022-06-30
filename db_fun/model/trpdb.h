@@ -91,11 +91,11 @@ struct competenze {
 }; 
 
 struct dipendente{
-	char iddipendente [NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	int iddipendente ; //Corretto trasformandolo da carattere a puntatore di carattere
 	char nomedipendente[VARCHAR_LEN];
 	char cognomedipendente[VARCHAR_LEN];
 	char tipologiadipendente[VARCHAR_LEN];
-	char telefonoaziendale [NUM_LEN];  //Corretto trasformandolo da carattere a puntatore di carattere
+	char telefonoaziendale [TEL_LEN];  //Corretto trasformandolo da carattere a puntatore di carattere
 };
 
 struct documentazionefotografica {
@@ -419,6 +419,8 @@ extern void do_select_review(struct revisione *revisione);
 extern void do_select_bus(struct mezzo *mezzo); 
 extern void do_select_assoc(struct associata *associata); 
 extern void do_select_skills(struct competenze *competenze); 
+extern void do_select_employee(struct dipendente* dipendente); 
+
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 

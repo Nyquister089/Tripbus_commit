@@ -32,7 +32,9 @@ static MYSQL_STMT *select_reservation; // ok HOSTESS
 static MYSQL_STMT *select_review;	   // ok Meccanico
 static MYSQL_STMT *select_sparepart;   // ok Meccanico
 static MYSQL_STMT *select_assoc;   		// ok Manager
-static MYSQL_STMT *select_skills; 		// Manager
+static MYSQL_STMT *select_skills; 		// ok Manager
+static MYSQL_STMT *select_employee;		// Manager 
+
 
 
 
@@ -166,6 +168,11 @@ static void close_prepared_stmts(void)
 	{ 									// Procedura di select mezzo
 		mysql_stmt_close(select_bus);
 		select_bus = NULL;
+	}
+	if (select_employee)
+	{
+		mysql_stmt_close(select_employee);
+		select_employee = NULL;
 	}
 	if (select_skills)
 	{
@@ -438,11 +445,17 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(select_assoc, "Unable to initialize select_assoc statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&select_employee, "call  select_employee(?)", conn))
+		{ 
+			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
+			return false;
+		}
 		if (!setup_prepared_stmt(&select_skills, "call  select_skills(?,?)", conn))
 		{ 
 			print_stmt_error(select_skills, "Unable to initialize select_skills statement\n");
 			return false;
 		}
+
 		/*
 		 if(!setup_prepared_stmt(&insert_review, "call insert_review(?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
 			 print_stmt_error(insert_review, "Unable to initialize insert review statement\n");
@@ -846,6 +859,34 @@ void do_update_km(struct mezzo *mezzo)
 	mysql_stmt_reset(update_km);
 }
 
+void do_select_employee(struct dipendente*dipendente)
+{
+	MYSQL_BIND param[4];
+	
+	char *buff = "select_employee";
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &dipendente->iddipendente, sizeof(dipendente->iddipendente));
+	
+	if (bind_exe(select_employee, param, buff) == -1)
+		goto stop;
+
+	
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, dipendente->nomedipendente, sizeof(dipendente->nomedipendente));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, dipendente->cognomedipendente, sizeof(dipendente->cognomedipendente));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, dipendente->tipologiadipendente, sizeof(dipendente->cognomedipendente));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, dipendente->telefonoaziendale, sizeof(dipendente->telefonoaziendale));
+	
+	
+	if(take_result(select_employee, param, buff)== -1)
+		goto stop; 
+	
+	stop:
+	mysql_stmt_free_result(select_employee);
+	mysql_stmt_reset(select_employee);
+ 
+}
+
 void do_select_skills(struct competenze *competenze)
 {
 	MYSQL_BIND param[2];
@@ -863,7 +904,6 @@ void do_select_skills(struct competenze *competenze)
 	if (bind_exe(select_skills, param, buff) == -1)
 		goto stop;
 
-	free(competenze); 
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, meccanico, sizeof(meccanico));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, telefono, sizeof(telefono));
