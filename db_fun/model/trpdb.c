@@ -37,6 +37,8 @@ static MYSQL_STMT *select_employee;		// ok Manager
 static MYSQL_STMT *select_fmo;			// ok Manager
 static MYSQL_STMT *select_fme;			// ok Manager
 static MYSQL_STMT *select_ofr;			// ok Manager
+static MYSQL_STMT *select_tome; 		// Manager
+
 
 static MYSQL_STMT *select_tour;		   //
 static MYSQL_STMT *select_destination; //
@@ -173,6 +175,11 @@ static void close_prepared_stmts(void)
 	{
 		mysql_stmt_close(select_employee);
 		select_employee = NULL;
+	}
+	if (select_tome)
+	{
+		mysql_stmt_close(select_tome);
+		select_tome = NULL;
 	}
 	if (select_ofr)
 	{
@@ -463,6 +470,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_employee, "call  select_employee(?)", conn))
 		{ 
 			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_tome, "call  select_tome(?,?)", conn))
+		{ 
+			print_stmt_error(select_tome, "Unable to initialize select_tome statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&select_ofr, "call  select_ofr(?,?)", conn))
@@ -887,6 +899,29 @@ void do_update_km(struct mezzo *mezzo)
 
 	mysql_stmt_free_result(update_km);
 	mysql_stmt_reset(update_km);
+}
+
+void do_select_tome(struct tome *tome)
+{
+	MYSQL_BIND param[2];
+	
+	char *buff = "select_tome";
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tome->tourinquestione, sizeof(tome->tourinquestione));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &tome->metainquestione, sizeof(tome->metainquestione));
+	
+	if (bind_exe(select_tome, param, buff) == -1)
+		goto stop;
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tome->descrizione, sizeof(tome->descrizione));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tome->meta, sizeof(tome->meta));
+	
+	take_result (select_tome, param, buff);
+ 
+	stop:
+	mysql_stmt_free_result(select_tome);
+	mysql_stmt_reset(select_tome);
+ 
 }
 
 void do_select_ofr(struct offre *offre)

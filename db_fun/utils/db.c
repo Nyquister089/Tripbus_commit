@@ -156,11 +156,12 @@ int take_result(MYSQL_STMT *procedure, MYSQL_BIND *param, char *buff)
 { 	
 	int status; 
  
-	if(mysql_stmt_bind_result(procedure, param)) {
+	if(mysql_stmt_bind_result(procedure, param)!=0) {
 		printf("Procedura : %s ",buff);
 		print_stmt_error(procedure, "\n\n Impossibile eseguire il bind result\n\n");
 		return -1; 
 	}
+	
 	
 	if( mysql_stmt_store_result(procedure) != 0){
 		printf("Procedura : %s", buff); 

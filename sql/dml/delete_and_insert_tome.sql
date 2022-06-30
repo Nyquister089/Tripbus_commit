@@ -42,3 +42,10 @@ INSERT INTO `tripdb`.`tome` (
     VALUES (
          '6', 
         'Milano tour' );
+        INSERT INTO `tripdb`.`tome` (  
+    `MetaInclusa`,
+    `TourRelativo`) 
+    VALUES (
+         '6', 
+        'Tour' );
+

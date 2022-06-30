@@ -42,4 +42,21 @@ VALUES
 '10.00',
 '15.00',
 '0');
+INSERT INTO `tripdb`.`tour` 
+(`DenominazioneTour`,
+`DescrizioneTour`,
+`Minimopartecipanti`,
+`CostoAssicurazioneMedica` ,
+`CostoBagaglio`,
+`CostoGaranziaAnnullamento`,
+`Accompagnatrice`)
+VALUES
+(
+'Tour',
+'Tour per le strade',
+'54',
+'90.00' ,
+'10.00',
+'15.00',
+'0');
 

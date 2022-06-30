@@ -229,7 +229,8 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/select_employee.sql");  
     execute_query_from_file_sql("../sql/ddl/procedure/select_fmo.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_fme.sql"); 
-     execute_query_from_file_sql("../sql/ddl/procedure/select_ofr.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/select_ofr.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/select_tome.sql");  
  
 }
 

@@ -191,7 +191,7 @@ struct info_modelli {
 struct offre {
 	int idservizio; 
 	int albergoofferente; 					
-	//
+
 	char servizio[VARCHAR_LEN]; 
 	char meta [VARCHAR_LEN]; 
 	char descrizione [DES_LEN]; 
@@ -277,6 +277,9 @@ struct tagliando {
 struct tome {
 	char tourinquestione[VARCHAR_LEN]; 
 	int metainquestione;  //Corretto trasformandolo da carattere a puntatore di carattere
+
+	char descrizione[DES_LEN]; 
+	char meta[VARCHAR_LEN]; 
 }; 
 
 struct tour {
@@ -432,6 +435,7 @@ extern void do_select_employee(struct dipendente* dipendente);
 extern void do_select_fmo(struct fmo *fmo); 
 extern void do_select_fme(struct fme *fme);
 extern void do_select_ofr(struct offre *offre);  
+extern void do_select_tome(struct tome *tome);
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 
