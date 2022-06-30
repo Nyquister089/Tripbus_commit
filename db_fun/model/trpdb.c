@@ -37,7 +37,9 @@ static MYSQL_STMT *select_employee;		// ok Manager
 static MYSQL_STMT *select_fmo;			// ok Manager
 static MYSQL_STMT *select_fme;			// ok Manager
 static MYSQL_STMT *select_ofr;			// ok Manager
-static MYSQL_STMT *select_tome; 		// Manager
+static MYSQL_STMT *select_tome; 		// non funziona Manager
+static MYSQL_STMT *select_user; 		// non funziona Manager
+
 
 
 static MYSQL_STMT *select_tour;		   //
@@ -175,6 +177,11 @@ static void close_prepared_stmts(void)
 	{
 		mysql_stmt_close(select_employee);
 		select_employee = NULL;
+	}
+	if (select_user)
+	{
+		mysql_stmt_close(select_user);
+		select_user = NULL;
 	}
 	if (select_tome)
 	{
@@ -470,6 +477,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_employee, "call  select_employee(?)", conn))
 		{ 
 			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_user, "call  select_user(?)", conn))
+		{ 
+			print_stmt_error(select_user, "Unable to initialize select_user statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&select_tome, "call  select_tome(?,?)", conn))
@@ -901,6 +913,29 @@ void do_update_km(struct mezzo *mezzo)
 	mysql_stmt_reset(update_km);
 }
 
+void do_select_user(struct utente *utente)
+{
+	MYSQL_BIND param[3];
+	
+	char *buff = "select_user";
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &utente->id, sizeof(utente->id));
+	
+	if (bind_exe(select_user, param, buff) == -1)
+		goto stop;
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, utente->email, sizeof(utente->email));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, utente->pswrd, sizeof(utente->pswrd));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &utente->tipo, sizeof(utente->tipo));
+	
+	take_result(select_user, param, buff);
+ 
+	stop:
+	mysql_stmt_free_result(select_user);
+	mysql_stmt_reset(select_user);
+ 
+}
+
 void do_select_tome(struct tome *tome)
 {
 	MYSQL_BIND param[2];
@@ -916,7 +951,7 @@ void do_select_tome(struct tome *tome)
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tome->descrizione, sizeof(tome->descrizione));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tome->meta, sizeof(tome->meta));
 	
-	take_result (select_tome, param, buff);
+	take_result(select_tome, param, buff);
  
 	stop:
 	mysql_stmt_free_result(select_tome);

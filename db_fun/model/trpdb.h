@@ -276,7 +276,7 @@ struct tagliando {
 
 struct tome {
 	char tourinquestione[VARCHAR_LEN]; 
-	int metainquestione;  //Corretto trasformandolo da carattere a puntatore di carattere
+	int metainquestione;
 
 	char descrizione[DES_LEN]; 
 	char meta[VARCHAR_LEN]; 
@@ -436,6 +436,7 @@ extern void do_select_fmo(struct fmo *fmo);
 extern void do_select_fme(struct fme *fme);
 extern void do_select_ofr(struct offre *offre);  
 extern void do_select_tome(struct tome *tome);
+extern void do_select_user(struct utente *utente); 
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 

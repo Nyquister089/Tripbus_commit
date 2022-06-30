@@ -212,6 +212,20 @@ void show_tome(struct tome *tome)
 		tome->meta); 
 }
 
+
+void show_user(struct utente *utente)
+{	
+	char buff [NUM_LEN]; 
+	printf("\n\n** Dettagli utente **\n\n");
+	get_input("Inserisci l'id dell'utente d'interesse:", NUM_LEN, buff, false);
+	utente->id = atoi(buff); 
+	do_select_user(utente);
+ 	printf("*Email:		%s\n Password:	%s \n Tipo:		%d\n\n",
+		utente->email,
+		utente->pswrd,
+		utente->tipo); 
+}
+
 void show_expired_review (void) 
 {	
 	printf("** Ecco i mezzi le cui revisioni risultano scadute o in scadenza**\n\n");
