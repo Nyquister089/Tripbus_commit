@@ -155,6 +155,20 @@ void show_employee(struct dipendente *dipendente)
 		dipendente->telefonoaziendale ); 
 }
 
+
+void show_fmo(struct fmo *fmo)
+{	
+	char buff [NUM_LEN]; 
+	printf("\n\n** Dettagli Foto-Modelli  **\n\n");
+	get_input("Inserisci l'id d'interesse:",NUM_LEN, buff, false); 
+	fmo->foto = atoi(buff); 
+	get_input("Inserisci il nome del modello d'interesse:",NUM_LEN, fmo->modello, false);
+	do_select_fmo(fmo);
+ 	printf("*Descrizione:	%s \n Immagine:	%s\n\n",
+		fmo->descrizione,
+		fmo->immagine); 
+}
+
 void show_expired_review (void) 
 {	
 	printf("** Ecco i mezzi le cui revisioni risultano scadute o in scadenza**\n\n");

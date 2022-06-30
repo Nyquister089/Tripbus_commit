@@ -107,6 +107,9 @@ struct documentazionefotografica {
 struct fmo{
 	int foto; 
 	char modello[VARCHAR_LEN]; 
+	//
+	char descrizione[DES_LEN];
+	char immagine[DES_LEN];  
 };
 
 struct fme{
@@ -420,7 +423,7 @@ extern void do_select_bus(struct mezzo *mezzo);
 extern void do_select_assoc(struct associata *associata); 
 extern void do_select_skills(struct competenze *competenze); 
 extern void do_select_employee(struct dipendente* dipendente); 
-
+extern void do_select_fmo(struct fmo *fmo); 
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 

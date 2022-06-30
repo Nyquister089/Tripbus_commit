@@ -220,8 +220,25 @@ bool get_table_gest (char sel)
         return true; 
         }
         case TABELLA_FMO: {
+			act = get_admin_action();
+            switch (act){
+                case GESTIONE_SELECT: {
+                    show_fmo(fmo); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                return false; 
+				}
+			}
         
-        return true; 
         } 
         case TABELLA_FME: {
         

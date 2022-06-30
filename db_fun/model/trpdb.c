@@ -33,9 +33,8 @@ static MYSQL_STMT *select_review;	   // ok Meccanico
 static MYSQL_STMT *select_sparepart;   // ok Meccanico
 static MYSQL_STMT *select_assoc;   		// ok Manager
 static MYSQL_STMT *select_skills; 		// ok Manager
-static MYSQL_STMT *select_employee;		// Manager 
-
-
+static MYSQL_STMT *select_employee;		// ok Manager 
+static MYSQL_STMT *select_fmo;			// Manager
 
 
 static MYSQL_STMT *select_tour;		   //
@@ -43,7 +42,7 @@ static MYSQL_STMT *select_destination; //
 static MYSQL_STMT *select_picture;	   //
 static MYSQL_STMT *select_room;		   //
 static MYSQL_STMT *select_model;	   // Meccanico
-static MYSQL_STMT *select_comfort;	   //
+static MYSQL_STMT *select_comfort;	   //			
 static MYSQL_STMT *select_service;	   //
 static MYSQL_STMT *select_bus;		   // Meccanico
 
@@ -173,6 +172,11 @@ static void close_prepared_stmts(void)
 	{
 		mysql_stmt_close(select_employee);
 		select_employee = NULL;
+	}
+	if (select_fmo)
+	{
+		mysql_stmt_close(select_fmo);
+		select_fmo = NULL;
 	}
 	if (select_skills)
 	{
@@ -448,6 +452,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_employee, "call  select_employee(?)", conn))
 		{ 
 			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_fmo, "call  select_fmo(?,?)", conn))
+		{ 
+			print_stmt_error(select_fmo, "Unable to initialize select_fmo statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&select_skills, "call  select_skills(?,?)", conn))
@@ -859,6 +868,34 @@ void do_update_km(struct mezzo *mezzo)
 	mysql_stmt_reset(update_km);
 }
 
+
+void do_select_fmo(struct fmo *fmo)
+{
+	MYSQL_BIND param[2];
+	
+	char *buff = "select_fmo";
+
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &fmo->foto, sizeof(fmo->foto));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, fmo->modello, strlen(fmo->modello));
+	
+	
+	if (bind_exe(select_fmo, param, buff) == -1)
+		goto stop;
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, fmo->descrizione, sizeof(fmo->descrizione));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, fmo->immagine, sizeof(fmo->immagine));
+	
+	if(take_result(select_fmo, param, buff)== -1)
+		goto stop; 
+	
+	stop:
+	mysql_stmt_free_result(select_fmo);
+	mysql_stmt_reset(select_fmo);
+ 
+}
+ 
+
 void do_select_employee(struct dipendente*dipendente)
 {
 	MYSQL_BIND param[4];
@@ -869,8 +906,6 @@ void do_select_employee(struct dipendente*dipendente)
 	
 	if (bind_exe(select_employee, param, buff) == -1)
 		goto stop;
-
-	
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, dipendente->nomedipendente, sizeof(dipendente->nomedipendente));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, dipendente->cognomedipendente, sizeof(dipendente->cognomedipendente));
