@@ -21,4 +21,5 @@ extern void show_skills(struct competenze *competenze);
 extern void show_employee(struct dipendente *dipendente); 
 extern void show_fmo(struct fmo *fmo); 
 extern void show_fme(struct fme *fme); 
+extern void show_ofr(struct offre *offre); 
 extern void show_expired_review (void); 

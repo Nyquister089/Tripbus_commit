@@ -184,6 +184,21 @@ void show_fme(struct fme *fme)
 		fme->immagine); 
 }
 
+void show_ofr(struct offre *offre)
+{	
+	char buff [NUM_LEN]; 
+	printf("\n\n** Dettagli servizi-offerti  **\n\n");
+	get_input("Inserisci l'id del servizio d'interesse:",NUM_LEN, buff, false); 
+	offre->idservizio = atoi(buff); 
+	get_input("Inserisci l'id dell'labergo offerente:",NUM_LEN, buff, false);
+	offre->albergoofferente = atoi(buff); 
+	do_select_ofr(offre);
+ 	printf("*Albergo:	%s\n Servizio:	%s \n Descrizione:	%s\n\n",
+		offre->meta,
+		offre->servizio,
+		offre->descrizione); 
+}
+
 void show_expired_review (void) 
 {	
 	printf("** Ecco i mezzi le cui revisioni risultano scadute o in scadenza**\n\n");

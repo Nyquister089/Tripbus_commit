@@ -36,8 +36,7 @@ static MYSQL_STMT *select_skills; 		// ok Manager
 static MYSQL_STMT *select_employee;		// ok Manager 
 static MYSQL_STMT *select_fmo;			// ok Manager
 static MYSQL_STMT *select_fme;			// ok Manager
-
-
+static MYSQL_STMT *select_ofr;			// ok Manager
 
 static MYSQL_STMT *select_tour;		   //
 static MYSQL_STMT *select_destination; //
@@ -174,6 +173,11 @@ static void close_prepared_stmts(void)
 	{
 		mysql_stmt_close(select_employee);
 		select_employee = NULL;
+	}
+	if (select_ofr)
+	{
+		mysql_stmt_close(select_ofr);
+		select_ofr = NULL;
 	}
 	if (select_fme)
 	{
@@ -459,6 +463,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_employee, "call  select_employee(?)", conn))
 		{ 
 			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_ofr, "call  select_ofr(?,?)", conn))
+		{ 
+			print_stmt_error(select_ofr, "Unable to initialize select_ofr statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&select_fme, "call  select_fme(?,?)", conn))
@@ -878,6 +887,33 @@ void do_update_km(struct mezzo *mezzo)
 
 	mysql_stmt_free_result(update_km);
 	mysql_stmt_reset(update_km);
+}
+
+void do_select_ofr(struct offre *offre)
+{
+	MYSQL_BIND param[3];
+	
+	char *buff = "select_ofr";
+
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &offre->albergoofferente, sizeof(offre->albergoofferente));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &offre->idservizio, sizeof(offre->servizio));
+	
+	
+	if (bind_exe(select_ofr, param, buff) == -1)
+		goto stop;
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, offre->meta, sizeof(offre->meta));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, offre->servizio, sizeof(offre->servizio));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, offre->descrizione, sizeof(offre->descrizione));
+	
+	if(take_result(select_ofr, param, buff)== -1)
+		goto stop; 
+	
+	stop:
+	mysql_stmt_free_result(select_ofr);
+	mysql_stmt_reset(select_ofr);
+ 
 }
 
 void do_select_fme(struct fme *fme)

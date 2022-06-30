@@ -189,8 +189,12 @@ struct info_modelli {
 };
 
 struct offre {
-	char servizi[NUM_LEN]; 						//FK //Corretto trasformandolo da carattere a puntatore di carattere
-	char albergoofferente[NUM_LEN]; 					//FK //Corretto trasformandolo da carattere a puntatore di carattere
+	int idservizio; 
+	int albergoofferente; 					
+	//
+	char servizio[VARCHAR_LEN]; 
+	char meta [VARCHAR_LEN]; 
+	char descrizione [DES_LEN]; 
 }; 
 
 struct postoprenotato {
@@ -426,7 +430,8 @@ extern void do_select_assoc(struct associata *associata);
 extern void do_select_skills(struct competenze *competenze); 
 extern void do_select_employee(struct dipendente* dipendente); 
 extern void do_select_fmo(struct fmo *fmo); 
-extern void do_select_fme(struct fme *fme); 
+extern void do_select_fme(struct fme *fme);
+extern void do_select_ofr(struct offre *offre);  
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 
@@ -438,6 +443,7 @@ extern struct revisioni_scadute *get_info_revisioni(void);
 extern struct viaggi_assegnati *get_viaggi_assegnati(int dvr);
 extern struct mete_visite *get_mete_visite(int idv);
 extern struct mappe *get_mappe(char* nml); 
+
 
 extern void do_update_data_doc(struct cliente *cliente); 
 extern void do_validate_reservation(struct prenotazione *prenotazione);
