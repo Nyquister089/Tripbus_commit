@@ -9,11 +9,14 @@
 #include "../utils/validation.h"
 
 struct associata * associata;
+struct cliente *cliente; 
 struct competenze *competenze; 
 struct dipendente * dipendente; 
 struct fmo *fmo; 
 struct fme *fme; 
 struct offre *offre; 
+struct postoprenotato *postoprenotato; 
+struct prenotazione *prenotazione; 
 struct tome *tome;
 struct utente *utente; 
 
@@ -60,6 +63,27 @@ int allocation_gest(void)
 		{printf("Fallimento malloc utente (manager) \n\n"); 
 		 return -1; 
 		 }
+}
+
+int allocation_costumer(void)
+{
+
+	cliente = malloc(sizeof(struct cliente)); 
+	if(cliente == NULL)
+		{printf("Fallimento malloc su cliente (manager)) \n\n"); 
+		 return -1; 
+		}
+	prenotazione = malloc(sizeof(struct prenotazione)); 
+	if(prenotazione == NULL)
+		{printf("Fallimento malloc su prenotazione (manager) \n\n");
+		 return -1; 
+		}
+	postoprenotato = malloc(sizeof(struct postoprenotato));
+	if(postoprenotato == NULL)
+		{printf("Fallimento malloc su postoprenotato (manager) \n\n"); 
+		 return -1; 
+		}
+
 }
 
 int get_admin_action(void) 
@@ -109,7 +133,6 @@ int tour_section(void) //sezione tour
 		return op - '1';
 }
 
-
 int workshop_section(void) // sezione officina 
  {	    
 		char options[6] = {'1','2','3','4','5','6'};
@@ -126,9 +149,25 @@ int workshop_section(void) // sezione officina
 }
 
 
+bool get_table_costumer (char sel )
+{ 	
+	char act; 
+	if(cliente == NULL || prenotazione  == NULL || postoprenotato == NULL) {
+		allocation_costumer();
+		printf("\n\nAllocazione gest avvenuta.\n\n");
+     } 
+    switch(sel){
+/*
+	TABELLA_CLIENTE,
+    TABELLA_PRENOTAZIONE, 
+    TABELLA_POSTO_PRENOTATO,
+    QUIT_GEST_CLIENTE*/
+	}
+
+}
+
 int costumer_section(void) // sezione clienti
 {	
-
 	char options[4] = {'1','2','3','4'};
     char op; 
     puts("*** Su quale tabella della gestione clienti? ***\n");
@@ -137,7 +176,7 @@ int costumer_section(void) // sezione clienti
 	puts("3) Posto prenotato");
 	puts("4) Esci");
     op = multi_choice("Seleziona un'opzione", options, 4);
-	return op - '1';
+	get_table_costumer((op-'1')); 
 }
 
 bool get_table_gest (char sel)
