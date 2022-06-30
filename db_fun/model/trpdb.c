@@ -31,7 +31,9 @@ static MYSQL_STMT *select_costumer;	   // Ok HOSTESS
 static MYSQL_STMT *select_reservation; // ok HOSTESS
 static MYSQL_STMT *select_review;	   // ok Meccanico
 static MYSQL_STMT *select_sparepart;   // ok Meccanico
-static MYSQL_STMT *select_assoc;   		// Manager
+static MYSQL_STMT *select_assoc;   		// ok Manager
+static MYSQL_STMT *select_skills; 		// Manager
+
 
 
 static MYSQL_STMT *select_tour;		   //
@@ -164,6 +166,11 @@ static void close_prepared_stmts(void)
 	{ 									// Procedura di select mezzo
 		mysql_stmt_close(select_bus);
 		select_bus = NULL;
+	}
+	if (select_skills)
+	{
+		mysql_stmt_close(select_skills);
+		select_skills = NULL;
 	}
 	if (select_trip)
 	{ // Procedura di select viaggi
@@ -429,6 +436,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_assoc, "call  select_assoc(?,?,?)", conn))
 		{ 
 			print_stmt_error(select_assoc, "Unable to initialize select_assoc statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_skills, "call  select_skills(?,?)", conn))
+		{ 
+			print_stmt_error(select_skills, "Unable to initialize select_skills statement\n");
 			return false;
 		}
 		/*
@@ -833,6 +845,41 @@ void do_update_km(struct mezzo *mezzo)
 	mysql_stmt_free_result(update_km);
 	mysql_stmt_reset(update_km);
 }
+
+void do_select_skills(struct competenze *competenze)
+{
+	MYSQL_BIND param[2];
+
+	
+	char *buff = "select_skills";
+
+	char telefono[VARCHAR_LEN];
+	char meccanico[VARCHAR_LEN];  
+
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &competenze->meccanicocompetente, sizeof(competenze->meccanicocompetente));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, competenze->modelloassociato, strlen(competenze->modelloassociato));
+	
+	if (bind_exe(select_skills, param, buff) == -1)
+		goto stop;
+
+	free(competenze); 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, meccanico, sizeof(meccanico));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, telefono, sizeof(telefono));
+	
+	
+	if(take_result(select_skills, param, buff)== -1)
+		goto stop; 
+	
+	strcpy(competenze->modelloassociato, meccanico); 
+	strcpy(competenze->telefono, telefono);
+	
+	stop:
+	mysql_stmt_free_result(select_skills);
+	mysql_stmt_reset(select_skills);
+}
+
 
 void do_select_assoc(struct associata *associata)
 {

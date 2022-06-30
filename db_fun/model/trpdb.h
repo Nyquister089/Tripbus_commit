@@ -12,7 +12,8 @@ extern void fini_db(void);
 #define TIME_LEN 6
 #define DATETIME_LEN (DATE_LEN + TIME_LEN)
 #define NUM_LEN 45
-#define DEC_LEN 10 
+#define DEC_LEN 10
+#define TEL_LEN 16 
 #define TAR_LEN 10
 #define BLOB_LEN 45
 #define USERNAME_LEN 45
@@ -65,8 +66,8 @@ struct cliente {
 	char indirizzocliente[VARCHAR_LEN];
 	char codicefiscale[VARCHAR_LEN];
 	char datadocumentazione[DATE_LEN];
-	char recapitotelefonico[VARCHAR_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
-	char fax[VARCHAR_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	char recapitotelefonico[TEL_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	char fax[TEL_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 };
 
 
@@ -84,8 +85,9 @@ struct comfort_mezzo{
 };
 
 struct competenze {
-	int meccanicocompetente; 				//FK //Corretto trasformandolo da carattere a puntatore di carattere
-	int modelloassociato; 					//FK //Corretto trasformandolo da carattere a puntatore di carattere
+	int meccanicocompetente; 
+	char modelloassociato[VARCHAR_LEN];
+	char telefono[TEL_LEN];
 }; 
 
 struct dipendente{
@@ -416,6 +418,7 @@ extern void do_select_sparepart(struct ricambio *ricambio);
 extern void do_select_review(struct revisione *revisione);
 extern void do_select_bus(struct mezzo *mezzo); 
 extern void do_select_assoc(struct associata *associata); 
+extern void do_select_skills(struct competenze *competenze); 
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 

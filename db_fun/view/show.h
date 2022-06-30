@@ -17,4 +17,5 @@ extern void show_sparepart(struct ricambio *ricambio);
 extern void show_review (struct revisione *revisione); 
 extern void show_bus(struct mezzo *mezzo); 
 extern void show_assoc(struct associata *associata); 
+extern void show_skills(struct competenze *competenze); 
 extern void show_expired_review (void); 

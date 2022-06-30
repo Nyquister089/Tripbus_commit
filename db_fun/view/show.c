@@ -128,6 +128,19 @@ void show_assoc(struct associata *associata)
 
 }
 
+void show_skills(struct competenze *competenze)
+{	
+	char buff [NUM_LEN]; 
+	printf("\n\n** Dettagli competenze  **\n\n");
+	get_input("Inserisci l'id del meccanico competente :",NUM_LEN, buff, false); 
+	competenze->meccanicocompetente = atoi(buff); 
+	get_input("Inserisci il modello d'interesse :",NUM_LEN, competenze->modelloassociato, false);
+	do_select_skills(competenze);
+ 	printf("*Nome meccanico:%s \n Telefono :	%s \n\n",
+		competenze->modelloassociato,
+		competenze->telefono); 
+}
+
 void show_expired_review (void) 
 {	
 	printf("** Ecco i mezzi le cui revisioni risultano scadute o in scadenza**\n\n");
