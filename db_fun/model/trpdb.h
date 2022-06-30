@@ -70,8 +70,6 @@ struct cliente {
 	char fax[TEL_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 };
 
-
-
 struct comfort {
 	char idcomfort [NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 	char nomecomfort[VARCHAR_LEN]; 
@@ -109,12 +107,16 @@ struct fmo{
 	char modello[VARCHAR_LEN]; 
 	//
 	char descrizione[DES_LEN];
-	char immagine[DES_LEN];  
+	char immagine[BLOB_LEN];  
 };
 
 struct fme{
 	int foto; 
 	int meta; 
+	//
+	char nome[VARCHAR_LEN];
+	char descrizione[DES_LEN]; 
+	char immagine[BLOB_LEN];
 }; 
 
 struct foto_mete {
@@ -424,6 +426,7 @@ extern void do_select_assoc(struct associata *associata);
 extern void do_select_skills(struct competenze *competenze); 
 extern void do_select_employee(struct dipendente* dipendente); 
 extern void do_select_fmo(struct fmo *fmo); 
+extern void do_select_fme(struct fme *fme); 
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 

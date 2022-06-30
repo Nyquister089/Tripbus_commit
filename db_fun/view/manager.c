@@ -166,6 +166,7 @@ bool get_table_gest (char sel)
                     return false; 
                 }
 			} 
+			return true; 
         }
 
         case TABELLA_UTENTI: {
@@ -191,6 +192,7 @@ bool get_table_gest (char sel)
                     return false; 
                 }
             } 
+			return true;
         } 
         case TABELLA_OFFRE: {
 		return true; 
@@ -214,6 +216,7 @@ bool get_table_gest (char sel)
                 return false; 
 				}
 			}
+			return true;
         }
         case TABELLA_TOME: {
         
@@ -238,11 +241,29 @@ bool get_table_gest (char sel)
                 return false; 
 				}
 			}
+			return true;
         
         } 
         case TABELLA_FME: {
-        
-        return true; 
+			act = get_admin_action();
+            switch (act){
+                case GESTIONE_SELECT: {
+                    show_fme(fme); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                return false; 
+				}
+			}
+			return true;
         }
         case QUIT_ANAG: {
 

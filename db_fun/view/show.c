@@ -160,13 +160,28 @@ void show_fmo(struct fmo *fmo)
 {	
 	char buff [NUM_LEN]; 
 	printf("\n\n** Dettagli Foto-Modelli  **\n\n");
-	get_input("Inserisci l'id d'interesse:",NUM_LEN, buff, false); 
+	get_input("Inserisci l'id della foto d'interesse:",NUM_LEN, buff, false); 
 	fmo->foto = atoi(buff); 
 	get_input("Inserisci il nome del modello d'interesse:",NUM_LEN, fmo->modello, false);
 	do_select_fmo(fmo);
  	printf("*Descrizione:	%s \n Immagine:	%s\n\n",
 		fmo->descrizione,
 		fmo->immagine); 
+}
+
+void show_fme(struct fme *fme)
+{	
+	char buff [NUM_LEN]; 
+	printf("\n\n** Dettagli Foto-Mete  **\n\n");
+	get_input("Inserisci l'id della foto d'interesse:",NUM_LEN, buff, false); 
+	fme->foto = atoi(buff); 
+	get_input("Inserisci l'id della meta d'interesse:",NUM_LEN, buff, false);
+	fme->meta = atoi(buff); 
+	do_select_fme(fme);
+ 	printf("*Nome:	%s\n Descrizione:	%s \n Immagine:	%s\n\n",
+		fme->nome,
+		fme->descrizione,
+		fme->immagine); 
 }
 
 void show_expired_review (void) 

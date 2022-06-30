@@ -34,7 +34,9 @@ static MYSQL_STMT *select_sparepart;   // ok Meccanico
 static MYSQL_STMT *select_assoc;   		// ok Manager
 static MYSQL_STMT *select_skills; 		// ok Manager
 static MYSQL_STMT *select_employee;		// ok Manager 
-static MYSQL_STMT *select_fmo;			// Manager
+static MYSQL_STMT *select_fmo;			// ok Manager
+static MYSQL_STMT *select_fme;			// ok Manager
+
 
 
 static MYSQL_STMT *select_tour;		   //
@@ -172,6 +174,11 @@ static void close_prepared_stmts(void)
 	{
 		mysql_stmt_close(select_employee);
 		select_employee = NULL;
+	}
+	if (select_fme)
+	{
+		mysql_stmt_close(select_fme);
+		select_fme = NULL;
 	}
 	if (select_fmo)
 	{
@@ -452,6 +459,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_employee, "call  select_employee(?)", conn))
 		{ 
 			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_fme, "call  select_fme(?,?)", conn))
+		{ 
+			print_stmt_error(select_fme, "Unable to initialize select_fme statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&select_fmo, "call  select_fmo(?,?)", conn))
@@ -868,6 +880,32 @@ void do_update_km(struct mezzo *mezzo)
 	mysql_stmt_reset(update_km);
 }
 
+void do_select_fme(struct fme *fme)
+{
+	MYSQL_BIND param[3];
+	
+	char *buff = "select_fme";
+
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &fme->foto, sizeof(fme->foto));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &fme->meta, sizeof(fme->meta));
+	
+	
+	if (bind_exe(select_fme, param, buff) == -1)
+		goto stop;
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, fme->nome, sizeof(fme->nome));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, fme->descrizione, sizeof(fme->descrizione));
+	set_binding_param(&param[2], MYSQL_TYPE_BLOB, fme->immagine, sizeof(fme->immagine));
+	
+	if(take_result(select_fme, param, buff)== -1)
+		goto stop; 
+	
+	stop:
+	mysql_stmt_free_result(select_fme);
+	mysql_stmt_reset(select_fme);
+ 
+}
 
 void do_select_fmo(struct fmo *fmo)
 {
@@ -884,7 +922,7 @@ void do_select_fmo(struct fmo *fmo)
 		goto stop;
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, fmo->descrizione, sizeof(fmo->descrizione));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, fmo->immagine, sizeof(fmo->immagine));
+	set_binding_param(&param[1], MYSQL_TYPE_BLOB, fmo->immagine, sizeof(fmo->immagine));
 	
 	if(take_result(select_fmo, param, buff)== -1)
 		goto stop; 
