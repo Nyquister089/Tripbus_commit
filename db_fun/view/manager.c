@@ -356,7 +356,7 @@ int tour_section(void) //sezione tour
 		puts("7) Mappa");
 		puts("8) Esci");
 		op = multi_choice("Seleziona un'opzione", options, 8);
-		return op - '1';
+		get_table_tour(( op - '1'));
 }
 
 
