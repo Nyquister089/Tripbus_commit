@@ -9,15 +9,28 @@
 #include "../utils/validation.h"
 
 struct associata * associata;
+struct camera *camera; 
+struct documentazionefotografica *documentazionefotografica; 
 struct cliente *cliente; 
 struct competenze *competenze; 
 struct dipendente * dipendente; 
 struct fmo *fmo; 
 struct fme *fme; 
+struct localita *localita; 
+struct mappa *mappa; 
+struct meta *meta; 
+struct mezzo *mezzo; 
+struct modello *modello; 
 struct offre *offre; 
 struct postoprenotato *postoprenotato; 
 struct prenotazione *prenotazione; 
+struct revisione *revisione; 
+struct ricambio *ricambio; 
+struct tagliando *tagliando; 
 struct tome *tome;
+struct tour *tour; 
+struct viaggio *viaggio;
+struct visita *visita;  
 struct utente *utente; 
 
 int allocation_gest(void)
@@ -86,7 +99,85 @@ int allocation_costumer(void)
 
 }
 
-int get_admin_action(void) 
+int allocation_workshop(void)
+{	
+
+	mezzo = malloc(sizeof(struct mezzo));
+	if(mezzo == NULL)
+		{printf("Fallimento malloc su mezzo (manager) \n\n"); 
+		 return -1;
+		}
+	modello = malloc (sizeof(struct modello));
+	if(modello == NULL)
+		{printf("Fallimento malloc su modello (manager) \n\n"); 
+		 return -1;
+		}
+	revisione = malloc(sizeof(struct revisione));
+	if(revisione == NULL)
+		{printf("Fallimento malloc su revisione (manager) \n\n"); 
+		 return -1;
+		}
+
+	ricambio = malloc(sizeof(struct ricambio));
+	if(ricambio == NULL)
+		{printf("Fallimento malloc su ricambio (manager) \n\n"); 
+		 return -1;
+		}
+	
+	tagliando = malloc(sizeof(struct tagliando));
+	if(tagliando == NULL)
+		{printf("Fallimento malloc su tagliando (manager) \n\n"); 
+		 return -1;
+		}
+}
+
+int allocation_tour(void){
+
+	camera = malloc(sizeof(struct camera));
+	if(camera == NULL)
+		{printf("Fallimento malloc su camera (manager) \n\n"); 
+		 return -1;
+		}
+	documentazionefotografica = malloc(sizeof(struct documentazionefotografica));
+	if(documentazionefotografica == NULL)
+		{printf("Fallimento malloc su documentazionefotografica (manager) \n\n"); 
+		 return -1;
+		}
+	localita = malloc(sizeof(struct localita));
+	if(localita == NULL)
+		{printf("Fallimento malloc su localita (manager) \n\n"); 
+		 return -1;
+		}
+	mappa = malloc(sizeof(struct mappa));
+	if(mappa == NULL)
+		{printf("Fallimento malloc su mappa (manager) \n\n"); 
+		 return -1;
+		}
+	meta = malloc(sizeof(struct meta));
+	if(meta == NULL)
+		{printf("Fallimento malloc su meta (manager) \n\n"); 
+		 return -1;
+		}
+	viaggio = malloc(sizeof(struct viaggio));
+	if(viaggio == NULL)
+		{printf("Fallimento malloc su viaggio (manager) \n\n"); 
+		 return -1;
+		}
+	visita = malloc(sizeof(struct visita));
+	if(visita == NULL)
+		{printf("Fallimento malloc su visita (manager) \n\n"); 
+		 return -1;
+		}
+	tour = malloc(sizeof(struct tour));
+	if(tour == NULL)
+		{printf("Fallimento malloc su tour (manager) \n\n"); 
+		 return -1;
+		}
+
+}
+
+
+int get_mngr_action(void) 
 {	char options[4] = {'1','2','3','4'};
 	char op; 
 	puts("*** Quale operazione vorresti eseguire? ***\n");
@@ -116,6 +207,141 @@ int get_mngr_group(void)
 
 }
 
+
+bool get_table_tour(char sel)
+{
+	char act; 
+	if(camera == NULL || documentazionefotografica == NULL || localita == NULL || mappa == NULL || meta == NULL ){
+		allocation_tour();
+		printf("Allocazione tour avvenuta\n\n"); 
+	}
+	switch(sel){
+		case TABELLA_TOUR:{
+			act = get_mngr_action();
+						switch(act){
+				case GESTIONE_SELECT: {
+                    show_costumer(cliente); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			} 
+		}
+    	case TABELLA_VIAGGIO:{
+			act = get_mngr_action();
+						switch(act){
+				case GESTIONE_SELECT: {
+                    show_costumer(cliente); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			} 
+		}
+    	case TABELLA_META:{
+			act = get_mngr_action();
+						switch(act){
+				case GESTIONE_SELECT: {
+                    show_costumer(cliente); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			} 
+		} 
+    	case TABELLA_VISITA:{
+			act = get_mngr_action();
+						switch(act){
+				case GESTIONE_SELECT: {
+                    show_costumer(cliente); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			} 
+		} 
+    	case TABELLA_LOCALITA:{
+			act = get_mngr_action();
+						switch(act){
+				case GESTIONE_SELECT: {
+                    show_costumer(cliente); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			} 
+		}
+    	case TABELLA_MAPPA:{
+			act = get_mngr_action();
+						switch(act){
+				case GESTIONE_SELECT: {
+                    show_costumer(cliente); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			} 
+		}
+    case QUIT_GEST_TOUR:{
+		return false; 
+	}
+	}
+}
+
 int tour_section(void) //sezione tour
 {	
 	char options[8] = {'1','2','3','4','5','6','7','8'};
@@ -133,6 +359,122 @@ int tour_section(void) //sezione tour
 		return op - '1';
 }
 
+
+bool get_table_workshop(char sel){ 
+	char act; 
+	if (mezzo == NULL || modello == NULL || revisione == NULL || ricambio == NULL || tagliando == NULL)
+		{
+			allocation_workshop(); 
+			printf("Allocazione costumer avvenuta\n\n"); 
+		}
+	switch(sel){
+		case TABELLA_MODELLO: {
+			act = get_mngr_action(); 
+			switch(act){
+				case GESTIONE_SELECT: {
+                    show_costumer(cliente); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			} 
+		}
+
+    	case TABELLA_MEZZO:{
+			act = get_mngr_action(); 
+			switch(act){
+				case GESTIONE_SELECT: {
+                    show_costumer(cliente); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			} 
+		} 
+    	case TABELLA_RICAMBIO:{
+			act = get_mngr_action(); 
+			switch(act){
+				case GESTIONE_SELECT: {
+                    show_costumer(cliente); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			} 
+		}  
+    	case TABELLA_REVISIONE:{
+			act = get_mngr_action(); 
+			switch(act){
+				case GESTIONE_SELECT: {
+                    show_costumer(cliente); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			} 
+		}  
+    	case TABELLA_TAGLIANDO:{
+			act = get_mngr_action(); 
+			switch(act){
+				case GESTIONE_SELECT: {
+                    show_costumer(cliente); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			} 
+		} 
+    	case QUIT_GEST_OFFICINA:{
+			return false; 
+		}
+	}
+}
+
 int workshop_section(void) // sezione officina 
  {	    
 		char options[6] = {'1','2','3','4','5','6'};
@@ -145,7 +487,7 @@ int workshop_section(void) // sezione officina
 		 puts("5) Tagliando");
 		 puts("6) Esci");
 		 op = multi_choice("Seleziona un'opzione", options, 6);
-		 return op - '1';
+		 get_table_workshop((op - '1'));
 }
 
 
@@ -154,14 +496,74 @@ bool get_table_costumer (char sel )
 	char act; 
 	if(cliente == NULL || prenotazione  == NULL || postoprenotato == NULL) {
 		allocation_costumer();
-		printf("\n\nAllocazione gest avvenuta.\n\n");
+		printf("\n\nAllocazione costumer avvenuta.\n\n");
      } 
     switch(sel){
-/*
-	TABELLA_CLIENTE,
-    TABELLA_PRENOTAZIONE, 
-    TABELLA_POSTO_PRENOTATO,
-    QUIT_GEST_CLIENTE*/
+		case TABELLA_CLIENTE: {
+			act = get_mngr_action(); 
+			switch(act){
+				case GESTIONE_SELECT: {
+                    show_costumer(cliente); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			}
+		}
+
+    	case TABELLA_PRENOTAZIONE:{
+			act = get_mngr_action(); 
+			switch(act){
+				case GESTIONE_SELECT: {
+                    show_reservation(prenotazione); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			}
+		} 
+
+    	case TABELLA_POSTO_PRENOTATO:{
+			act = get_mngr_action(); 
+			switch(act){
+				case GESTIONE_SELECT: {
+                    //show_seat(postoprenotato); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			} 
+		}
+    	case QUIT_GEST_CLIENTE: {
+		return false; 
+		}
 	}
 
 }
@@ -179,6 +581,7 @@ int costumer_section(void) // sezione clienti
 	get_table_costumer((op-'1')); 
 }
 
+
 bool get_table_gest (char sel)
 {   char act;
     if(associata == NULL ||	 competenze == NULL || dipendente == NULL ||fme == NULL ||fmo == NULL|| offre == NULL || tome == NULL || utente == NULL) {
@@ -187,7 +590,7 @@ bool get_table_gest (char sel)
      } 
     switch(sel){
         case TABELLA_DIPENDENTI: {
-         act = get_admin_action();
+         act = get_mngr_action();
             switch (act){
                 case GESTIONE_SELECT: {
                     show_employee(dipendente); 
@@ -209,7 +612,7 @@ bool get_table_gest (char sel)
         }
 
         case TABELLA_UTENTI: {
-         act = get_admin_action();
+         act = get_mngr_action();
             switch (act){
                 case GESTIONE_SELECT: {
                     show_user(utente); 
@@ -230,7 +633,7 @@ bool get_table_gest (char sel)
         return true; 
         }
         case TABELLA_ASSOCIATA: {
-        act = get_admin_action();
+        act = get_mngr_action();
             switch (act){
                 case GESTIONE_SELECT: {
                     show_assoc(associata); 
@@ -251,7 +654,7 @@ bool get_table_gest (char sel)
 			return true;
         } 
         case TABELLA_OFFRE: {
-			act = get_admin_action();
+			act = get_mngr_action();
             switch (act){
                 case GESTIONE_SELECT: {
                     show_ofr(offre); 
@@ -272,7 +675,7 @@ bool get_table_gest (char sel)
 		return true; 
         }
         case TABELLA_COMPETENZE: {
-            act = get_admin_action();
+            act = get_mngr_action();
             switch (act){
                 case GESTIONE_SELECT: {
                     show_skills(competenze); 
@@ -293,7 +696,7 @@ bool get_table_gest (char sel)
 			return true;
         }
         case TABELLA_TOME: {
-        act = get_admin_action();
+        act = get_mngr_action();
             switch (act){
                 case GESTIONE_SELECT: {
                     show_tome(tome); 
@@ -315,7 +718,7 @@ bool get_table_gest (char sel)
         return true; 
         }
         case TABELLA_FMO: {
-			act = get_admin_action();
+			act = get_mngr_action();
             switch (act){
                 case GESTIONE_SELECT: {
                     show_fmo(fmo); 
@@ -337,7 +740,7 @@ bool get_table_gest (char sel)
         
         } 
         case TABELLA_FME: {
-			act = get_admin_action();
+			act = get_mngr_action();
             switch (act){
                 case GESTIONE_SELECT: {
                     show_fme(fme); 
@@ -384,8 +787,6 @@ int gest_section(void)
 }
 
 
-
-
 bool exe_mngr_group(char sel)
 {	
 
@@ -415,7 +816,6 @@ bool exe_mngr_group(char sel)
 	}
 	return true;
 }
-
 
 void run_mngr_interface (void)
 { 	
