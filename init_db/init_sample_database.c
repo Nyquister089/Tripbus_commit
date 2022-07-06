@@ -234,6 +234,7 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/select_seat.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_model.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_certify.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/select_destination.sql");
 }
 
 int main(int argc, char *argv[])

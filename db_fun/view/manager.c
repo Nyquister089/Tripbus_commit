@@ -260,7 +260,7 @@ bool get_table_tour(char sel)
 			act = get_mngr_action();
 						switch(act){
 				case GESTIONE_SELECT: {
-                    show_costumer(cliente); 
+                    show_destination(meta); 
                 return true; 
                 }
 	            case GESTIONE_INSERT: {

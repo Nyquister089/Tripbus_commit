@@ -286,6 +286,29 @@ void show_certify(struct tagliando *tagliando){
 		tagliando->validitasuperate);
 }
 
+void show_destination(struct meta *meta){
+
+	char buff[NUM_LEN];
+	printf("\n\n** Dettagli meta  **\n\n");
+	get_input("Inserisci l'id  d'interesse:",NUM_LEN, buff, false); 
+	meta->idmeta= atoi(buff); 
+	do_select_destination(meta); 
+	printf("*Nome:		%s\n Tipologia:	%s\n Località:	%s\n Indirizzo:	%s\n Telefono:	%s\n E-mail:	%s\n Fax:		%s\n",
+		meta->nomemeta,
+		meta->tipologiameta,
+		meta->localitadiappartenenza,
+		meta->indirizzo,
+		meta->telefonometa,
+		meta->emailmeta,
+		meta->faxmeta); 
+	if(strcmp((meta->tipologiameta), "Albergo") == 0)
+		printf(" Categoria:	%s\n\n", meta->categoriaalbergo); 
+	else
+		printf(" Orario di apertura:%s\n\n", meta->orariodiapertura); 
+
+}
+
+
 void show_expired_review (void) 
 {	
 	printf("** Ecco i mezzi le cui revisioni risultano scadute o in scadenza**\n\n");

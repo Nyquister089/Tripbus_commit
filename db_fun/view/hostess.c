@@ -58,12 +58,7 @@ void mod_trip_seat(void) // Procedura modifica posti dipsonibili per viaggio
 	
 	char buffer[VARCHAR_LEN]; 
 	printf("** Procedura modifica posti viaggio **\n\n"); 
- 	get_input("Inserisci il codice del viaggio : ", VARCHAR_LEN, buffer, false);
-	viaggio_hstss->idviaggio = atoi(buffer);
-
- 	do_select_trip(viaggio_hstss);
 	show_trip (viaggio_hstss);
-
 	bool ans = yes_or_no("\n\n Vuoi modificare i posti disponibili per questo viaggio? (s/n) ",'s','n',false,false);
 	if(!ans) {
 		return;

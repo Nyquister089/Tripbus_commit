@@ -139,11 +139,11 @@ struct mappa {
 };
 
 struct meta { 
-	char idmeta[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	int idmeta; //Corretto trasformandolo da carattere a puntatore di carattere
 	char nomemeta[VARCHAR_LEN]; 
 	char emailmeta[VARCHAR_LEN]; 
-	char telefonometa[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
-	char faxmeta[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	char telefonometa[TEL_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	char faxmeta[TEL_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
 	char indirizzo[VARCHAR_LEN]; 
 	char tipologiameta[VARCHAR_LEN]; 
 	char categoriaalbergo[VARCHAR_LEN]; 
@@ -439,7 +439,8 @@ extern void do_select_tome(struct tome *tome);
 extern void do_select_user(struct utente *utente); 
 extern void do_select_seat(struct postoprenotato *postoprenotato); 
 extern void do_select_model(struct modello *modello); 
-extern void do_select_certify(struct tagliando *tagliando); 
+extern void do_select_certify(struct tagliando *tagliando);
+extern void do_select_destination(struct meta *neta);  
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 

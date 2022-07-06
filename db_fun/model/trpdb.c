@@ -26,7 +26,7 @@ static MYSQL_STMT *insert_assoc;	   // OK HOSTESS
 static MYSQL_STMT *insert_review;	   // Meccanico
 static MYSQL_STMT *insert_sostitution; // Meccanico
 
-static MYSQL_STMT *select_trip;		   // ok HOSTESS
+static MYSQL_STMT *select_trip;		   // ok HOSTESS, ok Manager
 static MYSQL_STMT *select_costumer;	   // Ok HOSTESS
 static MYSQL_STMT *select_reservation; // ok HOSTESS
 static MYSQL_STMT *select_review;	   // ok Meccanico, ok Manager
@@ -43,7 +43,9 @@ static MYSQL_STMT *select_seat; 		// ok Manager
 static MYSQL_STMT *select_model; 		// ok Manager
 static MYSQL_STMT *select_bus;			// ok Manager
 static MYSQL_STMT *select_certify;		// ok Manager 		
-static MYSQL_STMT *select_tour;			// Manager
+static MYSQL_STMT *select_tour;			// ok Manager
+static MYSQL_STMT *select_destination;	// Manager
+
 
 static MYSQL_STMT *select_destination; //
 static MYSQL_STMT *select_picture;	   //
@@ -81,8 +83,13 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(select_assoc);
 		select_assoc = NULL;
 	}
+	if (select_destination)
+	{
+		mysql_stmt_close(select_destination);
+		select_destination = NULL;
+	}
 	if (select_tour)
-	{ // Procedura di select tour
+	{
 		mysql_stmt_close(select_tour);
 		select_tour = NULL;
 	}
@@ -478,6 +485,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_employee, "call  select_employee(?)", conn))
 		{ 
 			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_destination, "call  select_destination(?)", conn))
+		{ 
+			print_stmt_error(select_destination, "Unable to initialize select_destination statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&select_tour, "call  select_tour(?)", conn))
@@ -1459,6 +1471,7 @@ void do_update_data_doc(struct cliente *cliente) // funziona
 	mysql_stmt_free_result(update_data_doc);
 	mysql_stmt_reset(update_data_doc);
 }
+
 void do_select_tour(struct tour *tour)
 {
 	MYSQL_BIND param[6];
@@ -1484,37 +1497,34 @@ void do_select_tour(struct tour *tour)
 
 void do_select_destination(struct meta *meta)
 {
-	MYSQL_BIND param[10];
+	MYSQL_BIND param[9];
 	MYSQL_TIME orariodiapertura;
 
-	int idmeta;
-	int telefonometa;
-	int faxmeta;
+	char *buff = "select_destination";
 
-	time_to_mysql_time(meta->orariodiapertura, &orariodiapertura);
+	init_mysql_timestamp(&orariodiapertura); 
 
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idmeta, sizeof(idmeta));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, meta->nomemeta, sizeof(meta->nomemeta));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, meta->emailmeta, sizeof(meta->emailmeta));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &telefonometa, sizeof(telefonometa));
-	set_binding_param(&param[4], MYSQL_TYPE_LONG, &faxmeta, sizeof(faxmeta));
-	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, meta->indirizzo, sizeof(meta->indirizzo));
-	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, meta->tipologiameta, sizeof(meta->tipologiameta));
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &meta->idmeta, sizeof(meta->idmeta));
+
+	if(bind_exe(select_destination, param, buff)==-1)
+		goto stop; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, meta->nomemeta, sizeof(meta->nomemeta));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, meta->tipologiameta, sizeof(meta->tipologiameta));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, meta->localitadiappartenenza, sizeof(meta->localitadiappartenenza));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, meta->indirizzo, sizeof(meta->indirizzo));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, meta->telefonometa, sizeof(meta->telefonometa));
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, meta->emailmeta, sizeof(meta->emailmeta));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, meta->faxmeta, sizeof(meta->faxmeta));
 	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, meta->categoriaalbergo, sizeof(meta->categoriaalbergo));
 	set_binding_param(&param[8], MYSQL_TYPE_TIME, &orariodiapertura, sizeof(orariodiapertura));
-	set_binding_param(&param[9], MYSQL_TYPE_VAR_STRING, meta->localitadiappartenenza, sizeof(meta->localitadiappartenenza));
 
-	if (mysql_stmt_bind_param(select_destination, param) != 0)
-	{
-		print_stmt_error(select_destination, "Could not bind parameters for select_destination");
-		return;
-	}
-	// Run procedure
-	if (mysql_stmt_execute(select_destination) != 0)
-	{
-		print_stmt_error(select_destination, "Could not execute select_destination");
-		return;
-	}
+	if(take_result(select_destination, param, buff)==-1)
+		goto stop; 
+	
+	mysql_time_to_string(&orariodiapertura,meta->orariodiapertura); 
+	
+	stop:
 	mysql_stmt_free_result(select_destination);
 	mysql_stmt_reset(select_destination);
 }
