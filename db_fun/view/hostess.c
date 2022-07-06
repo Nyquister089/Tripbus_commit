@@ -77,12 +77,8 @@ void mod_trip_seat(void) // Procedura modifica posti dipsonibili per viaggio
 
 void validate_reservation(void)
 {
-	char buff[NUM_LEN]; 
-	printf("** Procedura conferma prenotazione **\n\n");
-	get_input("Inserisci numero d'interesse : ", NUM_LEN , buff, false); 
-	prenotazione_hstss->numerodiprenotazione = atoi(buff); 
-
-    do_select_reservation(prenotazione_hstss); 
+	 
+	printf("** Procedura conferma prenotazione **\n\n"); 
 	show_reservation(prenotazione_hstss); 
 
  	bool ans = yes_or_no("\n\n Vuoi confermare questa prenotazione? (s/n) ",'s','n',false,false);
@@ -127,14 +123,9 @@ void validate_reservation(void)
 }
 
 void update_d_doc(void)
-{ 
+{ 	
 	printf("\n\n** Procedura di modifica data documenti cliente **\n\n");
-	get_input("Inserisci la mail d'interesse : ", VARCHAR_LEN , cliente_hstss->emailcliente, false);
-	printf("\n\n");  
-
-    do_select_costumer(cliente_hstss); 
 	show_costumer (cliente_hstss); 
-
     bool ans = yes_or_no("\n\n Vuoi modificare la data documentazione di questo cliente? (s/n) ",'s','n',false,false);
 	if(!ans) {
 		return;

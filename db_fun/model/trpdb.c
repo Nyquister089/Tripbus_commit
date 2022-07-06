@@ -38,7 +38,8 @@ static MYSQL_STMT *select_fmo;			// ok Manager
 static MYSQL_STMT *select_fme;			// ok Manager
 static MYSQL_STMT *select_ofr;			// ok Manager
 static MYSQL_STMT *select_tome; 		// non funziona Manager
-static MYSQL_STMT *select_user; 		// non funziona Manager
+static MYSQL_STMT *select_user; 		// ok Manager
+static MYSQL_STMT *select_seat; 		// Manager
 
 
 
@@ -177,6 +178,11 @@ static void close_prepared_stmts(void)
 	{
 		mysql_stmt_close(select_employee);
 		select_employee = NULL;
+	}
+	if (select_seat)
+	{
+		mysql_stmt_close(select_seat);
+		select_seat = NULL;
 	}
 	if (select_user)
 	{
@@ -477,6 +483,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_employee, "call  select_employee(?)", conn))
 		{ 
 			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_seat, "call  select_seat(?, ?)", conn))
+		{ 
+			print_stmt_error(select_seat, "Unable to initialize select_seat statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&select_user, "call  select_user(?)", conn))
@@ -911,6 +922,32 @@ void do_update_km(struct mezzo *mezzo)
 
 	mysql_stmt_free_result(update_km);
 	mysql_stmt_reset(update_km);
+}
+
+
+void do_select_seat(struct postoprenotato *postoprenotato)
+{
+	MYSQL_BIND param[4];
+	
+	char *buff = "select_seat";
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &postoprenotato->numerodiposto, sizeof(postoprenotato->numerodiposto));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &postoprenotato->viaggioassociato, sizeof(postoprenotato->viaggioassociato));
+	
+	if (bind_exe(select_seat, param, buff) == -1)
+		goto stop;
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, postoprenotato->nomepasseggero, sizeof(postoprenotato->nomepasseggero));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, postoprenotato->cognomepasseggero, sizeof(postoprenotato->cognomepasseggero));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &postoprenotato->etapasseggero, sizeof(postoprenotato->etapasseggero));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &postoprenotato->prenotazioneassociata, sizeof(postoprenotato->prenotazioneassociata));
+	
+	take_result(select_seat, param, buff);
+ 
+	stop:
+	mysql_stmt_free_result(select_seat);
+	mysql_stmt_reset(select_seat);
+ 
 }
 
 void do_select_user(struct utente *utente)

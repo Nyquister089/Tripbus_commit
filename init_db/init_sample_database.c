@@ -231,7 +231,8 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/select_fme.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_ofr.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/select_tome.sql");
-    execute_query_from_file_sql("../sql/ddl/procedure/select_user.sql");   
+    execute_query_from_file_sql("../sql/ddl/procedure/select_user.sql");  
+    execute_query_from_file_sql("../sql/ddl/procedure/select_seat.sql");  
 }
 
 int main(int argc, char *argv[])

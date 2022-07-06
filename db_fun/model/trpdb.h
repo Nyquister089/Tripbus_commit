@@ -437,6 +437,7 @@ extern void do_select_fme(struct fme *fme);
 extern void do_select_ofr(struct offre *offre);  
 extern void do_select_tome(struct tome *tome);
 extern void do_select_user(struct utente *utente); 
+extern void do_select_seat(struct postoprenotato *postoprenotato); 
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 

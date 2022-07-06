@@ -545,7 +545,7 @@ bool get_table_costumer (char sel )
 			act = get_mngr_action(); 
 			switch(act){
 				case GESTIONE_SELECT: {
-                    //show_seat(postoprenotato); 
+                    show_seat(postoprenotato); 
                 return true; 
                 }
 	            case GESTIONE_INSERT: {

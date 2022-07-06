@@ -24,4 +24,5 @@ extern void show_fme(struct fme *fme);
 extern void show_ofr(struct offre *offre);
 extern void show_tome(struct tome *tome); 
 extern void show_user(struct utente *utente); 
+extern void show_seat(struct postoprenotato *postoprenotato); 
 extern void show_expired_review (void); 

@@ -3,8 +3,12 @@
 #include "show.h" 
 
 void show_reservation (struct prenotazione * prenotazione)
-{
-printf("\n\n** Dettagli prenotazione **\n\n");
+{	
+	char buff[NUM_LEN];
+	get_input("Inserisci numero d'interesse : ", NUM_LEN , buff, false); 
+	prenotazione->numerodiprenotazione = atoi(buff); 
+    do_select_reservation(prenotazione);
+	printf("\n\n** Dettagli prenotazione **\n\n");
  	printf(" Prenotazione numero: 	%d \n E-mail cliente: 	%s \n Data di prenotazione: 	%s \n Data di conferma: 	%s \n Data Saldo: 		%s \n\n",
 		prenotazione->numerodiprenotazione, 
 		prenotazione->clienteprenotante,
@@ -31,7 +35,11 @@ void show_trip(struct viaggio *viaggio)
 }
 
 void show_costumer (struct cliente * cliente)
-{printf("\n\n**  Dettagli cliente ** \n\n");
+{	
+	
+	get_input("Inserisci la mail d'interesse : ", VARCHAR_LEN , cliente->emailcliente, false);
+    do_select_costumer(cliente); 
+	printf("\n\n**  Dettagli cliente ** \n\n");
 		printf("\n E-mail:  %s \n Nome: %s \n Cognome: %s \n Indirizzo: %s \n Codice fiscale: %s \n Recapito telefonico: %s \n Fax: %s \n Data documentazione: %s \n", 
 		cliente->emailcliente,
 		cliente->nomecliente,
@@ -213,8 +221,8 @@ void show_tome(struct tome *tome)
 }
 
 
-void show_user(struct utente *utente)
-{	
+void show_user(struct utente *utente){
+
 	char buff [NUM_LEN]; 
 	printf("\n\n** Dettagli utente **\n\n");
 	get_input("Inserisci l'id dell'utente d'interesse:", NUM_LEN, buff, false);
@@ -225,6 +233,24 @@ void show_user(struct utente *utente)
 		utente->pswrd,
 		utente->tipo); 
 }
+
+extern void show_seat(struct postoprenotato *postoprenotato){
+
+	char buff [NUM_LEN]; 
+	printf("\n\n** Dettagli posto prenotato  **\n\n");
+	get_input("Inserisci il numero di posto d'interesse:",NUM_LEN, buff, false); 
+	postoprenotato->numerodiposto = atoi(buff); 
+	get_input("Inserisci l'id del viaggio d'interesse:",NUM_LEN, buff, false);
+	postoprenotato->viaggioassociato = atoi(buff); 
+	do_select_seat(postoprenotato);
+ 	printf("*Nome passeggero:	%s\n Cognome passeggero:	%s \n Età:			%d \n Numero di prenotazione:%d\n\n",
+		postoprenotato->nomepasseggero,
+		postoprenotato->cognomepasseggero,
+		postoprenotato->etapasseggero,
+		postoprenotato->prenotazioneassociata);
+
+}
+
 
 void show_expired_review (void) 
 {	
