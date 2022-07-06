@@ -29,8 +29,8 @@ static MYSQL_STMT *insert_sostitution; // Meccanico
 static MYSQL_STMT *select_trip;		   // ok HOSTESS
 static MYSQL_STMT *select_costumer;	   // Ok HOSTESS
 static MYSQL_STMT *select_reservation; // ok HOSTESS
-static MYSQL_STMT *select_review;	   // ok Meccanico
-static MYSQL_STMT *select_sparepart;   // ok Meccanico, Manager
+static MYSQL_STMT *select_review;	   // ok Meccanico, Manager
+static MYSQL_STMT *select_sparepart;   // ok Meccanico, ok Manager
 static MYSQL_STMT *select_assoc;   		// ok Manager
 static MYSQL_STMT *select_skills; 		// ok Manager
 static MYSQL_STMT *select_employee;		// ok Manager 
@@ -462,6 +462,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_sparepart, "call select_sparepart(?)", conn))
 		{
 			print_stmt_error(select_sparepart, "Unable to initialize select_sparepart statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_review, "call select_review(?)", conn))
+		{
+			print_stmt_error(select_review, "Unable to initialize select_review statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&select_assoc, "call  select_assoc(?,?,?)", conn))
@@ -1209,35 +1214,37 @@ void do_select_bus(struct mezzo *mezzo)
 
 void do_select_review(struct revisione *revisione) // FUNZIONA
 {
-	MYSQL_BIND param[9];
+	MYSQL_BIND param[8];
 	MYSQL_TIME datainizio;
 	MYSQL_TIME datafine;
+
 	char *buff = "select_review";
 
 	init_mysql_timestamp(&datainizio);
 	init_mysql_timestamp(&datafine);
+ 
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &revisione->idrevisione, sizeof(revisione->idrevisione));
-
+	
 	if (bind_exe(select_review, param, buff) == -1)
 		goto stop;
-
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &revisione->idrevisione, sizeof(revisione->idrevisione));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, revisione->mezzorevisionato, sizeof(revisione->mezzorevisionato));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &revisione->addettoallarevisione, sizeof(revisione->addettoallarevisione));
-	set_binding_param(&param[3], MYSQL_TYPE_DATE, &datainizio, sizeof(datainizio));
-	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datafine, sizeof(datafine));
-	set_binding_param(&param[5], MYSQL_TYPE_LONG, &revisione->chilometraggio, sizeof(revisione->chilometraggio));
-	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, revisione->operazionieseguite, sizeof(revisione->operazionieseguite));
-	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, revisione->tipologiarevisione, sizeof(revisione->tipologiarevisione));
-	set_binding_param(&param[8], MYSQL_TYPE_VAR_STRING, revisione->motivazione, sizeof(revisione->motivazione));
-
+	
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, revisione->mezzorevisionato, sizeof(revisione->mezzorevisionato));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &revisione->addettoallarevisione, sizeof(revisione->addettoallarevisione));
+	set_binding_param(&param[2], MYSQL_TYPE_DATE, &datainizio, sizeof(datainizio));
+	set_binding_param(&param[3], MYSQL_TYPE_DATE, &datafine, sizeof(datafine));
+	set_binding_param(&param[4], MYSQL_TYPE_LONG, &revisione->chilometraggio, sizeof(revisione->chilometraggio));
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, revisione->operazionieseguite, sizeof(revisione->operazionieseguite));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, revisione->tipologiarevisione, sizeof(revisione->tipologiarevisione));
+	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, revisione->motivazione, sizeof(revisione->motivazione));
+	
 	if (take_result(select_review, param, buff) == -1)
 		goto stop;
+	
 	mysql_date_to_string(&datainizio, revisione->datainizio);
 	mysql_date_to_string(&datafine, revisione->datafine);
-stop:
-
+	
+	stop:
 	mysql_stmt_free_result(select_review);
 	mysql_stmt_reset(select_review);
 }

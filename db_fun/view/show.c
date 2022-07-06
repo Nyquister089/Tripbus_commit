@@ -92,11 +92,14 @@ void show_sparepart(struct ricambio *ricambio)
 		);
 }
 
-void show_review (struct revisione *revisione)
-{
-printf("\n\n** Dettagli prenotazione **\n\n");
- 	printf("*ID:			%d *\n Mezzo revsionato:	%s \n Id adetto: 		%d \n Data inizio: 		%s \n Data fine: 		%s\n Chilometraggio:	%d\n Operazioni eseguite:	%s \n Tipologia revsione:	%s \n Motivazione:	%s \n\n",
-	revisione->idrevisione,
+void show_review (struct revisione *revisione){
+
+	char buff[NUM_LEN]; 
+	printf("\n\n** Dettagli revisione **\n\n");
+	get_input("Inserisci l'id d'interesse: ", NUM_LEN, buff, false); 
+	revisione->idrevisione = atoi(buff);
+	do_select_review(revisione); 
+ 	printf("*Mezzo revsionato:	%s \n Id adetto: 		%d \n Data inizio: 		%s \n Data fine: 		%s\n Chilometraggio:	%d\n Operazioni eseguite:	%s \n Tipologia revsione:	%s \n Motivazione:	%s \n\n",
 	revisione->mezzorevisionato,
 	revisione->addettoallarevisione,
 	revisione->datainizio,
