@@ -391,7 +391,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 		break;
 
 	case CLIENTE:
-		if (!setup_prepared_stmt(&select_tour, "call select_tour(?, ?, ?, ?, ?, ?, ?)", conn))
+		if (!setup_prepared_stmt(&select_tour, "call select_tour(?)", conn))
 		{
 			print_stmt_error(select_tour, "Unable to initialize select_tour statement\n");
 			return false;
@@ -416,7 +416,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(select_dest_tour, "Unable to initialize select dest tour statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&select_trip, "call select_trip(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", conn))
+		if (!setup_prepared_stmt(&select_trip, "call select_trip(?)", conn))
 		{
 			print_stmt_error(select_trip, "Unable to initialize select_trip statement\n");
 			return false;
@@ -483,6 +483,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_tour, "call  select_tour(?)", conn))
 		{ 
 			print_stmt_error(select_tour, "Unable to initialize select_tour statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_trip, "call select_trip(?)", conn))
+		{
+			print_stmt_error(select_trip, "Unable to initialize select_trip statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&select_certify, "call  select_certify(?)", conn))
@@ -1285,84 +1290,43 @@ void do_select_review(struct revisione *revisione) // FUNZIONA
 
 void do_select_trip(struct viaggio *viaggio) // Funziona
 {
-	MYSQL_BIND param[11];
+	MYSQL_BIND param[10];
 	MYSQL_TIME datadipartenzaviaggio;
 	MYSQL_TIME datadiritornoviaggio;
 	MYSQL_TIME datadiannullamento;
-	MYSQL_TIME ddp;
-	MYSQL_TIME ddr;
-	MYSQL_TIME dda;
 
-	int idviaggio;
-	int conducente;
-	int accompagnatrice;
-	float costodelviaggio;
-	int numerodikm;
-	int postidisponibili;
-
-	int idv;
-	char tou[VARCHAR_LEN];
-	int con;
-	int acc;
-	char mez[VARCHAR_LEN];
-	float cos;
-	int nkm;
-	int pds;
+	char *buff =  "select_trip"; 
 
 	date_to_mysql_time(viaggio->datadipartenzaviaggio, &datadipartenzaviaggio);
 	date_to_mysql_time(viaggio->datadiritornoviaggio, &datadiritornoviaggio);
 	date_to_mysql_time(viaggio->datadiannullamento, &datadiannullamento);
 
-	init_mysql_timestamp(&ddp);
-	init_mysql_timestamp(&ddr);
-	init_mysql_timestamp(&dda);
 
-	idviaggio = viaggio->idviaggio;
-
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, sizeof(viaggio->tourassociato));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &conducente, sizeof(conducente));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, sizeof(viaggio->mezzoimpiegato));
-	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
-	set_binding_param(&param[6], MYSQL_TYPE_DATE, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
-	set_binding_param(&param[7], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
-	set_binding_param(&param[8], MYSQL_TYPE_LONG, &numerodikm, sizeof(numerodikm));
-	set_binding_param(&param[9], MYSQL_TYPE_LONG, &postidisponibili, sizeof(postidisponibili));
-	set_binding_param(&param[10], MYSQL_TYPE_DATE, &datadiannullamento, sizeof(datadiannullamento));
-
-	if (bind_exe(select_trip, param, "select_trip") == -1)
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &viaggio->idviaggio, sizeof(viaggio->idviaggio));
+	
+	if (bind_exe(select_trip, param, buff) == -1)
 		goto stop;
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tou, sizeof(tou));
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &con, sizeof(con));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &acc, sizeof(acc));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mez, sizeof(mez));
-	set_binding_param(&param[4], MYSQL_TYPE_DATE, &ddp, DATE_LEN);
-	set_binding_param(&param[5], MYSQL_TYPE_DATE, &ddr, DATE_LEN);
-	set_binding_param(&param[6], MYSQL_TYPE_FLOAT, &cos, sizeof(cos));
-	set_binding_param(&param[7], MYSQL_TYPE_LONG, &nkm, sizeof(nkm));
-	set_binding_param(&param[8], MYSQL_TYPE_LONG, &pds, sizeof(pds));
-	set_binding_param(&param[9], MYSQL_TYPE_DATE, &dda, DATE_LEN);
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, sizeof(viaggio->tourassociato));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &viaggio->conducente, sizeof(viaggio->conducente));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &viaggio->accompagnatrice, sizeof(viaggio->accompagnatrice));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, sizeof(viaggio->mezzoimpiegato));
+	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
+	set_binding_param(&param[6], MYSQL_TYPE_FLOAT, &viaggio->costodelviaggio, sizeof(viaggio->costodelviaggio));
+	set_binding_param(&param[7], MYSQL_TYPE_LONG, &viaggio->numerodikm, sizeof(viaggio->numerodikm));
+	set_binding_param(&param[8], MYSQL_TYPE_LONG, &viaggio->postidisponibili, sizeof(viaggio->postidisponibili));
+	set_binding_param(&param[9], MYSQL_TYPE_DATE, &datadiannullamento, sizeof(datadiannullamento));
 
-	if (take_result(select_trip, param, "select_trip") == -1)
+
+	if (take_result(select_trip, param,buff) == -1)
 		goto stop;
 
-	strcpy(viaggio->tourassociato, tou);
-	strcpy(viaggio->mezzoimpiegato, mez);
+	mysql_date_to_string(&datadipartenzaviaggio, viaggio->datadipartenzaviaggio);
+	mysql_date_to_string(&datadiritornoviaggio, viaggio->datadiritornoviaggio);
+	mysql_date_to_string(&datadiannullamento, viaggio->datadiannullamento);
 
-	viaggio->conducente = con;
-	viaggio->accompagnatrice = acc;
-	viaggio->numerodikm = nkm;
-	viaggio->postidisponibili = pds;
-	viaggio->costodelviaggio = cos;
-
-	mysql_date_to_string(&ddp, viaggio->datadipartenzaviaggio);
-	mysql_date_to_string(&ddr, viaggio->datadiritornoviaggio);
-	mysql_date_to_string(&dda, viaggio->datadiannullamento);
-
-stop:
-
+	stop:
 	mysql_stmt_free_result(select_trip);
 	mysql_stmt_reset(select_trip);
 }

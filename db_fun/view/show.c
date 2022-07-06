@@ -19,9 +19,13 @@ void show_reservation (struct prenotazione * prenotazione)
 }
 
 void show_trip(struct viaggio *viaggio)
-{printf("\n\n**  Dettagli viaggio ** \n\n"); 
- 	printf(" ID : %d \n Tour : %s \n Conducente : %d \n Accompagnatrice : %d \n Targa mezzo : %s \n Data di partenza : %s \n Data di ritorno : %s \n Costo : %f \n Chilometri da percorrere : %d \n Posti disponibili: %d \n Data annullamento: %s \n ",
- 		viaggio->idviaggio, 
+{	
+	char buff[NUM_LEN]; 
+	printf("\n\n**  Dettagli viaggio ** \n\n"); 
+	get_input("Inserisci l'id d'interesse: ", NUM_LEN, buff, false); 
+	viaggio->idviaggio = atoi(buff); 
+	do_select_trip(viaggio); 
+ 	printf("*Tour:				%s \n Conducente:			%d \n Accompagnatrice:		%d \n Targa mezzo:			%s \n Data di partenza:		%s \n Data di ritorno:		%s \n Costo:				%f \n Chilometri da percorrere:	%d \n Posti disponibili:		%d \n Data annullamento:		%s \n\n", 
 		viaggio->tourassociato,
 		viaggio->conducente, 					
 		viaggio->accompagnatrice, 				
