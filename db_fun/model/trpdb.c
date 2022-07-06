@@ -39,7 +39,8 @@ static MYSQL_STMT *select_fme;			// ok Manager
 static MYSQL_STMT *select_ofr;			// ok Manager
 static MYSQL_STMT *select_tome; 		// non funziona Manager
 static MYSQL_STMT *select_user; 		// ok Manager
-static MYSQL_STMT *select_seat; 		// Manager
+static MYSQL_STMT *select_seat; 		// ok Manager
+static MYSQL_STMT *select_model; 		// Manager
 
 
 
@@ -47,7 +48,6 @@ static MYSQL_STMT *select_tour;		   //
 static MYSQL_STMT *select_destination; //
 static MYSQL_STMT *select_picture;	   //
 static MYSQL_STMT *select_room;		   //
-static MYSQL_STMT *select_model;	   // Meccanico
 static MYSQL_STMT *select_comfort;	   //			
 static MYSQL_STMT *select_service;	   //
 static MYSQL_STMT *select_bus;		   // Meccanico
@@ -178,6 +178,11 @@ static void close_prepared_stmts(void)
 	{
 		mysql_stmt_close(select_employee);
 		select_employee = NULL;
+	}
+	if (select_model)
+	{
+		mysql_stmt_close(select_model);
+		select_model = NULL;
 	}
 	if (select_seat)
 	{
@@ -483,6 +488,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_employee, "call  select_employee(?)", conn))
 		{ 
 			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_model, "call  select_model(?)", conn))
+		{ 
+			print_stmt_error(select_model, "Unable to initialize select_model statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&select_seat, "call  select_seat(?, ?)", conn))
@@ -924,6 +934,28 @@ void do_update_km(struct mezzo *mezzo)
 	mysql_stmt_reset(update_km);
 }
 
+void do_select_model(struct modello *modello)
+{
+	MYSQL_BIND param[3];
+	
+	char *buff = "select_model";
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, modello->nomemodello, strlen(modello->nomemodello));
+	
+	if (bind_exe(select_model, param, buff) == -1)
+		goto stop;
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, modello->casacostruttrice, sizeof(modello->casacostruttrice));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, modello->datitecnici, sizeof(modello->datitecnici));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &modello->numeroposti, sizeof(modello->numeroposti));
+	
+	take_result(select_model, param, buff);
+ 
+	stop:
+	mysql_stmt_free_result(select_model);
+	mysql_stmt_reset(select_model);
+ 
+}
 
 void do_select_seat(struct postoprenotato *postoprenotato)
 {
@@ -1615,33 +1647,6 @@ void do_select_comfort(struct comfort *comfort)
 	}
 	mysql_stmt_free_result(select_comfort);
 	mysql_stmt_reset(select_comfort);
-}
-
-void do_select_model(struct modello *modello)
-{
-	MYSQL_BIND param[6];
-
-	int idmodello;
-	int numerodiposti;
-
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idmodello, sizeof(idmodello));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, modello->nomemodello, sizeof(modello->nomemodello));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, modello->datitecnici, sizeof(modello->datitecnici));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, modello->casacostruttrice, sizeof(modello->casacostruttrice));
-	set_binding_param(&param[4], MYSQL_TYPE_LONG, &numerodiposti, sizeof(numerodiposti));
-
-	if (mysql_stmt_bind_param(select_model, param) != 0)
-	{
-		print_stmt_error(select_model, "Could not bind parameters for select_model");
-		return;
-	}
-	if (mysql_stmt_execute(select_model) != 0)
-	{
-		print_stmt_error(select_model, "Could not execute select_model");
-		return;
-	}
-	mysql_stmt_free_result(select_model);
-	mysql_stmt_reset(select_model);
 }
 
 void do_select_picture(struct documentazionefotografica *documentazionefotografica)

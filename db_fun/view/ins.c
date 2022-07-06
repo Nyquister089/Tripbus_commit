@@ -142,12 +142,13 @@ void ins_bus(struct mezzo *mezzo)
 
 void ins_model(struct modello *modello)
 {	
-
+	char buff[VARCHAR_LEN];
 	printf("\n** Dettagli inserimento modello **\n\n");
 	get_input("Inserisci il nome : ", DEC_LEN, modello->nomemodello, false);
 	get_input("Inserisci la casa costruttrice : ", NUM_LEN, modello->casacostruttrice, false);
 	get_input("Inserisci i dati tecnici (massimo 5000 caratteri) : ", DES_LEN, modello-> datitecnici, false);
-	get_input("Inserisci il numero di posti: ", NUM_LEN, modello-> numeroposti, false);
+	get_input("Inserisci il numero di posti: ", NUM_LEN, buff, false);
+	modello->numeroposti = atoi(buff); 
 }
 
 void ins_certify(struct tagliando *tagliando)

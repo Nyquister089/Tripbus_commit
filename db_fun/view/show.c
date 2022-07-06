@@ -234,7 +234,7 @@ void show_user(struct utente *utente){
 		utente->tipo); 
 }
 
-extern void show_seat(struct postoprenotato *postoprenotato){
+void show_seat(struct postoprenotato *postoprenotato){
 
 	char buff [NUM_LEN]; 
 	printf("\n\n** Dettagli posto prenotato  **\n\n");
@@ -251,6 +251,16 @@ extern void show_seat(struct postoprenotato *postoprenotato){
 
 }
 
+extern void show_model(struct modello *modello){
+
+	printf("\n\n** Dettagli modello  **\n\n");
+	get_input("Inserisci il nome del modello d'interesse:",NUM_LEN, modello->nomemodello, false); 
+	do_select_model(modello);
+ 	printf("*Casa costruttrice:	%s\n Dati tecnici:		%s \n Numero di posti:	%d\n\n",
+		modello->casacostruttrice,
+		modello->datitecnici,
+		modello->numeroposti);
+}
 
 void show_expired_review (void) 
 {	

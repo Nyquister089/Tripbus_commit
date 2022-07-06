@@ -170,7 +170,7 @@ struct modello {
 	char nomemodello[VARCHAR_LEN];
 	char datitecnici[DES_LEN]; 
 	char casacostruttrice[VARCHAR_LEN];
-	char numeroposti[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	int numeroposti; //Corretto trasformandolo da carattere a puntatore di carattere
 }; 
 
 struct modelli_comfort {
@@ -438,6 +438,7 @@ extern void do_select_ofr(struct offre *offre);
 extern void do_select_tome(struct tome *tome);
 extern void do_select_user(struct utente *utente); 
 extern void do_select_seat(struct postoprenotato *postoprenotato); 
+extern void do_select_model(struct modello *modello); 
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 
