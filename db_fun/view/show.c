@@ -78,9 +78,12 @@ void show_service (struct servizio * servizio)
 
 void show_sparepart(struct ricambio *ricambio)
 {	
+
+
 	printf("\n\n**  Dettagli ricambio ** \n\n");
-		printf("\n Codice:		%s \n Costo unitario:	%f \n Quatità di Riordino: 	%d \n Scorta Minima:		%d \n Quantità in magazzino:	%d \n Descrizione:		%s \n", 
-		ricambio->codice,
+	get_input("Inserisci il codice del ricambio d'interesse: ",VARCHAR_LEN, ricambio->codice, false);
+	do_select_sparepart(ricambio); 
+	printf("*Costo unitario:	%f \n Quatità di Riordino: 	%d \n Scorta Minima:		%d \n Quantità in magazzino:	%d \n Descrizione:		%s \n", 
 		ricambio->costounitario,
 		ricambio->quantitadiriordino,
 		ricambio->scortaminima,
@@ -92,7 +95,7 @@ void show_sparepart(struct ricambio *ricambio)
 void show_review (struct revisione *revisione)
 {
 printf("\n\n** Dettagli prenotazione **\n\n");
- 	printf(" *ID:			%d *\n Mezzo revsionato:	%s \n Id adetto: 		%d \n Data inizio: 		%s \n Data fine: 		%s\n Chilometraggio:	%d\n Operazioni eseguite:	%s \n Tipologia revsione:	%s \n Motivazione:	%s \n\n",
+ 	printf("*ID:			%d *\n Mezzo revsionato:	%s \n Id adetto: 		%d \n Data inizio: 		%s \n Data fine: 		%s\n Chilometraggio:	%d\n Operazioni eseguite:	%s \n Tipologia revsione:	%s \n Motivazione:	%s \n\n",
 	revisione->idrevisione,
 	revisione->mezzorevisionato,
 	revisione->addettoallarevisione,

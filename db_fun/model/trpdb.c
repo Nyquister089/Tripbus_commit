@@ -30,7 +30,7 @@ static MYSQL_STMT *select_trip;		   // ok HOSTESS
 static MYSQL_STMT *select_costumer;	   // Ok HOSTESS
 static MYSQL_STMT *select_reservation; // ok HOSTESS
 static MYSQL_STMT *select_review;	   // ok Meccanico
-static MYSQL_STMT *select_sparepart;   // ok Meccanico
+static MYSQL_STMT *select_sparepart;   // ok Meccanico, Manager
 static MYSQL_STMT *select_assoc;   		// ok Manager
 static MYSQL_STMT *select_skills; 		// ok Manager
 static MYSQL_STMT *select_employee;		// ok Manager 
@@ -41,9 +41,7 @@ static MYSQL_STMT *select_tome; 		// non funziona Manager
 static MYSQL_STMT *select_user; 		// ok Manager
 static MYSQL_STMT *select_seat; 		// ok Manager
 static MYSQL_STMT *select_model; 		// ok Manager
-static MYSQL_STMT *select_bus;		   // Manager
-
-
+static MYSQL_STMT *select_bus;		   // ok Manager
 
 static MYSQL_STMT *select_tour;		   //
 static MYSQL_STMT *select_destination; //
@@ -461,6 +459,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		} 
 		break;
 		case MANAGER:
+		if (!setup_prepared_stmt(&select_sparepart, "call select_sparepart(?)", conn))
+		{
+			print_stmt_error(select_sparepart, "Unable to initialize select_sparepart statement\n");
+			return false;
+		}
 		if (!setup_prepared_stmt(&select_assoc, "call  select_assoc(?,?,?)", conn))
 		{ 
 			print_stmt_error(select_assoc, "Unable to initialize select_assoc statement\n");
@@ -1148,19 +1151,18 @@ void do_select_assoc(struct associata *associata)
 
 void do_select_sparepart(struct ricambio *ricambio) //FUNZIONA
 {
-	MYSQL_BIND param[6];
+	MYSQL_BIND param[5];
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, ricambio->codice, strlen(ricambio->codice));
 
 	if (bind_exe(select_sparepart, param, "select_sparepart") == -1)
 		goto stop;
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, ricambio->codice, sizeof(ricambio->codice));
-	set_binding_param(&param[1], MYSQL_TYPE_FLOAT, &ricambio->costounitario, sizeof(ricambio->costounitario));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &ricambio->quantitadiriordino, sizeof(ricambio->quantitadiriordino));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, ricambio->descrizione, sizeof(ricambio->descrizione));
-	set_binding_param(&param[4], MYSQL_TYPE_LONG, &ricambio->scortaminima, sizeof(ricambio->scortaminima));
-	set_binding_param(&param[5], MYSQL_TYPE_LONG, &ricambio->quantitainmagazzino, sizeof(ricambio->quantitainmagazzino));
+	set_binding_param(&param[0], MYSQL_TYPE_FLOAT, &ricambio->costounitario, sizeof(ricambio->costounitario));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &ricambio->quantitadiriordino, sizeof(ricambio->quantitadiriordino));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, ricambio->descrizione, sizeof(ricambio->descrizione));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &ricambio->scortaminima, sizeof(ricambio->scortaminima));
+	set_binding_param(&param[4], MYSQL_TYPE_LONG, &ricambio->quantitainmagazzino, sizeof(ricambio->quantitainmagazzino));
 
 	take_result(select_sparepart, param, "select_sparepart");
 

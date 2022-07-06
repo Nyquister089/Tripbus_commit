@@ -1,14 +1,13 @@
-CREATE DEFINER=`giordano`@`localhost` PROCEDURE `select_sparepart`(
-INOUT cdc VARCHAR(45)
+create procedure if not exists `tripdb`.`select_sparepart`(
+in cdc VARCHAR(45)
 )
 BEGIN
 SELECT  
-   Codice,
-   CostoUnitario,
-   QuantitaDiRiordino,
-   Descrizione,
-   ScortaMinima,
-   QuantitaMagazzino
-FROM ricambio
-WHERE Codice = cdc; 
+   r.CostoUnitario,
+   r.QuantitaDiRiordino,
+   r.Descrizione,
+   r.ScortaMinima,
+   r.QuantitaMagazzino
+FROM ricambio as r
+WHERE r.Codice = cdc; 
 END
