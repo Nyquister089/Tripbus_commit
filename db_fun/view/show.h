@@ -28,4 +28,5 @@ extern void show_seat(struct postoprenotato *postoprenotato);
 extern void show_model(struct modello *modello); 
 extern void show_certify(struct tagliando *tagliando); 
 extern void show_destination(struct meta *meta); 
+extern void show_visit(struct visita *visita); 
 extern void show_expired_review (void); 

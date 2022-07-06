@@ -308,6 +308,27 @@ void show_destination(struct meta *meta){
 
 }
 
+void show_visit(struct visita *visita){
+	char buff[NUM_LEN];
+	printf("\n\n** Dettagli visita  **\n\n");
+	get_input("Inserisci l'id  d'interesse:",NUM_LEN, buff, false); 
+	visita->idvisita= atoi(buff); 
+	do_select_visit(visita); 
+	printf("*Tour:		%s  Id viaggio:	%d*\n*Nome meta:	%s Id meta:	%d*\n Data di arrivo:	%s\n Ora di arrivo:		%s\n Data di partenza:	%s\n Ora di partenza:	%s\n Guida:			%d\n Supplemento:		%f\n Trattamento:		%s\n\n",
+		visita->tour,
+		visita->viaggiorelativo,
+		visita->meta,
+		visita->metavisitata,
+		visita->datadiarrivo,
+		visita->oradiarrivo,
+		visita->datadipartenza,
+		visita->oradipartenza, 
+		visita->guida,
+		visita->supplemento,
+		visita->trattamentoalberghiero);
+
+}
+
 
 void show_expired_review (void) 
 {	

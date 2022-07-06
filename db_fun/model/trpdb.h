@@ -345,6 +345,11 @@ struct visita {
 	signed char guida; //Corretto trasformandolo da carattere a puntatore di carattere
 	float supplemento; //Corretto trasformandolo da carattere a puntatore di carattere
 	char trattamentoalberghiero[VARCHAR_LEN]; 
+	//
+	char tour [VARCHAR_LEN]; 
+	char meta [VARCHAR_LEN]; 
+
+
 }; 
 struct mete_tour{
 	char nome[VARCHAR_LEN];
@@ -441,6 +446,7 @@ extern void do_select_seat(struct postoprenotato *postoprenotato);
 extern void do_select_model(struct modello *modello); 
 extern void do_select_certify(struct tagliando *tagliando);
 extern void do_select_destination(struct meta *neta);  
+extern void do_select_visit(struct visita *visita); 
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 
