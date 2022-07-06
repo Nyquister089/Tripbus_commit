@@ -1,20 +1,14 @@
-CREATE DEFINER=`giordano`@`localhost` PROCEDURE `select_tour`(
-INOUT den VARCHAR(45),
-OUT dsc VARCHAR (5000),
-OUT mnp INT, 
-OUT mdc DECIMAL(8,2), 
-OUT bgl DECIMAL(8,2), 
-OUT gnl	DECIMAL(8,2), 
-OUT acc TINYINT )
+create procedure if not exists `tripdb`.`select_tour`(
+IN dnm VARCHAR(45)
+)
 BEGIN
-SELECT DenominazioneTour ,
-    DescrizioneTour,
-    Minimopartecipanti,
-    CostoAssicurazioneMedica,
-    CostoBagaglio,
-    CostoGaranziaAnnullamento,
-    Accompagnatrice  
-INTO den, dsc, mnp, mdc, bgl, gnl, acc
+SELECT 
+    t.DescrizioneTour,
+    t.Minimopartecipanti,
+    t.CostoAssicurazioneMedica,
+    t.CostoBagaglio,
+    t.CostoGaranziaAnnullamento,
+    t.Accompagnatrice  
 FROM tour as t
-WHERE t.DenominazioneTour = den;
+WHERE t.DenominazioneTour = dnm;
 END

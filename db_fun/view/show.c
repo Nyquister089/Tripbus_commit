@@ -55,8 +55,9 @@ void show_costumer (struct cliente * cliente)
 void show_tour(struct tour *tour)
 {
 	printf("\n\n**  Dettagli tour ** \n\n");
-		printf("\n Denominazione:  	%s \n Descrizione:		   %s \n Minimo partecipanti: 	%d \n Assicurazione medica:	%f \n Bagaglio: 		%f \n Garanzia annullamento:	%f \n Accompagnatrice:	%d \n", 
-		tour->denominazionetour, 
+	get_input("Inserisci la denomiazione d'interesse: ", VARCHAR_LEN, tour->denominazionetour, false); 
+	do_select_tour(tour); 
+	printf("*Descrizione:		%s \n Minimo partecipanti:	%d \n Assicurazione medica:	%f \n Bagaglio: 		%f \n Garanzia annullamento:	%f \n Accompagnatrice:	%d \n",  
 		tour->descrizionetour, 
 		tour->minimopartecipanti,
 		tour->assicurazionemedica, 

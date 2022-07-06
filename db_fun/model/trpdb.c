@@ -42,9 +42,9 @@ static MYSQL_STMT *select_user; 		// ok Manager
 static MYSQL_STMT *select_seat; 		// ok Manager
 static MYSQL_STMT *select_model; 		// ok Manager
 static MYSQL_STMT *select_bus;			// ok Manager
-static MYSQL_STMT *select_certify;		// Manager 		
+static MYSQL_STMT *select_certify;		// ok Manager 		
+static MYSQL_STMT *select_tour;			// Manager
 
-static MYSQL_STMT *select_tour;		   //
 static MYSQL_STMT *select_destination; //
 static MYSQL_STMT *select_picture;	   //
 static MYSQL_STMT *select_room;		   //
@@ -478,6 +478,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_employee, "call  select_employee(?)", conn))
 		{ 
 			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_tour, "call  select_tour(?)", conn))
+		{ 
+			print_stmt_error(select_tour, "Unable to initialize select_tour statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&select_certify, "call  select_certify(?)", conn))
@@ -1492,55 +1497,23 @@ void do_update_data_doc(struct cliente *cliente) // funziona
 }
 void do_select_tour(struct tour *tour)
 {
-	MYSQL_BIND param[7];
+	MYSQL_BIND param[6];
 
-	int minimopartecipanti;
-	float assicurazionemedica;
-	float bagaglio;
-	float garanziaannullamento;
-	signed char accompagnatrice;
-
-	char den[VARCHAR_LEN];
-	char des[DES_LEN];
-	int mip;
-	float amd;
-	float bgl;
-	float gan;
-	signed char acc;
-
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tour->denominazionetour, sizeof(tour->denominazionetour));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tour->descrizionetour, sizeof(tour->descrizionetour));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &minimopartecipanti, sizeof(minimopartecipanti));
-	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &assicurazionemedica, sizeof(assicurazionemedica));
-	set_binding_param(&param[4], MYSQL_TYPE_FLOAT, &bagaglio, sizeof(bagaglio));
-	set_binding_param(&param[5], MYSQL_TYPE_FLOAT, &garanziaannullamento, sizeof(garanziaannullamento));
-	set_binding_param(&param[6], MYSQL_TYPE_TINY, &accompagnatrice, sizeof(accompagnatrice));
-
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tour->denominazionetour, strlen(tour->denominazionetour));
+	
 	if (bind_exe(select_tour, param, "select_tour") == -1)
 		goto stop;
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, den, sizeof(den));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, des, sizeof(des));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &mip, sizeof(mip));
-	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &amd, sizeof(amd));
-	set_binding_param(&param[4], MYSQL_TYPE_FLOAT, &bgl, sizeof(bgl));
-	set_binding_param(&param[5], MYSQL_TYPE_FLOAT, &gan, sizeof(gan));
-	set_binding_param(&param[6], MYSQL_TYPE_TINY, &acc, sizeof(acc));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tour->descrizionetour, sizeof(tour->descrizionetour));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &tour->minimopartecipanti, sizeof(tour->minimopartecipanti));
+	set_binding_param(&param[2], MYSQL_TYPE_FLOAT, &tour->assicurazionemedica, sizeof(tour->assicurazionemedica));
+	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &tour->bagaglio, sizeof(tour->bagaglio));
+	set_binding_param(&param[4], MYSQL_TYPE_FLOAT, &tour->garanziaannullamento, sizeof(tour->garanziaannullamento));
+	set_binding_param(&param[5], MYSQL_TYPE_TINY, &tour->accompagnatrice, sizeof(tour->accompagnatrice));
 
-	if (take_result(select_tour, param, "select_tour") == -1)
-		goto stop;
+	take_result(select_tour, param, "select_tour"); 
 
-	printf("Des %s", des);
-
-	strcpy(tour->denominazionetour, den);
-	strcpy(tour->descrizionetour, des);
-	tour->minimopartecipanti = mip;
-	tour->assicurazionemedica = amd;
-	tour->bagaglio = bgl;
-	tour->garanziaannullamento = gan;
-	tour->accompagnatrice = acc;
-
-stop:
+	stop:
 	mysql_stmt_free_result(select_tour);
 	mysql_stmt_reset(select_tour);
 }
