@@ -269,7 +269,7 @@ struct sostituito{
 
 
 struct tagliando {
-	char idtagliando[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	int idtagliando; //Corretto trasformandolo da carattere a puntatore di carattere
 	char tipologiatagliando[VARCHAR_LEN]; 
 	char validitasuperate[DES_LEN];
 }; 
@@ -439,6 +439,7 @@ extern void do_select_tome(struct tome *tome);
 extern void do_select_user(struct utente *utente); 
 extern void do_select_seat(struct postoprenotato *postoprenotato); 
 extern void do_select_model(struct modello *modello); 
+extern void do_select_certify(struct tagliando *tagliando); 
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 

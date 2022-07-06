@@ -29,7 +29,7 @@ static MYSQL_STMT *insert_sostitution; // Meccanico
 static MYSQL_STMT *select_trip;		   // ok HOSTESS
 static MYSQL_STMT *select_costumer;	   // Ok HOSTESS
 static MYSQL_STMT *select_reservation; // ok HOSTESS
-static MYSQL_STMT *select_review;	   // ok Meccanico, Manager
+static MYSQL_STMT *select_review;	   // ok Meccanico, ok Manager
 static MYSQL_STMT *select_sparepart;   // ok Meccanico, ok Manager
 static MYSQL_STMT *select_assoc;   		// ok Manager
 static MYSQL_STMT *select_skills; 		// ok Manager
@@ -41,7 +41,8 @@ static MYSQL_STMT *select_tome; 		// non funziona Manager
 static MYSQL_STMT *select_user; 		// ok Manager
 static MYSQL_STMT *select_seat; 		// ok Manager
 static MYSQL_STMT *select_model; 		// ok Manager
-static MYSQL_STMT *select_bus;		   // ok Manager
+static MYSQL_STMT *select_bus;			// ok Manager
+static MYSQL_STMT *select_certify;		// Manager 		
 
 static MYSQL_STMT *select_tour;		   //
 static MYSQL_STMT *select_destination; //
@@ -115,10 +116,10 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(select_model);
 		select_model = NULL;
 	}
-	if (select_bus)
+	if (select_certify)
 	{ // Procedura di select model
-		mysql_stmt_close(select_bus);
-		select_bus = NULL;
+		mysql_stmt_close(select_certify);
+		select_certify = NULL;
 	}
 	if (select_picture)
 	{ // Procedura di select documentazione fotografica
@@ -477,6 +478,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_employee, "call  select_employee(?)", conn))
 		{ 
 			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_certify, "call  select_certify(?)", conn))
+		{ 
+			print_stmt_error(select_certify, "Unable to initialize select_certify statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&select_bus, "call  select_bus(?)", conn))
@@ -1175,6 +1181,29 @@ stop:
 
 	mysql_stmt_free_result(select_sparepart);
 	mysql_stmt_reset(select_sparepart);
+}
+
+void do_select_certify(struct tagliando *tagliando)
+{
+	MYSQL_BIND param[2];
+	
+
+	char *buff = "select_certify";  
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &tagliando->idtagliando, sizeof(tagliando->idtagliando));
+
+	if (bind_exe(select_certify, param, buff) == -1)
+		goto stop;
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tagliando->tipologiatagliando, sizeof(tagliando->tipologiatagliando));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tagliando->validitasuperate, sizeof(tagliando->validitasuperate));
+	
+	take_result(select_certify, param, buff); 
+
+   	stop:
+
+	mysql_stmt_free_result(select_certify);
+	mysql_stmt_reset(select_certify);
 }
 
 void do_select_bus(struct mezzo *mezzo)

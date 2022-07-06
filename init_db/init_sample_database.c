@@ -186,8 +186,7 @@ void populate_tables()
     execute_query_from_file_sql("../sql/dml/delete_and_insert_postoprenotato.sql");
     execute_query_from_file_sql("../sql/dml/delete_and_insert_associata.sql");
     execute_query_from_file_sql("../sql/dml/delete_and_insert_competenze.sql");
-
-
+    execute_query_from_file_sql("../sql/dml/delete_and_insert_tagliando.sql");
 }
 
 void drop_procedures(){
@@ -234,6 +233,7 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/select_user.sql");  
     execute_query_from_file_sql("../sql/ddl/procedure/select_seat.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_model.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/select_certify.sql");
 }
 
 int main(int argc, char *argv[])
