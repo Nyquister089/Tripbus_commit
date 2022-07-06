@@ -40,7 +40,8 @@ static MYSQL_STMT *select_ofr;			// ok Manager
 static MYSQL_STMT *select_tome; 		// non funziona Manager
 static MYSQL_STMT *select_user; 		// ok Manager
 static MYSQL_STMT *select_seat; 		// ok Manager
-static MYSQL_STMT *select_model; 		// Manager
+static MYSQL_STMT *select_model; 		// ok Manager
+static MYSQL_STMT *select_bus;		   // Manager
 
 
 
@@ -50,7 +51,7 @@ static MYSQL_STMT *select_picture;	   //
 static MYSQL_STMT *select_room;		   //
 static MYSQL_STMT *select_comfort;	   //			
 static MYSQL_STMT *select_service;	   //
-static MYSQL_STMT *select_bus;		   // Meccanico
+
 
 static MYSQL_STMT *select_all_tour;		  	// ok Cliente
 static MYSQL_STMT *select_dest_tour;	  	// ok Cliente
@@ -115,6 +116,11 @@ static void close_prepared_stmts(void)
 	{ // Procedura di select model
 		mysql_stmt_close(select_model);
 		select_model = NULL;
+	}
+	if (select_bus)
+	{ // Procedura di select model
+		mysql_stmt_close(select_bus);
+		select_bus = NULL;
 	}
 	if (select_picture)
 	{ // Procedura di select documentazione fotografica
@@ -411,31 +417,6 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(select_dest_tour, "Unable to initialize select dest tour statement\n");
 			return false;
 		}
-		/*
-		if(!setup_prepared_stmt(&select_destination, "call select_destination()", conn)) {
-			print_stmt_error(select_destination, "Unable to initialize select_destination statement\n");
-			return false;
-		}
-		if(!setup_prepared_stmt(&select_comfort, "call select_comfort()", conn)) {
-			print_stmt_error(select_comfort, "Unable to initialize select_model_comfort statement\n");
-			return false;
-		}
-		if(!setup_prepared_stmt(&select_service, "call select_service()", conn)) {
-			print_stmt_error(select_service, "Unable to initialize select_service statement\n");
-			return false;
-		}
-		if(!setup_prepared_stmt(&select_model, "call select_model()", conn)) {
-			print_stmt_error(select_model, "Unable to initialize select_model statement\n");
-			return false;
-		}
-		if(!setup_prepared_stmt(&select_room, "call select_room()", conn)) {
-			print_stmt_error(select_room, "Unable to initialize select_room statement\n");
-			return false;
-		}
-		if(!setup_prepared_stmt(&select_picture, "call select_picture()", conn)) {
-			print_stmt_error(select_picture, "Unable to initialize select_picture statement\n");
-			return false;
-		}*/
 		if (!setup_prepared_stmt(&select_trip, "call select_trip(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", conn))
 		{
 			print_stmt_error(select_trip, "Unable to initialize select_trip statement\n");
@@ -490,6 +471,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&select_bus, "call  select_bus(?)", conn))
+		{ 
+			print_stmt_error(select_bus, "Unable to initialize select_bus statement\n");
+			return false;
+		}
 		if (!setup_prepared_stmt(&select_model, "call  select_model(?)", conn))
 		{ 
 			print_stmt_error(select_model, "Unable to initialize select_model statement\n");
@@ -530,50 +516,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(select_skills, "Unable to initialize select_skills statement\n");
 			return false;
 		}
-
-		/*
-		 if(!setup_prepared_stmt(&insert_review, "call insert_review(?, ?, ?, ?, ?, ?, ?)", conn)) {		//Insert
-			 print_stmt_error(insert_review, "Unable to initialize insert review statement\n");
-			 return false;
-		 }
-		 if(!setup_prepared_stmt(&insert_model, "call insert_model(?, ?, ?, ?, ?, ?, ?)", conn)) {
-			 print_stmt_error(insert_model, "Unable to initialize insert model statement\n");
-			 return false;
-		 }
-		 if(!setup_prepared_stmt(&insert_sparepart, "call insert_sparepart(?, ?, ?, ?, ?, ?, ?)", conn)) {
-			 print_stmt_error(insert_sparepart, "Unable to initialize insert sparepart statement\n");
-			 return false;
-		 }
-		 if(!setup_prepared_stmt(&insert_bus, "call insert_bus(?, ?, ?, ?, ?, ?, ?)", conn)) {
-			 print_stmt_error(insert_bus, "Unable to initialize insert bus statement\n");
-			 return false;
-		 }
-		 if(!setup_prepared_stmt(&insert_certify, "call insert_certify(?, ?, ?, ?, ?, ?, ?)", conn)) {
-			 print_stmt_error(insert_certify, "Unable to initialize insert certify statement\n");
-			 return false;
-		 }
-
-		 if(!setup_prepared_stmt(&select_review, "call select_review(?, ?, ?, ?, ?, ?, ?)", conn)) {
-			 print_stmt_error(select_review, "Unable to initialize select review statement\n");
-			 return false;
-		 }
-		 if(!setup_prepared_stmt(&select_model, "call select_model(?, ?, ?, ?, ?, ?, ?)", conn)) {
-			 print_stmt_error(select_model, "Unable to initialize select model statement\n");
-			 return false;
-		 }
-		 if(!setup_prepared_stmt(&select_sparepart, "call select_sparepart(?, ?, ?, ?, ?, ?, ?)", conn)) {
-			 print_stmt_error(select_sparepart, "Unable to initialize select sparepart statement\n");
-			 return false;
-		 }
-		 if(!setup_prepared_stmt(&select_bus, "call select_bus(?, ?, ?, ?, ?, ?, ?)", conn)) {
-			 print_stmt_error(select_bus, "Unable to initialize select bus statement\n");
-			 return false;
-		 }
-		 if(!setup_prepared_stmt(&select_certify, "call select_certify(?, ?, ?, ?, ?, ?, ?)", conn)) {
-			 print_stmt_error(select_certify, "Unable to initialize select certify statement\n");
-			 return false;
-		 }*/
-		 break;
+		break;
 
 	default:
 		fprintf(stderr, "[FATAL] Unexpected role to prepare statements.\n");
