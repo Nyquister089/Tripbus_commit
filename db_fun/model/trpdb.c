@@ -45,7 +45,8 @@ static MYSQL_STMT *select_bus;			// ok Manager
 static MYSQL_STMT *select_certify;		// ok Manager 		
 static MYSQL_STMT *select_tour;			// ok Manager
 static MYSQL_STMT *select_destination;	// ok Manager
-static MYSQL_STMT *select_visit; 		// Manager
+static MYSQL_STMT *select_visit; 		// ok Manager
+static MYSQL_STMT *select_location; 	// Manager
 
 
 static MYSQL_STMT *select_picture;	   //
@@ -87,6 +88,11 @@ static void close_prepared_stmts(void)
 	{
 		mysql_stmt_close(select_visit);
 		select_visit = NULL;
+	}
+	if (select_location)
+	{
+		mysql_stmt_close(select_location);
+		select_location = NULL;
 	}
 	if (select_destination)
 	{
@@ -485,6 +491,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_employee, "call  select_employee(?)", conn))
 		{ 
 			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_location, "call  select_location(?)", conn))
+		{ 
+			print_stmt_error(select_location, "Unable to initialize select_location statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&select_visit, "call  select_visit(?)", conn))
@@ -1498,6 +1509,28 @@ void do_select_tour(struct tour *tour)
 	stop:
 	mysql_stmt_free_result(select_tour);
 	mysql_stmt_reset(select_tour);
+}
+
+void do_select_location(struct localita *localita)
+{
+	MYSQL_BIND param[2];
+	
+	char *buff = "select_location";
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, localita->nomelocalita, strlen(localita->nomelocalita));
+
+	if(bind_exe(select_location, param, buff)==-1)
+		goto stop; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, localita->regione, sizeof(localita->regione));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, localita->stato, sizeof(localita->stato));
+	
+	take_result(select_location, param, buff); 
+	
+	
+	stop:
+	mysql_stmt_free_result(select_location);
+	mysql_stmt_reset(select_location);
 }
 
 void do_select_visit(struct visita *visita)

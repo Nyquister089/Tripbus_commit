@@ -445,8 +445,9 @@ extern void do_select_user(struct utente *utente);
 extern void do_select_seat(struct postoprenotato *postoprenotato); 
 extern void do_select_model(struct modello *modello); 
 extern void do_select_certify(struct tagliando *tagliando);
-extern void do_select_destination(struct meta *neta);  
+extern void do_select_destination(struct meta *meta);  
 extern void do_select_visit(struct visita *visita); 
+extern void do_select_location(struct localita *localita);
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 

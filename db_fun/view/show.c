@@ -308,6 +308,20 @@ void show_destination(struct meta *meta){
 
 }
 
+void show_location(struct localita *localita){
+
+
+	printf("\n\n** Dettagli localita  **\n\n");
+	get_input("Inserisci il nome d'interesse:",VARCHAR_LEN, localita->nomelocalita, false); 
+
+	do_select_location(localita); 
+	printf("*Regione:	%s \n Stato:		%s\n\n",
+		localita->regione,
+		localita->stato
+		);
+
+}
+
 void show_visit(struct visita *visita){
 	char buff[NUM_LEN];
 	printf("\n\n** Dettagli visita  **\n\n");

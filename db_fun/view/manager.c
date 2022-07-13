@@ -296,7 +296,47 @@ bool get_table_tour(char sel)
                 }
 			} 
 		} 
+		case TABELLA_CAMERA:{
+			act = get_mngr_action();
+						switch(act){
+				case GESTIONE_SELECT: {
+                    //show_room(camera); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			} 
+		}
     	case TABELLA_LOCALITA:{
+			act = get_mngr_action();
+						switch(act){
+				case GESTIONE_SELECT: {
+                    show_location(localita); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			} 
+		}
+    	case TABELLA_MAPPA:{
 			act = get_mngr_action();
 						switch(act){
 				case GESTIONE_SELECT: {
@@ -316,7 +356,7 @@ bool get_table_tour(char sel)
                 }
 			} 
 		}
-    	case TABELLA_MAPPA:{
+		case TABELLA_DOCUMENTAZIONEFOTOGRAFICA:{
 			act = get_mngr_action();
 						switch(act){
 				case GESTIONE_SELECT: {
