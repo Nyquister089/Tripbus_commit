@@ -12,6 +12,7 @@ struct associata * associata;
 struct camera *camera; 
 struct documentazionefotografica *documentazionefotografica; 
 struct cliente *cliente; 
+struct comfort *comfort; 
 struct competenze *competenze; 
 struct dipendente * dipendente; 
 struct fmo *fmo; 
@@ -26,6 +27,7 @@ struct postoprenotato *postoprenotato;
 struct prenotazione *prenotazione; 
 struct revisione *revisione; 
 struct ricambio *ricambio; 
+struct servizio *servizio; 
 struct tagliando *tagliando; 
 struct tome *tome;
 struct tour *tour; 
@@ -360,7 +362,7 @@ bool get_table_tour(char sel)
 			act = get_mngr_action();
 						switch(act){
 				case GESTIONE_SELECT: {
-                    show_costumer(cliente); 
+                    show_picture(documentazionefotografica); 
                 return true; 
                 }
 	            case GESTIONE_INSERT: {
@@ -384,7 +386,7 @@ bool get_table_tour(char sel)
 
 int tour_section(void) //sezione tour
 {	
-	char options[8] = {'1','2','3','4','5','6','7','8'};
+	char options[9] = {'1','2','3','4','5','6','7','8','9'};
     char op; 
 		puts("*** Su quale tabella della gestione tour? ***\n");
 		puts("1) Tour");
@@ -394,8 +396,9 @@ int tour_section(void) //sezione tour
 		puts("5) Camera"); 
 		puts("6) Località"); 
 		puts("7) Mappa");
-		puts("8) Esci");
-		op = multi_choice("Seleziona un'opzione", options, 8);
+		puts("8) Documentazione fotografica"); 
+		puts("9) Esci");
+		op = multi_choice("Seleziona un'opzione", options, 9);
 		get_table_tour(( op - '1'));
 }
 

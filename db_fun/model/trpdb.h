@@ -96,8 +96,10 @@ struct dipendente{
 };
 
 struct documentazionefotografica {
-	 char idfoto [NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
-	 char foto [PIC]; 
+	
+	 int idfoto; 
+	 char foto [BLOB_LEN]; 
+	 char descrzione[DES_LEN]; 
 	 
 };
 
@@ -450,6 +452,7 @@ extern void do_select_visit(struct visita *visita);
 extern void do_select_location(struct localita *localita);
 extern void do_select_room(struct camera *camera); 
 extern void do_select_map(struct mappa *mappa); 
+extern void do_select_picture(struct documentazionefotografica *documentazionefotografica);
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 

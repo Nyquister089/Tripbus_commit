@@ -48,9 +48,9 @@ static MYSQL_STMT *select_destination;	// ok Manager
 static MYSQL_STMT *select_visit; 		// ok Manager
 static MYSQL_STMT *select_location; 	// ok Manager
 static MYSQL_STMT *select_room; 		// ok Manager
-static MYSQL_STMT *select_map; 			// Manager 
+static MYSQL_STMT *select_map; 			// ok Manager 
+static MYSQL_STMT *select_picture;	   	//	Manager
 
-static MYSQL_STMT *select_picture;	   //
 static MYSQL_STMT *select_comfort;	   //			
 static MYSQL_STMT *select_service;	   //
 
@@ -88,11 +88,16 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(select_visit);
 		select_visit = NULL;
 	}
+	if (select_picture)
+	{
+		mysql_stmt_close(select_picture);
+		select_picture = NULL;
+	}
 
 	if (select_map)
 	{
 		mysql_stmt_close(select_map);
-		select_map = NULL;
+		select_picture = NULL;
 	}
 	if (select_room)
 	{
@@ -496,6 +501,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_employee, "call  select_employee(?)", conn))
 		{ 
 			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_picture, "call  select_picture(?)", conn))
+		{ 
+			print_stmt_error(select_picture, "Unable to initialize select_picture statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&select_map, "call  select_map(?)", conn))
@@ -1527,6 +1537,27 @@ void do_select_tour(struct tour *tour)
 	mysql_stmt_reset(select_tour);
 }
 
+void do_select_picture(struct documentazionefotografica *documentazionefotografica)
+{
+	MYSQL_BIND param[2];
+	
+	char *buff = "select_picture";
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &documentazionefotografica->idfoto, sizeof(documentazionefotografica->idfoto));
+
+	if(bind_exe(select_picture, param, buff)==-1)
+		goto stop; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_BLOB, &documentazionefotografica->foto, sizeof(documentazionefotografica->foto));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, documentazionefotografica->descrzione, sizeof(documentazionefotografica->descrzione));
+	
+	take_result(select_picture, param, buff); 
+	
+	stop:
+	mysql_stmt_free_result(select_picture);
+	mysql_stmt_reset(select_picture);
+}
+
 void do_select_map(struct mappa *mappa)
 {
 	MYSQL_BIND param[5];
@@ -1724,31 +1755,6 @@ void do_select_comfort(struct comfort *comfort)
 	mysql_stmt_free_result(select_comfort);
 	mysql_stmt_reset(select_comfort);
 }
-
-void do_select_picture(struct documentazionefotografica *documentazionefotografica)
-{
-	MYSQL_BIND param[2];
-
-	int idfoto;
-
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idfoto, sizeof(idfoto));
-	set_binding_param(&param[1], MYSQL_TYPE_BLOB, documentazionefotografica->foto, sizeof(documentazionefotografica->foto));
-
-	if (mysql_stmt_bind_param(select_picture, param) != 0)
-	{
-		print_stmt_error(select_picture, "Could not bind parameters for select_picture");
-		return;
-	}
-	if (mysql_stmt_execute(select_picture) != 0)
-	{
-		print_stmt_error(select_picture, "Could not execute select_picture");
-		return;
-	}
-	mysql_stmt_free_result(select_picture);
-	mysql_stmt_reset(select_picture);
-}
-
-
 
 void do_select_max_idreview(struct revisione *revisione )
 {

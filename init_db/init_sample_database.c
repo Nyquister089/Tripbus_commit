@@ -239,8 +239,8 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/select_location.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_room.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/select_map.sql"); 
-
-}
+    execute_query_from_file_sql("../sql/ddl/procedure/select_picture.sql"); 
+    }
 
 int main(int argc, char *argv[])
 {
