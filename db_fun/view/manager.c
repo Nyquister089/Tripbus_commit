@@ -63,6 +63,11 @@ int allocation_gest(void)
 		{printf("Fallimento malloc offre (manager) \n\n"); 
 		 return -1; 
 	    }
+	servizio= malloc(sizeof(struct offre));
+	if(servizio== NULL)
+		{printf("Fallimento malloc servizio(manager) \n\n"); 
+		 return -1; 
+	    }
     tome = malloc(sizeof(struct tome));
 	if(tome == NULL)
 		{printf("Fallimento malloc tome (manager) \n\n"); 
@@ -653,7 +658,7 @@ int costumer_section(void) // sezione clienti
 
 bool get_table_gest (char sel)
 {   char act;
-    if(associata == NULL || dipendente == NULL ||fme == NULL ||fmo == NULL|| offre == NULL || tome == NULL || utente == NULL) {
+    if(associata == NULL || dipendente == NULL ||fme == NULL ||fmo == NULL|| offre == NULL || servizio == NULL || tome == NULL || utente == NULL) {
 		allocation_gest();
 		printf("\n\nAllocazione gest avvenuta.\n\n");
      } 
@@ -727,6 +732,27 @@ bool get_table_gest (char sel)
             switch (act){
                 case GESTIONE_SELECT: {
                     show_ofr(offre); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+            } 
+		return true; 
+        }
+		case TABELLA_SERVIZI: {
+			act = get_mngr_action();
+            switch (act){
+                case GESTIONE_SELECT: {
+                    show_service(servizio); 
                 return true; 
                 }
 	            case GESTIONE_INSERT: {
@@ -825,7 +851,7 @@ int gest_section(void)
 	 	 puts("2) Utenti");
 	 	 puts("3) Associata");
 		 puts("4) Offre");
-		 puts("5) Servizi")
+		 puts("5) Servizi"); 
 		 puts("6) Collegamento tour-mete");
          puts("7) Collegamento foto-modelli");
          puts("8) Collegamento foto-mete");

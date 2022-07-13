@@ -34,4 +34,5 @@ extern void show_room(struct camera *camera);
 extern void show_map(struct mappa *mappa); 
 extern void show_picture(struct documentazionefotografica *documentazionefotografica); 
 extern void show_comfort(struct comfort *comfort); 
+extern void show_service(struct servizio *servizio); 
 extern void show_expired_review (void); 

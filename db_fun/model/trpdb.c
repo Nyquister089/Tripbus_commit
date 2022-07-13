@@ -50,9 +50,8 @@ static MYSQL_STMT *select_location; 	// ok Manager
 static MYSQL_STMT *select_room; 		// ok Manager
 static MYSQL_STMT *select_map; 			// ok Manager 
 static MYSQL_STMT *select_picture;	   	// ok Manager
-static MYSQL_STMT *select_comfort;	   	// Manager
-
-static MYSQL_STMT *select_service;	   //
+static MYSQL_STMT *select_comfort;	   	// ok Manager
+static MYSQL_STMT *select_service;	  	//	Manager
 
 static MYSQL_STMT *select_all_tour;		  	// ok Cliente
 static MYSQL_STMT *select_dest_tour;	  	// ok Cliente
@@ -134,14 +133,9 @@ static void close_prepared_stmts(void)
 		select_all_tour = NULL;
 	}
 	if (select_service)
-	{ // Procedura di select servizio
+	{
 		mysql_stmt_close(select_service);
 		select_service = NULL;
-	}
-	if (select_comfort)
-	{ // Procedura di select comfort
-		mysql_stmt_close(select_comfort);
-		select_comfort = NULL;
 	}
 	if (select_model)
 	{ // Procedura di select model
@@ -500,6 +494,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_employee, "call  select_employee(?)", conn))
 		{ 
 			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_service , "call  select_service (?)", conn))
+		{ 
+			print_stmt_error(select_service , "Unable to initialize select_service  statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&select_comfort, "call  select_comfort(?)", conn))

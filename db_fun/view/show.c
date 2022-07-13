@@ -71,15 +71,7 @@ void show_tour(struct tour *tour)
 		);
 }
 
-void show_service (struct servizio * servizio)
-{
-	printf("\n\n**  Dettagli servizio ** \n\n");
-		printf("\n ID:  	%d\n Nome:		   %s \n Descrizione : 	%s \n", 
-		servizio->idservizio, 
-		servizio->nomeservizio, 
-		servizio->descrizioneservizio
-		);
-}
+
 
 void show_sparepart(struct ricambio *ricambio)
 {	
@@ -306,6 +298,20 @@ void show_destination(struct meta *meta){
 	else
 		printf(" Orario di apertura:%s\n\n", meta->orariodiapertura); 
 
+}
+
+void show_service (struct servizio  *servizio ){
+
+	char buff[NUM_LEN]; 
+	printf("\n\n** Dettagli servizio   **\n\n");
+	get_input("Inserisci l'id d'interesse:",NUM_LEN, buff, false); 
+	servizio ->idservizio  = atoi(buff); 
+	do_select_service (servizio ); 
+	printf("*Nome:		%s \n Descrizione:	%s  \n\n",
+		servizio->nomeservizio ,
+		servizio->descrizioneservizio 
+		
+		);
 }
 
 void show_comfort(struct comfort *comfort){

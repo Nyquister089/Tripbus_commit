@@ -454,6 +454,7 @@ extern void do_select_room(struct camera *camera);
 extern void do_select_map(struct mappa *mappa); 
 extern void do_select_picture(struct documentazionefotografica *documentazionefotografica);
 extern void do_select_comfort(struct comfort *comfort); 
+extern void do_select_service(struct servizio *servizio); 
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 
