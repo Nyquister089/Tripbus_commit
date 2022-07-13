@@ -46,7 +46,8 @@ static MYSQL_STMT *select_certify;		// ok Manager
 static MYSQL_STMT *select_tour;			// ok Manager
 static MYSQL_STMT *select_destination;	// ok Manager
 static MYSQL_STMT *select_visit; 		// ok Manager
-static MYSQL_STMT *select_location; 	// Manager
+static MYSQL_STMT *select_location; 	// ok Manager
+static MYSQL_STMT *select_room; 		// Manager
 
 
 static MYSQL_STMT *select_picture;	   //
@@ -88,6 +89,11 @@ static void close_prepared_stmts(void)
 	{
 		mysql_stmt_close(select_visit);
 		select_visit = NULL;
+	}
+	if (select_room)
+	{
+		mysql_stmt_close(select_room);
+		select_room = NULL;
 	}
 	if (select_location)
 	{
@@ -493,11 +499,17 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&select_room, "call  select_room(?, ?)", conn))
+		{ 
+			print_stmt_error(select_room, "Unable to initialize select_room statement\n");
+			return false;
+		}
 		if (!setup_prepared_stmt(&select_location, "call  select_location(?)", conn))
 		{ 
 			print_stmt_error(select_location, "Unable to initialize select_location statement\n");
 			return false;
 		}
+
 		if (!setup_prepared_stmt(&select_visit, "call  select_visit(?)", conn))
 		{ 
 			print_stmt_error(select_visit, "Unable to initialize select_visit statement\n");
@@ -1511,6 +1523,29 @@ void do_select_tour(struct tour *tour)
 	mysql_stmt_reset(select_tour);
 }
 
+void do_select_room(struct camera *camera)
+{
+	MYSQL_BIND param[2];
+	
+	char *buff = "select_room";
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &camera->numerocamera, sizeof(camera->numerocamera));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &camera->albergo, sizeof(camera->albergo));
+	
+	if(bind_exe(select_room, param, buff)==-1)
+		goto stop; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, camera->tipologia, sizeof(camera->tipologia));
+	set_binding_param(&param[1], MYSQL_TYPE_FLOAT, &camera->costo, sizeof(camera->costo));
+	
+	take_result(select_room, param, buff); 
+	
+	
+	stop:
+	mysql_stmt_free_result(select_room);
+	mysql_stmt_reset(select_room);
+}
+
 void do_select_location(struct localita *localita)
 {
 	MYSQL_BIND param[2];
@@ -1685,32 +1720,7 @@ void do_select_picture(struct documentazionefotografica *documentazionefotografi
 	mysql_stmt_reset(select_picture);
 }
 
-void do_select_room(struct camera *camera)
-{
-	MYSQL_BIND param[4];
 
-	int numerocamera;
-	int albergoinquestione;
-	int costo;
-
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerocamera, sizeof(numerocamera));
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &albergoinquestione, sizeof(albergoinquestione));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, camera->tipologia, sizeof(camera->tipologia));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &costo, sizeof(costo));
-
-	if (mysql_stmt_bind_param(select_room, param) != 0)
-	{
-		print_stmt_error(select_room, "Could not bind parameters for select_room");
-		return;
-	}
-	if (mysql_stmt_execute(select_room) != 0)
-	{
-		print_stmt_error(select_room, "Could not execute select_room");
-		return;
-	}
-	mysql_stmt_free_result(select_room);
-	mysql_stmt_reset(select_room);
-}
 
 void do_select_max_idreview(struct revisione *revisione )
 {

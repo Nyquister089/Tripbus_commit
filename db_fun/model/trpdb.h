@@ -52,11 +52,10 @@ struct associata{
 }; 
 
 struct camera {
-	int numerocamera;//Corretto trasformandolo da carattere a puntatore di carattere
-	int albergo;						//FK //Corretto trasformandolo da carattere a puntatore di carattere
+	int numerocamera;
+	int albergo;						//FK
 	char tipologia[VARCHAR_LEN];
-	float costo ; //Corretto trasformandolo da carattere a puntatore di carattere
-	
+	float costo ;
 };
 
 struct cliente {
@@ -448,6 +447,7 @@ extern void do_select_certify(struct tagliando *tagliando);
 extern void do_select_destination(struct meta *meta);  
 extern void do_select_visit(struct visita *visita); 
 extern void do_select_location(struct localita *localita);
+extern void do_select_room(struct camera *camera); 
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 

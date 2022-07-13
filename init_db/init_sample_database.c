@@ -237,6 +237,7 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/select_destination.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/select_visit.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/select_location.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/select_room.sql"); 
 
 }
 

@@ -30,4 +30,5 @@ extern void show_certify(struct tagliando *tagliando);
 extern void show_destination(struct meta *meta); 
 extern void show_visit(struct visita *visita); 
 extern void show_location(struct localita *localita); 
+extern void show_room(struct camera *camera); 
 extern void show_expired_review (void); 

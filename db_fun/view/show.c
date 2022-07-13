@@ -308,6 +308,22 @@ void show_destination(struct meta *meta){
 
 }
 
+void show_room(struct camera *camera){
+
+	char buff[NUM_LEN]; 
+	printf("\n\n** Dettagli camera  **\n\n");
+	get_input("Inserisci il numero d'interesse:",NUM_LEN, buff, false); 
+	camera->numerocamera = atoi(buff); 
+	get_input("Inserisci l'id dell'albergo d'interesse:",NUM_LEN, buff, false); 
+	camera->albergo = atoi(buff);
+	do_select_room(camera); 
+	printf("*Tipologia:	%s \n Costo:		%f\n\n",
+		camera->tipologia,
+		camera->costo
+		);
+
+}
+
 void show_location(struct localita *localita){
 
 
