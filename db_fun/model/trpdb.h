@@ -70,7 +70,7 @@ struct cliente {
 };
 
 struct comfort {
-	char idcomfort [NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	int idcomfort; //Corretto trasformandolo da carattere a puntatore di carattere
 	char nomecomfort[VARCHAR_LEN]; 
 	char descrizionecomfort[DES_LEN]; 
 
@@ -453,6 +453,7 @@ extern void do_select_location(struct localita *localita);
 extern void do_select_room(struct camera *camera); 
 extern void do_select_map(struct mappa *mappa); 
 extern void do_select_picture(struct documentazionefotografica *documentazionefotografica);
+extern void do_select_comfort(struct comfort *comfort); 
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 

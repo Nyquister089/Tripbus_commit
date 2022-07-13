@@ -308,11 +308,26 @@ void show_destination(struct meta *meta){
 
 }
 
+void show_comfort(struct comfort *comfort){
+
+	char buff[NUM_LEN]; 
+	printf("\n\n** Dettagli comfort  **\n\n");
+	get_input("Inserisci l'id d'interesse:",NUM_LEN, buff, false); 
+	comfort->idcomfort = atoi(buff); 
+	do_select_comfort(comfort); 
+	printf("*Nome:		%s \n Descrizione:	%s  \n\n",
+		comfort->nomecomfort,
+		comfort->descrizionecomfort
+		
+		);
+}
+
+
 void show_picture(struct documentazionefotografica *documentazionefotografica){
 
 	char buff[NUM_LEN]; 
 	printf("\n\n** Dettagli documentazionefotografica  **\n\n");
-	get_input("Inserisci il numero d'interesse:",NUM_LEN, buff, false); 
+	get_input("Inserisci l'id d'interesse:",NUM_LEN, buff, false); 
 	documentazionefotografica->idfoto = atoi(buff); 
 	do_select_picture(documentazionefotografica); 
 	printf("*Foto:		%s \n Descrizione:	%s  \n\n",

@@ -43,11 +43,6 @@ int allocation_gest(void)
 		{printf("Fallimento malloc su associata (manager)) \n\n"); 
 		 return -1; 
 		}
-	competenze = malloc(sizeof(struct competenze)); 
-	if(competenze == NULL)
-		{printf("Fallimento malloc su competenze (manager) \n\n");
-		 return -1; 
-		}
 	dipendente = malloc(sizeof(struct dipendente));
 	if(dipendente == NULL)
 		{printf("Fallimento malloc su dipendente (manager) \n\n"); 
@@ -130,6 +125,16 @@ int allocation_workshop(void)
 	if(tagliando == NULL)
 		{printf("Fallimento malloc su tagliando (manager) \n\n"); 
 		 return -1;
+		}
+	comfort = malloc(sizeof(struct comfort));
+	if(comfort == NULL)
+		{printf("Fallimento malloc su comfort (manager) \n\n"); 
+		 return -1;
+		}
+	competenze = malloc(sizeof(struct competenze)); 
+	if(competenze == NULL)
+		{printf("Fallimento malloc su competenze (manager) \n\n");
+		 return -1; 
 		}
 }
 
@@ -378,7 +383,7 @@ bool get_table_tour(char sel)
                 }
 			} 
 		}
-    case QUIT_GEST_TOUR:{
+    	case QUIT_GEST_TOUR:{
 		return false; 
 	}
 	}
@@ -405,7 +410,7 @@ int tour_section(void) //sezione tour
 
 bool get_table_workshop(char sel){ 
 	char act; 
-	if (mezzo == NULL || modello == NULL || revisione == NULL || ricambio == NULL || tagliando == NULL)
+	if (mezzo == NULL || modello == NULL || revisione == NULL || ricambio == NULL || tagliando == NULL || comfort == NULL || competenze == NULL)
 		{
 			allocation_workshop(); 
 			printf("Allocazione costumer avvenuta\n\n"); 
@@ -431,7 +436,6 @@ bool get_table_workshop(char sel){
                 }
 			} 
 		}
-
     	case TABELLA_MEZZO:{
 			act = get_mngr_action(); 
 			switch(act){
@@ -512,6 +516,26 @@ bool get_table_workshop(char sel){
                 }
 			} 
 		} 
+		case TABELLA_COMFORT:{
+			act = get_mngr_action(); 
+			switch(act){
+				case GESTIONE_SELECT: {
+                    show_comfort(comfort); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                    //ins_assoc(associata); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			} 
+		} 
     	case QUIT_GEST_OFFICINA:{
 			return false; 
 		}
@@ -520,7 +544,7 @@ bool get_table_workshop(char sel){
 
 int workshop_section(void) // sezione officina 
  {	    
-		char options[6] = {'1','2','3','4','5','6'};
+		char options[8] = {'1','2','3','4','5','6','7','8'};
         char op; 
 		 puts("*** Su quale tabella della gestione officina? ***\n");
 	 	 puts("1) Modello ");
@@ -528,8 +552,10 @@ int workshop_section(void) // sezione officina
 	 	 puts("3) Ricambio");
 		 puts("4) Revisione");
 		 puts("5) Tagliando");
-		 puts("6) Esci");
-		 op = multi_choice("Seleziona un'opzione", options, 6);
+		 puts("6) Comfort"); 
+		 puts("7) Competenze"); 
+		 puts("8) Esci");
+		 op = multi_choice("Seleziona un'opzione", options, 8);
 		 get_table_workshop((op - '1'));
 }
 
@@ -627,7 +653,7 @@ int costumer_section(void) // sezione clienti
 
 bool get_table_gest (char sel)
 {   char act;
-    if(associata == NULL ||	 competenze == NULL || dipendente == NULL ||fme == NULL ||fmo == NULL|| offre == NULL || tome == NULL || utente == NULL) {
+    if(associata == NULL || dipendente == NULL ||fme == NULL ||fmo == NULL|| offre == NULL || tome == NULL || utente == NULL) {
 		allocation_gest();
 		printf("\n\nAllocazione gest avvenuta.\n\n");
      } 
@@ -717,27 +743,6 @@ bool get_table_gest (char sel)
             } 
 		return true; 
         }
-        case TABELLA_COMPETENZE: {
-            act = get_mngr_action();
-            switch (act){
-                case GESTIONE_SELECT: {
-                    show_skills(competenze); 
-                return true; 
-                }
-	            case GESTIONE_INSERT: {
-                    //ins_assoc(associata); 
-                return true; 
-                }
-	            case GESTIONE_DELETE: {
-                    //del_associata(associata); 
-                return true; 
-                }
-	            case QUIT_GEST_OP: {
-                return false; 
-				}
-			}
-			return true;
-        }
         case TABELLA_TOME: {
         act = get_mngr_action();
             switch (act){
@@ -820,7 +825,7 @@ int gest_section(void)
 	 	 puts("2) Utenti");
 	 	 puts("3) Associata");
 		 puts("4) Offre");
-		 puts("5) Competenze");
+		 puts("5) Servizi")
 		 puts("6) Collegamento tour-mete");
          puts("7) Collegamento foto-modelli");
          puts("8) Collegamento foto-mete");
