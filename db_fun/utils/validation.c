@@ -56,9 +56,10 @@ bool init_validation(void)
 		return false;
 	}
 	
-	if (setting_regex(&regex_integer,"^[0-9]+(\\.[0-9]+)?", "double number validation")){
+	if (setting_regex(&regex_double,"^[0-9]+(\\.[0-9]+)?", "double number validation")){
 		return false;
 	}
+
 
 	return true;
 }
@@ -103,6 +104,7 @@ bool validate_integer(char *str){
 bool validate_double(char *str){
 	return validate(str, &regex_double);
 }
+
 
 /**
 * Libera la memoria allocata per le strutture regex_t allocate.

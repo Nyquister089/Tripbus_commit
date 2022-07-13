@@ -19,3 +19,23 @@ extern void ins_model(struct modello *modello);
 extern void ins_certify(struct tagliando *tagliando);
 extern void ins_association(struct associata *associata);
 extern void ins_sostitution( struct sostituito *sostituito, struct ricambio *ricambio); 
+extern void ins_tour(struct tour *tour);
+/*
+void ins_destination(struct  meta *meta);
+void ins_trip(struct viaggio *viaggio);
+void ins_visit(struct visita *visita);
+void ins_picture(struct documentazionefotografica *documentazionefotografica) ;
+void ins_employee(struct dipendente *dipendente);
+void ins_room(struct camera *camera);
+void ins_location(struct localita *localita);
+void ins_map(struct mappa *mappa);
+void ins_costumer(struct cliente *cliente);
+void ins_prenotation(struct prenotazione *prenotazione);
+void ins_seat(struct postoprenotato *postoprenotato);
+void ins_review(struct revisione *revisione);
+void ins_sparepart(struct ricambio *ricambio);
+void ins_bus(struct mezzo *mezzo);
+void ins_model(struct modello *modello);
+void ins_certify(struct tagliando *tagliando);
+void ins_comfort(struct comfort *comfort);
+void ins_service(struct servizio *servizio);*/

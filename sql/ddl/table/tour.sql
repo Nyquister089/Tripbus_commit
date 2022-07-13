@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`tour` (
   `CostoAssicurazioneMedica` decimal(8,2) unsigned DEFAULT NULL,
   `CostoBagaglio` decimal(8,2) unsigned DEFAULT NULL,
   `CostoGaranziaAnnullamento` decimal(8,2) unsigned DEFAULT NULL,
-  `Accompagnatrice` varchar(45) DEFAULT NULL,
+  `Accompagnatrice`tinyint DEFAULT NULL,
   PRIMARY KEY (`DenominazioneTour`),
   UNIQUE KEY `DenominazioneTour_UNIQUE` (`DenominazioneTour`)
 ) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci COMMENT='Programma di viaggio consultabile da clienti ed impiegati dell’azienda.';

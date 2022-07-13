@@ -1,4 +1,4 @@
-CREATE DEFINER=`giordano`@`localhost` PROCEDURE `insert_sostitution`(
+create procedure if not exists `tripdb`.`insert_sostitution`(
 in rvs int, 
 in rcm varchar(45), 
 in qnt int

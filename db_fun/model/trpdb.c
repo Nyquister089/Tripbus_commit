@@ -19,12 +19,14 @@ static MYSQL *conn;
 
 static MYSQL_STMT *login_procedure;
 
-static MYSQL_STMT *insert_costumer;	   // OK HOSTESS
-static MYSQL_STMT *insert_reservation; // OK HOSTESS
-static MYSQL_STMT *insert_seat;		   // OK HOSTESS
-static MYSQL_STMT *insert_assoc;	   // OK HOSTESS
-static MYSQL_STMT *insert_review;	   // Meccanico
-static MYSQL_STMT *insert_sostitution; // Meccanico
+static MYSQL_STMT *insert_tour; 	 	// Manager
+static MYSQL_STMT *insert_costumer;		// OK HOSTESS
+static MYSQL_STMT *insert_reservation;	// OK HOSTESS
+static MYSQL_STMT *insert_seat;			// OK HOSTESS
+static MYSQL_STMT *insert_assoc;		// OK HOSTESS
+static MYSQL_STMT *insert_review;		// ok Meccanico
+static MYSQL_STMT *insert_sostitution;	// ok Meccanico
+
 
 static MYSQL_STMT *select_trip;		   // ok HOSTESS, ok Manager
 static MYSQL_STMT *select_costumer;	   // Ok HOSTESS
@@ -51,7 +53,7 @@ static MYSQL_STMT *select_room; 		// ok Manager
 static MYSQL_STMT *select_map; 			// ok Manager 
 static MYSQL_STMT *select_picture;	   	// ok Manager
 static MYSQL_STMT *select_comfort;	   	// ok Manager
-static MYSQL_STMT *select_service;	  	//	Manager
+static MYSQL_STMT *select_service;	  	// ok Manager
 
 static MYSQL_STMT *select_all_tour;		  	// ok Cliente
 static MYSQL_STMT *select_dest_tour;	  	// ok Cliente
@@ -245,8 +247,13 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(select_trip);
 		select_trip = NULL;
 	}
+	if ( insert_tour)
+	{ 
+		mysql_stmt_close( insert_tour);
+		 insert_tour = NULL;
+	}
 	if (insert_costumer)
-	{ // Procedura di insert cliente (HOSTESS)
+	{ 
 		mysql_stmt_close(insert_costumer);
 		insert_costumer = NULL;
 	}
@@ -355,7 +362,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 
 	case HOSTESS:
 		if (!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?, ?)", conn))
-		{ // Insert
+		{ 
 			print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
 			return false;
 		}
@@ -476,6 +483,15 @@ static bool initialize_prepared_stmts(role_t for_role)
 		} 
 		break;
 		case MANAGER:
+		if (!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?, ?)", conn))
+		{ 
+			print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
+			return false;
+		}if (!setup_prepared_stmt(& insert_tour, "call  insert_tour(?, ?, ?, ?, ?, ?, ?)", conn))
+		{ 
+			print_stmt_error( insert_tour, "Unable to initialize insert costumer statement\n");
+			return false;
+		}
 		if (!setup_prepared_stmt(&select_sparepart, "call select_sparepart(?)", conn))
 		{
 			print_stmt_error(select_sparepart, "Unable to initialize select_sparepart statement\n");
@@ -1515,6 +1531,26 @@ void do_update_data_doc(struct cliente *cliente) // funziona
 	}
 	mysql_stmt_free_result(update_data_doc);
 	mysql_stmt_reset(update_data_doc);
+}
+
+void do_insert_tour(struct tour *tour)
+{
+	MYSQL_BIND param[7];
+
+	char *buff = "insert_tour"; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tour->denominazionetour, strlen(tour->denominazionetour));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tour->descrizionetour, strlen(tour->descrizionetour));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &tour->minimopartecipanti, sizeof(tour->minimopartecipanti));
+	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &tour->assicurazionemedica, sizeof(tour->assicurazionemedica));
+	set_binding_param(&param[4], MYSQL_TYPE_FLOAT, &tour->bagaglio, sizeof(tour->bagaglio));
+	set_binding_param(&param[5], MYSQL_TYPE_FLOAT, &tour->garanziaannullamento, sizeof(tour->garanziaannullamento));
+	set_binding_param(&param[6], MYSQL_TYPE_TINY, &tour->accompagnatrice, sizeof(tour->accompagnatrice));
+
+	bind_exe(insert_tour, param, buff); 
+
+	mysql_stmt_free_result(insert_tour);
+	mysql_stmt_reset(insert_tour);
 }
 
 void do_select_tour(struct tour *tour)

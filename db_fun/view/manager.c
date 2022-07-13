@@ -230,24 +230,24 @@ bool get_table_tour(char sel)
 	switch(sel){
 		case TABELLA_TOUR:{
 			act = get_mngr_action();
-						switch(act){
-				case GESTIONE_SELECT: {
-                    show_tour(tour); 
-                return true; 
-                }
-	            case GESTIONE_INSERT: {
-                    //ins_assoc(associata); 
-                return true; 
-                }
-	            case GESTIONE_DELETE: {
-                    //del_associata(associata); 
-                return true; 
-                }
-	            case QUIT_GEST_OP: {
-                    return false; 
-                }
-			} 
-		}
+				switch(act){
+					case GESTIONE_SELECT: {
+                    	show_tour(tour); 
+               			return true; 
+               		}
+	            	case GESTIONE_INSERT: {
+                   		ins_tour(tour); 
+                		return true; 
+                	}
+	            	case GESTIONE_DELETE: {
+                    	//del_associata(associata); 
+                	return true; 
+               		}
+	            	case QUIT_GEST_OP: {
+                    	return false; 
+                	}
+				} 
+			}
     	case TABELLA_VIAGGIO:{
 			act = get_mngr_action();
 						switch(act){
