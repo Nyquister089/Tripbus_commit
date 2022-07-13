@@ -308,6 +308,24 @@ void show_destination(struct meta *meta){
 
 }
 
+void show_map(struct mappa *mappa){
+
+	char buff[NUM_LEN]; 
+	printf("\n\n** Dettagli mappa  **\n\n");
+	get_input("Inserisci il numero d'interesse:",NUM_LEN, buff, false); 
+	mappa->idmappa = atoi(buff); 
+	do_select_map(mappa); 
+	printf("*Città:		%s \n Località:	%s \n Dettaglio:	%s \n Zona:		%s \n Immagine: 	%s \n\n",
+		mappa->citta,
+		mappa->localitarappresentata,
+		mappa->dettaglio, 
+		mappa->zona,
+		mappa->immagine
+		);
+
+}
+
+
 void show_room(struct camera *camera){
 
 	char buff[NUM_LEN]; 

@@ -47,14 +47,12 @@ static MYSQL_STMT *select_tour;			// ok Manager
 static MYSQL_STMT *select_destination;	// ok Manager
 static MYSQL_STMT *select_visit; 		// ok Manager
 static MYSQL_STMT *select_location; 	// ok Manager
-static MYSQL_STMT *select_room; 		// Manager
-
+static MYSQL_STMT *select_room; 		// ok Manager
+static MYSQL_STMT *select_map; 			// Manager 
 
 static MYSQL_STMT *select_picture;	   //
-static MYSQL_STMT *select_room;		   //
 static MYSQL_STMT *select_comfort;	   //			
 static MYSQL_STMT *select_service;	   //
-
 
 static MYSQL_STMT *select_all_tour;		  	// ok Cliente
 static MYSQL_STMT *select_dest_tour;	  	// ok Cliente
@@ -89,6 +87,12 @@ static void close_prepared_stmts(void)
 	{
 		mysql_stmt_close(select_visit);
 		select_visit = NULL;
+	}
+
+	if (select_map)
+	{
+		mysql_stmt_close(select_map);
+		select_map = NULL;
 	}
 	if (select_room)
 	{
@@ -154,11 +158,6 @@ static void close_prepared_stmts(void)
 	{ // Procedura di select ricambio
 		mysql_stmt_close(select_sparepart);
 		select_sparepart = NULL;
-	}
-	if (select_room)
-	{ // Procedura di select camera
-		mysql_stmt_close(select_room);
-		select_room = NULL;
 	}
 	if (select_model_comfort)
 	{ // Procedura di select di un  modello e di foto e comfort ad esso associate
@@ -497,6 +496,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&select_employee, "call  select_employee(?)", conn))
 		{ 
 			print_stmt_error(select_employee, "Unable to initialize select_employee statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&select_map, "call  select_map(?)", conn))
+		{ 
+			print_stmt_error(select_map, "Unable to initialize select_map statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&select_room, "call  select_room(?, ?)", conn))
@@ -1521,6 +1525,30 @@ void do_select_tour(struct tour *tour)
 	stop:
 	mysql_stmt_free_result(select_tour);
 	mysql_stmt_reset(select_tour);
+}
+
+void do_select_map(struct mappa *mappa)
+{
+	MYSQL_BIND param[5];
+	
+	char *buff = "select_map";
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &mappa->idmappa, sizeof(mappa->idmappa));
+
+	if(bind_exe(select_map, param, buff)==-1)
+		goto stop; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mappa->citta, sizeof(mappa->citta));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, mappa->localitarappresentata, sizeof(mappa->localitarappresentata));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, mappa->dettaglio, sizeof(mappa->dettaglio));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mappa->zona, sizeof(mappa->zona));
+	set_binding_param(&param[4], MYSQL_TYPE_BLOB, &mappa->immagine, sizeof(mappa->immagine));
+
+	take_result(select_map, param, buff); 
+	
+	stop:
+	mysql_stmt_free_result(select_map);
+	mysql_stmt_reset(select_map);
 }
 
 void do_select_room(struct camera *camera)

@@ -9,4 +9,3 @@ c.Costo
 from camera as c
 where c.NumeroCamera = nmc and c.IdAlbergo = htl;
 end
- 

@@ -130,10 +130,11 @@ struct localita {
 };
 
 struct mappa {
-	char idmappa[NUM_LEN]; //Corretto trasformandolo da carattere a puntatore di carattere
+	int idmappa; //Corretto trasformandolo da carattere a puntatore di carattere
 	char citta[VARCHAR_LEN];
 	char dettaglio[VARCHAR_LEN];
 	char zona[VARCHAR_LEN];
+	char immagine[BLOB_LEN]; 
 	char localitarappresentata[VARCHAR_LEN]; 		//FK
 };
 
@@ -448,6 +449,7 @@ extern void do_select_destination(struct meta *meta);
 extern void do_select_visit(struct visita *visita); 
 extern void do_select_location(struct localita *localita);
 extern void do_select_room(struct camera *camera); 
+extern void do_select_map(struct mappa *mappa); 
 
 extern void do_select_max_idreview(struct revisione *revisione ); 
 
