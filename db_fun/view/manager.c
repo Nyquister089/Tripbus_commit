@@ -256,7 +256,7 @@ bool get_table_tour(char sel)
                 return true; 
                 }
 	            case GESTIONE_INSERT: {
-                    //ins_assoc(associata); 
+					ins_trip(viaggio); 
                 return true; 
                 }
 	            case GESTIONE_DELETE: {

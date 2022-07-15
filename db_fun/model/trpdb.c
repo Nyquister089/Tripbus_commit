@@ -1553,6 +1553,489 @@ void do_insert_tour(struct tour *tour)
 	mysql_stmt_reset(insert_tour);
 }
 
+/*
+void do_insert_destination(struct meta *meta)
+{ 	MYSQL_BIND param[10]; 
+	MYSQL_TIME orariodiapertura; 
+	
+	time_to_mysql_time(meta->orariodiapertura, &orariodiapertura);
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idmeta, sizeof(idmeta));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, meta->nomemeta, strlen(meta->nomemeta));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, meta->emailmeta, strlen(meta->emailmeta));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &telefonometa, sizeof(telefonometa));
+	set_binding_param(&param[4], MYSQL_TYPE_LONG, &faxmeta, sizeof(faxmeta));
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, meta->indirizzometa, strlen(meta->indirizzometa));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, meta->tipologiameta, strlen(meta->tipologiameta));
+	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, meta->categoriaalbergo, strlen(meta->categoriaalbergo));
+	set_binding_param(&param[8], MYSQL_TYPE_TIME, &orariodiapertura, sizeof(orariodiapertura));
+	set_binding_param(&param[9], MYSQL_TYPE_VAR_STRING, meta->localitadiappartenenza, strlen(meta->localitadiappartenenza));
+	
+	
+	if(mysql_stmt_bind_param(insert_destination, param) != 0) {
+		print_stmt_error(insert_destination, "Could not bind parameters for insert_destination");
+		return;
+	}
+	// Run procedure
+	if(mysql_stmt_execute(insert_destination) != 0) {
+		print_stmt_error(insert_destination, "Could not execute insert_destinatio");
+		return;
+		}
+	mysql_stmt_free_result(insert_destination);
+	mysql_stmt_reset(insert_destination);
+
+	
+}
+
+void do_insert_trip(struct viaggio *viaggio)
+{		
+	MYSQL_BIND param[11]; 
+	MYSQL_TIME datapartenzaviaggio; 
+	MYSQL_TIME dataritornoviaggio;
+	MYSQL_TIME datadiannullamento; 
+	
+	datetime_to_mysql_time(viaggio->datapartenzaviaggio, &datapartenzaviaggio);
+	datetime_to_mysql_time(viaggio->dataritornoviaggio, &dataritornoviaggio); 
+	datatime_to_mysql_time(viaggio->datadiannullamento, &datadiannullamento); 
+
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, strlen(viaggio->tourassociato));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &conducente, sizeof(conducente);
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, strlen(viaggio->mezzoimpiegato));
+	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datapartenzaviaggio, sizeof(datapartenzaviaggio));
+	set_binding_param(&param[6], MYSQL_TYPE_DATETIME, &dataritornoviaggio, sizeof(dataritornoviaggio));
+	set_binding_param(&param[7], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
+	set_binding_param(&param[8], MYSQL_TYPE_LONG, &numerodikm, sizeof(numerodikm));
+	set_binding_param(&param[9], MYSQL_TYPE_LONG, &numerodipostidisponibili, sizeof(numerodipostidisponibili));
+	set_binding_param(&param[10], MYSQL_TYPE_DATETIME, &dataannullamento, sizeof(dataannullamento));
+	
+	if(mysql_stmt_bind_param(insert_trip, param) != 0) {
+		print_stmt_error(insert_trip, "Could not bind parameters for insert_trip");
+		return;
+	}
+	// Run procedure
+	if(mysql_stmt_execute(insert_trip) != 0) {
+		print_stmt_error(insert_trip, "Could not execute insert_trip");
+		return;
+		}
+	mysql_stmt_free_result(insert_trip);
+	mysql_stmt_reset(insert_trip);
+	
+}
+
+void do_insert_visit(struct visita *visita)
+{   
+	MYSQL_BIND param[10]; 
+	MYSQL_TIME datadiarrivo; 
+	MYSQL_TIME datadipartenza; 
+	MYSQL_TIME oradiarrivo; 
+	MYSQL_TIME oradipartenza; 
+
+	date_to_mysql_time (visita->datadiarrivo, &datadiarrivo); 
+	date_to_mysql_time (visita->datadipartenza; &datadipartenza); 
+	time_to_mysql_time (visita->oradiarrivo, &oradiarrivo); 
+	time_to_mysql_time (visita->oradipartenza, &oradipartenza); 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idvisita, sizeof(idvisita));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &viaggiorelativo, sizeof(viaggiorelativo));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &metavisitata, sizeof(metavisitata);
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, visita->datadiarrivo, strlen(visita->datadiarrivo));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, visita->datadipartenza, strlen(visita-> datadipartenza));
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, visita->oradiarrivo, strlen(visita->oradiarrivo));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, visita->oradipartenza, strlen(visita->oradipartenza));
+	set_binding_param(&param[7], MYSQL_TYPE_BIT, visita->guida, strlen(visita->guida));
+	set_binding_param(&param[8], MYSQL_TYPE_FLOAT, &supplemento, sizeof(supplemento));
+	set_binding_param(&param[9], MYSQL_TYPE_VAR_STRING, visita->trattamentoalberghiero, strlen(visita->trattamentoalberghiero));
+	
+	
+
+	if(mysql_stmt_bind_param(insert_visit, param) != 0) {
+		print_stmt_error(insert_visit, "Could not bind parameters for bind_visit");
+		return;
+	}
+	if(mysql_stmt_execute(insert_visit) != 0) {
+		print_stmt_error(insert_visit, "Could not execute insert_visit");
+		return;
+		}
+	mysql_stmt_free_result(insert_visit);
+	mysql_stmt_reset(insert_visit);
+	
+}
+
+void do_insert_picture(struct documentazionefotografica *documentazionefotografica)
+{	
+	MYSQL_BIND param[2]; 
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idfoto sizeof(idfoto));
+	set_binding_param(&param[1], MYSQL_TYPE_BLOB, documentazionefotografica->foto, strlen(documentazionefotografica->foto));
+	
+	
+	if(mysql_stmt_bind_param(insert_picture, param) != 0) {
+		print_stmt_error(insert_picture, "Could not bind parameters for bind_picture");
+		return;
+	}
+	if(mysql_stmt_execute(insert_picture) != 0) {
+		print_stmt_error(insert_picture, "Could not execute insert_picture");
+		return;
+		}
+	mysql_stmt_free_result(insert_picture);
+	mysql_stmt_reset(insert_picture);
+	
+}
+
+void do_insert_employee(struct dipendente *dipendente)
+{		
+	MYSQL_BIND param[5]; 
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &iddipendente, sizeof(iddipendente));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, dipendente->nomedipendente, strlen(dipendente->nomedipendente));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, dipendente->cognomedipendente, strlen(dipendente->cognomedipendente);
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, dipendente->tipologiadipendente, strlen(dipendente->tipologiadipendente));
+	set_binding_param(&param[4], MYSQL_TYPE_LONG, &telefonoaziendale, sizeof(telefonoaziendale));
+	
+	
+	if(mysql_stmt_bind_param(insert_employee, param) != 0) {
+		print_stmt_error(insert_employee, "Could not bind parameters for bind_employee");
+		return;
+	}
+	if(mysql_stmt_execute(insert_employee) != 0) {
+		print_stmt_error(insert_employee, "Could not execute insert_employee");
+		return;
+		}
+	mysql_stmt_free_result(insert_employee);
+	mysql_stmt_reset(insert_employee);
+	
+}
+
+void do_insert_room(struct camera *camera)
+{		
+	MYSQL_BIND param[4]; 
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerocamera, sizeof(numerocamera));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &albergo, sizeof(albergo);
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, camera->tipologia, strlen(camera->tipologia);
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &costo , sizeof(costo));
+	
+	
+	if(mysql_stmt_bind_param(insert_room, param) != 0) {
+		print_stmt_error(insert_room, "Could not bind parameters for bind_room");
+		return;
+	}
+	if(mysql_stmt_execute(insert_room) != 0) {
+		print_stmt_error(insert_room, "Could not execute insert_room");
+		return;
+		}
+	mysql_stmt_free_result(insert_room);
+	mysql_stmt_reset(insert_room);
+}
+
+void do_insert_location(struct localita *localita)
+{		
+	MYSQL_BIND param[3]; 
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, localita->nomelocalita, strlen(localita->nomelocalita));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, localita->regione, strlen(localita->regione));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, localita->stato, strlen(localita->stato);
+	
+	if(mysql_stmt_bind_param(insert_location, param) != 0) {
+		print_stmt_error(insert_location, "Could not bind parameters for insert_location");
+		return;
+	}
+	if(mysql_stmt_execute(insert_location) != 0) {
+		print_stmt_error(insert_location, "Could not execute insert_location");
+		return;
+		}
+	mysql_stmt_free_result(insert_location);
+	mysql_stmt_reset(insert_location);
+}
+
+void do_insert_map(struct mappa *mappa)
+{		
+	MYSQL_BIND param[5]; 
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idmappa, sizeof(idmappa));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, mappa->citta, strlen(mappa->citta));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, mappa->livellodidettaglio, strlen(mappa->livellodidettaglio));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mappa->zona, strlen(mappa->zona));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, mappa->localitarappresentata, strlen(mappa->localitarappresentata));
+	
+	
+	if(mysql_stmt_bind_param(insert_map, param) != 0) {
+		print_stmt_error(insert_map, "Could not bind parameters for insert_map");
+		return;
+	}
+	if(mysql_stmt_execute(insert_map) != 0) {
+		print_stmt_error(insert_map, "Could not execute insert_map");
+		return;
+		}
+	mysql_stmt_free_result(insert_map);
+	mysql_stmt_reset(insert_map);
+	
+}
+
+void do_insert_costumer(struct cliente *cliente)
+{	MYSQL_BIND param[8]; 
+	MYSQL_TIME datadocumentazione; 
+	
+	datetime_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
+	
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente);
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, strlen(cliente->nomecliente));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, strlen(cliente->cognomecliente));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, strlen(cliente->indirizzocliente));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, strlen(cliente->codicefiscale));
+	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datadocumentazione, sizeof(datadocumentazione));
+	set_binding_param(&param[6], MYSQL_TYPE_LONG, &recapitotelefonico, sizeof(recapitotelefonico));
+	set_binding_param(&param[7], MYSQL_TYPE_LONG, &fax, sizeof(fax));
+	
+	
+	if(mysql_stmt_bind_param(insert_costumer, param) != 0) {
+		print_stmt_error(insert_costumer, "Could not bind parameters for insert_costumer");
+		return;
+	}
+	if(mysql_stmt_execute(insert_costumer) != 0) {
+		print_stmt_error(insert_costumer, "Could not execute insert_costumer");
+		return;
+		}
+	mysql_stmt_free_result(insert_costumer);
+	mysql_stmt_reset(insert_costumer);
+	
+}
+
+void do_insert_reservation(struct prenotazione *prenotazione)
+{		
+	MYSQL_BIND param[5]; 
+	MYSQL_TIME datadiprenotazione; 
+	MYSQL_TIME datadiconferma; 
+	MYSQL_TIME datasaldo; 
+
+	datetime_to_mysql_time(prenotazione->datadiprenotazione, &datadiprenotazione);
+	datetime_to_mysql_time(prenotazione->datadiconferma, &datadiconferma);
+	datetime_to_mysql_time(prenotazione->datasaldo, &datasaldo);
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerodiprenotazione, sizeof(numerodiprenotazione);
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, strlen(prenotazione->clienteprenotante));
+	set_binding_param(&param[2], MYSQL_TYPE_DATETIME, &datadiprenotazione,sizeof(datadiprenotazione));
+	set_binding_param(&param[3], MYSQL_TYPE_DATETIME, &datadiconferma, sizeof(datadiconferma));
+	set_binding_param(&param[4], MYSQL_TYPE_DATETIME, &datasaldo, sizeof(datasaldo));
+	
+	
+	if(mysql_stmt_bind_param(insert_reservation, param) != 0) {
+		print_stmt_error(insert_reservation, "Could not bind parameters for insert_reservation");
+		return;
+	}
+	if(mysql_stmt_execute(insert_reservation) != 0) {
+		print_stmt_error(insert_reservation, "Could not execute insert_reservation");
+		return;
+		}
+	mysql_stmt_free_result(insert_reservation);
+	mysql_stmt_reset(insert_reservation);
+	
+}
+
+void do_insert_seat(struct postoprenotato *postoprenotato)
+{		
+	MYSQL_BIND param[6]; 
+	
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerodiposto, sizeof(numerodiposto);
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &viaggioassociato, sizeof(viaggioassociato));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &prenotazioneassociata,sizeof(prenotazioneassociata));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &etapasseggero, sizeof(etapasseggero));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, postoprenotato->nomepasseggero, strlen(postoprenotato->nomepasseggero));
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, postoprenotato->cognomepasseggero, strlen(postoprenotato->cognomepasseggero));
+	
+	
+	if(mysql_stmt_bind_param(insert_seat, param) != 0) {
+		print_stmt_error(insert_seat, "Could not bind parameters for insert_seat");
+		return;
+	}
+	if(mysql_stmt_execute(insert_seat) != 0) {
+		print_stmt_error(insert_seat, "Could not execute insert_seat");
+		return;
+		}
+	mysql_stmt_free_result(insert_seat);
+	mysql_stmt_reset(insert_seat);
+	
+}
+
+void do_insert_review(struct revisione *revisione)
+{		
+	MYSQL_BIND param[9]; 
+	MYSQL_TIME datainizio;
+	MYSQL_TIME datafine; 
+
+	date_to_mysql_time(revisione->datainizio, &datainizio);
+	date_to_mysql_time(revisione->datafine, &datafine); 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idrevisione, sizeof(idrevisione);
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, revisione->mezzorevisionato, strlen(revisione->mezzorevisionato));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &addettoallarevisione,sizeof(addettoallarevisione));
+	set_binding_param(&param[3], MYSQL_TYPE_DATE, &datainizio, sizeof(datainizio));
+	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datafine, sizeof(datafine));
+	set_binding_param(&param[5], MYSQL_TYPE_LONG, &chilometraggio, sizeof(chilometraggio));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, revisione->operazionieseguite, strlen(revisione->operazionieseguite));
+	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, revisione->tipologiarevisione, strlen(revisione->tipologiarevisione));
+	set_binding_param(&param[8], MYSQL_TYPE_VAR_STRING, revisione->motivazione, strlen(revisione->motivazione));
+	
+	
+	if(mysql_stmt_bind_param(insert_review, param) != 0) {
+		print_stmt_error(insert_review, "Could not bind parameters for insert_review");
+		return;
+	}
+	if(mysql_stmt_execute(insert_review) != 0) {
+		print_stmt_error(insert_review, "Could not execute insert_review");
+		return;
+		}
+	mysql_stmt_free_result(insert_review);
+	mysql_stmt_reset(insert_review);	
+}
+
+void do_insert_model(struct modello *modello)
+{		
+	MYSQL_BIND param[6]; 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idmodello, sizeof(idmodello);
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, modello->nomemodello, strlen(modello->nomemodello));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, modello->tipologia, strlen(modello->tipologia));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, modello->datitecnici, strlen(modello->datitecnici));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, modello->casacostruttrice, strlen(modello->casacostruttrice));
+	set_binding_param(&param[5], MYSQL_TYPE_LONG, &numerodiposti, sizeof(numerodiposti));
+	
+
+	if(mysql_stmt_bind_param(insert_model, param) != 0) {
+		print_stmt_error(insert_model, "Could not bind parameters for insert_model");
+		return;
+	}
+	if(mysql_stmt_execute(insert_model) != 0) {
+		print_stmt_error(insert_model, "Could not execute insert_model");
+		return;
+		}
+	mysql_stmt_free_result(insert_model);
+	mysql_stmt_reset(insert_model);
+	
+
+}
+
+void do_insert_sparepart(struct ricambio *ricambio)
+{		
+	MYSQL_BIND param[6]; 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, ricambi->codice, strlen(ricambi->codice));
+	set_binding_param(&param[1], MYSQL_TYPE_FLOAT, &costounitario, sizeof(costounitario));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &quantitadiriordino, sizeof(quantitadiriordino));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, ricambi->descrzione, strlen(ricambi->descrizione));
+	set_binding_param(&param[4], MYSQL_TYPE_LOGN, &scortaminima, sizeof(scortaminima));
+	set_binding_param(&param[5], MYSQL_TYPE_LONG, &quantitainmagazzino, sizeof(quantitainmagazzino));
+	 
+	
+	if(mysql_stmt_bind_param(insert_sparepart, param) != 0) {
+		print_stmt_error(insert_sparepart, "Could not bind parameters for bind_sparepart");
+		return;
+	}
+	if(mysql_stmt_execute(insert_sparepart) != 0) {
+		print_stmt_error(insert_sparepart, "Could not execute insert_sparepart");
+		return;
+		}
+	mysql_stmt_free_result(insert_sparepart);
+	mysql_stmt_reset(insert_sparepart);
+	
+}
+
+void do_insert_bus(struct mezzo *mezzo)
+{		
+	MYSQL_BIND param[8]; 
+	MYSQL_TIME dataultimarevisioneinmotorizzazione; 
+	MYSQL_TIME dataimmatricolazione; 
+	
+	date_to_mysql_time(mezzo->dataultimarevisioneinmotorizzazione, &dataultimarevisioneinmotorizzazione); 
+	date_to_mysql_time(mezzo->dataimmatricolazione, &dataimmatricolazione); 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mezzo->targa, strlen(mezzo->targa));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &modellomezzo, sizeof(modellomezzo));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, mezzo->ingombri, strlen(mezzo->ingombri));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mezzo->modellomezzo, strlen(mezzo->modellomezzo));
+	set_binding_param(&param[4], MYSQL_TYPE_LOGN, &autonomia, sizeof(autonomia));
+	set_binding_param(&param[5], MYSQL_TYPE_LONG, &valorecontakm, sizeof(valorecontkm));
+	set_binding_param(&param[6], MYSQL_TYPE_DATE, &dataultimarevisioneinmotorizzazione, sizeof(dataultimarevisioneinmotorizzazione));
+	set_binding_param(&param[6], MYSQL_TYPE_DATE, &dataimmatricolazione, sizeof(dataimmatricolazione));
+	
+
+	if(mysql_stmt_bind_param(insert_bus, param) != 0) {
+		print_stmt_error(insert_bus, "Could not bind parameters for bind_bus");
+		return;
+	}
+	if(mysql_stmt_execute(insert_bus) != 0) {
+		print_stmt_error(insert_bus, "Could not execute insert_bus");
+		return;
+		}
+	mysql_stmt_free_result(insert_bus);
+	mysql_stmt_reset(insert_bus);
+	
+}
+
+void do_insert_certify(struct tagliando *tagliando)
+{		
+	MYSQL_BIND param[3]; 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, tagliando->idtagliando, sizeof(idtagliando));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tagliando->tipologiatagliando, strlen(tagliando->tipologiatagliando));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, tagliando->validitasuperate, strlen(tagliando->validitasuperate));
+	
+	
+	if(mysql_stmt_bind_param(insert_certify, param) != 0) {
+		print_stmt_error(insert_certify, "Could not bind parameters for insert_certify");
+		return;
+	}
+	if(mysql_stmt_execute(insert_certify) != 0) {
+		print_stmt_error(insert_certify, "Could not execute insert_certify");
+		return;
+		}
+	mysql_stmt_free_result(insert_certify);
+	mysql_stmt_reset(insert_certify);
+	
+}
+void do_insert_comfort(struct comfort *comfort)
+{		
+	MYSQL_BIND param[3]; 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, comfort->idcomfort, sizeof(idcomfort));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, comfort->nomecomfort, strlen(comfort->nomecomfort));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, comfort->descrizionecomfort, strlen(comfort->descrizionecomfort));
+	
+	
+	if(mysql_stmt_bind_param(insert_comfort, param) != 0) {
+		print_stmt_error(insert_comfort, "Could not bind parameters for insert_comfort");
+		return;
+	}
+	if(mysql_stmt_execute(insert_comfort) != 0) {
+		print_stmt_error(insert_comfort, "Could not execute insert_comfort");
+		return;
+		}
+	mysql_stmt_free_result(insert_comfort);
+	mysql_stmt_reset(insert_comfort);
+	
+}
+
+void do_insert_service(struct servizio *servizio)
+{		
+	MYSQL_BIND param[3]; 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, servizio->idservizio, sizeof(idservizio));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, servizio->nomeservizio, strlen(servizio->nomeservizio));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, servizio->descrizioneservizio, strlen(servizio->descrizioneservizio));
+	
+	
+	if(mysql_stmt_bind_param(insert_service, param) != 0) {
+		print_stmt_error(insert_service, "Could not bind parameters for insert_service");
+		return;
+	}
+	if(mysql_stmt_execute(insert_service) != 0) {
+		print_stmt_error(insert_service, "Could not execute insert_service");
+		return;
+		}
+	mysql_stmt_free_result(insert_service);
+	mysql_stmt_reset(insert_service);
+	
+}
+*/
 void do_select_tour(struct tour *tour)
 {
 	MYSQL_BIND param[6];
