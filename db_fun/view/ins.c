@@ -336,6 +336,22 @@ void ins_visit(struct visita *visita)
 	do_insert_visit(visita); 
 }
 
+void ins_room(struct camera *camera)
+{	
+	char buff[NUM_LEN]; 
+	char buffer[DEC_LEN]; 
+	printf("** Dettagli inserimento camera di albergo **\n\n");
+	get_input("Inserisci il numero della camera : ", NUM_LEN, buff, false);
+	camera->numerocamera = atoi(buff); 
+	get_input("Inserisci l'ID dell'albergo in cui la camera è ubicata : ", NUM_LEN, buff, false);
+	camera->albergo = atoi(buff); 
+	get_input("Inserisci la tipologia: ", VARCHAR_LEN, camera->tipologia, false);
+	get_input("Inserisci il prezzo giornaliero del soggiorno: ", DEC_LEN, buffer, false);
+	camera->costo = atof(buffer); 
+	do_insert_room(camera); 
+}
+
+
 /*
 void ins_picture(struct documentazionefotografica *documentazionefotografica) 
 {	clear_screen();
@@ -355,14 +371,6 @@ void ins_employee(struct dipendente *dipendente)
 	get_input("Inserisci il numero di telefono aziendale: ", NUM_LEN,  dipendente->telefonoaziendale, false); 
 }
 
-void ins_room(struct camera *camera)
-{	clear_screen();
-	printf("** Dettagli inserimento camera di albergo **\n\n");
-	get_input("Inserisci il numero della camera : ", NUM_LEN, camera->numerocamera, false);
-	get_input("Inserisci l'ID dell'albergo in cui la camera è ubicata : ", NUM_LEN, camera->albergo, false);
-	get_input("Inserisci la tipologia: ", VARCHAR_LEN, camera->tipologia, false);
-	get_input("Inserisci il prezzo giornaliero del soggiorno: ", DEC_LEN, camera->costo, false);
-}
 
 void ins_location(struct localita *localita)
 {	clear_screen();

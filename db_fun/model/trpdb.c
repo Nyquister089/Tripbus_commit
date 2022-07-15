@@ -22,7 +22,8 @@ static MYSQL_STMT *login_procedure;
 static MYSQL_STMT *insert_tour; 	 	// ok Manager
 static MYSQL_STMT *insert_trip; 		// ok Manager
 static MYSQL_STMT *insert_destination; 	// ok Manager
-static MYSQL_STMT *insert_visit;		// Manager
+static MYSQL_STMT *insert_visit;		// ok Manager
+static MYSQL_STMT *insert_room; 		// Manager
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS
 static MYSQL_STMT *insert_seat;			// OK HOSTESS
@@ -255,10 +256,15 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close( insert_tour);
 		 insert_tour = NULL;
 	}
-	if (  insert_visit)
+	if (insert_room)
 	{ 
-		mysql_stmt_close(  insert_visit);
-		  insert_visit = NULL;
+		mysql_stmt_close(insert_room);
+		insert_room = NULL;
+	}
+	if (insert_visit)
+	{ 
+		mysql_stmt_close(insert_visit);
+		insert_visit = NULL;
 	}
 	if ( insert_destination)
 	{ 
@@ -504,6 +510,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?, ?)", conn))
 		{ 
 			print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&  insert_room, "call   insert_room(?, ?, ?, ?)", conn))
+		{ 
+			print_stmt_error(  insert_room, "Unable to initialize insert costumer statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&  insert_visit, "call   insert_visit(?, ?, ?, ?, ?, ?, ?, ?, ?)", conn))
@@ -1676,6 +1687,23 @@ void do_insert_visit(struct visita *visita)
 	
 }
 
+void do_insert_room(struct camera *camera)
+{		
+	MYSQL_BIND param[4]; 
+
+	char *buff = "insert_room"; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &camera->numerocamera, sizeof(camera->numerocamera));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &camera->albergo, sizeof(camera->albergo));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, camera->tipologia, strlen(camera->tipologia));
+	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &camera->costo , sizeof(camera->costo));
+	
+	bind_exe(insert_room, param, buff); 
+
+	mysql_stmt_free_result(insert_room);
+	mysql_stmt_reset(insert_room);
+}
+
 /*
 void do_insert_picture(struct documentazionefotografica *documentazionefotografica)
 {	
@@ -1720,26 +1748,7 @@ void do_insert_employee(struct dipendente *dipendente)
 	
 }
 
-void do_insert_room(struct camera *camera)
-{		
-	MYSQL_BIND param[4]; 
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerocamera, sizeof(numerocamera));
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &albergo, sizeof(albergo);
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, camera->tipologia, strlen(camera->tipologia);
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &costo , sizeof(costo));
-	
-	
-	if(mysql_stmt_bind_param(insert_room, param) != 0) {
-		print_stmt_error(insert_room, "Could not bind parameters for bind_room");
-		return;
-	}
-	if(mysql_stmt_execute(insert_room) != 0) {
-		print_stmt_error(insert_room, "Could not execute insert_room");
-		return;
-		}
-	mysql_stmt_free_result(insert_room);
-	mysql_stmt_reset(insert_room);
-}
+
 
 void do_insert_location(struct localita *localita)
 {		

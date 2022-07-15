@@ -22,10 +22,11 @@ extern void ins_sostitution( struct sostituito *sostituito, struct ricambio *ric
 extern void ins_tour(struct tour *tour);
 extern void ins_trip(struct viaggio *viaggio);
 extern void ins_destination(struct  meta *meta);
-extern void ins_visit(struct visita *visita);/*
+extern void ins_visit(struct visita *visita);
+extern void ins_room(struct camera *camera);/*
 void ins_picture(struct documentazionefotografica *documentazionefotografica) ;
 void ins_employee(struct dipendente *dipendente);
-void ins_room(struct camera *camera);
+
 void ins_location(struct localita *localita);
 void ins_map(struct mappa *mappa);
 void ins_costumer(struct cliente *cliente);
