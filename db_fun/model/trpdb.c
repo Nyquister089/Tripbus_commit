@@ -1586,45 +1586,39 @@ void do_insert_destination(struct meta *meta)
 
 	
 }
-
+*/
 void do_insert_trip(struct viaggio *viaggio)
 {		
-	MYSQL_BIND param[11]; 
+	MYSQL_BIND param[10]; 
 	MYSQL_TIME datapartenzaviaggio; 
 	MYSQL_TIME dataritornoviaggio;
 	MYSQL_TIME datadiannullamento; 
+
+	char *buff = "insert_trip"; 
 	
 	datetime_to_mysql_time(viaggio->datapartenzaviaggio, &datapartenzaviaggio);
 	datetime_to_mysql_time(viaggio->dataritornoviaggio, &dataritornoviaggio); 
 	datatime_to_mysql_time(viaggio->datadiannullamento, &datadiannullamento); 
 
 	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idviaggio, sizeof(idviaggio));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, strlen(viaggio->tourassociato));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &conducente, sizeof(conducente);
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &accompagnatrice, sizeof(accompagnatrice));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &viaggio->conducente, sizeof(viaggio->conducente));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &viaggio->accompagnatrice, sizeof(viaggio->accompagnatrice));
 	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, strlen(viaggio->mezzoimpiegato));
-	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datapartenzaviaggio, sizeof(datapartenzaviaggio));
-	set_binding_param(&param[6], MYSQL_TYPE_DATETIME, &dataritornoviaggio, sizeof(dataritornoviaggio));
-	set_binding_param(&param[7], MYSQL_TYPE_FLOAT, &costodelviaggio, sizeof(costodelviaggio));
-	set_binding_param(&param[8], MYSQL_TYPE_LONG, &numerodikm, sizeof(numerodikm));
-	set_binding_param(&param[9], MYSQL_TYPE_LONG, &numerodipostidisponibili, sizeof(numerodipostidisponibili));
-	set_binding_param(&param[10], MYSQL_TYPE_DATETIME, &dataannullamento, sizeof(dataannullamento));
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &viaggio->datapartenzaviaggio, sizeof(viaggio->datapartenzaviaggio));
+	set_binding_param(&param[6], MYSQL_TYPE_DATE, &viaggio->dataritornoviaggio, sizeof(viaggio->dataritornoviaggio));
+	set_binding_param(&param[7], MYSQL_TYPE_FLOAT, &viaggio->costodelviaggio, sizeof(viaggio->costodelviaggio));
+	set_binding_param(&param[8], MYSQL_TYPE_LONG, &viaggio->numerodikm, sizeof(viaggio->numerodikm));
+	set_binding_param(&param[9], MYSQL_TYPE_LONG, &viaggio->numerodipostidisponibili, sizeof(viaggio->numerodipostidisponibili));
+	set_binding_param(&param[10], MYSQL_TYPE_DATE, &viaggio->dataannullamento, sizeof(viaggio->dataannullamento));
 	
-	if(mysql_stmt_bind_param(insert_trip, param) != 0) {
-		print_stmt_error(insert_trip, "Could not bind parameters for insert_trip");
-		return;
-	}
-	// Run procedure
-	if(mysql_stmt_execute(insert_trip) != 0) {
-		print_stmt_error(insert_trip, "Could not execute insert_trip");
-		return;
-		}
+	bind_exe(insert_trip,param,buff); 
+
 	mysql_stmt_free_result(insert_trip);
 	mysql_stmt_reset(insert_trip);
 	
 }
-
+/*
 void do_insert_visit(struct visita *visita)
 {   
 	MYSQL_BIND param[10]; 
@@ -1633,7 +1627,7 @@ void do_insert_visit(struct visita *visita)
 	MYSQL_TIME oradiarrivo; 
 	MYSQL_TIME oradipartenza; 
 
-	date_to_mysql_time (visita->datadiarrivo, &datadiarrivo); 
+	date_to_mysql_time (visita->datadiarrivo, &viaggio->datadiarrivo); 
 	date_to_mysql_time (visita->datadipartenza; &datadipartenza); 
 	time_to_mysql_time (visita->oradiarrivo, &oradiarrivo); 
 	time_to_mysql_time (visita->oradipartenza, &oradipartenza); 

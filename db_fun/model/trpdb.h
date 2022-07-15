@@ -300,12 +300,12 @@ struct viaggio {
 	int conducente; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
 	int accompagnatrice; 					// FK //Corretto trasformandolo da carattere a puntatore di carattere
 	char mezzoimpiegato[TAR_LEN]; 			// FK
-	char datadipartenzaviaggio[DATETIME_LEN]; 
-	char datadiritornoviaggio[DATETIME_LEN]; 
+	char datadipartenzaviaggio[DATE_LEN]; 
+	char datadiritornoviaggio[DATE_LEN]; 
 	float costodelviaggio;  //Corretto trasformandolo da carattere a puntatore di carattere
 	int numerodikm; //Corretto trasformandolo da carattere a puntatore di carattere
 	int postidisponibili; //Corretto trasformandolo da carattere a puntatore di carattere
-	char datadiannullamento[DATETIME_LEN]; 
+	char datadiannullamento[DATE_LEN]; 
 };
 
 struct tour_viaggi{
