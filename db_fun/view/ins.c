@@ -266,15 +266,15 @@ void ins_trip(struct viaggio *viaggio)
 	do_insert_trip(viaggio); 
 }
 
-/*
+
 void ins_destination(struct meta *meta)
-{	clear_screen();
+{	
 	printf("** Dettagli inserimento meta **\n\n");
-	get_input("Inserisci l'ID: ", NUM_LEN, meta->idmeta, false);   /// AUTOINCREMENT
+	get_input("Inserisci la localita di appartenenza: ", VARCHAR_LEN, meta->localitadiappartenenza, false);
 	get_input("Inserisci il nome: ", VARCHAR_LEN, meta->nomemeta, false);
 	get_input("Inserisci l'indirizzo e-mail: ", VARCHAR_LEN, meta->emailmeta, false);
-	get_input("Inserisci il numero di telefono: ", NUM_LEN, meta->telefonometa, false);
-	get_input("Inserisci il numero di fax: ", NUM_LEN, meta->faxmeta, false);
+	get_input("Inserisci il numero di telefono: ", VARCHAR_LEN, meta->telefonometa, false);
+	get_input("Inserisci il numero di fax: ", VARCHAR_LEN, meta->faxmeta, false);
 	get_input("Inserisci l'indirizzo: ", VARCHAR_LEN, meta->indirizzo, false);
 	get_input("Inserisci la tipologia (bene o albergo )", VARCHAR_LEN, meta->tipologiameta, false);
 
@@ -287,10 +287,10 @@ void ins_destination(struct meta *meta)
 		break;
 		}
 
-	get_input("Inserisci la localita di appartenenza: ", VARCHAR_LEN, meta->localitadiappartenenza, false);
+	do_insert_destination(meta); 
 }
 
-
+/*
 void ins_visit(struct visita *visita)
 {	clear_screen();
 	printf("** Dettagli inserimento visita **\n\n");

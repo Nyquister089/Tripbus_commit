@@ -10,7 +10,7 @@ create procedure if not exists `tripdb`.`insert_trip`(
     in pst int
  
 )
-
+begin
 INSERT INTO viaggio
 ( TourAssociato ,
    IdConducente ,
@@ -31,3 +31,4 @@ VALUES
      cst, 
      nkm, 
      pst);
+     end

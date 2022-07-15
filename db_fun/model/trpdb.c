@@ -20,7 +20,8 @@ static MYSQL *conn;
 static MYSQL_STMT *login_procedure;
 
 static MYSQL_STMT *insert_tour; 	 	// ok Manager
-static MYSQL_STMT *insert_trip; 		// Manager
+static MYSQL_STMT *insert_trip; 		// ok Manager
+static MYSQL_STMT *insert_destination; 	// Manager
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS
 static MYSQL_STMT *insert_seat;			// OK HOSTESS
@@ -252,6 +253,11 @@ static void close_prepared_stmts(void)
 	{ 
 		mysql_stmt_close( insert_tour);
 		 insert_tour = NULL;
+	}
+	if ( insert_destination)
+	{ 
+		mysql_stmt_close( insert_destination);
+		 insert_destination = NULL;
 	}
 	if ( insert_trip)
 	{ 
@@ -492,6 +498,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?, ?)", conn))
 		{ 
 			print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(& insert_destination, "call  insert_destination(?, ?, ?, ?, ?, ?, ?, ?, ?)", conn))
+		{ 
+			print_stmt_error( insert_destination, "Unable to initialize insert costumer statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(& insert_trip, "call  insert_trip(?, ?, ?, ?, ?, ?, ?, ?, ?)", conn))
@@ -1565,40 +1576,34 @@ void do_insert_tour(struct tour *tour)
 	mysql_stmt_reset(insert_tour);
 }
 
-/*
+
 void do_insert_destination(struct meta *meta)
-{ 	MYSQL_BIND param[10]; 
+{ 	
+	MYSQL_BIND param[9]; 
 	MYSQL_TIME orariodiapertura; 
+
+	char *buff = "insert_destination"; 
 	
 	time_to_mysql_time(meta->orariodiapertura, &orariodiapertura);
 	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idmeta, sizeof(idmeta));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, meta->localitadiappartenenza, strlen(meta->localitadiappartenenza));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, meta->nomemeta, strlen(meta->nomemeta));
 	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, meta->emailmeta, strlen(meta->emailmeta));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &telefonometa, sizeof(telefonometa));
-	set_binding_param(&param[4], MYSQL_TYPE_LONG, &faxmeta, sizeof(faxmeta));
-	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, meta->indirizzometa, strlen(meta->indirizzometa));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, meta->telefonometa, strlen(meta->telefonometa));
+	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, meta->faxmeta, strlen(meta->faxmeta));
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, meta->indirizzo, strlen(meta->indirizzo));
 	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, meta->tipologiameta, strlen(meta->tipologiameta));
 	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, meta->categoriaalbergo, strlen(meta->categoriaalbergo));
 	set_binding_param(&param[8], MYSQL_TYPE_TIME, &orariodiapertura, sizeof(orariodiapertura));
-	set_binding_param(&param[9], MYSQL_TYPE_VAR_STRING, meta->localitadiappartenenza, strlen(meta->localitadiappartenenza));
 	
-	
-	if(mysql_stmt_bind_param(insert_destination, param) != 0) {
-		print_stmt_error(insert_destination, "Could not bind parameters for insert_destination");
-		return;
-	}
-	// Run procedure
-	if(mysql_stmt_execute(insert_destination) != 0) {
-		print_stmt_error(insert_destination, "Could not execute insert_destinatio");
-		return;
-		}
+	bind_exe(insert_destination, param, buff); 
+
 	mysql_stmt_free_result(insert_destination);
 	mysql_stmt_reset(insert_destination);
 
 	
 }
-*/
+
 void do_insert_trip(struct viaggio *viaggio)
 {		
 	MYSQL_BIND param[9]; 
