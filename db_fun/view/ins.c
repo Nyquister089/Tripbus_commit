@@ -231,6 +231,41 @@ void ins_tour(struct tour *tour){
 	tour->accompagnatrice = atoi(bit); 
 	do_insert_tour(tour); 
 }
+
+void ins_trip(struct viaggio *viaggio)
+{	
+	char buff[NUM_LEN]; 
+	char buffer[DEC_LEN]; 
+	printf("** Dettagli inserimento viaggio **\n\n");
+	get_input("Inserisci il tour a cui e' associato: ", VARCHAR_LEN, viaggio->tourassociato, false);
+	get_input("Inserisci l'ID del conducente assegnato: ", NUM_LEN, buff, false);
+	viaggio->conducente = atoi(buff); 
+	get_input("Inserisci l'ID dell'eventuale accompagnatrice: ", NUM_LEN, buff, false);
+	viaggio->accompagnatrice = atoi(buff); 
+	get_input("Inserisci la targa del mezzo impiegato: ", VARCHAR_LEN, viaggio->mezzoimpiegato, false);
+
+	while(true) {
+		get_input("Inserisci la data di partenza [YYYY-MM-DD]: ", DATE_LEN, viaggio->datadipartenzaviaggio, false);
+		if(validate_date(viaggio->datadipartenzaviaggio))
+			break;
+		fprintf(stderr, "Data Errata!\n");
+		}
+	while(true) {
+		get_input("Inserisci la data di ritorno [YYYY-MM-DD]: ", DATE_LEN, viaggio->datadiritornoviaggio, false);
+		if(validate_date(viaggio->datadiritornoviaggio))
+			break;
+		fprintf(stderr, "Data Errata!\n");
+		}
+
+	get_input("Inserisci il prezzo: ", DEC_LEN, buffer, false);
+	viaggio->costodelviaggio = atof(buffer); 
+	get_input("Inserisci il numero di Km che verranno percorsi: ", NUM_LEN, buff, false);
+	viaggio->numerodikm = atoi (buff); 
+	get_input("Inserisci i posti disponibili totali: ", NUM_LEN, buff, false);
+	viaggio->postidisponibili = atoi(buff); 
+	do_insert_trip(viaggio); 
+}
+
 /*
 void ins_destination(struct meta *meta)
 {	clear_screen();
@@ -255,32 +290,6 @@ void ins_destination(struct meta *meta)
 	get_input("Inserisci la localita di appartenenza: ", VARCHAR_LEN, meta->localitadiappartenenza, false);
 }
 
-void ins_trip(struct viaggio *viaggio)
-{	clear_screen();
-	printf("** Dettagli inserimento viaggio **\n\n");
-	get_input("Inserisci l'ID: ", NUM_LEN, viaggio->idviaggio, false); // ID è autoincrement, quindi non va inserito?
-	get_input("Inserisci il tour a cui e' associato: ", VARCHAR_LEN, viaggio->tourassociato, false);
-	get_input("Inserisci l'ID del conducente assegnato: ", NUM_LEN, viaggio->conducente, false);
-	get_input("Inserisci l'ID dell'eventuale accompagnatrice: ", NUM_LEN, viaggio->accompagnatrice, false);
-	get_input("Inserisci la targa del mezzo impiegato: ", VARCHAR_LEN, viaggio->mezzoimpiegato, false);
-
-while(true) {
-	get_input("Inserisci la data di partenza [YYYY-MM-DD]: ", DATE_LEN, viaggio->datadipartenzaviaggio, false);
-	if(validate_date(viaggio->datadipartenzaviaggio))
-		break;
-	fprintf(stderr, "Data Errata!\n");
-	}
-while(true) {
-	get_input("Inserisci la data di ritorno [YYYY-MM-DD]: ", DATE_LEN, viaggio->datadiritornoviaggio, false);
-	if(validate_date(viaggio->datadiritornoviaggio))
-		break;
-	fprintf(stderr, "Data Errata!\n");
-	}
-
-	get_input("Inserisci il prezzo: ", DEC_LEN, viaggio->costodelviaggio, false);
-	get_input("Inserisci il numero di Km che verranno percorsi: ", NUM_LEN, viaggio->numerodikm, false);
-	get_input("Inserisci i posti disponibili totali: ", NUM_LEN, viaggio->postidisponibili, false);
-}
 
 void ins_visit(struct visita *visita)
 {	clear_screen();

@@ -20,9 +20,9 @@ extern void ins_certify(struct tagliando *tagliando);
 extern void ins_association(struct associata *associata);
 extern void ins_sostitution( struct sostituito *sostituito, struct ricambio *ricambio); 
 extern void ins_tour(struct tour *tour);
+extern void ins_trip(struct viaggio *viaggio);
 /*
 void ins_destination(struct  meta *meta);
-void ins_trip(struct viaggio *viaggio);
 void ins_visit(struct visita *visita);
 void ins_picture(struct documentazionefotografica *documentazionefotografica) ;
 void ins_employee(struct dipendente *dipendente);

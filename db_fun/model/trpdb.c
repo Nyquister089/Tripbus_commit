@@ -19,7 +19,8 @@ static MYSQL *conn;
 
 static MYSQL_STMT *login_procedure;
 
-static MYSQL_STMT *insert_tour; 	 	// Manager
+static MYSQL_STMT *insert_tour; 	 	// ok Manager
+static MYSQL_STMT *insert_trip; 		// Manager
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS
 static MYSQL_STMT *insert_seat;			// OK HOSTESS
@@ -251,6 +252,11 @@ static void close_prepared_stmts(void)
 	{ 
 		mysql_stmt_close( insert_tour);
 		 insert_tour = NULL;
+	}
+	if ( insert_trip)
+	{ 
+		mysql_stmt_close( insert_trip);
+		 insert_trip = NULL;
 	}
 	if (insert_costumer)
 	{ 
@@ -487,7 +493,13 @@ static bool initialize_prepared_stmts(role_t for_role)
 		{ 
 			print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
 			return false;
-		}if (!setup_prepared_stmt(& insert_tour, "call  insert_tour(?, ?, ?, ?, ?, ?, ?)", conn))
+		}
+		if (!setup_prepared_stmt(& insert_trip, "call  insert_trip(?, ?, ?, ?, ?, ?, ?, ?, ?)", conn))
+		{ 
+			print_stmt_error( insert_trip, "Unable to initialize insert costumer statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(& insert_tour, "call  insert_tour(?, ?, ?, ?, ?, ?, ?)", conn))
 		{ 
 			print_stmt_error( insert_tour, "Unable to initialize insert costumer statement\n");
 			return false;
@@ -1589,28 +1601,24 @@ void do_insert_destination(struct meta *meta)
 */
 void do_insert_trip(struct viaggio *viaggio)
 {		
-	MYSQL_BIND param[10]; 
-	MYSQL_TIME datapartenzaviaggio; 
-	MYSQL_TIME dataritornoviaggio;
-	MYSQL_TIME datadiannullamento; 
+	MYSQL_BIND param[9]; 
+	MYSQL_TIME datadipartenzaviaggio; 
+	MYSQL_TIME datadiritornoviaggio;
 
 	char *buff = "insert_trip"; 
 	
-	datetime_to_mysql_time(viaggio->datapartenzaviaggio, &datapartenzaviaggio);
-	datetime_to_mysql_time(viaggio->dataritornoviaggio, &dataritornoviaggio); 
-	datatime_to_mysql_time(viaggio->datadiannullamento, &datadiannullamento); 
-
+	date_to_mysql_time(viaggio->datadipartenzaviaggio, &datadipartenzaviaggio);
+	date_to_mysql_time(viaggio->datadiritornoviaggio, &datadiritornoviaggio); 
 	
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, strlen(viaggio->tourassociato));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &viaggio->conducente, sizeof(viaggio->conducente));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &viaggio->accompagnatrice, sizeof(viaggio->accompagnatrice));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, strlen(viaggio->mezzoimpiegato));
-	set_binding_param(&param[5], MYSQL_TYPE_DATE, &viaggio->datapartenzaviaggio, sizeof(viaggio->datapartenzaviaggio));
-	set_binding_param(&param[6], MYSQL_TYPE_DATE, &viaggio->dataritornoviaggio, sizeof(viaggio->dataritornoviaggio));
-	set_binding_param(&param[7], MYSQL_TYPE_FLOAT, &viaggio->costodelviaggio, sizeof(viaggio->costodelviaggio));
-	set_binding_param(&param[8], MYSQL_TYPE_LONG, &viaggio->numerodikm, sizeof(viaggio->numerodikm));
-	set_binding_param(&param[9], MYSQL_TYPE_LONG, &viaggio->numerodipostidisponibili, sizeof(viaggio->numerodipostidisponibili));
-	set_binding_param(&param[10], MYSQL_TYPE_DATE, &viaggio->dataannullamento, sizeof(viaggio->dataannullamento));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, viaggio->tourassociato, strlen(viaggio->tourassociato));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &viaggio->conducente, sizeof(viaggio->conducente));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &viaggio->accompagnatrice, sizeof(viaggio->accompagnatrice));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, viaggio->mezzoimpiegato, strlen(viaggio->mezzoimpiegato));
+	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datadipartenzaviaggio, sizeof(datadipartenzaviaggio));
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadiritornoviaggio, sizeof(datadiritornoviaggio));
+	set_binding_param(&param[6], MYSQL_TYPE_FLOAT, &viaggio->costodelviaggio, sizeof(viaggio->costodelviaggio));
+	set_binding_param(&param[7], MYSQL_TYPE_LONG, &viaggio->numerodikm, sizeof(viaggio->numerodikm));
+	set_binding_param(&param[8], MYSQL_TYPE_LONG, &viaggio->postidisponibili, sizeof(viaggio->postidisponibili));
 	
 	bind_exe(insert_trip,param,buff); 
 
