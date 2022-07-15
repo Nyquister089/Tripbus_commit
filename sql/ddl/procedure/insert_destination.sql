@@ -10,6 +10,7 @@ create procedure if not exists `tripdb`.`insert_destination`(
     in ctg varchar(45),
     in opn time
 )
+begin
 INSERT INTO meta(  
      LocalitaDiAppartenenza ,
      NomeMeta , 
@@ -30,3 +31,4 @@ INSERT INTO meta(
      tpl,
      ctg,
      opn);
+     end

@@ -21,7 +21,8 @@ static MYSQL_STMT *login_procedure;
 
 static MYSQL_STMT *insert_tour; 	 	// ok Manager
 static MYSQL_STMT *insert_trip; 		// ok Manager
-static MYSQL_STMT *insert_destination; 	// Manager
+static MYSQL_STMT *insert_destination; 	// ok Manager
+static MYSQL_STMT *insert_visit;		// Manager
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS
 static MYSQL_STMT *insert_seat;			// OK HOSTESS
@@ -253,6 +254,11 @@ static void close_prepared_stmts(void)
 	{ 
 		mysql_stmt_close( insert_tour);
 		 insert_tour = NULL;
+	}
+	if (  insert_visit)
+	{ 
+		mysql_stmt_close(  insert_visit);
+		  insert_visit = NULL;
 	}
 	if ( insert_destination)
 	{ 
@@ -498,6 +504,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?, ?)", conn))
 		{ 
 			print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&  insert_visit, "call   insert_visit(?, ?, ?, ?, ?, ?, ?, ?, ?)", conn))
+		{ 
+			print_stmt_error(  insert_visit, "Unable to initialize insert costumer statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(& insert_destination, "call  insert_destination(?, ?, ?, ?, ?, ?, ?, ?, ?)", conn))
@@ -1631,46 +1642,41 @@ void do_insert_trip(struct viaggio *viaggio)
 	mysql_stmt_reset(insert_trip);
 	
 }
-/*
+
 void do_insert_visit(struct visita *visita)
 {   
-	MYSQL_BIND param[10]; 
+	MYSQL_BIND param[9]; 
 	MYSQL_TIME datadiarrivo; 
 	MYSQL_TIME datadipartenza; 
 	MYSQL_TIME oradiarrivo; 
 	MYSQL_TIME oradipartenza; 
 
-	date_to_mysql_time (visita->datadiarrivo, &viaggio->datadiarrivo); 
-	date_to_mysql_time (visita->datadipartenza; &datadipartenza); 
+	char *buff ="insert_visit"; 
+
+	date_to_mysql_time (visita->datadiarrivo, &datadiarrivo); 
+	date_to_mysql_time (visita->datadipartenza, &datadipartenza); 
 	time_to_mysql_time (visita->oradiarrivo, &oradiarrivo); 
 	time_to_mysql_time (visita->oradipartenza, &oradipartenza); 
 	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idvisita, sizeof(idvisita));
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &viaggiorelativo, sizeof(viaggiorelativo));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &metavisitata, sizeof(metavisitata);
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, visita->datadiarrivo, strlen(visita->datadiarrivo));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, visita->datadipartenza, strlen(visita-> datadipartenza));
-	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, visita->oradiarrivo, strlen(visita->oradiarrivo));
-	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, visita->oradipartenza, strlen(visita->oradipartenza));
-	set_binding_param(&param[7], MYSQL_TYPE_BIT, visita->guida, strlen(visita->guida));
-	set_binding_param(&param[8], MYSQL_TYPE_FLOAT, &supplemento, sizeof(supplemento));
-	set_binding_param(&param[9], MYSQL_TYPE_VAR_STRING, visita->trattamentoalberghiero, strlen(visita->trattamentoalberghiero));
 	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &visita->viaggiorelativo, sizeof(visita->viaggiorelativo));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG , &visita->metavisitata, sizeof(visita->metavisitata));
+	set_binding_param(&param[2], MYSQL_TYPE_DATE, &datadiarrivo, sizeof(datadiarrivo));
+	set_binding_param(&param[3], MYSQL_TYPE_DATE, &datadipartenza, sizeof(datadipartenza));
+	set_binding_param(&param[4], MYSQL_TYPE_TIME, &oradiarrivo, sizeof(oradiarrivo));
+	set_binding_param(&param[5], MYSQL_TYPE_TIME, &oradipartenza, sizeof(oradipartenza));
+	set_binding_param(&param[6], MYSQL_TYPE_TINY, &visita->guida, sizeof(visita->guida));
+	set_binding_param(&param[7], MYSQL_TYPE_FLOAT , &visita->supplemento, sizeof(visita->supplemento));
+	set_binding_param(&param[8], MYSQL_TYPE_VAR_STRING, visita->trattamentoalberghiero, strlen(visita->trattamentoalberghiero));
 	
+	bind_exe(insert_visit, param, buff); 
 
-	if(mysql_stmt_bind_param(insert_visit, param) != 0) {
-		print_stmt_error(insert_visit, "Could not bind parameters for bind_visit");
-		return;
-	}
-	if(mysql_stmt_execute(insert_visit) != 0) {
-		print_stmt_error(insert_visit, "Could not execute insert_visit");
-		return;
-		}
 	mysql_stmt_free_result(insert_visit);
 	mysql_stmt_reset(insert_visit);
 	
 }
 
+/*
 void do_insert_picture(struct documentazionefotografica *documentazionefotografica)
 {	
 	MYSQL_BIND param[2]; 

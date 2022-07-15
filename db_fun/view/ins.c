@@ -276,7 +276,7 @@ void ins_destination(struct meta *meta)
 	get_input("Inserisci il numero di telefono: ", VARCHAR_LEN, meta->telefonometa, false);
 	get_input("Inserisci il numero di fax: ", VARCHAR_LEN, meta->faxmeta, false);
 	get_input("Inserisci l'indirizzo: ", VARCHAR_LEN, meta->indirizzo, false);
-	get_input("Inserisci la tipologia (bene o albergo )", VARCHAR_LEN, meta->tipologiameta, false);
+	get_input("Inserisci la tipologia (bene o albergo ): ", VARCHAR_LEN, meta->tipologiameta, false);
 
 	if(strcmp(meta->tipologiameta, "albergo") == 0)
 		get_input("Inserisci la categoria dell'albergo: ", VARCHAR_LEN, meta->categoriaalbergo, false);
@@ -290,13 +290,17 @@ void ins_destination(struct meta *meta)
 	do_insert_destination(meta); 
 }
 
-/*
+
 void ins_visit(struct visita *visita)
-{	clear_screen();
+{	
+	char buff[NUM_LEN]; 
+	char buffer[DEC_LEN]; 
+	char tiny[BIT_LEN]; 
 	printf("** Dettagli inserimento visita **\n\n");
-	get_input("Inserisci l'ID: ", NUM_LEN, visita->idvisita, false); // ID è autoincrement, quindi non va inserito?
-	get_input("Inserisci l'ID del viaggio associato: ", NUM_LEN, visita->viaggiorelativo, false);
-	get_input("Inserisci l'ID della meta visitata: ", NUM_LEN, visita->metavisitata, false);
+	get_input("Inserisci l'ID del viaggio associato: ", NUM_LEN, buff, false);
+	visita->viaggiorelativo = atoi(buff); 
+	get_input("Inserisci l'ID della meta visitata: ", NUM_LEN, buff, false);
+	visita->metavisitata = atoi(buff); 
 	while(true) {
 		get_input("Inserisci la data di arrivo prevista [YYYY-MM-DD]: ", DATE_LEN, visita->datadiarrivo, false);
 		if(validate_date(visita->datadiarrivo))
@@ -311,24 +315,28 @@ void ins_visit(struct visita *visita)
 		fprintf(stderr,"Data errata!");	
 	}
 
-while(true) {
-		get_input("Inserisci l'orario di arrivo previsto [HH:MM]", TIME_LEN, visita->oradiarrivo, false);
-	if(validate_time(visita->oradiarrivo))
-		break;
+	while(true) {
+		get_input("Inserisci l'orario di arrivo previsto [HH:MM]: ", TIME_LEN, visita->oradiarrivo, false);
+		if(validate_time(visita->oradiarrivo))
+			break;
 	fprintf(stderr,"Orario errato!");	
 	}
-while(true) {
-		get_input("Inserisci l'orario di partenza previsto [HH:MM]", TIME_LEN, visita->oradipartenza, false);
-	if(validate_time(visita->oradipartenza))
-		break;
+	while(true) {
+		get_input("Inserisci l'orario di partenza previsto [HH:MM]: ", TIME_LEN, visita->oradipartenza, false);
+		if(validate_time(visita->oradipartenza))
+			break;
 	fprintf(stderr,"Orario errato!");
 	}
 
-	get_input("Inserisci l'indicazione sulla presenza della guida(si/no): ", BIT_LEN, visita->guida, false);
-	get_input("Inserisci l'importo dell'eventuale supplemento: ", DEC_LEN, visita->supplemento, false);
-	getinput("Inserisci la descrizione dell'eventuale trattamento alberghiero (massimo 5000 caratteri)", DES_LEN, visita->trattamentoalberghiero, false); 
+	get_input("Inserisci l'indicazione sulla presenza della guida(si/no): ", BIT_LEN, tiny, false);
+	visita->guida = atoi(tiny); 
+	get_input("Inserisci l'importo dell'eventuale supplemento: ", DEC_LEN, buffer, false);
+	visita->supplemento = atof(buffer); 
+	get_input("Inserisci la descrizione dell'eventuale trattamento alberghiero (massimo 5000 caratteri): ", DES_LEN, visita->trattamentoalberghiero, false); 
+	do_insert_visit(visita); 
 }
 
+/*
 void ins_picture(struct documentazionefotografica *documentazionefotografica) 
 {	clear_screen();
 	printf("** Dettagli inserimento nuova foto **\n\n");

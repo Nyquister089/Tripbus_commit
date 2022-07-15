@@ -245,6 +245,7 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/insert_tour.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/insert_trip.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/insert_destination.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/insert_visit.sql");
     }
 
 int main(int argc, char *argv[])

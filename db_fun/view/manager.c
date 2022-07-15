@@ -296,11 +296,11 @@ bool get_table_tour(char sel)
                 return true; 
                 }
 	            case GESTIONE_INSERT: {
-                    //ins_assoc(associata); 
+                    ins_visit(visita); 
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
-                    //del_associata(associata); 
+                    //del_visitiata(visita); 
                 return true; 
                 }
 	            case QUIT_GEST_OP: {
