@@ -432,6 +432,8 @@ extern void do_insert_seat(struct postoprenotato *postoprenotato);
 extern void do_insert_assoc(struct associata *associata);
 extern void do_insert_review(struct revisione *revisione);
 extern void do_insert_sostitution (struct sostituito *sostituito); 
+extern void do_insert_location(struct localita *localita); 
+extern void do_insert_map(struct mappa *mappa); 
 
 extern void do_select_trip(struct viaggio *viaggio);
 extern void do_select_costumer(struct cliente *cliente);

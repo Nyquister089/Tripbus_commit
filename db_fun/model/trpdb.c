@@ -23,7 +23,10 @@ static MYSQL_STMT *insert_tour; 	 	// ok Manager
 static MYSQL_STMT *insert_trip; 		// ok Manager
 static MYSQL_STMT *insert_destination; 	// ok Manager
 static MYSQL_STMT *insert_visit;		// ok Manager
-static MYSQL_STMT *insert_room; 		// Manager
+static MYSQL_STMT *insert_room; 		// ok Manager
+static MYSQL_STMT *insert_location; 	// ok Manager
+static MYSQL_STMT *insert_map; 			// Manager 
+
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS
 static MYSQL_STMT *insert_seat;			// OK HOSTESS
@@ -260,6 +263,16 @@ static void close_prepared_stmts(void)
 	{ 
 		mysql_stmt_close(insert_room);
 		insert_room = NULL;
+	}
+	if ( insert_map)
+	{ 
+		mysql_stmt_close( insert_map);
+		 insert_map = NULL;
+	}
+	if ( insert_location)
+	{ 
+		mysql_stmt_close( insert_location);
+		 insert_location = NULL;
 	}
 	if (insert_visit)
 	{ 
@@ -512,7 +525,17 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&  insert_room, "call   insert_room(?, ?, ?, ?)", conn))
+		if (!setup_prepared_stmt(&insert_map, "call insert_map(?, ?, ?, ?, ?)", conn))
+		{ 
+			print_stmt_error(insert_map, "Unable to initialize insert costumer statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&insert_location, "call insert_location(?, ?, ?)", conn))
+		{ 
+			print_stmt_error(insert_location, "Unable to initialize insert costumer statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&  insert_room, "call insert_room(?, ?, ?, ?)", conn))
 		{ 
 			print_stmt_error(  insert_room, "Unable to initialize insert costumer statement\n");
 			return false;
@@ -1703,6 +1726,39 @@ void do_insert_room(struct camera *camera)
 	mysql_stmt_free_result(insert_room);
 	mysql_stmt_reset(insert_room);
 }
+void do_insert_location(struct localita *localita)
+{		
+	MYSQL_BIND param[3]; 
+	char *buff ="insert_location"; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, localita->nomelocalita, strlen(localita->nomelocalita));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, localita->regione, strlen(localita->regione));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, localita->stato, strlen(localita->stato));
+	
+	bind_exe(insert_location, param, buff); 
+
+	mysql_stmt_free_result(insert_location);
+	mysql_stmt_reset(insert_location);
+}
+
+void do_insert_map(struct mappa *mappa)
+{		
+	MYSQL_BIND param[5]; 
+	char *buff = "insert_map"; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mappa->citta, strlen(mappa->citta));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, mappa->localitarappresentata, strlen(mappa->localitarappresentata));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, mappa->zona, strlen(mappa->zona));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mappa->dettaglio, strlen(mappa->dettaglio));
+	set_binding_param(&param[4], MYSQL_TYPE_BLOB, mappa->immagine, strlen(mappa->immagine));
+
+	bind_exe(insert_map,param, buff); 
+
+	mysql_stmt_free_result(insert_map);
+	mysql_stmt_reset(insert_map);
+	
+}
+
 
 /*
 void do_insert_picture(struct documentazionefotografica *documentazionefotografica)
@@ -1749,48 +1805,6 @@ void do_insert_employee(struct dipendente *dipendente)
 }
 
 
-
-void do_insert_location(struct localita *localita)
-{		
-	MYSQL_BIND param[3]; 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, localita->nomelocalita, strlen(localita->nomelocalita));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, localita->regione, strlen(localita->regione));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, localita->stato, strlen(localita->stato);
-	
-	if(mysql_stmt_bind_param(insert_location, param) != 0) {
-		print_stmt_error(insert_location, "Could not bind parameters for insert_location");
-		return;
-	}
-	if(mysql_stmt_execute(insert_location) != 0) {
-		print_stmt_error(insert_location, "Could not execute insert_location");
-		return;
-		}
-	mysql_stmt_free_result(insert_location);
-	mysql_stmt_reset(insert_location);
-}
-
-void do_insert_map(struct mappa *mappa)
-{		
-	MYSQL_BIND param[5]; 
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idmappa, sizeof(idmappa));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, mappa->citta, strlen(mappa->citta));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, mappa->livellodidettaglio, strlen(mappa->livellodidettaglio));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mappa->zona, strlen(mappa->zona));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, mappa->localitarappresentata, strlen(mappa->localitarappresentata));
-	
-	
-	if(mysql_stmt_bind_param(insert_map, param) != 0) {
-		print_stmt_error(insert_map, "Could not bind parameters for insert_map");
-		return;
-	}
-	if(mysql_stmt_execute(insert_map) != 0) {
-		print_stmt_error(insert_map, "Could not execute insert_map");
-		return;
-		}
-	mysql_stmt_free_result(insert_map);
-	mysql_stmt_reset(insert_map);
-	
-}
 
 void do_insert_costumer(struct cliente *cliente)
 {	MYSQL_BIND param[8]; 

@@ -336,7 +336,7 @@ bool get_table_tour(char sel)
                 return true; 
                 }
 	            case GESTIONE_INSERT: {
-                    //ins_assoc(associata); 
+                    ins_location(localita); 
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
@@ -356,7 +356,7 @@ bool get_table_tour(char sel)
                 return true; 
                 }
 	            case GESTIONE_INSERT: {
-                    //ins_assoc(associata); 
+                    ins_map(mappa); 
                 return true; 
                 }
 	            case GESTIONE_DELETE: {

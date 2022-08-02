@@ -351,6 +351,27 @@ void ins_room(struct camera *camera)
 	do_insert_room(camera); 
 }
 
+void ins_location(struct localita *localita)
+{	
+	printf("** Dettagli inserimento localita **\n\n");
+	get_input("Inserisci il nome: ", VARCHAR_LEN, localita->nomelocalita, false);
+	get_input("Inserisci ll nome della regione: ", VARCHAR_LEN, localita->regione, false);
+	get_input("Inserisci il nome dello stato: ", VARCHAR_LEN, localita->stato, false);
+	do_insert_location(localita); 
+}
+
+
+void ins_map(struct mappa *mappa)
+{	
+	printf("** Dettagli inserimento mappa **\n\n");
+	get_input("Inserisci il nome della citta' rappresentata nella mappa: ", VARCHAR_LEN, mappa->citta, false);
+	get_input("Inserisci il nome della località in cui è ubicata la citta' rappresentata: ", VARCHAR_LEN, mappa->localitarappresentata, false);
+	get_input("Inserisci il livello di dettaglio: ", VARCHAR_LEN, mappa->dettaglio, false);
+	get_input("Inserisci il nome della zona rappresentata dalla mappa: ", VARCHAR_LEN, mappa->zona, false);
+	get_input("Inserisci il file della mappa: ", BLOB_LEN, mappa->immagine, false); 
+	do_insert_map(mappa); 
+}
+
 
 /*
 void ins_picture(struct documentazionefotografica *documentazionefotografica) 
@@ -372,23 +393,7 @@ void ins_employee(struct dipendente *dipendente)
 }
 
 
-void ins_location(struct localita *localita)
-{	clear_screen();
-	printf("** Dettagli inserimento localita **\n\n");
-	get_input("Inserisci il nome: ", VARCHAR_LEN, localita->nomelocalita, false);
-	get_input("Inserisci ll nome della regione: ", VARCHAR_LEN, localita->regione, false);
-	get_input("Inserisci il nome dello stato: ", VARCHAR_LEN, localita->stato, false);
-}
 
-void ins_map(struct mappa *mappa)
-{	clear_screen();
-	printf("** Dettagli inserimento mappa **\n\n");
-	get_input("Inserisci l'ID: ", NUM_LEN, mappa->idmappa, false); //Autoincrement ???
-	get_input("Inserisci il nome della citta' rappresentata nella mappa: ", VARCHAR_LEN, mappa->citta, false);
-	get_input("Inserisci il livello di dettaglio: ", VARCHAR_LEN, mappa->livellodidettaglio, false);
-	get_input("Inserisci il nome della zona rappresentata dalla mappa: ", VARCHAR_LEN, mappa->zona, false);
-	get_input("Inserisci il nome della località in cui è ubicata la citta' rappresentata: ", VARCHAR_LEN, mappa->zona, false);
-}
 void ins_costumer(struct cliente *cliente)
 {	clear_screen();
 	printf("** Dettagli inserimento cliente **\n\n");

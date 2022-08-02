@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
 # GNU Make 4.3
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2020 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Jul 15 11:20:43 2022
+# Make data base, printed on Tue Aug  2 15:47:03 2022
 
 # Variables
 
@@ -43,11 +45,11 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/d
 # automatic
 %F = $(notdir $%)
 # environment
-VSCODE_CODE_CACHE_PATH = /home/giordano/.config/Code/CachedData/b06ae3b2d2dbfe28bca3134cc6be65935cdfea6a
+VSCODE_CODE_CACHE_PATH = /home/giordano/.config/Code/CachedData/3b889b090b5ad5793f524b5d1d39fda662b96a2a
 # environment
 LANG = C
 # environment
-XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.UE8CP1
+XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.WCB3P1
 # default
 .LOADED := 
 # default
@@ -57,7 +59,7 @@ MAKEFLAGS = pqrR
 # makefile
 CURDIR := /home/giordano/db_prg/tripbus
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # automatic
@@ -81,13 +83,13 @@ MAKEFILE_LIST := Makefile
 # automatic
 @F = $(notdir $@)
 # environment
-VSCODE_PID = 3128
+VSCODE_PID = 7353
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/oem-Aspire-E5-553G:@/tmp/.ICE-unix/1169,unix/oem-Aspire-E5-553G:/tmp/.ICE-unix/1169
+SESSION_MANAGER = local/oem-Aspire-E5-553G:@/tmp/.ICE-unix/1187,unix/oem-Aspire-E5-553G:/tmp/.ICE-unix/1187
 # automatic
 *F = $(notdir $*)
 # environment
@@ -97,7 +99,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
 # environment
-VSCODE_NLS_CONFIG = {"locale":"it","availableLanguages":{"*":"it"},"_languagePackId":"e42d83a2243fefd704ae12d65a4126f2.it","_translationsConfigFile":"/home/giordano/.config/Code/clp/e42d83a2243fefd704ae12d65a4126f2.it/tcf.json","_cacheRoot":"/home/giordano/.config/Code/clp/e42d83a2243fefd704ae12d65a4126f2.it","_resolvedLanguagePackCoreLocation":"/home/giordano/.config/Code/clp/e42d83a2243fefd704ae12d65a4126f2.it/b06ae3b2d2dbfe28bca3134cc6be65935cdfea6a","_corruptedFile":"/home/giordano/.config/Code/clp/e42d83a2243fefd704ae12d65a4126f2.it/corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"it","availableLanguages":{"*":"it"},"_languagePackId":"ab4c584458951cae9fe6dd31374e1344.it","_translationsConfigFile":"/home/giordano/.config/Code/clp/ab4c584458951cae9fe6dd31374e1344.it/tcf.json","_cacheRoot":"/home/giordano/.config/Code/clp/ab4c584458951cae9fe6dd31374e1344.it","_resolvedLanguagePackCoreLocation":"/home/giordano/.config/Code/clp/ab4c584458951cae9fe6dd31374e1344.it/3b889b090b5ad5793f524b5d1d39fda662b96a2a","_corruptedFile":"/home/giordano/.config/Code/clp/ab4c584458951cae9fe6dd31374e1344.it/corrupted.info","_languagePackSupport":true}
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -125,7 +127,7 @@ MAKEFILES :=
 # automatic
 ^F = $(notdir $^)
 # environment
-INVOCATION_ID = 00c00fa2db0b4fb7a87423ce439a2bbe
+INVOCATION_ID = 5d4904be5804422d83d2dcde03d15300
 # environment
 USERNAME = giordano
 # environment
@@ -153,7 +155,7 @@ GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # makefile
 .DEFAULT_GOAL := compile
 # environment
-SYSTEMD_EXEC_PID = 1192
+SYSTEMD_EXEC_PID = 1215
 # environment
 DISPLAY = :0
 # environment
@@ -163,15 +165,15 @@ GTK_MODULES = gail:atk-bridge
 # default
 MAKE_VERSION := 4.3
 # environment
-MANAGERPID = 1032
+MANAGERPID = 1058
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 3128
+GIO_LAUNCHED_DESKTOP_FILE_PID = 7353
 # environment
 _ = /usr/share/code/code
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
-JOURNAL_STREAM = 8:30534
+JOURNAL_STREAM = 8:34449
 # environment
 XDG_SESSION_CLASS = user
 # environment
@@ -183,7 +185,7 @@ QT_IM_MODULE = ibus
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-dffbc31b-1.69.1-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-dffbc31b-1.69.2-main.sock
 # environment
 IM_CONFIG_PHASE = 1
 # default
@@ -265,8 +267,6 @@ all:
 # strcache performance: lookups = 32 / hit rate = 18%
 # hash-table stats:
 # Load=26/8192=0%, Rehash=0, Collisions=1/32=3%
-# Finished Make data base on Fri Jul 15 11:20:43 2022
+# Finished Make data base on Tue Aug  2 15:47:03 2022
 
  
-make: *** No rule to make target 'all'.  Stop.
-
