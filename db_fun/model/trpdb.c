@@ -25,7 +25,8 @@ static MYSQL_STMT *insert_destination; 	// ok Manager
 static MYSQL_STMT *insert_visit;		// ok Manager
 static MYSQL_STMT *insert_room; 		// ok Manager
 static MYSQL_STMT *insert_location; 	// ok Manager
-static MYSQL_STMT *insert_map; 			// Manager 
+static MYSQL_STMT *insert_map; 			// ok Manager 
+static MYSQL_STMT *insert_picture; 		// Manager
 
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS
@@ -263,6 +264,11 @@ static void close_prepared_stmts(void)
 	{ 
 		mysql_stmt_close(insert_room);
 		insert_room = NULL;
+	}
+	if ( insert_picture)
+	{ 
+		mysql_stmt_close( insert_picture);
+		 insert_picture = NULL;
 	}
 	if ( insert_map)
 	{ 
@@ -523,6 +529,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?, ?)", conn))
 		{ 
 			print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&insert_picture, "call insert_picture(?, ?)", conn))
+		{ 
+			print_stmt_error(insert_picture, "Unable to initialize insert costumer statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&insert_map, "call insert_map(?, ?, ?, ?, ?)", conn))
@@ -1759,27 +1770,23 @@ void do_insert_map(struct mappa *mappa)
 	
 }
 
-
-/*
 void do_insert_picture(struct documentazionefotografica *documentazionefotografica)
 {	
 	MYSQL_BIND param[2]; 
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idfoto sizeof(idfoto));
+	char *buff = "insert_picture"; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING,documentazionefotografica->descrzione, strlen(documentazionefotografica->descrzione));
 	set_binding_param(&param[1], MYSQL_TYPE_BLOB, documentazionefotografica->foto, strlen(documentazionefotografica->foto));
 	
+	bind_exe(insert_picture, param, buff); 
 	
-	if(mysql_stmt_bind_param(insert_picture, param) != 0) {
-		print_stmt_error(insert_picture, "Could not bind parameters for bind_picture");
-		return;
-	}
-	if(mysql_stmt_execute(insert_picture) != 0) {
-		print_stmt_error(insert_picture, "Could not execute insert_picture");
-		return;
-		}
 	mysql_stmt_free_result(insert_picture);
 	mysql_stmt_reset(insert_picture);
 	
 }
+
+
+/*
 
 void do_insert_employee(struct dipendente *dipendente)
 {		

@@ -26,8 +26,9 @@ extern void ins_visit(struct visita *visita);
 extern void ins_room(struct camera *camera);
 extern void ins_location(struct localita *localita);
 extern void ins_map(struct mappa *mappa);
+extern void ins_picture(struct documentazionefotografica *documentazionefotografica) ;
+
 /*
-void ins_picture(struct documentazionefotografica *documentazionefotografica) ;
 void ins_employee(struct dipendente *dipendente);
 
 

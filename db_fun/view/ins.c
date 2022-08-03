@@ -372,14 +372,16 @@ void ins_map(struct mappa *mappa)
 	do_insert_map(mappa); 
 }
 
+void ins_picture(struct documentazionefotografica *documentazionefotografica) 
+{	
+	printf("** Dettagli inserimento nuova foto **\n\n");
+	get_input("Inserisci la descrizione : ", DES_LEN, documentazionefotografica->descrzione, false);
+	get_input("Inserisci l'immagine: ", PIC, documentazionefotografica->foto, false);
+	do_insert_picture(documentazionefotografica); 
+}
 
 /*
-void ins_picture(struct documentazionefotografica *documentazionefotografica) 
-{	clear_screen();
-	printf("** Dettagli inserimento nuova foto **\n\n");
-	get_input("Inserisci l'ID : ", NUM_LEN, documentazionefotografica->idfoto, false); // ID è autoincrement, quindi non va inserito?
-	get_input("Inserisci l'immagine: ", PIC, documentazionefotografica->foto, false);
-}
+
 
 
 void ins_employee(struct dipendente *dipendente) 
