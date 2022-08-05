@@ -380,13 +380,23 @@ void ins_picture(struct documentazionefotografica *documentazionefotografica)
 	do_insert_picture(documentazionefotografica); 
 }
 
+void ins_user(struct utente *utente) 
+{	char buff[VARCHAR_LEN];
+	printf("** Dettagli inserimento utente **\n\n");
+	get_input("Inserisci la mail: ", VARCHAR_LEN, utente->email, false);
+	get_input("Inserisci la password: ", VARCHAR_LEN, utente->pswrd, false);
+	get_input("Inserisci la tipologia: ", NUM_LEN, buff, false);
+	utente->tipo = atoi(buff); 
+	do_insert_user(utente);
+}
+
 void ins_employee(struct dipendente *dipendente) 
 {	
 	printf("** Dettagli inserimento dipendente **\n\n");
 	get_input("Inserisci il nome: ", VARCHAR_LEN, dipendente->nomedipendente, false);
 	get_input("Inserisci il cognome: ", VARCHAR_LEN, dipendente->cognomedipendente, false);
 	get_input("Inserisci la tipologia (Autista, Hostess o Meccanico): ", VARCHAR_LEN, dipendente->tipologiadipendente, false);
-	get_input("Inserisci il numero di telefono aziendale: ", TEL_LEN  dipendente->telefonoaziendale, false); 
+	get_input("Inserisci il numero di telefono aziendale: ", TEL_LEN ,dipendente->telefonoaziendale, false); 
 	do_insert_employee(dipendente);
 }
 /*

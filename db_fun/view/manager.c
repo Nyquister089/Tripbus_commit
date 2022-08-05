@@ -714,7 +714,7 @@ bool get_table_gest (char sel)
                 return true; 
                 }
 	            case GESTIONE_INSERT: {
-                    //ins_assoc(associata); 
+                    ins_assoc(associata); 
                 return true; 
                 }
 	            case GESTIONE_DELETE: {

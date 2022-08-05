@@ -27,7 +27,8 @@ static MYSQL_STMT *insert_room; 		// ok Manager
 static MYSQL_STMT *insert_location; 	// ok Manager
 static MYSQL_STMT *insert_map; 			// ok Manager 
 static MYSQL_STMT *insert_picture; 		// ok Manager
-static MYSQL_STMT *insert_employee; 	// Manager 
+static MYSQL_STMT *insert_employee; 	// ok Manager 
+static MYSQL_STMT *insert_user; 		// Manager 
 
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS, Manager
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS, Manager
@@ -266,10 +267,15 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(insert_room);
 		insert_room = NULL;
 	}
-	if (  insert_employee)
+	if (  insert_user)
 	{ 
-		mysql_stmt_close(  insert_employee);
-		  insert_employee = NULL;
+		mysql_stmt_close(  insert_user);
+		  insert_user = NULL;
+	}
+	if (insert_employee)
+	{ 
+		mysql_stmt_close(insert_employee);
+		insert_employee = NULL;
 	}
 	if ( insert_picture)
 	{ 
@@ -532,6 +538,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		} 
 		break;
 		case MANAGER:
+		if (!setup_prepared_stmt(&insert_assoc, "call insert_assoc(?, ?, ?, ?, ?)", conn))
+		{
+			print_stmt_error(insert_assoc, "Unable to initialize update trip statement statement\n");
+			return false;
+		}
 		if (!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?, ?)", conn))
 		{ 
 			print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
@@ -547,9 +558,14 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(insert_seat, "Unable to initialize insert seat statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&insert_user, "call  insert_user(?, ?, ?)", conn))
+		{ 
+			print_stmt_error(insert_user, "Unable to initialize insert_user statement\n");
+			return false;
+		}
 		if (!setup_prepared_stmt(& insert_employee, "call  insert_employee(?, ?, ?, ?)", conn))
 		{ 
-			print_stmt_error( insert_employee, "Unable to initialize insert costumer statement\n");
+			print_stmt_error( insert_employee, "Unable to initialize insert_employee statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&insert_picture, "call insert_picture(?, ?)", conn))
@@ -1796,11 +1812,6 @@ void do_insert_employee(struct dipendente *dipendente)
 	MYSQL_BIND param[4]; 
 	char *buff = "insert_employee"; 
 
-	char tipologiadipendente[VARCHAR_LEN];
-	char telefonoaziendale [TEL_LEN]; 
-	char nomedipendente[VARCHAR_LEN];
-	char cognomedipendente[VARCHAR_LEN];
-
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING,dipendente->tipologiadipendente, strlen(dipendente->tipologiadipendente));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, dipendente->telefonoaziendale, strlen(dipendente->telefonoaziendale));
 	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, dipendente->nomedipendente, strlen(dipendente->nomedipendente));
@@ -1811,6 +1822,22 @@ void do_insert_employee(struct dipendente *dipendente)
 	
 	mysql_stmt_free_result(insert_employee);
 	mysql_stmt_reset(insert_employee);
+	
+}
+
+void do_insert_user(struct utente *utente)
+{	
+	MYSQL_BIND param[3]; 
+	char *buff = "insert_user"; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, utente->email, strlen(utente->email));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, utente->pswrd, strlen(utente->pswrd));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &utente->tipo, sizeof(utente->tipo));
+	
+	bind_exe( insert_user, param, buff); 
+	
+	mysql_stmt_free_result(insert_user);
+	mysql_stmt_reset(insert_user);
 	
 }
 
@@ -1832,28 +1859,7 @@ void do_insert_picture(struct documentazionefotografica *documentazionefotografi
 
 /*
 
-void do_insert_employee(struct dipendente *dipendente)
-{		
-	MYSQL_BIND param[5]; 
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &iddipendente, sizeof(iddipendente));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, dipendente->nomedipendente, strlen(dipendente->nomedipendente));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, dipendente->cognomedipendente, strlen(dipendente->cognomedipendente);
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, dipendente->tipologiadipendente, strlen(dipendente->tipologiadipendente));
-	set_binding_param(&param[4], MYSQL_TYPE_LONG, &telefonoaziendale, sizeof(telefonoaziendale));
-	
-	
-	if(mysql_stmt_bind_param(insert_employee, param) != 0) {
-		print_stmt_error(insert_employee, "Could not bind parameters for bind_employee");
-		return;
-	}
-	if(mysql_stmt_execute(insert_employee) != 0) {
-		print_stmt_error(insert_employee, "Could not execute insert_employee");
-		return;
-		}
-	mysql_stmt_free_result(insert_employee);
-	mysql_stmt_reset(insert_employee);
-	
-}
+
 
 
 

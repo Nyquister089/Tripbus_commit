@@ -28,6 +28,7 @@ extern void ins_location(struct localita *localita);
 extern void ins_map(struct mappa *mappa);
 extern void ins_picture(struct documentazionefotografica *documentazionefotografica) ;
 extern void ins_employee(struct dipendente *dipendente);
+extern void ins_user(struct utente *utente); 
 
 
 /*

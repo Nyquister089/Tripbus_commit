@@ -251,6 +251,7 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/insert_map.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/insert_picture.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/insert_employee.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/insert_user.sql"); 
     }
 
 int main(int argc, char *argv[])
