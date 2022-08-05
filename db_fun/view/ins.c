@@ -380,6 +380,17 @@ void ins_picture(struct documentazionefotografica *documentazionefotografica)
 	do_insert_picture(documentazionefotografica); 
 }
 
+void ins_offert(struct offre *offre) 
+{	
+	char buff[VARCHAR_LEN];
+	printf("** Dettagli inserimento offre **\n\n");
+	get_input("Inserisci l'id del servizio offerto: ", NUM_LEN, buff, false);
+	offre->idservizio = atoi(buff); 
+	get_input("Inserisci l'id dell'albergo offerente : ", NUM_LEN, buff, false);
+	offre->albergoofferente= atoi(buff); 
+	do_insert_offert(offre);
+}
+
 void ins_user(struct utente *utente) 
 {	char buff[VARCHAR_LEN];
 	printf("** Dettagli inserimento utente **\n\n");

@@ -28,12 +28,13 @@ static MYSQL_STMT *insert_location; 	// ok Manager
 static MYSQL_STMT *insert_map; 			// ok Manager 
 static MYSQL_STMT *insert_picture; 		// ok Manager
 static MYSQL_STMT *insert_employee; 	// ok Manager 
-static MYSQL_STMT *insert_user; 		// Manager 
+static MYSQL_STMT *insert_user; 		// ok Manager 
+static MYSQL_STMT *insert_offert; 		// Manager
 
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS, Manager
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS, Manager
 static MYSQL_STMT *insert_seat;			// OK HOSTESS, Manager
-static MYSQL_STMT *insert_assoc;		// OK HOSTESS
+static MYSQL_STMT *insert_assoc;		// OK HOSTESS, Manager
 static MYSQL_STMT *insert_review;		// ok Meccanico
 static MYSQL_STMT *insert_sostitution;	// ok Meccanico
 
@@ -267,10 +268,15 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(insert_room);
 		insert_room = NULL;
 	}
-	if (  insert_user)
+	if (insert_offert)
 	{ 
-		mysql_stmt_close(  insert_user);
-		  insert_user = NULL;
+		mysql_stmt_close(insert_offert);
+		insert_offert = NULL;
+	}
+	if (insert_user)
+	{ 
+		mysql_stmt_close(insert_user);
+		insert_user = NULL;
 	}
 	if (insert_employee)
 	{ 
@@ -556,6 +562,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&insert_seat, "call insert_seat (?, ?, ?, ?, ?, ?)", conn))
 		{
 			print_stmt_error(insert_seat, "Unable to initialize insert seat statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&insert_offert, "call  insert_offert(?, ?)", conn))
+		{ 
+			print_stmt_error(insert_offert, "Unable to initialize insert_offert statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&insert_user, "call  insert_user(?, ?, ?)", conn))
@@ -1822,6 +1833,21 @@ void do_insert_employee(struct dipendente *dipendente)
 	
 	mysql_stmt_free_result(insert_employee);
 	mysql_stmt_reset(insert_employee);
+	
+}
+
+void do_insert_offert(struct offre *offre)
+{	
+	MYSQL_BIND param[2]; 
+	char *buff = "insert_offert"; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &offre->idservizio, sizeof(offre->idservizio));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &offre->albergoofferente, sizeof(offre->albergoofferente));
+	
+	bind_exe( insert_offert, param, buff); 
+	
+	mysql_stmt_free_result(insert_offert);
+	mysql_stmt_reset(insert_offert);
 	
 }
 
