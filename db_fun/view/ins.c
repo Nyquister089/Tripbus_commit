@@ -380,73 +380,17 @@ void ins_picture(struct documentazionefotografica *documentazionefotografica)
 	do_insert_picture(documentazionefotografica); 
 }
 
-/*
-
-
-
 void ins_employee(struct dipendente *dipendente) 
-{	clear_screen();
+{	
 	printf("** Dettagli inserimento dipendente **\n\n");
-	get_input("Inserisci l'ID: ", NUM_LEN, dipendente->iddipendente, false); // ID è autoincrement, quindi non va inserito?
 	get_input("Inserisci il nome: ", VARCHAR_LEN, dipendente->nomedipendente, false);
 	get_input("Inserisci il cognome: ", VARCHAR_LEN, dipendente->cognomedipendente, false);
-	get_input("Inserisci la tipologia (Autista, Hostess o Meccanico): ", BIT_LEN, dipendente->tipologiadipendente, false);
-	get_input("Inserisci il numero di telefono aziendale: ", NUM_LEN,  dipendente->telefonoaziendale, false); 
+	get_input("Inserisci la tipologia (Autista, Hostess o Meccanico): ", VARCHAR_LEN, dipendente->tipologiadipendente, false);
+	get_input("Inserisci il numero di telefono aziendale: ", TEL_LEN  dipendente->telefonoaziendale, false); 
+	do_insert_employee(dipendente);
 }
+/*
 
-
-
-void ins_costumer(struct cliente *cliente)
-{	clear_screen();
-	printf("** Dettagli inserimento cliente **\n\n");
-	get_input("Inserisci l'indirizzo e-mail: ", VARCHAR_LEN, cliente->emailcliente, false);
-	get_input("Inserisci il nome: ", VARCHAR_LEN, cliente->nomecliente, false);
-	get_input("Inserisci il cognome: ", VARCHAR_LEN, cliente->cognomecliente, false);
-	get_input("Inserisci l'indirizzo: ", VARCHAR_LEN, cliente->indirizzocliente, false);
-	get_input("Inserisci il codice fiscale: ", VARCHAR_LEN, cliente->codicefiscale, false);
-	get_input("Inserisci il recapito telefonico: ", NUM_LEN, cliente->recapitotelefonico, false);
-	get_input("Inserisci il numero di fax: ", NUM_LEN, cliente->fax, false);
-	while{
-		get_input("Inserisci l'ultima data d'invio dei documuenti [YYYY-DD-MM]: ", DATE_LEN, cliente->datadocumentazione, false);
-		if(validate_date(cliente->datadocumentazione))
-			break;
-		fprintf(stderr, "Data errata!\n");
-	}
-}
-
-void ins_reservation(struct prenotazione *prenotazione)
-{	clear_screen();
-	printf("** Dettagli inserimento prenotazione **\n\n");
-	get_input("Inserisci il numero di prenotazione: ", NUM_LEN, prenotazione->numerodiprenotazione, false);/////Autoincrement
-	get_input("Inserisci l'indirizzo e-mail del cliente che ha effettuato la prenotazione : ", VARCHAR_LEN, prenotazione->clienteprenotante, false);
-	while{
-		get_input("Inserisci data [YYYY-DD-MM]: ", DATE_LEN, prenotazione->datadiprenotazione, false);
-		if(validate_date(prenotazione->datadiprenotazione))
-			break;
-		fprintf(stderr, "Data errata!\n");
-	}
-	while{
-		get_input("Inserisci data di conferma [YYYY-DD-MM]: ", DATE_LEN, prenotazione->datadiconferma, false);
-		if(validate_date(prenotazione->datadiconferma))
-			break;
-		fprintf(stderr, "Data errata!\n");
-	}
-	while{
-		get_input("Inserisci data di saldo [YYYY-DD-MM]: ", DATE_LEN, prenotazione->datasaldo, false);
-		if(validate_date(prenotazione->datasaldo))
-			break;
-		fprintf(stderr, "Data errata!\n");
-	}
-}
-void ins_seat(struct postoprenotato *postoprenotato)
-{	clear_screen();
-	printf("** Dettagli inserimento passeggero **\n\n");
-	get_input("Inserisci il numero di posto  : ", NUM_LEN, postoprenotato->numerodiposto, false);
-	get_input("Inserisci l'ID del viaggio a cui partecipera' il passeggero: ", NUM_LEN, postoprenotato->viaggioassociato, false);
-	get_input("Inserisci l'eta': ", NUM_LEN, postoprenotato-> etapasseggero, false);
-	get_input("Inserisci il nome: ", VARCHAR_LEN, postoprenotato-> nomepasseggero, false);
-	get_input("Inserisci il cognome: ", VARCHAR_LEN, postoprenotato-> cognomepasseggero, false);
-}
 
 void ins_review(struct revisione *revisione)
 {	clear_screen();

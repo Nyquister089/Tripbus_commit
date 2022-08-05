@@ -88,11 +88,11 @@ struct competenze {
 }; 
 
 struct dipendente{
-	int iddipendente ; //Corretto trasformandolo da carattere a puntatore di carattere
+	int iddipendente ; 
+	char tipologiadipendente[VARCHAR_LEN];
+	char telefonoaziendale [TEL_LEN]; 
 	char nomedipendente[VARCHAR_LEN];
 	char cognomedipendente[VARCHAR_LEN];
-	char tipologiadipendente[VARCHAR_LEN];
-	char telefonoaziendale [TEL_LEN];  //Corretto trasformandolo da carattere a puntatore di carattere
 };
 
 struct documentazionefotografica {
@@ -435,6 +435,7 @@ extern void do_insert_sostitution (struct sostituito *sostituito);
 extern void do_insert_location(struct localita *localita); 
 extern void do_insert_map(struct mappa *mappa); 
 extern void do_insert_picture(struct documentazionefotografica *documentazionefotografica); 
+extern void do_insert_employee(struct dipendente *dipendente); 
 
 extern void do_select_trip(struct viaggio *viaggio);
 extern void do_select_costumer(struct cliente *cliente);

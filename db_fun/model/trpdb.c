@@ -26,11 +26,12 @@ static MYSQL_STMT *insert_visit;		// ok Manager
 static MYSQL_STMT *insert_room; 		// ok Manager
 static MYSQL_STMT *insert_location; 	// ok Manager
 static MYSQL_STMT *insert_map; 			// ok Manager 
-static MYSQL_STMT *insert_picture; 		// Manager
+static MYSQL_STMT *insert_picture; 		// ok Manager
+static MYSQL_STMT *insert_employee; 	// Manager 
 
-static MYSQL_STMT *insert_costumer;		// OK HOSTESS
-static MYSQL_STMT *insert_reservation;	// OK HOSTESS
-static MYSQL_STMT *insert_seat;			// OK HOSTESS
+static MYSQL_STMT *insert_costumer;		// OK HOSTESS, Manager
+static MYSQL_STMT *insert_reservation;	// OK HOSTESS, Manager
+static MYSQL_STMT *insert_seat;			// OK HOSTESS, Manager
 static MYSQL_STMT *insert_assoc;		// OK HOSTESS
 static MYSQL_STMT *insert_review;		// ok Meccanico
 static MYSQL_STMT *insert_sostitution;	// ok Meccanico
@@ -264,6 +265,11 @@ static void close_prepared_stmts(void)
 	{ 
 		mysql_stmt_close(insert_room);
 		insert_room = NULL;
+	}
+	if (  insert_employee)
+	{ 
+		mysql_stmt_close(  insert_employee);
+		  insert_employee = NULL;
 	}
 	if ( insert_picture)
 	{ 
@@ -529,6 +535,21 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?, ?)", conn))
 		{ 
 			print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&insert_reservation, "call insert_reservation(?, ?)", conn))
+		{
+			print_stmt_error(insert_reservation, "Unable to initialize insert reservation statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&insert_seat, "call insert_seat (?, ?, ?, ?, ?, ?)", conn))
+		{
+			print_stmt_error(insert_seat, "Unable to initialize insert seat statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(& insert_employee, "call  insert_employee(?, ?, ?, ?)", conn))
+		{ 
+			print_stmt_error( insert_employee, "Unable to initialize insert costumer statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&insert_picture, "call insert_picture(?, ?)", conn))
@@ -1767,6 +1788,29 @@ void do_insert_map(struct mappa *mappa)
 
 	mysql_stmt_free_result(insert_map);
 	mysql_stmt_reset(insert_map);
+	
+}
+
+void do_insert_employee(struct dipendente *dipendente)
+{	
+	MYSQL_BIND param[4]; 
+	char *buff = "insert_employee"; 
+
+	char tipologiadipendente[VARCHAR_LEN];
+	char telefonoaziendale [TEL_LEN]; 
+	char nomedipendente[VARCHAR_LEN];
+	char cognomedipendente[VARCHAR_LEN];
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING,dipendente->tipologiadipendente, strlen(dipendente->tipologiadipendente));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, dipendente->telefonoaziendale, strlen(dipendente->telefonoaziendale));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, dipendente->nomedipendente, strlen(dipendente->nomedipendente));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, dipendente->cognomedipendente, strlen(dipendente->cognomedipendente));
+	
+	
+	bind_exe( insert_employee, param, buff); 
+	
+	mysql_stmt_free_result(insert_employee);
+	mysql_stmt_reset(insert_employee);
 	
 }
 
