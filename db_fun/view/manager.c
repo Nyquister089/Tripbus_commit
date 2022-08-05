@@ -581,7 +581,7 @@ bool get_table_costumer (char sel )
                 return true; 
                 }
 	            case GESTIONE_INSERT: {
-                    //ins_assoc(associata); 
+                    ins_costumer(cliente); 
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
@@ -602,7 +602,7 @@ bool get_table_costumer (char sel )
                 return true; 
                 }
 	            case GESTIONE_INSERT: {
-                    //ins_assoc(associata); 
+                	ins_prenotation(prenotazione); 
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
@@ -623,7 +623,7 @@ bool get_table_costumer (char sel )
                 return true; 
                 }
 	            case GESTIONE_INSERT: {
-                    //ins_assoc(associata); 
+                    ins_seat(postoprenotato); 
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
