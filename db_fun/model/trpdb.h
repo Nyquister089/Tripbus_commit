@@ -160,7 +160,7 @@ struct mete_viaggio{
 
 struct mezzo {
 	char targa[TAR_LEN];
-	char modellomezzo[VARCHAR_LEN]; 
+	int modellomezzo; 
 	char dataultimarevisioneinmotorizzazione[DATE_LEN]; 					
 	char ingombri[VARCHAR_LEN];	
 	int autonomia; //Corretto trasformandolo da carattere a puntatore di carattere
@@ -169,6 +169,7 @@ struct mezzo {
 };
 
 struct modello {
+	int idmodello; 
 	char nomemodello[VARCHAR_LEN];
 	char datitecnici[DES_LEN]; 
 	char casacostruttrice[VARCHAR_LEN];

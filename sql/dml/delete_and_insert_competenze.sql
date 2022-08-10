@@ -2,12 +2,12 @@ DELETE FROM `tripdb`.`competenze`;
 INSERT INTO `tripdb`.`competenze`(
 `CompetenzeModello`,
 `MeccanicoCompetente`)
-VALUES('AXA','3');
+VALUES('1','3');
 INSERT INTO `tripdb`.`competenze`(
 `CompetenzeModello`,
 `MeccanicoCompetente`)
-VALUES('DAXA','3');
+VALUES('2','3');
 INSERT INTO `tripdb`.`competenze`(
 `CompetenzeModello`,
 `MeccanicoCompetente`)
-VALUES('RAXA','3');
+VALUES('3','3');

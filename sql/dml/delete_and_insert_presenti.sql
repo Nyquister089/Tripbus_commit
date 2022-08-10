@@ -1,16 +1,16 @@
 DELETE FROM `tripdb`.`presenti`;
 INSERT INTO `tripdb`.`presenti`(`ComfortPresenti`,`ModelloAssociato`)
-VALUES('1','AXA');
+VALUES('1','1');
 INSERT INTO `tripdb`.`presenti`(`ComfortPresenti`,`ModelloAssociato`)
-VALUES('2','AXA');
+VALUES('2','1');
 INSERT INTO `tripdb`.`presenti`(`ComfortPresenti`,`ModelloAssociato`)
-VALUES('3','AXA');
+VALUES('3','1');
 INSERT INTO `tripdb`.`presenti`(`ComfortPresenti`,`ModelloAssociato`)
-VALUES('1','DAXA');
+VALUES('1','2');
 INSERT INTO `tripdb`.`presenti`(`ComfortPresenti`,`ModelloAssociato`)
-VALUES('2','DAXA');
+VALUES('2','2');
 INSERT INTO `tripdb`.`presenti`(`ComfortPresenti`,`ModelloAssociato`)
-VALUES('1','RAXA');
+VALUES('1','3');
 INSERT INTO `tripdb`.`presenti`(`ComfortPresenti`,`ModelloAssociato`)
-VALUES('3','RAXA');
+VALUES('3','3');
 

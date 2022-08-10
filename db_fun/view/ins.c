@@ -117,10 +117,11 @@ void ins_sparepart(struct ricambio *ricambio)
 
 void ins_bus(struct mezzo *mezzo)
 {	
-	char buff[VARCHAR_LEN]; 
+	char buff[NUM_LEN]; 
 	printf("\n** Dettagli inserimento mezzo **\n\n");
 	get_input("Inserisci la targa : ", VARCHAR_LEN, mezzo->targa, false);
-	get_input("Inserisci l'ID del modello : ", VARCHAR_LEN, mezzo->modellomezzo, false);
+	get_input("Inserisci l'ID del modello : ", NUM_LEN, buff, false);
+	mezzo->modellomezzo = atoi(buff); 
 	get_input("Inserisci gli ingombri : ", VARCHAR_LEN, mezzo->ingombri, false);
 	get_input("Inserisci l'autonomia : ", NUM_LEN, buff , false);
 	mezzo-> autonomia = atoi(buff); 

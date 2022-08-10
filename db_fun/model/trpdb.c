@@ -1125,18 +1125,19 @@ void do_update_km(struct mezzo *mezzo)
 
 void do_select_model(struct modello *modello)
 {
-	MYSQL_BIND param[3];
+	MYSQL_BIND param[4];
 	
 	char *buff = "select_model";
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, modello->nomemodello, strlen(modello->nomemodello));
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &modello->idmodello, sizeof(modello->idmodello));
 	
 	if (bind_exe(select_model, param, buff) == -1)
 		goto stop;
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, modello->casacostruttrice, sizeof(modello->casacostruttrice));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, modello->datitecnici, sizeof(modello->datitecnici));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &modello->numeroposti, sizeof(modello->numeroposti));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, modello->nomemodello, sizeof(modello->casacostruttrice));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, modello->casacostruttrice, sizeof(modello->casacostruttrice));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, modello->datitecnici, sizeof(modello->datitecnici));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &modello->numeroposti, sizeof(modello->numeroposti));
 	
 	take_result(select_model, param, buff);
  
@@ -1454,7 +1455,7 @@ void do_select_bus(struct mezzo *mezzo)
 	if (bind_exe(select_bus, param, buff) == -1)
 		goto stop;
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mezzo->modellomezzo, sizeof(mezzo->modellomezzo));
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &mezzo->modellomezzo, sizeof(mezzo->modellomezzo));
 	set_binding_param(&param[1], MYSQL_TYPE_DATE, &dataultimarevisioneinmotorizzazione, sizeof(dataultimarevisioneinmotorizzazione));
 	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, mezzo->ingombri, sizeof(mezzo->ingombri));
 	set_binding_param(&param[3], MYSQL_TYPE_LONG, &mezzo->autonomia, sizeof(mezzo->autonomia));
