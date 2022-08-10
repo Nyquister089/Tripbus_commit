@@ -772,7 +772,7 @@ bool get_table_gest (char sel)
             } 
 		return true; 
         }
-		
+
         case TABELLA_TOME: {
         act = get_mngr_action();
             switch (act){
@@ -781,7 +781,7 @@ bool get_table_gest (char sel)
                 return true; 
                 }
 	            case GESTIONE_INSERT: {
-                    //ins_assoc(associata); 
+                    ins_tome(tome); 
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
@@ -795,6 +795,7 @@ bool get_table_gest (char sel)
         
         return true; 
         }
+
         case TABELLA_FMO: {
 			act = get_mngr_action();
             switch (act){
@@ -817,6 +818,7 @@ bool get_table_gest (char sel)
 			return true;
         
         } 
+ 
         case TABELLA_FME: {
 			act = get_mngr_action();
             switch (act){
@@ -838,6 +840,7 @@ bool get_table_gest (char sel)
 			}
 			return true;
         }
+
         case QUIT_ANAG: {
 
         return false; 

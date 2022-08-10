@@ -439,6 +439,7 @@ extern void do_insert_employee(struct dipendente *dipendente);
 extern void do_insert_user(struct utente *utente); 
 extern void do_insert_offert(struct offre *offre); 
 extern void do_insert_service(struct servizio *servizio); 
+extern void do_insert_tome(struct tome *tome); 
 
 extern void do_select_trip(struct viaggio *viaggio);
 extern void do_select_costumer(struct cliente *cliente);

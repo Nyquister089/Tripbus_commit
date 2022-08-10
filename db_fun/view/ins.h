@@ -31,6 +31,7 @@ extern void ins_employee(struct dipendente *dipendente);
 extern void ins_user(struct utente *utente);
 extern void ins_offert(struct offre *offre); 
 extern void ins_service(struct servizio *servizio);
+extern void ins_tome(struct tome *tome); 
 /*
 
 

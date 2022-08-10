@@ -30,7 +30,8 @@ static MYSQL_STMT *insert_picture; 		// ok Manager
 static MYSQL_STMT *insert_employee; 	// ok Manager 
 static MYSQL_STMT *insert_user; 		// ok Manager 
 static MYSQL_STMT *insert_offert; 		// ok Manager
-static MYSQL_STMT *insert_service; 		// Manager
+static MYSQL_STMT *insert_service; 		// ok Manager
+static MYSQL_STMT *insert_tome; 		// Managger
 
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS, Manager
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS, Manager
@@ -268,6 +269,11 @@ static void close_prepared_stmts(void)
 	{ 
 		mysql_stmt_close(insert_room);
 		insert_room = NULL;
+	}
+	if ( insert_tome)
+	{ 
+		mysql_stmt_close( insert_tome);
+		 insert_tome = NULL;
 	}
 	if ( insert_service)
 	{ 
@@ -568,6 +574,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&insert_seat, "call insert_seat (?, ?, ?, ?, ?, ?)", conn))
 		{
 			print_stmt_error(insert_seat, "Unable to initialize insert seat statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&insert_tome, "call  insert_tome(?, ?)", conn))
+		{ 
+			print_stmt_error(insert_tome, "Unable to initialize insert_tome statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&insert_service, "call  insert_service(?, ?)", conn))
@@ -1908,13 +1919,23 @@ void do_insert_service(struct servizio *servizio)
 	
 }
 
+void do_insert_tome(struct tome *tome)
+{
+	MYSQL_BIND param[2];
+	
+	char *buff = "insert_tome";
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tome->tourinquestione, strlen(tome->tourinquestione));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &tome->metainquestione, sizeof(tome->metainquestione));
+	
+	bind_exe(insert_tome, param, buff); 
+	
+	mysql_stmt_free_result(insert_tome);
+	mysql_stmt_reset(insert_tome);
+}
+
 
 /*
-
-
-
-
-
 void do_insert_costumer(struct cliente *cliente)
 {	MYSQL_BIND param[8]; 
 	MYSQL_TIME datadocumentazione; 
