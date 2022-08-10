@@ -120,7 +120,7 @@ void ins_bus(struct mezzo *mezzo)
 	char buff[VARCHAR_LEN]; 
 	printf("\n** Dettagli inserimento mezzo **\n\n");
 	get_input("Inserisci la targa : ", VARCHAR_LEN, mezzo->targa, false);
-	get_input("Inserisci l'ID del modello : ", VARCHAR_LEN, mezzo->modellomezzo, false);
+	get_input("Inserisci il modello : ", VARCHAR_LEN, mezzo->modellomezzo, false);
 	get_input("Inserisci gli ingombri : ", VARCHAR_LEN, mezzo->ingombri, false);
 	get_input("Inserisci l'autonomia : ", NUM_LEN, buff , false);
 	mezzo-> autonomia = atoi(buff); 
@@ -138,6 +138,8 @@ void ins_bus(struct mezzo *mezzo)
 			break;
 		fprintf(stderr, "Data errata!\n");
 	}
+ do_insert_bus(mezzo);
+
 }
 
 void ins_model(struct modello *modello)

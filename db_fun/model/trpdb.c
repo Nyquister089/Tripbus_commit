@@ -34,7 +34,8 @@ static MYSQL_STMT *insert_service; 		// ok Manager
 static MYSQL_STMT *insert_tome; 		// ok Manager
 static MYSQL_STMT *insert_fmo;			// ok Manager
 static MYSQL_STMT *insert_fme; 			// ok Manager
-static MYSQL_STMT *insert_model; 		// Manger
+static MYSQL_STMT *insert_model; 		// ok Manager
+static MYSQL_STMT *insert_bus; 			// Manager
 
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS, Manager
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS, Manager
@@ -288,10 +289,15 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close( insert_fme);
 		 insert_fme = NULL;
 	}
-	if (  insert_model)
+	if (insert_model)
 	{ 
-		mysql_stmt_close(  insert_model);
-		  insert_model = NULL;
+		mysql_stmt_close(insert_model);
+		insert_model = NULL;
+	}
+	if (insert_bus)
+	{ 
+		mysql_stmt_close(insert_bus);
+		insert_bus = NULL;
 	}
 	if ( insert_service)
 	{ 
@@ -579,6 +585,16 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(insert_assoc, "Unable to initialize update trip statement statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&insert_review, "call insert_review(?, ?, ?, ?, ?, ?, ?, ?)", conn))
+		{
+			print_stmt_error(insert_review, "Unable to initialize insert review statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&insert_sostitution, "call insert_sostitution(?,?,?)", conn))
+		{
+			print_stmt_error(insert_sostitution, "Unable to initialize insert_sostitution statement\n");
+			return false;
+		}
 		if (!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?, ?)", conn))
 		{ 
 			print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
@@ -602,6 +618,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&insert_fmo, "call  insert_fmo(?, ?)", conn))
 		{ 
 			print_stmt_error(insert_fmo, "Unable to initialize insert_fmo statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&insert_bus, "call insert_bus(?, ?, ?, ?, ?, ?, ?)", conn))
+		{ 
+			print_stmt_error( insert_bus, "Unable to initialize  insert_bus statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(& insert_model, "call   insert_model(?, ?, ?, ?)", conn))
@@ -2021,6 +2042,31 @@ void do_insert_model(struct modello *modello)
 	
 
 }
+
+void do_insert_bus(struct mezzo *mezzo)
+{		
+	MYSQL_BIND param[7]; 
+	MYSQL_TIME dataultimarevisioneinmotorizzazione; 
+	MYSQL_TIME dataimmatricolazione; 
+	char *buff ="insert_bus"; 
+	
+	date_to_mysql_time(mezzo->dataultimarevisioneinmotorizzazione, &dataultimarevisioneinmotorizzazione); 
+	date_to_mysql_time(mezzo->dataimmatricolazione, &dataimmatricolazione); 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mezzo->targa, strlen(mezzo->targa));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, mezzo->modellomezzo, strlen(mezzo->modellomezzo));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, mezzo->ingombri, strlen(mezzo->ingombri));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &mezzo->autonomia, sizeof(mezzo->autonomia));
+	set_binding_param(&param[4], MYSQL_TYPE_LONG, &mezzo->valorecontakm, sizeof(mezzo->valorecontakm));
+	set_binding_param(&param[5], MYSQL_TYPE_DATE, &dataultimarevisioneinmotorizzazione, sizeof(dataultimarevisioneinmotorizzazione));
+	set_binding_param(&param[6], MYSQL_TYPE_DATE, &dataimmatricolazione, sizeof(dataimmatricolazione));
+	
+	bind_exe(insert_bus, param, buff); 
+
+	mysql_stmt_free_result(insert_bus);
+	mysql_stmt_reset(insert_bus);
+	
+}
 /*
 void do_insert_costumer(struct cliente *cliente)
 {	MYSQL_BIND param[8]; 
@@ -2167,37 +2213,7 @@ void do_insert_sparepart(struct ricambio *ricambio)
 	
 }
 
-void do_insert_bus(struct mezzo *mezzo)
-{		
-	MYSQL_BIND param[8]; 
-	MYSQL_TIME dataultimarevisioneinmotorizzazione; 
-	MYSQL_TIME dataimmatricolazione; 
-	
-	date_to_mysql_time(mezzo->dataultimarevisioneinmotorizzazione, &dataultimarevisioneinmotorizzazione); 
-	date_to_mysql_time(mezzo->dataimmatricolazione, &dataimmatricolazione); 
-	
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mezzo->targa, strlen(mezzo->targa));
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &modellomezzo, sizeof(modellomezzo));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, mezzo->ingombri, strlen(mezzo->ingombri));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mezzo->modellomezzo, strlen(mezzo->modellomezzo));
-	set_binding_param(&param[4], MYSQL_TYPE_LOGN, &autonomia, sizeof(autonomia));
-	set_binding_param(&param[5], MYSQL_TYPE_LONG, &valorecontakm, sizeof(valorecontkm));
-	set_binding_param(&param[6], MYSQL_TYPE_DATE, &dataultimarevisioneinmotorizzazione, sizeof(dataultimarevisioneinmotorizzazione));
-	set_binding_param(&param[6], MYSQL_TYPE_DATE, &dataimmatricolazione, sizeof(dataimmatricolazione));
-	
 
-	if(mysql_stmt_bind_param(insert_bus, param) != 0) {
-		print_stmt_error(insert_bus, "Could not bind parameters for bind_bus");
-		return;
-	}
-	if(mysql_stmt_execute(insert_bus) != 0) {
-		print_stmt_error(insert_bus, "Could not execute insert_bus");
-		return;
-		}
-	mysql_stmt_free_result(insert_bus);
-	mysql_stmt_reset(insert_bus);
-	
-}
 
 void do_insert_certify(struct tagliando *tagliando)
 {		

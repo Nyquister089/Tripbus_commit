@@ -34,6 +34,7 @@ extern void ins_service(struct servizio *servizio);
 extern void ins_tome(struct tome *tome); 
 extern void ins_fmo(struct fmo *fmo); 
 extern void ins_fme(struct fme *fme); 
+extern void ins_bus(struct mezzo *mezzo);
 /*
 
 
@@ -43,7 +44,6 @@ void ins_prenotation(struct prenotazione *prenotazione);
 void ins_seat(struct postoprenotato *postoprenotato);
 void ins_review(struct revisione *revisione);
 void ins_sparepart(struct ricambio *ricambio);
-void ins_bus(struct mezzo *mezzo);
 void ins_model(struct modello *modello);
 void ins_certify(struct tagliando *tagliando);
 void ins_comfort(struct comfort *comfort);
