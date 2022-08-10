@@ -117,11 +117,10 @@ void ins_sparepart(struct ricambio *ricambio)
 
 void ins_bus(struct mezzo *mezzo)
 {	
-	char buff[NUM_LEN]; 
+	char buff[VARCHAR_LEN]; 
 	printf("\n** Dettagli inserimento mezzo **\n\n");
 	get_input("Inserisci la targa : ", VARCHAR_LEN, mezzo->targa, false);
-	get_input("Inserisci l'ID del modello : ", NUM_LEN, buff, false);
-	mezzo->modellomezzo = atoi(buff); 
+	get_input("Inserisci l'ID del modello : ", VARCHAR_LEN, mezzo->modellomezzo, false);
 	get_input("Inserisci gli ingombri : ", VARCHAR_LEN, mezzo->ingombri, false);
 	get_input("Inserisci l'autonomia : ", NUM_LEN, buff , false);
 	mezzo-> autonomia = atoi(buff); 
@@ -415,17 +414,27 @@ void ins_employee(struct dipendente *dipendente)
 void ins_service(struct servizio *servizio)
 {	
 	printf("** Dettagli inserimento servizio **\n\n");
-	get_input("Inserisci il nome : ", VARCHAR_LEN, servizio->nomeservizio, false);
-	get_input("Inserisci la descrizione (massimo 5000 caratteri) : ", DES_LEN, servizio->descrizioneservizio, false);
+	get_input("Inserisci il nome: ", VARCHAR_LEN, servizio->nomeservizio, false);
+	get_input("Inserisci la descrizione (massimo 5000 caratteri): ", DES_LEN, servizio->descrizioneservizio, false);
 	do_insert_service(servizio); 
+}
+
+void ins_fmo(struct fmo *fmo)
+{	
+	char buff[NUM_LEN]; 
+	printf("** Dettagli inserimento fmo **\n\n");
+	get_input("Inserisci il nome del modello in questione: ", VARCHAR_LEN, fmo->modello, false);
+	get_input("Inserisci l'id della foto in questione: ", NUM_LEN, buff, false);
+	fmo->foto = atoi(buff); 
+	do_insert_fmo(fmo); 
 }
 
 void ins_tome(struct tome *tome)
 {	
 	char buff[NUM_LEN]; 
 	printf("** Dettagli inserimento tome **\n\n");
-	get_input("Inserisci il nome del tour in questione : ", VARCHAR_LEN, tome->tourinquestione, false);
-	get_input("Inserisci l'id della meta in questione  : ", NUM_LEN, buff, false);
+	get_input("Inserisci il nome del tour in questione: ", VARCHAR_LEN, tome->tourinquestione, false);
+	get_input("Inserisci l'id della meta in questione: ", NUM_LEN, buff, false);
 	tome->metainquestione = atoi(buff); 
 	do_insert_tome(tome); 
 }

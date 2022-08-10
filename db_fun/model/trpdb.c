@@ -31,7 +31,8 @@ static MYSQL_STMT *insert_employee; 	// ok Manager
 static MYSQL_STMT *insert_user; 		// ok Manager 
 static MYSQL_STMT *insert_offert; 		// ok Manager
 static MYSQL_STMT *insert_service; 		// ok Manager
-static MYSQL_STMT *insert_tome; 		// Managger
+static MYSQL_STMT *insert_tome; 		// ok Managger
+static MYSQL_STMT *insert_fmo;			// Manager
 
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS, Manager
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS, Manager
@@ -274,6 +275,11 @@ static void close_prepared_stmts(void)
 	{ 
 		mysql_stmt_close( insert_tome);
 		 insert_tome = NULL;
+	}
+	if ( insert_fmo)
+	{ 
+		mysql_stmt_close( insert_fmo);
+		 insert_fmo = NULL;
 	}
 	if ( insert_service)
 	{ 
@@ -579,6 +585,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&insert_tome, "call  insert_tome(?, ?)", conn))
 		{ 
 			print_stmt_error(insert_tome, "Unable to initialize insert_tome statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&insert_fmo, "call  insert_fmo(?, ?)", conn))
+		{ 
+			print_stmt_error(insert_fmo, "Unable to initialize insert_fmo statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&insert_service, "call  insert_service(?, ?)", conn))
@@ -1125,19 +1136,18 @@ void do_update_km(struct mezzo *mezzo)
 
 void do_select_model(struct modello *modello)
 {
-	MYSQL_BIND param[4];
+	MYSQL_BIND param[3];
 	
 	char *buff = "select_model";
 
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &modello->idmodello, sizeof(modello->idmodello));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, modello->nomemodello, strlen(modello->nomemodello));
 	
 	if (bind_exe(select_model, param, buff) == -1)
 		goto stop;
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, modello->nomemodello, sizeof(modello->casacostruttrice));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, modello->casacostruttrice, sizeof(modello->casacostruttrice));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, modello->datitecnici, sizeof(modello->datitecnici));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &modello->numeroposti, sizeof(modello->numeroposti));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, modello->casacostruttrice, sizeof(modello->casacostruttrice));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, modello->datitecnici, sizeof(modello->datitecnici));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &modello->numeroposti, sizeof(modello->numeroposti));
 	
 	take_result(select_model, param, buff);
  
@@ -1455,7 +1465,7 @@ void do_select_bus(struct mezzo *mezzo)
 	if (bind_exe(select_bus, param, buff) == -1)
 		goto stop;
 
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &mezzo->modellomezzo, sizeof(mezzo->modellomezzo));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mezzo->modellomezzo, sizeof(mezzo->modellomezzo));
 	set_binding_param(&param[1], MYSQL_TYPE_DATE, &dataultimarevisioneinmotorizzazione, sizeof(dataultimarevisioneinmotorizzazione));
 	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, mezzo->ingombri, sizeof(mezzo->ingombri));
 	set_binding_param(&param[3], MYSQL_TYPE_LONG, &mezzo->autonomia, sizeof(mezzo->autonomia));
@@ -1926,13 +1936,28 @@ void do_insert_tome(struct tome *tome)
 	
 	char *buff = "insert_tome";
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tome->tourinquestione, strlen(tome->tourinquestione));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tome->tourinquestione, sizeof(tome->tourinquestione));
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &tome->metainquestione, sizeof(tome->metainquestione));
 	
 	bind_exe(insert_tome, param, buff); 
 	
 	mysql_stmt_free_result(insert_tome);
 	mysql_stmt_reset(insert_tome);
+}
+
+void do_insert_fmo(struct fmo *fmo)
+{
+	MYSQL_BIND param[2];
+	
+	char *buff = "insert_fmo";
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &fmo->foto, sizeof(fmo->foto));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, fmo->modello, strlen(fmo->modello));
+	
+	bind_exe(insert_fmo, param, buff); 
+	
+	mysql_stmt_free_result(insert_fmo);
+	mysql_stmt_reset(insert_fmo);
 }
 
 

@@ -1,6 +1,6 @@
 create procedure if not exists `tripdb`.`insert_fmo`(
     in fmd int, 
-    in mdl int
+    in mdl varchar(45)
 )
 begin
 

@@ -160,7 +160,7 @@ struct mete_viaggio{
 
 struct mezzo {
 	char targa[TAR_LEN];
-	int modellomezzo; 
+	char modellomezzo[VARCHAR_LEN]; 
 	char dataultimarevisioneinmotorizzazione[DATE_LEN]; 					
 	char ingombri[VARCHAR_LEN];	
 	int autonomia; //Corretto trasformandolo da carattere a puntatore di carattere
@@ -169,7 +169,6 @@ struct mezzo {
 };
 
 struct modello {
-	int idmodello; 
 	char nomemodello[VARCHAR_LEN];
 	char datitecnici[DES_LEN]; 
 	char casacostruttrice[VARCHAR_LEN];
@@ -440,7 +439,8 @@ extern void do_insert_employee(struct dipendente *dipendente);
 extern void do_insert_user(struct utente *utente); 
 extern void do_insert_offert(struct offre *offre); 
 extern void do_insert_service(struct servizio *servizio); 
-extern void do_insert_tome(struct tome *tome); 
+extern void do_insert_tome(struct tome *tome);
+extern void do_insert_fmo(struct fmo *fmo); 
 
 extern void do_select_trip(struct viaggio *viaggio);
 extern void do_select_costumer(struct cliente *cliente);

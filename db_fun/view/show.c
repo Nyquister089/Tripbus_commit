@@ -113,7 +113,7 @@ void show_bus(struct mezzo *mezzo)
 	printf("\n\n** Dettagli mezzo **\n\n");
 	get_input("Inserisci la targa del mezzo d'interesse: ", VARCHAR_LEN, mezzo->targa, false); 
 	do_select_bus(mezzo); 
- 	printf(" *Modello:		%s \n Ultima revisone mtc: 	%s \n Ingombri: 		%s \n Autonomia: 		%d\n Chilometraggio:	%d\n Data immatricolazione:	%s \n\n",
+ 	printf(" *Modello:		%s\n Ultima revisone mtc: 	%s \n Ingombri: 		%s \n Autonomia: 		%d\n Chilometraggio:	%d\n Data immatricolazione:	%s \n\n",
 		mezzo->modellomezzo,
 		mezzo->dataultimarevisioneinmotorizzazione, 
 		mezzo->ingombri, 
@@ -146,7 +146,8 @@ void show_skills(struct competenze *competenze)
 	printf("\n\n** Dettagli competenze  **\n\n");
 	get_input("Inserisci l'id del meccanico competente :",NUM_LEN, buff, false); 
 	competenze->meccanicocompetente = atoi(buff); 
-	get_input("Inserisci il modello d'interesse :",NUM_LEN, competenze->modelloassociato, false);
+	get_input("Inserisci il modello d'interesse :",VARCHAR_LEN, competenze->modelloassociato, false);
+	
 	do_select_skills(competenze);
  	printf("*Nome meccanico:%s \n Telefono :	%s \n\n",
 		competenze->modelloassociato,
@@ -174,7 +175,8 @@ void show_fmo(struct fmo *fmo)
 	printf("\n\n** Dettagli Foto-Modelli  **\n\n");
 	get_input("Inserisci l'id della foto d'interesse:",NUM_LEN, buff, false); 
 	fmo->foto = atoi(buff); 
-	get_input("Inserisci il nome del modello d'interesse:",NUM_LEN, fmo->modello, false);
+	get_input("Inserisci il nome del modello d'interesse:",VARCHAR_LEN, fmo->modello,  false);
+
 	do_select_fmo(fmo);
  	printf("*Descrizione:	%s \n Immagine:	%s\n\n",
 		fmo->descrizione,
@@ -256,11 +258,11 @@ void show_seat(struct postoprenotato *postoprenotato){
 }
 
 void show_model(struct modello *modello){
-
+	
 	printf("\n\n** Dettagli modello  **\n\n");
-	get_input("Inserisci il nome del modello d'interesse:",VARCHAR_LEN, modello->nomemodello, false); 
+	get_input("Inserisci l'id del modello d'interesse:",VARCHAR_LEN, modello->nomemodello, false); 
 	do_select_model(modello);
- 	printf("*Casa costruttrice:	%s\n Dati tecnici:		%s \n Numero di posti:	%d\n\n",
+ 	printf("* Casa costruttrice:	%s\n Dati tecnici:		%s \n Numero di posti:	%d\n\n",
 		modello->casacostruttrice,
 		modello->datitecnici,
 		modello->numeroposti);

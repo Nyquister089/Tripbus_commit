@@ -1,7 +1,7 @@
 DELETE FROM `tripdb`.`fmo`; 
 INSERT INTO `tripdb`.`fmo`(`FotoModello`,`ModelloRappresentato`)
-VALUES('7','1');
+VALUES('7','AXA');
 INSERT INTO `tripdb`.`fmo`(`FotoModello`,`ModelloRappresentato`)
-VALUES('8','2');
+VALUES('8','DAXA');
 INSERT INTO `tripdb`.`fmo`(`FotoModello`,`ModelloRappresentato`)
-VALUES('9','3');
+VALUES('9','RAXA');
