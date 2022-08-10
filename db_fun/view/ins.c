@@ -419,6 +419,17 @@ void ins_service(struct servizio *servizio)
 	do_insert_service(servizio); 
 }
 
+void ins_fme(struct fme *fme)
+{	
+	char buff[NUM_LEN]; 
+	printf("** Dettagli inserimento fme **\n\n");
+	get_input("Inserisci l'di della meta in questione: ", NUM_LEN, buff, false);
+	fme->meta = atoi(buff); 
+	get_input("Inserisci l'id della foto in questione: ", NUM_LEN, buff, false);
+	fme->foto = atoi(buff); 
+	do_insert_fme(fme); 
+}
+
 void ins_fmo(struct fmo *fmo)
 {	
 	char buff[NUM_LEN]; 

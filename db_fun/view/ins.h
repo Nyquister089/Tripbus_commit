@@ -33,6 +33,7 @@ extern void ins_offert(struct offre *offre);
 extern void ins_service(struct servizio *servizio);
 extern void ins_tome(struct tome *tome); 
 extern void ins_fmo(struct fmo *fmo); 
+extern void ins_fme(struct fme *fme); 
 /*
 
 

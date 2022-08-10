@@ -32,7 +32,8 @@ static MYSQL_STMT *insert_user; 		// ok Manager
 static MYSQL_STMT *insert_offert; 		// ok Manager
 static MYSQL_STMT *insert_service; 		// ok Manager
 static MYSQL_STMT *insert_tome; 		// ok Managger
-static MYSQL_STMT *insert_fmo;			// Manager
+static MYSQL_STMT *insert_fmo;			// ok Manager
+static MYSQL_STMT *insert_fme; 			// Manager
 
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS, Manager
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS, Manager
@@ -241,15 +242,15 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(select_ofr);
 		select_ofr = NULL;
 	}
-	if (select_fme)
-	{
-		mysql_stmt_close(select_fme);
-		select_fme = NULL;
-	}
 	if (select_fmo)
 	{
 		mysql_stmt_close(select_fmo);
 		select_fmo = NULL;
+	}
+	if (select_fme)
+	{
+		mysql_stmt_close(select_fme);
+		select_fme = NULL;
 	}
 	if (select_skills)
 	{
@@ -280,6 +281,11 @@ static void close_prepared_stmts(void)
 	{ 
 		mysql_stmt_close( insert_fmo);
 		 insert_fmo = NULL;
+	}
+	if ( insert_fme)
+	{ 
+		mysql_stmt_close( insert_fme);
+		 insert_fme = NULL;
 	}
 	if ( insert_service)
 	{ 
@@ -592,6 +598,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(insert_fmo, "Unable to initialize insert_fmo statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&insert_fme, "call  insert_fme(?, ?)", conn))
+		{ 
+			print_stmt_error(insert_fme, "Unable to initialize insert_fme statement\n");
+			return false;
+		}
 		if (!setup_prepared_stmt(&insert_service, "call  insert_service(?, ?)", conn))
 		{ 
 			print_stmt_error(insert_service, "Unable to initialize insert_service statement\n");
@@ -702,7 +713,6 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(select_location, "Unable to initialize select_location statement\n");
 			return false;
 		}
-
 		if (!setup_prepared_stmt(&select_visit, "call  select_visit(?)", conn))
 		{ 
 			print_stmt_error(select_visit, "Unable to initialize select_visit statement\n");
@@ -1960,6 +1970,20 @@ void do_insert_fmo(struct fmo *fmo)
 	mysql_stmt_reset(insert_fmo);
 }
 
+void do_insert_fme(struct fme *fme)
+{
+	MYSQL_BIND param[2];
+	
+	char *buff = "insert_fme";
+
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &fme->meta, sizeof(fme->meta));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &fme->foto, sizeof(fme->foto));
+	
+	bind_exe(insert_fme, param, buff); 
+	
+	mysql_stmt_free_result(insert_fme);
+	mysql_stmt_reset(insert_fme);
+}
 
 /*
 void do_insert_costumer(struct cliente *cliente)
