@@ -706,6 +706,7 @@ bool get_table_gest (char sel)
             } 
         return true; 
         }
+
         case TABELLA_ASSOCIATA: {
         act = get_mngr_action();
             switch (act){
@@ -727,6 +728,7 @@ bool get_table_gest (char sel)
             } 
 			return true;
         } 
+
         case TABELLA_OFFRE: {
 			act = get_mngr_action();
             switch (act){
@@ -748,6 +750,7 @@ bool get_table_gest (char sel)
             } 
 		return true; 
         }
+
 		case TABELLA_SERVIZI: {
 			act = get_mngr_action();
             switch (act){
@@ -756,7 +759,7 @@ bool get_table_gest (char sel)
                 return true; 
                 }
 	            case GESTIONE_INSERT: {
-                    //ins_assoc(associata); 
+                    ins_service(servizio); 
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
@@ -769,6 +772,7 @@ bool get_table_gest (char sel)
             } 
 		return true; 
         }
+		
         case TABELLA_TOME: {
         act = get_mngr_action();
             switch (act){

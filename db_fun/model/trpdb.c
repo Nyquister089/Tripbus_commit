@@ -29,7 +29,8 @@ static MYSQL_STMT *insert_map; 			// ok Manager
 static MYSQL_STMT *insert_picture; 		// ok Manager
 static MYSQL_STMT *insert_employee; 	// ok Manager 
 static MYSQL_STMT *insert_user; 		// ok Manager 
-static MYSQL_STMT *insert_offert; 		// Manager
+static MYSQL_STMT *insert_offert; 		// ok Manager
+static MYSQL_STMT *insert_service; 		// Manager
 
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS, Manager
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS, Manager
@@ -267,6 +268,11 @@ static void close_prepared_stmts(void)
 	{ 
 		mysql_stmt_close(insert_room);
 		insert_room = NULL;
+	}
+	if ( insert_service)
+	{ 
+		mysql_stmt_close( insert_service);
+		 insert_service = NULL;
 	}
 	if (insert_offert)
 	{ 
@@ -562,6 +568,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&insert_seat, "call insert_seat (?, ?, ?, ?, ?, ?)", conn))
 		{
 			print_stmt_error(insert_seat, "Unable to initialize insert seat statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&insert_service, "call  insert_service(?, ?)", conn))
+		{ 
+			print_stmt_error(insert_service, "Unable to initialize insert_service statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&insert_offert, "call  insert_offert(?, ?)", conn))
@@ -1882,6 +1893,21 @@ void do_insert_picture(struct documentazionefotografica *documentazionefotografi
 	
 }
 
+void do_insert_service(struct servizio *servizio)
+{		
+	MYSQL_BIND param[2]; 
+	char *buff = "insert_service"; 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, servizio->nomeservizio, strlen(servizio->nomeservizio));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, servizio->descrizioneservizio, strlen(servizio->descrizioneservizio));
+	
+	bind_exe(insert_service,param,buff); 
+
+	mysql_stmt_free_result(insert_service);
+	mysql_stmt_reset(insert_service);
+	
+}
+
 
 /*
 
@@ -2133,27 +2159,7 @@ void do_insert_comfort(struct comfort *comfort)
 	
 }
 
-void do_insert_service(struct servizio *servizio)
-{		
-	MYSQL_BIND param[3]; 
-	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, servizio->idservizio, sizeof(idservizio));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, servizio->nomeservizio, strlen(servizio->nomeservizio));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, servizio->descrizioneservizio, strlen(servizio->descrizioneservizio));
-	
-	
-	if(mysql_stmt_bind_param(insert_service, param) != 0) {
-		print_stmt_error(insert_service, "Could not bind parameters for insert_service");
-		return;
-	}
-	if(mysql_stmt_execute(insert_service) != 0) {
-		print_stmt_error(insert_service, "Could not execute insert_service");
-		return;
-		}
-	mysql_stmt_free_result(insert_service);
-	mysql_stmt_reset(insert_service);
-	
-}
+
 */
 void do_select_tour(struct tour *tour)
 {

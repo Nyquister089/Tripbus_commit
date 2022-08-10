@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Aug  3 12:22:38 2022
+# Make data base, printed on Wed Aug 10 10:03:27 2022
 
 # Variables
 
@@ -45,11 +45,11 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/d
 # automatic
 %F = $(notdir $%)
 # environment
-VSCODE_CODE_CACHE_PATH = /home/giordano/.config/Code/CachedData/3b889b090b5ad5793f524b5d1d39fda662b96a2a
+VSCODE_CODE_CACHE_PATH = /home/giordano/.config/Code/CachedData/da76f93349a72022ca4670c1b84860304616aaa2
 # environment
 LANG = C
 # environment
-XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.7C4AQ1
+XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.00XRQ1
 # default
 .LOADED := 
 # default
@@ -83,13 +83,13 @@ MAKEFILE_LIST := Makefile
 # automatic
 @F = $(notdir $@)
 # environment
-VSCODE_PID = 3349
+VSCODE_PID = 3632
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/oem-Aspire-E5-553G:@/tmp/.ICE-unix/1177,unix/oem-Aspire-E5-553G:/tmp/.ICE-unix/1177
+SESSION_MANAGER = local/oem-Aspire-E5-553G:@/tmp/.ICE-unix/1175,unix/oem-Aspire-E5-553G:/tmp/.ICE-unix/1175
 # automatic
 *F = $(notdir $*)
 # environment
@@ -99,7 +99,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
 # environment
-VSCODE_NLS_CONFIG = {"locale":"it","availableLanguages":{"*":"it"},"_languagePackId":"ab4c584458951cae9fe6dd31374e1344.it","_translationsConfigFile":"/home/giordano/.config/Code/clp/ab4c584458951cae9fe6dd31374e1344.it/tcf.json","_cacheRoot":"/home/giordano/.config/Code/clp/ab4c584458951cae9fe6dd31374e1344.it","_resolvedLanguagePackCoreLocation":"/home/giordano/.config/Code/clp/ab4c584458951cae9fe6dd31374e1344.it/3b889b090b5ad5793f524b5d1d39fda662b96a2a","_corruptedFile":"/home/giordano/.config/Code/clp/ab4c584458951cae9fe6dd31374e1344.it/corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"it","availableLanguages":{"*":"it"},"_languagePackId":"35bb7f4c3ea1aa810fd49c1141563929.it","_translationsConfigFile":"/home/giordano/.config/Code/clp/35bb7f4c3ea1aa810fd49c1141563929.it/tcf.json","_cacheRoot":"/home/giordano/.config/Code/clp/35bb7f4c3ea1aa810fd49c1141563929.it","_resolvedLanguagePackCoreLocation":"/home/giordano/.config/Code/clp/35bb7f4c3ea1aa810fd49c1141563929.it/da76f93349a72022ca4670c1b84860304616aaa2","_corruptedFile":"/home/giordano/.config/Code/clp/35bb7f4c3ea1aa810fd49c1141563929.it/corrupted.info","_languagePackSupport":true}
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -127,7 +127,7 @@ MAKEFILES :=
 # automatic
 ^F = $(notdir $^)
 # environment
-INVOCATION_ID = cfcb290b6092423ea8dcfcd7aa50e79d
+INVOCATION_ID = 3929402e608242ad866e4f0c67e63eda
 # environment
 USERNAME = giordano
 # environment
@@ -155,7 +155,7 @@ GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # makefile
 .DEFAULT_GOAL := compile
 # environment
-SYSTEMD_EXEC_PID = 1206
+SYSTEMD_EXEC_PID = 1195
 # environment
 DISPLAY = :0
 # environment
@@ -165,15 +165,15 @@ GTK_MODULES = gail:atk-bridge
 # default
 MAKE_VERSION := 4.3
 # environment
-MANAGERPID = 1044
+MANAGERPID = 1040
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 3349
+GIO_LAUNCHED_DESKTOP_FILE_PID = 3632
 # environment
 _ = /usr/share/code/code
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
-JOURNAL_STREAM = 8:30660
+JOURNAL_STREAM = 8:34833
 # environment
 XDG_SESSION_CLASS = user
 # environment
@@ -185,7 +185,7 @@ QT_IM_MODULE = ibus
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-dffbc31b-1.69.2-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-dffbc31b-1.70.0-main.sock
 # environment
 IM_CONFIG_PHASE = 1
 # default
@@ -267,6 +267,6 @@ all:
 # strcache performance: lookups = 32 / hit rate = 18%
 # hash-table stats:
 # Load=26/8192=0%, Rehash=0, Collisions=1/32=3%
-# Finished Make data base on Wed Aug  3 12:22:38 2022
+# Finished Make data base on Wed Aug 10 10:03:27 2022
 
  

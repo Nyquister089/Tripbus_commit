@@ -410,6 +410,14 @@ void ins_employee(struct dipendente *dipendente)
 	get_input("Inserisci il numero di telefono aziendale: ", TEL_LEN ,dipendente->telefonoaziendale, false); 
 	do_insert_employee(dipendente);
 }
+
+void ins_service(struct servizio *servizio)
+{	
+	printf("** Dettagli inserimento servizio **\n\n");
+	get_input("Inserisci il nome : ", VARCHAR_LEN, servizio->nomeservizio, false);
+	get_input("Inserisci la descrizione (massimo 5000 caratteri) : ", DES_LEN, servizio->descrizioneservizio, false);
+	do_insert_service(servizio); 
+}
 /*
 
 
@@ -499,11 +507,5 @@ void ins_comfort(struct comfort *comfort)
 	get_input("Inserisci la descrizione (massimo 5000 caratteri) : ", DES_LEN, comfort->descrizionecomfort, false);
 }
 
-void ins_service(struct servizio *servizio)
-{	clear_screen();
-	printf("** Dettagli inserimento servizio **\n\n");
-	get_input("Inserisci l'ID : ", NUM_LEN, servizio->idservizio, false); // AUTOINCREMENT???
-	get_input("Inserisci il nome : ", VARCHAR_LEN, servizio->nomeservizio, false);
-	get_input("Inserisci la descrizione (massimo 5000 caratteri) : ", DES_LEN, servizio->descrizioneservizio, false);
-}
+
 */

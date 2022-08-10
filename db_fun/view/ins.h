@@ -30,6 +30,7 @@ extern void ins_picture(struct documentazionefotografica *documentazionefotograf
 extern void ins_employee(struct dipendente *dipendente);
 extern void ins_user(struct utente *utente);
 extern void ins_offert(struct offre *offre); 
+extern void ins_service(struct servizio *servizio);
 /*
 
 
@@ -43,4 +44,4 @@ void ins_bus(struct mezzo *mezzo);
 void ins_model(struct modello *modello);
 void ins_certify(struct tagliando *tagliando);
 void ins_comfort(struct comfort *comfort);
-void ins_service(struct servizio *servizio);*/
+*/
