@@ -31,9 +31,10 @@ static MYSQL_STMT *insert_employee; 	// ok Manager
 static MYSQL_STMT *insert_user; 		// ok Manager 
 static MYSQL_STMT *insert_offert; 		// ok Manager
 static MYSQL_STMT *insert_service; 		// ok Manager
-static MYSQL_STMT *insert_tome; 		// ok Managger
+static MYSQL_STMT *insert_tome; 		// ok Manager
 static MYSQL_STMT *insert_fmo;			// ok Manager
-static MYSQL_STMT *insert_fme; 			// Manager
+static MYSQL_STMT *insert_fme; 			// ok Manager
+static MYSQL_STMT *insert_model; 		// Manger
 
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS, Manager
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS, Manager
@@ -286,6 +287,11 @@ static void close_prepared_stmts(void)
 	{ 
 		mysql_stmt_close( insert_fme);
 		 insert_fme = NULL;
+	}
+	if (  insert_model)
+	{ 
+		mysql_stmt_close(  insert_model);
+		  insert_model = NULL;
 	}
 	if ( insert_service)
 	{ 
@@ -596,6 +602,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&insert_fmo, "call  insert_fmo(?, ?)", conn))
 		{ 
 			print_stmt_error(insert_fmo, "Unable to initialize insert_fmo statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(& insert_model, "call   insert_model(?, ?, ?, ?)", conn))
+		{ 
+			print_stmt_error( insert_model, "Unable to initialize  insert_model statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&insert_fme, "call  insert_fme(?, ?)", conn))
@@ -1985,6 +1996,31 @@ void do_insert_fme(struct fme *fme)
 	mysql_stmt_reset(insert_fme);
 }
 
+void do_insert_model(struct modello *modello)
+{		
+	MYSQL_BIND param[4]; 
+	char *buff = "insert_model"; 
+	
+	
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, modello->nomemodello, strlen(modello->nomemodello));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, modello->datitecnici, strlen(modello->datitecnici));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, modello->casacostruttrice, strlen(modello->casacostruttrice));
+	set_binding_param(&param[3], MYSQL_TYPE_LONG, &modello->numeroposti, sizeof(modello->numeroposti));
+	
+
+	if(mysql_stmt_bind_param(insert_model, param) != 0) {
+		print_stmt_error(insert_model, "Could not bind parameters for insert_model");
+		return;
+	}
+	if(mysql_stmt_execute(insert_model) != 0) {
+		print_stmt_error(insert_model, "Could not execute insert_model");
+		return;
+		}
+	mysql_stmt_free_result(insert_model);
+	mysql_stmt_reset(insert_model);
+	
+
+}
 /*
 void do_insert_costumer(struct cliente *cliente)
 {	MYSQL_BIND param[8]; 
@@ -2104,31 +2140,7 @@ void do_insert_review(struct revisione *revisione)
 	mysql_stmt_reset(insert_review);	
 }
 
-void do_insert_model(struct modello *modello)
-{		
-	MYSQL_BIND param[6]; 
-	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idmodello, sizeof(idmodello);
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, modello->nomemodello, strlen(modello->nomemodello));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, modello->tipologia, strlen(modello->tipologia));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, modello->datitecnici, strlen(modello->datitecnici));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, modello->casacostruttrice, strlen(modello->casacostruttrice));
-	set_binding_param(&param[5], MYSQL_TYPE_LONG, &numerodiposti, sizeof(numerodiposti));
-	
 
-	if(mysql_stmt_bind_param(insert_model, param) != 0) {
-		print_stmt_error(insert_model, "Could not bind parameters for insert_model");
-		return;
-	}
-	if(mysql_stmt_execute(insert_model) != 0) {
-		print_stmt_error(insert_model, "Could not execute insert_model");
-		return;
-		}
-	mysql_stmt_free_result(insert_model);
-	mysql_stmt_reset(insert_model);
-	
-
-}
 
 void do_insert_sparepart(struct ricambio *ricambio)
 {		

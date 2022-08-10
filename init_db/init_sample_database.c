@@ -257,6 +257,7 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/insert_tome.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/insert_fmo.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/insert_fme.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/insert_model.sql"); 
     }
 
 int main(int argc, char *argv[])

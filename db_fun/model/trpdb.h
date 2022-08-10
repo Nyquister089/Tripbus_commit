@@ -442,6 +442,7 @@ extern void do_insert_service(struct servizio *servizio);
 extern void do_insert_tome(struct tome *tome);
 extern void do_insert_fmo(struct fmo *fmo); 
 extern void do_insert_fme(struct fme *fme); 
+extern void do_insert_model(struct modello * modello); 
 
 extern void do_select_trip(struct viaggio *viaggio);
 extern void do_select_costumer(struct cliente *cliente);
