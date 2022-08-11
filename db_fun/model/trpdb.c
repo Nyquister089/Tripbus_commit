@@ -36,7 +36,8 @@ static MYSQL_STMT *insert_fmo;			// ok Manager
 static MYSQL_STMT *insert_fme; 			// ok Manager
 static MYSQL_STMT *insert_model; 		// ok Manager
 static MYSQL_STMT *insert_bus; 			// ok Manager
-static MYSQL_STMT *insert_sparepart; 	// Manager
+static MYSQL_STMT *insert_sparepart; 	// ok Manager
+static MYSQL_STMT *insert_certify; 		// Manager
 
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS, Manager
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS, Manager
@@ -304,6 +305,11 @@ static void close_prepared_stmts(void)
 	{ 
 		mysql_stmt_close(insert_sparepart);
 		insert_sparepart = NULL;
+	}
+	if (insert_certify)
+	{ 
+		mysql_stmt_close(insert_certify);
+		insert_certify = NULL;
 	}
 	if ( insert_service)
 	{ 
@@ -634,6 +640,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&insert_sparepart, "call insert_sparepart(?, ?, ?, ?, ?, ?)", conn))
 		{ 
 			print_stmt_error( insert_sparepart, "Unable to initialize  insert_sparepart statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&insert_certify, "call insert_certify(?, ?)", conn))
+		{ 
+			print_stmt_error( insert_certify, "Unable to initialize  insert_certify statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(& insert_model, "call   insert_model(?, ?, ?, ?)", conn))
@@ -2082,7 +2093,7 @@ void do_insert_bus(struct mezzo *mezzo)
 void do_insert_sparepart(struct ricambio *ricambio)
 {		
 	MYSQL_BIND param[6]; 
-	char *buff ="insert_spareparts"; 
+	char *buff ="insert_sparepart"; 
 	
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, ricambio->codice, strlen(ricambio->codice));
 	set_binding_param(&param[1], MYSQL_TYPE_FLOAT, &ricambio->costounitario, sizeof(ricambio->costounitario));
@@ -2095,6 +2106,21 @@ void do_insert_sparepart(struct ricambio *ricambio)
 	 
 	mysql_stmt_free_result(insert_sparepart);
 	mysql_stmt_reset(insert_sparepart);
+	
+}
+
+void do_insert_certify(struct tagliando *tagliando)
+{		
+	MYSQL_BIND param[2]; 
+	char *buff = "insert_certify"; 
+
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tagliando->tipologiatagliando, strlen(tagliando->tipologiatagliando));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tagliando->validitasuperate, strlen(tagliando->validitasuperate));
+	
+	bind_exe(insert_certify, param, buff); 
+	
+	mysql_stmt_free_result(insert_certify);
+	mysql_stmt_reset(insert_certify);
 	
 }
 /*
@@ -2216,33 +2242,6 @@ void do_insert_review(struct revisione *revisione)
 	mysql_stmt_reset(insert_review);	
 }
 
-
-
-
-
-
-
-void do_insert_certify(struct tagliando *tagliando)
-{		
-	MYSQL_BIND param[3]; 
-	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, tagliando->idtagliando, sizeof(idtagliando));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tagliando->tipologiatagliando, strlen(tagliando->tipologiatagliando));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, tagliando->validitasuperate, strlen(tagliando->validitasuperate));
-	
-	
-	if(mysql_stmt_bind_param(insert_certify, param) != 0) {
-		print_stmt_error(insert_certify, "Could not bind parameters for insert_certify");
-		return;
-	}
-	if(mysql_stmt_execute(insert_certify) != 0) {
-		print_stmt_error(insert_certify, "Could not execute insert_certify");
-		return;
-		}
-	mysql_stmt_free_result(insert_certify);
-	mysql_stmt_reset(insert_certify);
-	
-}
 void do_insert_comfort(struct comfort *comfort)
 {		
 	MYSQL_BIND param[3]; 

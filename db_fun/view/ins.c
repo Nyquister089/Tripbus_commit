@@ -156,10 +156,11 @@ void ins_model(struct modello *modello)
 }
 
 void ins_certify(struct tagliando *tagliando)
-{	//clear_scren();
+{	
 	printf("\n** Dettagli inserimento tagliando **\n\n");
 	get_input("Inserisci la tipologia del tagliando: ", VARCHAR_LEN, tagliando->tipologiatagliando, false);
 	get_input("Inserisci le validita' superate (massimo 5000 caratteri) : ", DES_LEN, tagliando->validitasuperate, false);
+	do_insert_certify(tagliando); 
 }
 
 void ins_association(struct associata *associata)

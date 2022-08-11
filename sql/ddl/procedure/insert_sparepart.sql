@@ -6,6 +6,7 @@ create procedure if not exists `tripdb`.`insert_sparepart`(
     in scm int, 
     in qtm int
 )
+begin
 insert into ricambio (
    Codice ,
    CostoUnitario ,
@@ -20,3 +21,4 @@ insert into ricambio (
     dsc,
     scm,
     qtm); 
+  end

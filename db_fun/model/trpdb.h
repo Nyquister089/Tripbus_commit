@@ -445,6 +445,7 @@ extern void do_insert_fme(struct fme *fme);
 extern void do_insert_model(struct modello * modello); 
 extern void do_insert_bus(struct mezzo *mezzo); 
 extern void do_insert_sparepart(struct ricambio *ricambio);
+extern void do_insert_certify(struct tagliando *tagliando); 
 
 extern void do_select_trip(struct viaggio *viaggio);
 extern void do_select_costumer(struct cliente *cliente);

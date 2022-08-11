@@ -38,12 +38,5 @@ extern void ins_bus(struct mezzo *mezzo);
 extern void ins_sparepart(struct ricambio *ricambio);
 
 /*
-void ins_costumer(struct cliente *cliente);
-void ins_prenotation(struct prenotazione *prenotazione);
-void ins_seat(struct postoprenotato *postoprenotato);
-void ins_review(struct revisione *revisione);
-
-void ins_model(struct modello *modello);
-void ins_certify(struct tagliando *tagliando);
 void ins_comfort(struct comfort *comfort);
 */

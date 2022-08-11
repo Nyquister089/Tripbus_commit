@@ -28,6 +28,7 @@ struct prenotazione *prenotazione;
 struct revisione *revisione; 
 struct ricambio *ricambio; 
 struct servizio *servizio; 
+struct sostituito *sostituito; 
 struct tagliando *tagliando; 
 struct tome *tome;
 struct tour *tour; 
@@ -141,6 +142,12 @@ int allocation_workshop(void)
 		{printf("Fallimento malloc su competenze (manager) \n\n");
 		 return -1; 
 		}
+	sostituito= malloc(sizeof(struct sostituito)); 
+	if(sostituito== NULL)
+		{printf("Fallimento malloc su sostituito(manager) \n\n");
+		 return -1; 
+		}
+
 }
 
 int allocation_tour(void){
@@ -489,7 +496,7 @@ bool get_table_workshop(char sel){
                 return true; 
                 }
 	            case GESTIONE_INSERT: {
-                    //ins_assoc(associata); 
+                    ins_review(revisione,sostituito,ricambio); 
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
@@ -509,7 +516,7 @@ bool get_table_workshop(char sel){
                 return true; 
                 }
 	            case GESTIONE_INSERT: {
-                    //ins_assoc(associata); 
+                    ins_certify(tagliando); 
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
