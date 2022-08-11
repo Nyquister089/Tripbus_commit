@@ -262,6 +262,7 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/insert_sparepart.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/insert_certify.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/insert_comfort.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/insert_skill.sql"); 
     }
 
 int main(int argc, char *argv[])

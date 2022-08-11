@@ -38,8 +38,8 @@ static MYSQL_STMT *insert_model; 		// ok Manager
 static MYSQL_STMT *insert_bus; 			// ok Manager
 static MYSQL_STMT *insert_sparepart; 	// ok Manager
 static MYSQL_STMT *insert_certify; 		// ok Manager
-static MYSQL_STMT *insert_comfort; 		// Manager
-
+static MYSQL_STMT *insert_comfort; 		// ok Manager
+static MYSQL_STMT *insert_skills; 		// Manager
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS, Manager
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS, Manager
 static MYSQL_STMT *insert_seat;			// OK HOSTESS, Manager
@@ -316,6 +316,11 @@ static void close_prepared_stmts(void)
 	{ 
 		mysql_stmt_close(insert_comfort);
 		insert_comfort = NULL;
+	}
+	if (insert_skills)
+	{ 
+		mysql_stmt_close(insert_skills);
+		insert_skills = NULL;
 	}
 	if ( insert_service)
 	{ 
@@ -651,6 +656,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&insert_certify, "call insert_certify(?, ?)", conn))
 		{ 
 			print_stmt_error( insert_certify, "Unable to initialize  insert_certify statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&insert_skills, "call insert_skills(?, ?)", conn))
+		{ 
+			print_stmt_error( insert_skills, "Unable to initialize  insert_skills statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(&insert_comfort, "call insert_comfort(?, ?)", conn))
@@ -2149,6 +2159,22 @@ void do_insert_comfort(struct comfort *comfort)
 	mysql_stmt_reset(insert_comfort);
 	
 }
+
+void do_insert_skills(struct competenze *competenze)
+{		
+	MYSQL_BIND param[2]; 
+	char *buff ="insert_skills"; 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, competenze->modelloassociato, strlen(competenze->modelloassociato));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &competenze->meccanicocompetente, sizeof(competenze->meccanicocompetente));
+	
+	bind_exe(insert_skills,param,buff); 
+
+	mysql_stmt_free_result(insert_skills);
+	mysql_stmt_reset(insert_skills);
+	
+}
+
 
 void do_select_tour(struct tour *tour)
 {

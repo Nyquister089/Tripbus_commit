@@ -462,3 +462,13 @@ void ins_comfort(struct comfort *comfort)
 	get_input("Inserisci la descrizione (massimo 5000 caratteri) : ", DES_LEN, comfort->descrizionecomfort, false);
 	do_insert_comfort(comfort); 
 }
+
+void ins_skills(struct competenze *competenze)
+{	
+	char buff[NUM_LEN];
+	printf("** Dettagli inserimento competenze **\n\n");
+	get_input("Inserisci il nome del modello associato: ", VARCHAR_LEN, competenze->modelloassociato, false);
+	get_input("Inserisci l'id del meccanico competente : ", NUM_LEN, buff, false);
+	competenze->meccanicocompetente= atoi(buff); 
+	do_insert_skills(competenze); 
+}

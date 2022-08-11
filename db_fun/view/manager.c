@@ -64,7 +64,7 @@ int allocation_gest(void)
 		{printf("Fallimento malloc offre (manager) \n\n"); 
 		 return -1; 
 	    }
-	servizio= malloc(sizeof(struct offre));
+	servizio= malloc(sizeof(struct servizio));
 	if(servizio== NULL)
 		{printf("Fallimento malloc servizio(manager) \n\n"); 
 		 return -1; 
@@ -529,6 +529,7 @@ bool get_table_workshop(char sel){
 			} 
 		} 
 		case TABELLA_COMFORT:{
+		
 			act = get_mngr_action(); 
 			switch(act){
 				case GESTIONE_SELECT: {
@@ -537,6 +538,27 @@ bool get_table_workshop(char sel){
                 }
 	            case GESTIONE_INSERT: {
                 	ins_comfort(comfort); 
+                return true; 
+                }
+	            case GESTIONE_DELETE: {
+                    //del_associata(associata); 
+                return true; 
+                }
+	            case QUIT_GEST_OP: {
+                    return false; 
+                }
+			} 
+		} 
+		case TABELLA_COMPETENZE:{
+		
+			act = get_mngr_action(); 
+			switch(act){
+				case GESTIONE_SELECT: {
+                    show_skills(competenze); 
+                return true; 
+                }
+	            case GESTIONE_INSERT: {
+                	ins_skills(competenze); 
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
