@@ -37,7 +37,8 @@ static MYSQL_STMT *insert_fme; 			// ok Manager
 static MYSQL_STMT *insert_model; 		// ok Manager
 static MYSQL_STMT *insert_bus; 			// ok Manager
 static MYSQL_STMT *insert_sparepart; 	// ok Manager
-static MYSQL_STMT *insert_certify; 		// Manager
+static MYSQL_STMT *insert_certify; 		// ok Manager
+static MYSQL_STMT *insert_comfort; 		// Manager
 
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS, Manager
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS, Manager
@@ -310,6 +311,11 @@ static void close_prepared_stmts(void)
 	{ 
 		mysql_stmt_close(insert_certify);
 		insert_certify = NULL;
+	}
+	if (insert_comfort)
+	{ 
+		mysql_stmt_close(insert_comfort);
+		insert_comfort = NULL;
 	}
 	if ( insert_service)
 	{ 
@@ -645,6 +651,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&insert_certify, "call insert_certify(?, ?)", conn))
 		{ 
 			print_stmt_error( insert_certify, "Unable to initialize  insert_certify statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&insert_comfort, "call insert_comfort(?, ?)", conn))
+		{ 
+			print_stmt_error( insert_comfort, "Unable to initialize  insert_comfort statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(& insert_model, "call   insert_model(?, ?, ?, ?)", conn))
@@ -2118,154 +2129,27 @@ void do_insert_certify(struct tagliando *tagliando)
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tagliando->validitasuperate, strlen(tagliando->validitasuperate));
 	
 	bind_exe(insert_certify, param, buff); 
-	
+
 	mysql_stmt_free_result(insert_certify);
 	mysql_stmt_reset(insert_certify);
 	
 }
-/*
-void do_insert_costumer(struct cliente *cliente)
-{	MYSQL_BIND param[8]; 
-	MYSQL_TIME datadocumentazione; 
-	
-	datetime_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
-	
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente);
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, strlen(cliente->nomecliente));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, strlen(cliente->cognomecliente));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, strlen(cliente->indirizzocliente));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, strlen(cliente->codicefiscale));
-	set_binding_param(&param[5], MYSQL_TYPE_DATETIME, &datadocumentazione, sizeof(datadocumentazione));
-	set_binding_param(&param[6], MYSQL_TYPE_LONG, &recapitotelefonico, sizeof(recapitotelefonico));
-	set_binding_param(&param[7], MYSQL_TYPE_LONG, &fax, sizeof(fax));
-	
-	
-	if(mysql_stmt_bind_param(insert_costumer, param) != 0) {
-		print_stmt_error(insert_costumer, "Could not bind parameters for insert_costumer");
-		return;
-	}
-	if(mysql_stmt_execute(insert_costumer) != 0) {
-		print_stmt_error(insert_costumer, "Could not execute insert_costumer");
-		return;
-		}
-	mysql_stmt_free_result(insert_costumer);
-	mysql_stmt_reset(insert_costumer);
-	
-}
-
-void do_insert_reservation(struct prenotazione *prenotazione)
-{		
-	MYSQL_BIND param[5]; 
-	MYSQL_TIME datadiprenotazione; 
-	MYSQL_TIME datadiconferma; 
-	MYSQL_TIME datasaldo; 
-
-	datetime_to_mysql_time(prenotazione->datadiprenotazione, &datadiprenotazione);
-	datetime_to_mysql_time(prenotazione->datadiconferma, &datadiconferma);
-	datetime_to_mysql_time(prenotazione->datasaldo, &datasaldo);
-	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerodiprenotazione, sizeof(numerodiprenotazione);
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, strlen(prenotazione->clienteprenotante));
-	set_binding_param(&param[2], MYSQL_TYPE_DATETIME, &datadiprenotazione,sizeof(datadiprenotazione));
-	set_binding_param(&param[3], MYSQL_TYPE_DATETIME, &datadiconferma, sizeof(datadiconferma));
-	set_binding_param(&param[4], MYSQL_TYPE_DATETIME, &datasaldo, sizeof(datasaldo));
-	
-	
-	if(mysql_stmt_bind_param(insert_reservation, param) != 0) {
-		print_stmt_error(insert_reservation, "Could not bind parameters for insert_reservation");
-		return;
-	}
-	if(mysql_stmt_execute(insert_reservation) != 0) {
-		print_stmt_error(insert_reservation, "Could not execute insert_reservation");
-		return;
-		}
-	mysql_stmt_free_result(insert_reservation);
-	mysql_stmt_reset(insert_reservation);
-	
-}
-
-void do_insert_seat(struct postoprenotato *postoprenotato)
-{		
-	MYSQL_BIND param[6]; 
-	
-	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerodiposto, sizeof(numerodiposto);
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &viaggioassociato, sizeof(viaggioassociato));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &prenotazioneassociata,sizeof(prenotazioneassociata));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &etapasseggero, sizeof(etapasseggero));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, postoprenotato->nomepasseggero, strlen(postoprenotato->nomepasseggero));
-	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, postoprenotato->cognomepasseggero, strlen(postoprenotato->cognomepasseggero));
-	
-	
-	if(mysql_stmt_bind_param(insert_seat, param) != 0) {
-		print_stmt_error(insert_seat, "Could not bind parameters for insert_seat");
-		return;
-	}
-	if(mysql_stmt_execute(insert_seat) != 0) {
-		print_stmt_error(insert_seat, "Could not execute insert_seat");
-		return;
-		}
-	mysql_stmt_free_result(insert_seat);
-	mysql_stmt_reset(insert_seat);
-	
-}
-
-void do_insert_review(struct revisione *revisione)
-{		
-	MYSQL_BIND param[9]; 
-	MYSQL_TIME datainizio;
-	MYSQL_TIME datafine; 
-
-	date_to_mysql_time(revisione->datainizio, &datainizio);
-	date_to_mysql_time(revisione->datafine, &datafine); 
-	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &idrevisione, sizeof(idrevisione);
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, revisione->mezzorevisionato, strlen(revisione->mezzorevisionato));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &addettoallarevisione,sizeof(addettoallarevisione));
-	set_binding_param(&param[3], MYSQL_TYPE_DATE, &datainizio, sizeof(datainizio));
-	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datafine, sizeof(datafine));
-	set_binding_param(&param[5], MYSQL_TYPE_LONG, &chilometraggio, sizeof(chilometraggio));
-	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, revisione->operazionieseguite, strlen(revisione->operazionieseguite));
-	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, revisione->tipologiarevisione, strlen(revisione->tipologiarevisione));
-	set_binding_param(&param[8], MYSQL_TYPE_VAR_STRING, revisione->motivazione, strlen(revisione->motivazione));
-	
-	
-	if(mysql_stmt_bind_param(insert_review, param) != 0) {
-		print_stmt_error(insert_review, "Could not bind parameters for insert_review");
-		return;
-	}
-	if(mysql_stmt_execute(insert_review) != 0) {
-		print_stmt_error(insert_review, "Could not execute insert_review");
-		return;
-		}
-	mysql_stmt_free_result(insert_review);
-	mysql_stmt_reset(insert_review);	
-}
 
 void do_insert_comfort(struct comfort *comfort)
 {		
-	MYSQL_BIND param[3]; 
+	MYSQL_BIND param[2]; 
+	char *buff ="insert_comfort"; 
 	
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, comfort->idcomfort, sizeof(idcomfort));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, comfort->nomecomfort, strlen(comfort->nomecomfort));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, comfort->descrizionecomfort, strlen(comfort->descrizionecomfort));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, comfort->nomecomfort, strlen(comfort->nomecomfort));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, comfort->descrizionecomfort, strlen(comfort->descrizionecomfort));
 	
-	
-	if(mysql_stmt_bind_param(insert_comfort, param) != 0) {
-		print_stmt_error(insert_comfort, "Could not bind parameters for insert_comfort");
-		return;
-	}
-	if(mysql_stmt_execute(insert_comfort) != 0) {
-		print_stmt_error(insert_comfort, "Could not execute insert_comfort");
-		return;
-		}
+	bind_exe(insert_comfort,param,buff); 
+
 	mysql_stmt_free_result(insert_comfort);
 	mysql_stmt_reset(insert_comfort);
 	
 }
 
-
-*/
 void do_select_tour(struct tour *tour)
 {
 	MYSQL_BIND param[6];

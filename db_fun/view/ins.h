@@ -36,7 +36,4 @@ extern void ins_fmo(struct fmo *fmo);
 extern void ins_fme(struct fme *fme); 
 extern void ins_bus(struct mezzo *mezzo);
 extern void ins_sparepart(struct ricambio *ricambio);
-
-/*
-void ins_comfort(struct comfort *comfort);
-*/
+extern void ins_comfort(struct comfort *comfort);
