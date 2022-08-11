@@ -35,14 +35,15 @@ static MYSQL_STMT *insert_tome; 		// ok Manager
 static MYSQL_STMT *insert_fmo;			// ok Manager
 static MYSQL_STMT *insert_fme; 			// ok Manager
 static MYSQL_STMT *insert_model; 		// ok Manager
-static MYSQL_STMT *insert_bus; 			// Manager
+static MYSQL_STMT *insert_bus; 			// ok Manager
+static MYSQL_STMT *insert_sparepart; 	// Manager
 
 static MYSQL_STMT *insert_costumer;		// OK HOSTESS, Manager
 static MYSQL_STMT *insert_reservation;	// OK HOSTESS, Manager
 static MYSQL_STMT *insert_seat;			// OK HOSTESS, Manager
 static MYSQL_STMT *insert_assoc;		// OK HOSTESS, Manager
-static MYSQL_STMT *insert_review;		// ok Meccanico
-static MYSQL_STMT *insert_sostitution;	// ok Meccanico
+static MYSQL_STMT *insert_review;		// ok Meccanico, Manager
+static MYSQL_STMT *insert_sostitution;	// ok Meccanico, Manager
 
 
 static MYSQL_STMT *select_trip;		   // ok HOSTESS, ok Manager
@@ -298,6 +299,11 @@ static void close_prepared_stmts(void)
 	{ 
 		mysql_stmt_close(insert_bus);
 		insert_bus = NULL;
+	}
+	if (insert_sparepart)
+	{ 
+		mysql_stmt_close(insert_sparepart);
+		insert_sparepart = NULL;
 	}
 	if ( insert_service)
 	{ 
@@ -623,6 +629,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 		if (!setup_prepared_stmt(&insert_bus, "call insert_bus(?, ?, ?, ?, ?, ?, ?)", conn))
 		{ 
 			print_stmt_error( insert_bus, "Unable to initialize  insert_bus statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&insert_sparepart, "call insert_sparepart(?, ?, ?, ?, ?, ?)", conn))
+		{ 
+			print_stmt_error( insert_sparepart, "Unable to initialize  insert_sparepart statement\n");
 			return false;
 		}
 		if (!setup_prepared_stmt(& insert_model, "call   insert_model(?, ?, ?, ?)", conn))
@@ -2067,6 +2078,25 @@ void do_insert_bus(struct mezzo *mezzo)
 	mysql_stmt_reset(insert_bus);
 	
 }
+
+void do_insert_sparepart(struct ricambio *ricambio)
+{		
+	MYSQL_BIND param[6]; 
+	char *buff ="insert_spareparts"; 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, ricambio->codice, strlen(ricambio->codice));
+	set_binding_param(&param[1], MYSQL_TYPE_FLOAT, &ricambio->costounitario, sizeof(ricambio->costounitario));
+	set_binding_param(&param[2], MYSQL_TYPE_LONG, &ricambio->quantitadiriordino, sizeof(ricambio->quantitadiriordino));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, ricambio->descrizione, strlen(ricambio->descrizione));
+	set_binding_param(&param[4], MYSQL_TYPE_LONG, &ricambio->scortaminima, sizeof(ricambio->scortaminima));
+	set_binding_param(&param[5], MYSQL_TYPE_LONG, &ricambio->quantitainmagazzino, sizeof(ricambio->quantitainmagazzino));
+
+	bind_exe(insert_sparepart, param, buff); 
+	 
+	mysql_stmt_free_result(insert_sparepart);
+	mysql_stmt_reset(insert_sparepart);
+	
+}
 /*
 void do_insert_costumer(struct cliente *cliente)
 {	MYSQL_BIND param[8]; 
@@ -2188,30 +2218,7 @@ void do_insert_review(struct revisione *revisione)
 
 
 
-void do_insert_sparepart(struct ricambio *ricambio)
-{		
-	MYSQL_BIND param[6]; 
-	
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, ricambi->codice, strlen(ricambi->codice));
-	set_binding_param(&param[1], MYSQL_TYPE_FLOAT, &costounitario, sizeof(costounitario));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &quantitadiriordino, sizeof(quantitadiriordino));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, ricambi->descrzione, strlen(ricambi->descrizione));
-	set_binding_param(&param[4], MYSQL_TYPE_LOGN, &scortaminima, sizeof(scortaminima));
-	set_binding_param(&param[5], MYSQL_TYPE_LONG, &quantitainmagazzino, sizeof(quantitainmagazzino));
-	 
-	
-	if(mysql_stmt_bind_param(insert_sparepart, param) != 0) {
-		print_stmt_error(insert_sparepart, "Could not bind parameters for bind_sparepart");
-		return;
-	}
-	if(mysql_stmt_execute(insert_sparepart) != 0) {
-		print_stmt_error(insert_sparepart, "Could not execute insert_sparepart");
-		return;
-		}
-	mysql_stmt_free_result(insert_sparepart);
-	mysql_stmt_reset(insert_sparepart);
-	
-}
+
 
 
 

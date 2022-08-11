@@ -113,6 +113,7 @@ void ins_sparepart(struct ricambio *ricambio)
 	ricambio->scortaminima = atoi(buff); 
 	get_input("Inserisci quantita' di pezzi disponibili: ", NUM_LEN, buff, false);
 	ricambio->quantitainmagazzino = atoi(buff);
+	do_insert_sparepart(ricambio);
 }
 
 void ins_bus(struct mezzo *mezzo)

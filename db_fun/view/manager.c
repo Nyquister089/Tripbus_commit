@@ -469,7 +469,7 @@ bool get_table_workshop(char sel){
                 return true; 
                 }
 	            case GESTIONE_INSERT: {
-                    //ins_assoc(associata); 
+                    ins_sparepart(ricambio); 
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
