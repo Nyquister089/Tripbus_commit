@@ -268,18 +268,9 @@ void create_procedures(){
 
 
     execute_query_from_file_sql("../sql/ddl/procedure/delete_trip.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_tour.sql");/* 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_all_tour.sql");
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_dest_tour.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_hotel_service.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_model_comfort.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_expired_review.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_sparepart.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_tour.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_sparepart.sql"); /* 
     execute_query_from_file_sql("../sql/ddl/procedure/delete_review.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_max_idreview.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_assigned_trip.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_dest_time.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_dvr_map.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/delete_bus.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/delete_reservation.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/delete_costumer.sql");

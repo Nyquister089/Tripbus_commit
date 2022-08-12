@@ -17,6 +17,12 @@ void dlt_tour(struct tour *tour)
     if(yes_or_no("Vuoi cancellare questo tour? (s/n)",'s','n',false,false) == true)
         do_delete_tour(tour); 
 }
+void dlt_sparepart(struct ricambio *ricambio)
+{	
+    show_sparepart(ricambio); 
+    if(yes_or_no("Vuoi cancellare questo ricambio? (s/n)",'s','n',false,false) == true)
+        do_delete_sparepart(ricambio);
+}
 /*
 void dlt_reservation (struct prenotazione * prenotazione)
 {	
@@ -55,21 +61,7 @@ void dlt_costumer (struct cliente * cliente)
 
 
 
-void dlt_sparepart(struct ricambio *ricambio)
-{	
 
-
-	printf("\n\n**  Dettagli ricambio ** \n\n");
-	get_input("Inserisci il codice del ricambio d'interesse: ",VARCHAR_LEN, ricambio->codice, false);
-	do_select_sparepart(ricambio); 
-	printf("*Costo unitario:	%f \n Quatità di Riordino: 	%d \n Scorta Minima:		%d \n Quantità in magazzino:	%d \n Descrizione:		%s \n", 
-		ricambio->costounitario,
-		ricambio->quantitadiriordino,
-		ricambio->scortaminima,
-		ricambio->quantitainmagazzino,
-		ricambio->descrizione
-		);
-}
 
 void dlt_review (struct revisione *revisione){
 

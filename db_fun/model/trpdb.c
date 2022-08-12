@@ -911,13 +911,14 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_tour, "Unable to initialize delete_tour statement\n");
 			return false;
 		}
-	
-		/*
 		if (!setup_prepared_stmt(&delete_sparepart, "call delete_sparepart(?)", conn))
 		{
 			print_stmt_error(delete_sparepart, "Unable to initialize delete_sparepart statement\n");
 			return false;
 		}
+	
+		/*
+	
 		if (!setup_prepared_stmt(&delete_review, "call delete_review(?)", conn))
 		{
 			print_stmt_error(delete_review, "Unable to initialize delete_review statement\n");
@@ -2965,22 +2966,12 @@ void do_delete_assoc(struct associata *associata)
 
 void do_delete_sparepart(struct ricambio *ricambio) //FUNZIONA
 {
-	MYSQL_BIND param[5];
+	MYSQL_BIND param[1];
+	char *buff ="delete_sparepart";
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, ricambio->codice, strlen(ricambio->codice));
 
-	if (bind_exe(delete_sparepart, param, "delete_sparepart") == -1)
-		goto stop;
-
-	set_binding_param(&param[0], MYSQL_TYPE_FLOAT, &ricambio->costounitario, sizeof(ricambio->costounitario));
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &ricambio->quantitadiriordino, sizeof(ricambio->quantitadiriordino));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, ricambio->descrizione, sizeof(ricambio->descrizione));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &ricambio->scortaminima, sizeof(ricambio->scortaminima));
-	set_binding_param(&param[4], MYSQL_TYPE_LONG, &ricambio->quantitainmagazzino, sizeof(ricambio->quantitainmagazzino));
-
-	take_result(delete_sparepart, param, "delete_sparepart");
-
-stop:
+	bind_exe(delete_sparepart, param,buff);
 
 	mysql_stmt_free_result(delete_sparepart);
 	mysql_stmt_reset(delete_sparepart);
