@@ -5,6 +5,7 @@
 void show_reservation (struct prenotazione * prenotazione)
 {	
 	char buff[NUM_LEN];
+	printf("\n\n**  Dettagli prenotazione ** \n\n"); 
 	get_input("Inserisci numero d'interesse : ", NUM_LEN , buff, false); 
 	prenotazione->numerodiprenotazione = atoi(buff); 
     do_select_reservation(prenotazione);

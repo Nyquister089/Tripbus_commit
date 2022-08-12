@@ -636,7 +636,7 @@ bool get_table_costumer (char sel )
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
-                    //del_associata(associata); 
+                    dlt_reservation(prenotazione);  
                 return true; 
                 }
 	            case QUIT_GEST_OP: {

@@ -24,7 +24,7 @@ void dlt_sparepart(struct ricambio *ricambio)
 void dlt_review (struct revisione *revisione){
 
 	show_review(revisione); 
-    if(yes_or_no("Vuoi cancellare questo revisione? (s/n)",'s','n',false,false) == true)
+    if(yes_or_no("Vuoi cancellare questa revisione? (s/n)",'s','n',false,false) == true)
         do_delete_review(revisione);
 }
 void dlt_bus(struct mezzo *mezzo)
@@ -33,22 +33,15 @@ void dlt_bus(struct mezzo *mezzo)
     if(yes_or_no("Vuoi cancellare questo mezzo? (s/n)",'s','n',false,false) == true)
         do_delete_bus(mezzo);
 }
-/*
 void dlt_reservation (struct prenotazione * prenotazione)
 {	
-	char buff[NUM_LEN];
-	get_input("Inserisci numero d'interesse : ", NUM_LEN , buff, false); 
-	prenotazione->numerodiprenotazione = atoi(buff); 
-    do_select_reservation(prenotazione);
-	printf("\n\n** Dettagli prenotazione **\n\n");
- 	printf(" Prenotazione numero: 	%d \n E-mail cliente: 	%s \n Data di prenotazione: 	%s \n Data di conferma: 	%s \n Data Saldo: 		%s \n\n",
-		prenotazione->numerodiprenotazione, 
-		prenotazione->clienteprenotante,
-		prenotazione->datadiprenotazione, 
-		prenotazione->datadiconferma, 
-		prenotazione->datasaldo); 
-
+	show_reservation(prenotazione); 
+    if(yes_or_no("Vuoi cancellare questa prenotazione? (s/n)",'s','n',false,false) == true)
+        do_delete_reservation(prenotazione);
+    
 }
+/*
+
 void dlt_costumer (struct cliente * cliente)
 {	
 	

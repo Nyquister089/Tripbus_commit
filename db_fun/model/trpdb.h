@@ -209,8 +209,8 @@ struct postoprenotato {
 }; 
 
 struct prenotazione {
-	int numerodiprenotazione; //Corretto trasformandolo da carattere a puntatore di carattere
-	char clienteprenotante[VARCHAR_LEN]; 			//FK
+	int numerodiprenotazione;
+	char clienteprenotante[VARCHAR_LEN];
 	char datadiprenotazione[DATE_LEN]; 
 	char datadiconferma[DATE_LEN]; 
 	char datasaldo[DATE_LEN]; 

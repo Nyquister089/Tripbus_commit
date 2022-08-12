@@ -669,7 +669,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(select_costumer, "Unable to initialize select costumer statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&select_reservation, "call select_reservation(?, ?, ?, ?, ?)", conn))
+		if (!setup_prepared_stmt(&select_reservation, "call select_reservation(?)", conn))
 		{
 			print_stmt_error(select_reservation, "Unable to initialize select reservation statement\n");
 			return false;
@@ -926,6 +926,12 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_bus, "Unable to initialize delete_bus statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&delete_reservation, "call delete_reservation(?)", conn))
+		{
+			print_stmt_error(delete_reservation, "Unable to initialize delete reservation statement\n");
+			return false;
+		}
+		
 		/*
 	
 	
@@ -1060,7 +1066,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(select_costumer, "Unable to initialize select costumer statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&select_reservation, "call select_reservation(?, ?, ?, ?, ?)", conn))
+		if (!setup_prepared_stmt(&select_reservation, "call select_reservation(?)", conn))
 		{
 			print_stmt_error(select_reservation, "Unable to initialize select reservation statement\n");
 			return false;
@@ -2349,105 +2355,68 @@ void do_select_trip(struct viaggio *viaggio) // Funziona
 	mysql_stmt_reset(select_trip);
 }
 
-void do_select_costumer(struct cliente *cliente) // funziona
+void do_select_costumer(struct cliente *cliente)
 {
-	MYSQL_BIND param[8];
+	MYSQL_BIND param[7];
 	MYSQL_TIME datadocumentazione;
-	MYSQL_TIME ddc;
-
-	char eml[VARCHAR_LEN];
-	char nmc[VARCHAR_LEN];
-	char cgm[VARCHAR_LEN];
-	char ind[VARCHAR_LEN];
-	char cdf[VARCHAR_LEN];
-	char tel[VARCHAR_LEN];
-	char fax[VARCHAR_LEN];
+	char *buff ="select_costumer"; 
 
 	date_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
-	init_mysql_timestamp(&ddc);
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, sizeof(cliente->nomecliente));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, sizeof(cliente->cognomecliente));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, sizeof(cliente->indirizzocliente));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, sizeof(cliente->codicefiscale));
-	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadocumentazione, sizeof(datadocumentazione));
-	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, sizeof(cliente->recapitotelefonico));
-	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, cliente->fax, sizeof(cliente->fax));
-
-	if (bind_exe(select_costumer, param, "select_costumer") == -1)
+	
+	if (bind_exe(select_costumer, param, buff) == -1)
 		goto stop;
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, eml, VARCHAR_LEN);
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, nmc, VARCHAR_LEN);
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cgm, VARCHAR_LEN);
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, ind, VARCHAR_LEN);
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cdf, VARCHAR_LEN);
-	set_binding_param(&param[5], MYSQL_TYPE_DATE, &ddc, DATE_LEN);
-	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, tel, VARCHAR_LEN);
-	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, fax, VARCHAR_LEN);
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, sizeof(cliente->nomecliente));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, sizeof(cliente->cognomecliente));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, sizeof(cliente->indirizzocliente));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, sizeof(cliente->codicefiscale));
+	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datadocumentazione, sizeof(datadocumentazione));
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, sizeof(cliente->recapitotelefonico));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->fax, sizeof(cliente->fax));
 
-	if (take_result(select_costumer, param, "select_costumer") == -1)
+	if (take_result(select_costumer, param, buff) == -1)
 		goto stop;
 
-	strcpy(cliente->emailcliente, eml);
-	strcpy(cliente->nomecliente, nmc);
-	strcpy(cliente->cognomecliente, cgm);
-	strcpy(cliente->codicefiscale, cdf);
-	strcpy(cliente->indirizzocliente, ind);
-	strcpy(cliente->recapitotelefonico, tel);
-	strcpy(cliente->fax, fax);
-	mysql_date_to_string(&ddc, cliente->datadocumentazione);
+	mysql_date_to_string(&datadocumentazione, cliente->datadocumentazione);
 
 stop:
 	mysql_stmt_free_result(select_costumer);
 	mysql_stmt_reset(select_costumer);
 }
 
-void do_select_reservation(struct prenotazione *prenotazione) // Funziona
+void do_select_reservation(struct prenotazione *prenotazione)
 {
-	MYSQL_BIND param[5];
+	MYSQL_BIND param[4];
 	MYSQL_TIME datadiprenotazione;
 	MYSQL_TIME datadiconferma;
 	MYSQL_TIME datasaldo;
-	MYSQL_TIME ddp;
-	MYSQL_TIME ddc;
-	MYSQL_TIME dds;
 
-	int numerodiprenotazione;
-	char cli[VARCHAR_LEN];
-
-	numerodiprenotazione = prenotazione->numerodiprenotazione;
+	char *buff ="select_reservation"; 
 
 	date_to_mysql_time(prenotazione->datadiprenotazione, &datadiprenotazione);
 	date_to_mysql_time(prenotazione->datadiconferma, &datadiconferma);
 	date_to_mysql_time(prenotazione->datasaldo, &datasaldo);
 
-	init_mysql_date(&ddp);
-	init_mysql_date(&ddc);
-	init_mysql_date(&dds);
-
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerodiprenotazione, sizeof(numerodiprenotazione));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, sizeof(prenotazione->clienteprenotante));
-	set_binding_param(&param[2], MYSQL_TYPE_DATE, &datadiprenotazione, sizeof(datadiprenotazione));
-	set_binding_param(&param[3], MYSQL_TYPE_DATE, &datadiconferma, sizeof(datadiconferma));
-	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datasaldo, sizeof(datasaldo));
-
-	if (bind_exe(select_reservation, param, "select_reservation") == -1)
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &prenotazione->numerodiprenotazione, sizeof(prenotazione->numerodiprenotazione));
+	
+	if (bind_exe(select_reservation, param, buff) == -1)
 		goto stop;
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cli, VARCHAR_LEN);
-	set_binding_param(&param[1], MYSQL_TYPE_DATE, &ddp, sizeof(ddp));
-	set_binding_param(&param[2], MYSQL_TYPE_DATE, &ddc, sizeof(ddc));
-	set_binding_param(&param[3], MYSQL_TYPE_DATE, &dds, sizeof(dds));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, sizeof(prenotazione->clienteprenotante));
+	set_binding_param(&param[1], MYSQL_TYPE_DATE, &datadiprenotazione, sizeof(datadiprenotazione));
+	set_binding_param(&param[2], MYSQL_TYPE_DATE, &datadiconferma, sizeof(datadiconferma));
+	set_binding_param(&param[3], MYSQL_TYPE_DATE, &datasaldo, sizeof(datasaldo));
 
-	if (take_result(select_reservation, param, "select_reservation") == -1)
+
+	if (take_result(select_reservation, param, buff) == -1)
 		goto stop;
 
-	strcpy(prenotazione->clienteprenotante, cli);
-	mysql_date_to_string(&ddp, prenotazione->datadiprenotazione);
-	mysql_date_to_string(&ddc, prenotazione->datadiconferma);
-	mysql_date_to_string(&dds, prenotazione->datasaldo);
+
+	mysql_date_to_string(&datadiprenotazione, prenotazione->datadiprenotazione);
+	mysql_date_to_string(&datadiconferma, prenotazione->datadiconferma);
+	mysql_date_to_string(&datasaldo, prenotazione->datasaldo);
 
 stop:
 	mysql_stmt_free_result(select_reservation);
@@ -3055,103 +3024,44 @@ void do_delete_costumer(struct cliente *cliente) // funziona
 {
 	MYSQL_BIND param[8];
 	MYSQL_TIME datadocumentazione;
-	MYSQL_TIME ddc;
-
-	char eml[VARCHAR_LEN];
-	char nmc[VARCHAR_LEN];
-	char cgm[VARCHAR_LEN];
-	char ind[VARCHAR_LEN];
-	char cdf[VARCHAR_LEN];
-	char tel[VARCHAR_LEN];
-	char fax[VARCHAR_LEN];
+	char *buff="delete_costumer"; 
 
 	date_to_mysql_time(cliente->datadocumentazione, &datadocumentazione);
-	init_mysql_timestamp(&ddc);
+
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, sizeof(cliente->nomecliente));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, sizeof(cliente->cognomecliente));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, sizeof(cliente->indirizzocliente));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, sizeof(cliente->codicefiscale));
-	set_binding_param(&param[5], MYSQL_TYPE_DATE, &datadocumentazione, sizeof(datadocumentazione));
-	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, sizeof(cliente->recapitotelefonico));
-	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, cliente->fax, sizeof(cliente->fax));
+	
 
-	if (bind_exe(delete_costumer, param, "delete_costumer") == -1)
+	if (bind_exe(delete_costumer, param, buff) == -1)
+		goto stop;
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, sizeof(cliente->nomecliente));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, sizeof(cliente->cognomecliente));
+	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, sizeof(cliente->indirizzocliente));
+	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, sizeof(cliente->codicefiscale));
+	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datadocumentazione, sizeof(datadocumentazione));
+	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, sizeof(cliente->recapitotelefonico));
+	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->fax, sizeof(cliente->fax));
+
+	if (take_result(delete_costumer, param, buff) == -1)
 		goto stop;
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, eml, VARCHAR_LEN);
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, nmc, VARCHAR_LEN);
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cgm, VARCHAR_LEN);
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, ind, VARCHAR_LEN);
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, cdf, VARCHAR_LEN);
-	set_binding_param(&param[5], MYSQL_TYPE_DATE, &ddc, DATE_LEN);
-	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, tel, VARCHAR_LEN);
-	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, fax, VARCHAR_LEN);
-
-	if (take_result(delete_costumer, param, "delete_costumer") == -1)
-		goto stop;
-
-	strcpy(cliente->emailcliente, eml);
-	strcpy(cliente->nomecliente, nmc);
-	strcpy(cliente->cognomecliente, cgm);
-	strcpy(cliente->codicefiscale, cdf);
-	strcpy(cliente->indirizzocliente, ind);
-	strcpy(cliente->recapitotelefonico, tel);
-	strcpy(cliente->fax, fax);
-	mysql_date_to_string(&ddc, cliente->datadocumentazione);
+	
+	mysql_date_to_string(&datadocumentazione, cliente->datadocumentazione);
 
 stop:
 	mysql_stmt_free_result(delete_costumer);
 	mysql_stmt_reset(delete_costumer);
 }
 
-void do_delete_reservation(struct prenotazione *prenotazione) // Funziona
+void do_delete_reservation(struct prenotazione *prenotazione)
 {
-	MYSQL_BIND param[5];
-	MYSQL_TIME datadiprenotazione;
-	MYSQL_TIME datadiconferma;
-	MYSQL_TIME datasaldo;
-	MYSQL_TIME ddp;
-	MYSQL_TIME ddc;
-	MYSQL_TIME dds;
-
-	int numerodiprenotazione;
-	char cli[VARCHAR_LEN];
-
-	numerodiprenotazione = prenotazione->numerodiprenotazione;
-
-	date_to_mysql_time(prenotazione->datadiprenotazione, &datadiprenotazione);
-	date_to_mysql_time(prenotazione->datadiconferma, &datadiconferma);
-	date_to_mysql_time(prenotazione->datasaldo, &datasaldo);
-
-	init_mysql_date(&ddp);
-	init_mysql_date(&ddc);
-	init_mysql_date(&dds);
-
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &numerodiprenotazione, sizeof(numerodiprenotazione));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, prenotazione->clienteprenotante, sizeof(prenotazione->clienteprenotante));
-	set_binding_param(&param[2], MYSQL_TYPE_DATE, &datadiprenotazione, sizeof(datadiprenotazione));
-	set_binding_param(&param[3], MYSQL_TYPE_DATE, &datadiconferma, sizeof(datadiconferma));
-	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datasaldo, sizeof(datasaldo));
-
-	if (bind_exe(delete_reservation, param, "delete_reservation") == -1)
-		goto stop;
-
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cli, VARCHAR_LEN);
-	set_binding_param(&param[1], MYSQL_TYPE_DATE, &ddp, sizeof(ddp));
-	set_binding_param(&param[2], MYSQL_TYPE_DATE, &ddc, sizeof(ddc));
-	set_binding_param(&param[3], MYSQL_TYPE_DATE, &dds, sizeof(dds));
-
-	if (take_result(delete_reservation, param, "delete_reservation") == -1)
-		goto stop;
-
-	strcpy(prenotazione->clienteprenotante, cli);
-	mysql_date_to_string(&ddp, prenotazione->datadiprenotazione);
-	mysql_date_to_string(&ddc, prenotazione->datadiconferma);
-	mysql_date_to_string(&dds, prenotazione->datasaldo);
-
-stop:
+	MYSQL_BIND param[1];
+	char *buff ="delete_reservation"; 
+	
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &prenotazione->numerodiprenotazione, sizeof(prenotazione->numerodiprenotazione));
+	
+	bind_exe(delete_reservation, param, buff); 
+	
 	mysql_stmt_free_result(delete_reservation);
 	mysql_stmt_reset(delete_reservation);
 }
