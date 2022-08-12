@@ -13,6 +13,6 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`visita` (
   KEY `FK_ViaggioRelativo_idx` (`ViaggioRelativo`),
   KEY `FK_MetaVisitata_idx` (`MetaVisitata`),
   CONSTRAINT `FK_MetaVisitata` FOREIGN KEY (`MetaVisitata`) REFERENCES `meta` (`IdMeta`),
-  CONSTRAINT `FK_ViaggioRelativo` FOREIGN KEY (`ViaggioRelativo`) REFERENCES `viaggio` (`idviaggio`),
+  CONSTRAINT `FK_ViaggioRelativo` FOREIGN KEY (`ViaggioRelativo`) REFERENCES `viaggio` (`idviaggio`) on delete cascade,
   CONSTRAINT `DataArrivoCannotBeLesserThanDataPartenza` CHECK (`DataArrivo` >= `DataPartenza`)
 ) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci COMMENT='    ';

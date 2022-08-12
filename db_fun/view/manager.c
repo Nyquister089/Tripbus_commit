@@ -4,6 +4,7 @@
 #include "manager.h"
 #include "ins.h"
 #include "show.h"
+#include "dlt.h"
 
 #include "../utils/io.h"
 #include "../utils/validation.h"
@@ -267,7 +268,7 @@ bool get_table_tour(char sel)
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
-                    //del_associata(associata); 
+                    dlt_trip(viaggio);  
                 return true; 
                 }
 	            case QUIT_GEST_OP: {

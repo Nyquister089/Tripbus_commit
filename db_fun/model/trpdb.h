@@ -476,6 +476,33 @@ extern void do_select_picture(struct documentazionefotografica *documentazionefo
 extern void do_select_comfort(struct comfort *comfort); 
 extern void do_select_service(struct servizio *servizio); 
 
+extern void do_delete_trip(struct viaggio *viaggio);
+extern void do_delete_costumer(struct cliente *cliente);
+extern void do_delete_reservation(struct prenotazione *prenotazione);
+extern void do_delete_tour( struct tour *tour);
+extern void do_delete_sparepart(struct ricambio *ricambio); 
+extern void do_delete_review(struct revisione *revisione);
+extern void do_delete_bus(struct mezzo *mezzo); 
+extern void do_delete_assoc(struct associata *associata); 
+extern void do_delete_skills(struct competenze *competenze); 
+extern void do_delete_employee(struct dipendente* dipendente); 
+extern void do_delete_fmo(struct fmo *fmo); 
+extern void do_delete_fme(struct fme *fme);
+extern void do_delete_ofr(struct offre *offre);  
+extern void do_delete_tome(struct tome *tome);
+extern void do_delete_user(struct utente *utente); 
+extern void do_delete_seat(struct postoprenotato *postoprenotato); 
+extern void do_delete_model(struct modello *modello); 
+extern void do_delete_certify(struct tagliando *tagliando);
+extern void do_delete_destination(struct meta *meta);  
+extern void do_delete_visit(struct visita *visita); 
+extern void do_delete_location(struct localita *localita);
+extern void do_delete_room(struct camera *camera); 
+extern void do_delete_map(struct mappa *mappa); 
+extern void do_delete_picture(struct documentazionefotografica *documentazionefotografica);
+extern void do_delete_comfort(struct comfort *comfort); 
+extern void do_delete_service(struct servizio *servizio); 
+
 extern void do_select_max_idreview(struct revisione *revisione ); 
 
 extern struct tour_info *get_tour_info (void);
