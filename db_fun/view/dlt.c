@@ -48,6 +48,13 @@ void dlt_costumer (struct cliente * cliente)
         do_delete_costumer(cliente);
     
 }
+void dlt_assoc(struct associata *associata)
+{ 	
+    show_assoc(associata); 
+    if(yes_or_no("Vuoi cancellare questa associazione? (s/n)",'s','n',false,false) == true)
+        do_delete_assoc(associata);
+}
+    
 /*
 
 

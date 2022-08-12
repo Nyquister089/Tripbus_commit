@@ -17,7 +17,7 @@ extern void dlt_sparepart(struct ricambio *ricambio);
 extern void dlt_bus(struct mezzo *mezzo);
 extern void dlt_model(struct modello *modello);
 extern void dlt_certify(struct tagliando *tagliando);
-extern void dlt_association(struct associata *associata);
+extern void dlt_assoc(struct associata *associata);
 extern void dlt_sostitution( struct sostituito *sostituito, struct ricambio *ricambio); 
 extern void dlt_tour(struct tour *tour);
 extern void dlt_trip(struct viaggio *viaggio);

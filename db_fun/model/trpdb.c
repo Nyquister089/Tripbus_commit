@@ -936,15 +936,16 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_costumer, "Unable to initialize delete_costumer statement\n");
 			return false;
 		}
-		
-		/*
-	
-	
-		if (!setup_prepared_stmt(&delete_assoc, "call  delete_assoc(?,?,?)", conn))
+			if (!setup_prepared_stmt(&delete_assoc, "call  delete_assoc(?, ?, ?)", conn))
 		{ 
 			print_stmt_error(delete_assoc, "Unable to initialize delete_assoc statement\n");
 			return false;
 		}
+		
+		/*
+	
+	
+	
 		if (!setup_prepared_stmt(&delete_employee, "call  delete_employee(?)", conn))
 		{ 
 			print_stmt_error(delete_employee, "Unable to initialize delete_employee statement\n");
@@ -2908,32 +2909,14 @@ void do_delete_skills(struct competenze *competenze)
 void do_delete_assoc(struct associata *associata)
 {
 	MYSQL_BIND param[3];
-	MYSQL_TIME datainiziosoggiorno; 
-	MYSQL_TIME datafinesoggiorno;
-
+	
 	char *buff = "delete_assoc";
-
-	date_to_mysql_time(associata->datainiziosoggiorno, &datainiziosoggiorno);
-	date_to_mysql_time(associata->datafinesoggiorno,&datafinesoggiorno);
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &associata->albergoinquestione, sizeof(associata->albergoinquestione));
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &associata->cameraprenotata, sizeof(associata->cameraprenotata));
 	set_binding_param(&param[2], MYSQL_TYPE_LONG, &associata->ospite, sizeof(associata->ospite));
 
-	if (bind_exe(delete_assoc, param, buff) == -1)
-		goto stop;
-
-	set_binding_param(&param[0], MYSQL_TYPE_DATE, &datainiziosoggiorno, sizeof(datainiziosoggiorno));
-	set_binding_param(&param[1], MYSQL_TYPE_DATE, &datafinesoggiorno, sizeof(datafinesoggiorno));
-	 
-	
-	if (take_result(delete_assoc, param, buff)== -1)
-		goto stop; 
-
-	mysql_date_to_string(&datainiziosoggiorno, associata->datainiziosoggiorno); 
-	mysql_date_to_string(&datafinesoggiorno, associata->datafinesoggiorno); 
-
-	stop:
+	bind_exe(delete_assoc, param, buff);
 
 	mysql_stmt_free_result(delete_assoc);
 	mysql_stmt_reset(delete_assoc);
