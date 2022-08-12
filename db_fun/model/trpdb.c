@@ -916,14 +916,15 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_sparepart, "Unable to initialize delete_sparepart statement\n");
 			return false;
 		}
-	
-		/*
-	
 		if (!setup_prepared_stmt(&delete_review, "call delete_review(?)", conn))
 		{
 			print_stmt_error(delete_review, "Unable to initialize delete_review statement\n");
 			return false;
 		}
+	
+		/*
+	
+	
 		if (!setup_prepared_stmt(&delete_assoc, "call  delete_assoc(?,?,?)", conn))
 		{ 
 			print_stmt_error(delete_assoc, "Unable to initialize delete_assoc statement\n");
@@ -3035,39 +3036,17 @@ void do_delete_bus(struct mezzo *mezzo)
 	mysql_stmt_reset(delete_bus);
 }
 
-void do_delete_review(struct revisione *revisione) // FUNZIONA
-{
-	MYSQL_BIND param[8];
-	MYSQL_TIME datainizio;
-	MYSQL_TIME datafine;
+void do_delete_review(struct revisione *revisione) {
+	MYSQL_BIND param[1];
+
 
 	char *buff = "delete_review";
-
-	init_mysql_timestamp(&datainizio);
-	init_mysql_timestamp(&datafine);
  
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &revisione->idrevisione, sizeof(revisione->idrevisione));
 	
-	if (bind_exe(delete_review, param, buff) == -1)
-		goto stop;
-	
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, revisione->mezzorevisionato, sizeof(revisione->mezzorevisionato));
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &revisione->addettoallarevisione, sizeof(revisione->addettoallarevisione));
-	set_binding_param(&param[2], MYSQL_TYPE_DATE, &datainizio, sizeof(datainizio));
-	set_binding_param(&param[3], MYSQL_TYPE_DATE, &datafine, sizeof(datafine));
-	set_binding_param(&param[4], MYSQL_TYPE_LONG, &revisione->chilometraggio, sizeof(revisione->chilometraggio));
-	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, revisione->operazionieseguite, sizeof(revisione->operazionieseguite));
-	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, revisione->tipologiarevisione, sizeof(revisione->tipologiarevisione));
-	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, revisione->motivazione, sizeof(revisione->motivazione));
-	
-	if (take_result(delete_review, param, buff) == -1)
-		goto stop;
-	
-	mysql_date_to_string(&datainizio, revisione->datainizio);
-	mysql_date_to_string(&datafine, revisione->datafine);
-	
-	stop:
+	bind_exe(delete_review, param, buff);
+
 	mysql_stmt_free_result(delete_review);
 	mysql_stmt_reset(delete_review);
 }

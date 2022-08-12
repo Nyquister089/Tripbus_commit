@@ -19,9 +19,13 @@ void dlt_tour(struct tour *tour)
 }
 void dlt_sparepart(struct ricambio *ricambio)
 {	
-    show_sparepart(ricambio); 
-    if(yes_or_no("Vuoi cancellare questo ricambio? (s/n)",'s','n',false,false) == true)
-        do_delete_sparepart(ricambio);
+    
+}
+void dlt_review (struct revisione *revisione){
+
+	show_review(revisione); 
+    if(yes_or_no("Vuoi cancellare questo revisione? (s/n)",'s','n',false,false) == true)
+        do_delete_review(revisione);
 }
 /*
 void dlt_reservation (struct prenotazione * prenotazione)
@@ -63,24 +67,7 @@ void dlt_costumer (struct cliente * cliente)
 
 
 
-void dlt_review (struct revisione *revisione){
 
-	char buff[NUM_LEN]; 
-	printf("\n\n** Dettagli revisione **\n\n");
-	get_input("Inserisci l'id d'interesse: ", NUM_LEN, buff, false); 
-	revisione->idrevisione = atoi(buff);
-	do_select_review(revisione); 
- 	printf("*Mezzo revsionato:	%s \n Id adetto: 		%d \n Data inizio: 		%s \n Data fine: 		%s\n Chilometraggio:	%d\n Operazioni eseguite:	%s \n Tipologia revsione:	%s \n Motivazione:	%s \n\n",
-	revisione->mezzorevisionato,
-	revisione->addettoallarevisione,
-	revisione->datainizio,
-	revisione->datafine,
-	revisione->chilometraggio,
-	revisione->operazionieseguite,
-	revisione->tipologiarevisione,
-	revisione->motivazione
-	); 
-}
 
 void dlt_bus(struct mezzo *mezzo)
 {	

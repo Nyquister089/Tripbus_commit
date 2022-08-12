@@ -12,7 +12,7 @@
 extern void dlt_costumer(struct cliente *cliente);
 extern void dlt_prenotation(struct prenotazione *prenotazione);
 extern void dlt_seat(struct postoprenotato *postoprenotato);
-extern void dlt_review(struct revisione *revisione, struct sostituito *sostituito, struct ricambio *ricambio);
+extern void dlt_review(struct revisione *revisione);
 extern void dlt_sparepart(struct ricambio *ricambio);
 extern void dlt_bus(struct mezzo *mezzo);
 extern void dlt_model(struct modello *modello);
