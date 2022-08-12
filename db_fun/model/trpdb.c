@@ -906,6 +906,12 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_trip, "Unable to initialize delete_trip statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&delete_tour, "call  delete_tour(?)", conn))
+		{ 
+			print_stmt_error(delete_tour, "Unable to initialize delete_tour statement\n");
+			return false;
+		}
+	
 		/*
 		if (!setup_prepared_stmt(&delete_sparepart, "call delete_sparepart(?)", conn))
 		{
@@ -967,12 +973,6 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_destination, "Unable to initialize delete_destination statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&delete_tour, "call  delete_tour(?)", conn))
-		{ 
-			print_stmt_error(delete_tour, "Unable to initialize delete_tour statement\n");
-			return false;
-		}
-	
 		if (!setup_prepared_stmt(&delete_certify, "call  delete_certify(?)", conn))
 		{ 
 			print_stmt_error(delete_certify, "Unable to initialize delete_certify statement\n");
@@ -3093,10 +3093,9 @@ void do_delete_trip(struct viaggio *viaggio) // Funziona
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &viaggio->idviaggio, sizeof(viaggio->idviaggio));
 	
-	if (bind_exe(delete_trip, param, buff) == -1)
-		goto stop;
+	bind_exe(delete_trip, param, buff); 
 
-	stop:
+
 	mysql_stmt_free_result(delete_trip);
 	mysql_stmt_reset(delete_trip);
 }
@@ -3208,23 +3207,13 @@ stop:
 
 void do_delete_tour(struct tour *tour)
 {
-	MYSQL_BIND param[6];
+	MYSQL_BIND param[1];
+	char *buff ="delete_tour"; 
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tour->denominazionetour, strlen(tour->denominazionetour));
 	
-	if (bind_exe(delete_tour, param, "delete_tour") == -1)
-		goto stop;
+	bind_exe(delete_tour, param,buff); 
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tour->descrizionetour, sizeof(tour->descrizionetour));
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &tour->minimopartecipanti, sizeof(tour->minimopartecipanti));
-	set_binding_param(&param[2], MYSQL_TYPE_FLOAT, &tour->assicurazionemedica, sizeof(tour->assicurazionemedica));
-	set_binding_param(&param[3], MYSQL_TYPE_FLOAT, &tour->bagaglio, sizeof(tour->bagaglio));
-	set_binding_param(&param[4], MYSQL_TYPE_FLOAT, &tour->garanziaannullamento, sizeof(tour->garanziaannullamento));
-	set_binding_param(&param[5], MYSQL_TYPE_TINY, &tour->accompagnatrice, sizeof(tour->accompagnatrice));
-
-	take_result(delete_tour, param, "delete_tour"); 
-
-	stop:
 	mysql_stmt_free_result(delete_tour);
 	mysql_stmt_reset(delete_tour);
 }

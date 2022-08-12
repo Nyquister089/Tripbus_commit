@@ -11,6 +11,12 @@ void dlt_trip(struct viaggio *viaggio)
     if(yes_or_no("Vuoi cancellare questo viaggio? (s/n)",'s','n',false,false) == true)
         do_delete_trip(viaggio); 
 }
+void dlt_tour(struct tour *tour)
+{
+	show_tour(tour); 
+    if(yes_or_no("Vuoi cancellare questo tour? (s/n)",'s','n',false,false) == true)
+        do_delete_tour(tour); 
+}
 /*
 void dlt_reservation (struct prenotazione * prenotazione)
 {	
@@ -45,20 +51,7 @@ void dlt_costumer (struct cliente * cliente)
 		);
 }
 
-void dlt_tour(struct tour *tour)
-{
-	printf("\n\n**  Dettagli tour ** \n\n");
-	get_input("Inserisci la denomiazione d'interesse: ", VARCHAR_LEN, tour->denominazionetour, false); 
-	do_select_tour(tour); 
-	printf("*Descrizione:		%s \n Minimo partecipanti:	%d \n Assicurazione medica:	%f \n Bagaglio: 		%f \n Garanzia annullamento:	%f \n Accompagnatrice:	%d \n",  
-		tour->descrizionetour, 
-		tour->minimopartecipanti,
-		tour->assicurazionemedica, 
-		tour->bagaglio, 
-		tour->garanziaannullamento, 
-		tour->accompagnatrice
-		);
-}
+
 
 
 

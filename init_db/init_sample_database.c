@@ -267,8 +267,8 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/insert_review.sql"); 
 
 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_trip.sql"); /* 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_tour.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_trip.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_tour.sql");/* 
     execute_query_from_file_sql("../sql/ddl/procedure/delete_all_tour.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/delete_dest_tour.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/delete_hotel_service.sql"); 
