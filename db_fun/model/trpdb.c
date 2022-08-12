@@ -664,7 +664,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(validate_reservation, "Unable to initialize validate reservation statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&select_costumer, "call select_costumer(?, ?, ?, ?, ?, ?, ?, ? )", conn))
+		if (!setup_prepared_stmt(&select_costumer, "call select_costumer(?)", conn))
 		{
 			print_stmt_error(select_costumer, "Unable to initialize select costumer statement\n");
 			return false;
@@ -931,6 +931,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_reservation, "Unable to initialize delete reservation statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&delete_costumer, "call delete_costumer(?)", conn))
+		{
+			print_stmt_error(delete_costumer, "Unable to initialize delete_costumer statement\n");
+			return false;
+		}
 		
 		/*
 	
@@ -1061,7 +1066,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(select_comfort, "Unable to initialize select_comfort statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&select_costumer, "call select_costumer(?, ?, ?, ?, ?, ?, ?, ? )", conn))
+		if (!setup_prepared_stmt(&select_costumer, "call select_costumer(? )", conn))
 		{
 			print_stmt_error(select_costumer, "Unable to initialize select costumer statement\n");
 			return false;
@@ -3020,9 +3025,9 @@ void do_delete_trip(struct viaggio *viaggio) // Funziona
 	mysql_stmt_reset(delete_trip);
 }
 
-void do_delete_costumer(struct cliente *cliente) // funziona
+void do_delete_costumer(struct cliente *cliente) 
 {
-	MYSQL_BIND param[8];
+	MYSQL_BIND param[1];
 	MYSQL_TIME datadocumentazione;
 	char *buff="delete_costumer"; 
 
@@ -3031,24 +3036,8 @@ void do_delete_costumer(struct cliente *cliente) // funziona
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->emailcliente, strlen(cliente->emailcliente));
 	
+	bind_exe(delete_costumer, param, buff); 
 
-	if (bind_exe(delete_costumer, param, buff) == -1)
-		goto stop;
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, cliente->nomecliente, sizeof(cliente->nomecliente));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, cliente->cognomecliente, sizeof(cliente->cognomecliente));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, cliente->indirizzocliente, sizeof(cliente->indirizzocliente));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, cliente->codicefiscale, sizeof(cliente->codicefiscale));
-	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datadocumentazione, sizeof(datadocumentazione));
-	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, cliente->recapitotelefonico, sizeof(cliente->recapitotelefonico));
-	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, cliente->fax, sizeof(cliente->fax));
-
-	if (take_result(delete_costumer, param, buff) == -1)
-		goto stop;
-
-	
-	mysql_date_to_string(&datadocumentazione, cliente->datadocumentazione);
-
-stop:
 	mysql_stmt_free_result(delete_costumer);
 	mysql_stmt_reset(delete_costumer);
 }

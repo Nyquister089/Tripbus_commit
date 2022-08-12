@@ -40,25 +40,17 @@ void dlt_reservation (struct prenotazione * prenotazione)
         do_delete_reservation(prenotazione);
     
 }
-/*
 
 void dlt_costumer (struct cliente * cliente)
 {	
-	
-	get_input("Inserisci la mail d'interesse : ", VARCHAR_LEN , cliente->emailcliente, false);
-    do_select_costumer(cliente); 
-	printf("\n\n**  Dettagli cliente ** \n\n");
-		printf("\n E-mail:  %s \n Nome: %s \n Cognome: %s \n Indirizzo: %s \n Codice fiscale: %s \n Recapito telefonico: %s \n Fax: %s \n Data documentazione: %s \n", 
-		cliente->emailcliente,
-		cliente->nomecliente,
-		cliente->cognomecliente,
-		cliente->indirizzocliente,
-		cliente->codicefiscale,
-		cliente->recapitotelefonico,
-		cliente->fax,
-		cliente->datadocumentazione
-		);
+	show_costumer(cliente); 
+    if(yes_or_no("Vuoi cancellare questo cliente? (s/n)",'s','n',false,false) == true)
+        do_delete_costumer(cliente);
+    
 }
+/*
+
+
 
 
 
