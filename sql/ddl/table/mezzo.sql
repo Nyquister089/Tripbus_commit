@@ -9,5 +9,5 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`mezzo` (
   PRIMARY KEY (`Targa`),
   UNIQUE KEY `Targa_UNIQUE` (`Targa`),
   KEY `FK_modello_idx` (`ModelloMezzo`),
-  CONSTRAINT `FK_ModelloMezzo` FOREIGN KEY (`ModelloMezzo`) REFERENCES `modello` (`NomeModello`)
+  CONSTRAINT `FK_ModelloMezzo` FOREIGN KEY (`ModelloMezzo`) REFERENCES `modello` (`NomeModello`) on delete cascade
 ) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci;

@@ -461,7 +461,7 @@ bool get_table_workshop(char sel){
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
-                    //del_associata(associata); 
+                    dlt_bus(mezzo); 
                 return true; 
                 }
 	            case QUIT_GEST_OP: {

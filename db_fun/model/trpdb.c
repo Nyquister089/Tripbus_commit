@@ -921,7 +921,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_review, "Unable to initialize delete_review statement\n");
 			return false;
 		}
-	
+		if (!setup_prepared_stmt(&delete_bus, "call  delete_bus(?)", conn))
+		{ 
+			print_stmt_error(delete_bus, "Unable to initialize delete_bus statement\n");
+			return false;
+		}
 		/*
 	
 	
@@ -980,11 +984,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_certify, "Unable to initialize delete_certify statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&delete_bus, "call  delete_bus(?)", conn))
-		{ 
-			print_stmt_error(delete_bus, "Unable to initialize delete_bus statement\n");
-			return false;
-		}
+	
 		if (!setup_prepared_stmt(&delete_model, "call  delete_model(?)", conn))
 		{ 
 			print_stmt_error(delete_model, "Unable to initialize delete_model statement\n");
@@ -3003,34 +3003,15 @@ void do_delete_certify(struct tagliando *tagliando)
 
 void do_delete_bus(struct mezzo *mezzo)
 {
-	MYSQL_BIND param[6];
-	MYSQL_TIME dataultimarevisioneinmotorizzazione;
-	MYSQL_TIME dataimmatricolazione;
-
+	MYSQL_BIND param[1];
+	
 	char *buff = "delete_bus";  
 
-	date_to_mysql_time(mezzo->dataultimarevisioneinmotorizzazione, &dataultimarevisioneinmotorizzazione);
-	date_to_mysql_time(mezzo->dataimmatricolazione, &dataimmatricolazione);
-
+	
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mezzo->targa, strlen(mezzo->targa));
 
-	if (bind_exe(delete_bus, param, buff) == -1)
-		goto stop;
+	bind_exe(delete_bus, param, buff); 
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mezzo->modellomezzo, sizeof(mezzo->modellomezzo));
-	set_binding_param(&param[1], MYSQL_TYPE_DATE, &dataultimarevisioneinmotorizzazione, sizeof(dataultimarevisioneinmotorizzazione));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, mezzo->ingombri, sizeof(mezzo->ingombri));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &mezzo->autonomia, sizeof(mezzo->autonomia));
-	set_binding_param(&param[4], MYSQL_TYPE_LONG, &mezzo->valorecontakm, sizeof(mezzo->valorecontakm));
-	set_binding_param(&param[5], MYSQL_TYPE_DATE, &dataimmatricolazione, sizeof(dataimmatricolazione));
-
-	if( take_result(delete_bus, param, buff) == -1)
-		goto stop; 
-
-   	stop:
-
-	mysql_date_to_string(&dataultimarevisioneinmotorizzazione, mezzo->dataultimarevisioneinmotorizzazione);
-	mysql_date_to_string(&dataimmatricolazione, mezzo->dataimmatricolazione);
 
 	mysql_stmt_free_result(delete_bus);
 	mysql_stmt_reset(delete_bus);

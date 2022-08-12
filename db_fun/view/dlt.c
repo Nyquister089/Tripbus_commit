@@ -27,6 +27,12 @@ void dlt_review (struct revisione *revisione){
     if(yes_or_no("Vuoi cancellare questo revisione? (s/n)",'s','n',false,false) == true)
         do_delete_review(revisione);
 }
+void dlt_bus(struct mezzo *mezzo)
+{	
+	show_bus(mezzo); 
+    if(yes_or_no("Vuoi cancellare questo mezzo? (s/n)",'s','n',false,false) == true)
+        do_delete_bus(mezzo);
+}
 /*
 void dlt_reservation (struct prenotazione * prenotazione)
 {	
@@ -69,20 +75,7 @@ void dlt_costumer (struct cliente * cliente)
 
 
 
-void dlt_bus(struct mezzo *mezzo)
-{	
-	printf("\n\n** Dettagli mezzo **\n\n");
-	get_input("Inserisci la targa del mezzo d'interesse: ", VARCHAR_LEN, mezzo->targa, false); 
-	do_select_bus(mezzo); 
- 	printf(" *Modello:		%s\n Ultima revisone mtc: 	%s \n Ingombri: 		%s \n Autonomia: 		%d\n Chilometraggio:	%d\n Data immatricolazione:	%s \n\n",
-		mezzo->modellomezzo,
-		mezzo->dataultimarevisioneinmotorizzazione, 
-		mezzo->ingombri, 
-		mezzo->autonomia,
-		mezzo->valorecontakm, 
-		mezzo->dataimmatricolazione); 
 
-}
 
 void dlt_assoc(struct associata *associata)
 {	
