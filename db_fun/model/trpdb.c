@@ -986,6 +986,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_certify, "Unable to initialize delete_certify statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&delete_destination, "call  delete_destination(?)", conn))
+		{ 
+			print_stmt_error(delete_destination, "Unable to initialize delete_destination statement\n");
+			return false;
+		}
 		/*
 	
 	
@@ -1026,11 +1031,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_visit, "Unable to initialize delete_visit statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&delete_destination, "call  delete_destination(?)", conn))
-		{ 
-			print_stmt_error(delete_destination, "Unable to initialize delete_destination statement\n");
-			return false;
-		}
+
 	
 	
 	
@@ -3104,34 +3105,14 @@ void do_delete_visit(struct visita *visita)
 
 void do_delete_destination(struct meta *meta)
 {
-	MYSQL_BIND param[9];
-	MYSQL_TIME orariodiapertura;
+	MYSQL_BIND param[1];
 
 	char *buff = "delete_destination";
 
-	init_mysql_timestamp(&orariodiapertura); 
-
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &meta->idmeta, sizeof(meta->idmeta));
 
-	if(bind_exe(delete_destination, param, buff)==-1)
-		goto stop; 
+	bind_exe(delete_destination, param, buff);
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, meta->nomemeta, sizeof(meta->nomemeta));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, meta->tipologiameta, sizeof(meta->tipologiameta));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, meta->localitadiappartenenza, sizeof(meta->localitadiappartenenza));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, meta->indirizzo, sizeof(meta->indirizzo));
-	set_binding_param(&param[4], MYSQL_TYPE_VAR_STRING, meta->telefonometa, sizeof(meta->telefonometa));
-	set_binding_param(&param[5], MYSQL_TYPE_VAR_STRING, meta->emailmeta, sizeof(meta->emailmeta));
-	set_binding_param(&param[6], MYSQL_TYPE_VAR_STRING, meta->faxmeta, sizeof(meta->faxmeta));
-	set_binding_param(&param[7], MYSQL_TYPE_VAR_STRING, meta->categoriaalbergo, sizeof(meta->categoriaalbergo));
-	set_binding_param(&param[8], MYSQL_TYPE_TIME, &orariodiapertura, sizeof(orariodiapertura));
-
-	if(take_result(delete_destination, param, buff)==-1)
-		goto stop; 
-	
-	mysql_time_to_string(&orariodiapertura,meta->orariodiapertura); 
-	
-	stop:
 	mysql_stmt_free_result(delete_destination);
 	mysql_stmt_reset(delete_destination);
 }

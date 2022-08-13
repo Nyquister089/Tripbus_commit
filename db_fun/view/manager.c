@@ -288,7 +288,7 @@ bool get_table_tour(char sel)
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
-                    //dlt_destination(meta); 
+                    dlt_destination(meta); 
                 return true; 
                 }
 	            case QUIT_GEST_OP: {

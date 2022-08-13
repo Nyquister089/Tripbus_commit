@@ -115,6 +115,12 @@ void dlt_certify(struct tagliando *tagliando)
 	 if(yes_or_no("Vuoi cancellare questo tagliando? (s/n)",'s','n',false,false) == true)
         do_delete_certify(tagliando);
 }
+void dlt_destination(struct meta *meta)
+{	
+	show_destination(meta);
+	 if(yes_or_no("Vuoi cancellare questa meta? (s/n)",'s','n',false,false) == true)
+        do_delete_destination(meta);
+}
 /*
 
 
@@ -197,7 +203,7 @@ void dlt_assoc(struct associata *associata)
 		tagliando->validitasuperate);
 }
 
-void dlt_destination(struct meta *meta){
+
 
 	char buff[NUM_LEN];
 	printf("\n\n** Dettagli meta  **\n\n");
