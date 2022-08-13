@@ -976,6 +976,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_user, "Unable to initialize delete_user statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&delete_seat, "call  delete_seat(?, ?)", conn))
+		{ 
+			print_stmt_error(delete_seat, "Unable to initialize delete_seat statement\n");
+			return false;
+		}
 		/*
 	
 	
@@ -1032,11 +1037,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_model, "Unable to initialize delete_model statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&delete_seat, "call  delete_seat(?, ?)", conn))
-		{ 
-			print_stmt_error(delete_seat, "Unable to initialize delete_seat statement\n");
-			return false;
-		}
+	
 	
 		
 	
@@ -2691,24 +2692,15 @@ void do_delete_model(struct modello *modello)
 
 void do_delete_seat(struct postoprenotato *postoprenotato)
 {
-	MYSQL_BIND param[4];
+	MYSQL_BIND param[2];
 	
 	char *buff = "delete_seat";
 
-	set_binding_param(&param[0], MYSQL_TYPE_LONG, &postoprenotato->numerodiposto, sizeof(postoprenotato->numerodiposto));
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &postoprenotato->viaggioassociato, sizeof(postoprenotato->viaggioassociato));
+	set_binding_param(&param[0], MYSQL_TYPE_LONG, &postoprenotato->viaggioassociato, sizeof(postoprenotato->viaggioassociato));
+	set_binding_param(&param[1], MYSQL_TYPE_LONG, &postoprenotato->numerodiposto, sizeof(postoprenotato->numerodiposto));
 	
-	if (bind_exe(delete_seat, param, buff) == -1)
-		goto stop;
+	bind_exe(delete_seat, param, buff);
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, postoprenotato->nomepasseggero, sizeof(postoprenotato->nomepasseggero));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, postoprenotato->cognomepasseggero, sizeof(postoprenotato->cognomepasseggero));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &postoprenotato->etapasseggero, sizeof(postoprenotato->etapasseggero));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &postoprenotato->prenotazioneassociata, sizeof(postoprenotato->prenotazioneassociata));
-	
-	take_result(delete_seat, param, buff);
- 
-	stop:
 	mysql_stmt_free_result(delete_seat);
 	mysql_stmt_reset(delete_seat);
  

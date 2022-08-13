@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`utente` (
   `Pswrd` varchar(8) NOT NULL,
   `TipoUtente` int unsigned NOT NULL,
   PRIMARY KEY (`IdUtente`),
-  KEY `fk_utenti_dipendente_idx` (`EmailUtente`) on delete cascade
+  KEY `fk_utenti_dipendente_idx` (`EmailUtente`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci;

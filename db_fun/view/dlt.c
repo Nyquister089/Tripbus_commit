@@ -97,7 +97,12 @@ void dlt_user(struct utente *utente)
 	 if(yes_or_no("Vuoi cancellare questo utente? (s/n)",'s','n',false,false) == true)
         do_delete_user(utente);
 }
-
+void dlt_seat(struct postoprenotato *postoprenotato)
+{
+	show_seat(postoprenotato);
+	 if(yes_or_no("Vuoi cancellare questo posto prenotato? (s/n)",'s','n',false,false) == true)
+        do_delete_seat(postoprenotato);
+}
 /*
 
 
@@ -140,7 +145,7 @@ void dlt_assoc(struct associata *associata)
 		utente->tipo); 
 }
 
-void dlt_seat(struct postoprenotato *postoprenotato){
+
 
 	char buff [NUM_LEN]; 
 	printf("\n\n** Dettagli posto prenotato  **\n\n");
