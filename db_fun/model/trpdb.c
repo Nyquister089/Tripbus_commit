@@ -1001,6 +1001,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_location, "Unable to initialize delete_location statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&delete_room, "call  delete_room(?, ?)", conn))
+		{ 
+			print_stmt_error(delete_room, "Unable to initialize delete_room statement\n");
+			return false;
+		}
 		/*
 	
 	
@@ -1026,11 +1031,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_map, "Unable to initialize delete_map statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&delete_room, "call  delete_room(?, ?)", conn))
-		{ 
-			print_stmt_error(delete_room, "Unable to initialize delete_room statement\n");
-			return false;
-		}
+	
 	
 		
 
@@ -3022,16 +3023,8 @@ void do_delete_room(struct camera *camera)
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &camera->numerocamera, sizeof(camera->numerocamera));
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &camera->albergo, sizeof(camera->albergo));
 	
-	if(bind_exe(delete_room, param, buff)==-1)
-		goto stop; 
+	bind_exe(delete_room, param, buff);
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, camera->tipologia, sizeof(camera->tipologia));
-	set_binding_param(&param[1], MYSQL_TYPE_FLOAT, &camera->costo, sizeof(camera->costo));
-	
-	take_result(delete_room, param, buff); 
-	
-	
-	stop:
 	mysql_stmt_free_result(delete_room);
 	mysql_stmt_reset(delete_room);
 }

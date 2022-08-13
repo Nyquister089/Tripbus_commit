@@ -328,7 +328,7 @@ bool get_table_tour(char sel)
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
-                    //del_room(camera); 
+                    dlt_room(camera); 
                 return true; 
                 }
 	            case QUIT_GEST_OP: {
