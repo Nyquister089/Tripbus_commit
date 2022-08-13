@@ -971,6 +971,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_tome, "Unable to initialize delete_tome statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&delete_user, "call  delete_user(?)", conn))
+		{ 
+			print_stmt_error(delete_user, "Unable to initialize delete_user statement\n");
+			return false;
+		}
 		/*
 	
 	
@@ -1032,11 +1037,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_seat, "Unable to initialize delete_seat statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&delete_user, "call  delete_user(?)", conn))
-		{ 
-			print_stmt_error(delete_user, "Unable to initialize delete_user statement\n");
-			return false;
-		}
+	
 		
 	
 	
@@ -2715,22 +2716,14 @@ void do_delete_seat(struct postoprenotato *postoprenotato)
 
 void do_delete_user(struct utente *utente)
 {
-	MYSQL_BIND param[3];
+	MYSQL_BIND param[1];
 	
 	char *buff = "delete_user";
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &utente->id, sizeof(utente->id));
 	
-	if (bind_exe(delete_user, param, buff) == -1)
-		goto stop;
+	bind_exe(delete_user, param, buff); 
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, utente->email, sizeof(utente->email));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, utente->pswrd, sizeof(utente->pswrd));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &utente->tipo, sizeof(utente->tipo));
-	
-	take_result(delete_user, param, buff);
- 
-	stop:
 	mysql_stmt_free_result(delete_user);
 	mysql_stmt_reset(delete_user);
  

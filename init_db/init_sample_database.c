@@ -280,7 +280,7 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/delete_fmo.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/delete_fme.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/delete_ofr.sql");
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_tome.sql");/*
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_tome.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/delete_user.sql");  /*
     execute_query_from_file_sql("../sql/ddl/procedure/delete_seat.sql"); /*
     execute_query_from_file_sql("../sql/ddl/procedure/delete_model.sql"); /*

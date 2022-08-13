@@ -91,6 +91,12 @@ void dlt_tome(struct tome *tome)
 	 if(yes_or_no("Vuoi cancellare questa associazione tour-mete? (s/n)",'s','n',false,false) == true)
         do_delete_tome(tome);
 }
+void dlt_user(struct utente *utente)
+{
+	show_user(utente);
+	 if(yes_or_no("Vuoi cancellare questo utente? (s/n)",'s','n',false,false) == true)
+        do_delete_user(utente);
+}
 
 /*
 
@@ -122,9 +128,6 @@ void dlt_assoc(struct associata *associata)
 		associata->datafinesoggiorno);
 
 
-
-
-void dlt_user(struct utente *utente){
 
 	char buff [NUM_LEN]; 
 	printf("\n\n** Dettagli utente **\n\n");
