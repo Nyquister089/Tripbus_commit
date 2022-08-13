@@ -277,21 +277,21 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/delete_assoc.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/delete_skills.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/delete_employee.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_fmo.sql"); /*
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_fme.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_ofr.sql");
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_tome.sql");
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_user.sql");  
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_seat.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_model.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_certify.sql");
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_destination.sql");
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_visit.sql");
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_location.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_room.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_map.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_picture.sql"); 
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_comfort.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_fmo.sql"); 
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_fme.sql"); /*
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_ofr.sql"); /*
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_tome.sql");/*
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_user.sql");  /*
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_seat.sql"); /*
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_model.sql"); /*
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_certify.sql");/*
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_destination.sql");/*
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_visit.sql");/*
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_location.sql"); /*
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_room.sql"); /*
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_map.sql"); /*
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_picture.sql"); /*
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_comfort.sql");/*
     execute_query_from_file_sql("../sql/ddl/procedure/delete_service.sql"); */
 
     }

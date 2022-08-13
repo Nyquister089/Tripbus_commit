@@ -861,7 +861,7 @@ bool get_table_gest (char sel)
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
-                    //del_associata(associata); 
+                    dlt_fme(fme); 
                 return true; 
                 }
 	            case QUIT_GEST_OP: {
