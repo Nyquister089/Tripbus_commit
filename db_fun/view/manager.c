@@ -368,7 +368,7 @@ bool get_table_tour(char sel)
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
-                    //del_associata(associata); 
+                    dlt_map(mappa);  
                 return true; 
                 }
 	            case QUIT_GEST_OP: {

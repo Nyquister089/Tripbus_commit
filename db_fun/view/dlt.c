@@ -140,6 +140,13 @@ void dlt_room(struct camera *camera)
         do_delete_room(camera);
 
 }
+void dlt_map(struct mappa *mappa)
+{
+	show_map(mappa);
+	 if(yes_or_no("Vuoi cancellare questa mappa? (s/n)",'s','n',false,false) == true)
+        do_delete_map(mappa);
+
+}
 /*
 
 
@@ -182,22 +189,7 @@ void dlt_picture(struct documentazionefotografica *documentazionefotografica){
 }
 
 
-void dlt_map(struct mappa *mappa){
 
-	char buff[NUM_LEN]; 
-	printf("\n\n** Dettagli mappa  **\n\n");
-	get_input("Inserisci il numero d'interesse:",NUM_LEN, buff, false); 
-	mappa->idmappa = atoi(buff); 
-	do_select_map(mappa); 
-	printf("*Città:		%s \n Località:	%s \n Dettaglio:	%s \n Zona:		%s \n Immagine: 	%s \n\n",
-		mappa->citta,
-		mappa->localitarappresentata,
-		mappa->dettaglio, 
-		mappa->zona,
-		mappa->immagine
-		);
-
-}
 
 
 

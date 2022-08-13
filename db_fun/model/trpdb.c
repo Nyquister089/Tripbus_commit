@@ -1006,6 +1006,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_room, "Unable to initialize delete_room statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&delete_map, "call  delete_map(?)", conn))
+		{ 
+			print_stmt_error(delete_map, "Unable to initialize delete_map statement\n");
+			return false;
+		}
 		/*
 	
 	
@@ -1026,11 +1031,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_picture, "Unable to initialize delete_picture statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&delete_map, "call  delete_map(?)", conn))
-		{ 
-			print_stmt_error(delete_map, "Unable to initialize delete_map statement\n");
-			return false;
-		}
+		
 	
 	
 		
@@ -2992,24 +2993,14 @@ void do_delete_picture(struct documentazionefotografica *documentazionefotografi
 
 void do_delete_map(struct mappa *mappa)
 {
-	MYSQL_BIND param[5];
+	MYSQL_BIND param[1];
 	
 	char *buff = "delete_map";
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &mappa->idmappa, sizeof(mappa->idmappa));
 
-	if(bind_exe(delete_map, param, buff)==-1)
-		goto stop; 
+	bind_exe(delete_map, param, buff); 
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, mappa->citta, sizeof(mappa->citta));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, mappa->localitarappresentata, sizeof(mappa->localitarappresentata));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, mappa->dettaglio, sizeof(mappa->dettaglio));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, mappa->zona, sizeof(mappa->zona));
-	set_binding_param(&param[4], MYSQL_TYPE_BLOB, &mappa->immagine, sizeof(mappa->immagine));
-
-	take_result(delete_map, param, buff); 
-	
-	stop:
 	mysql_stmt_free_result(delete_map);
 	mysql_stmt_reset(delete_map);
 }

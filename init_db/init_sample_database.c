@@ -288,8 +288,8 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/delete_destination.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/delete_visit.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/delete_location.sql");
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_room.sql");/*
-    execute_query_from_file_sql("../sql/ddl/procedure/delete_map.sql"); 4/*
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_room.sql");
+    execute_query_from_file_sql("../sql/ddl/procedure/delete_map.sql");/*
     execute_query_from_file_sql("../sql/ddl/procedure/delete_picture.sql"); 3/*
     execute_query_from_file_sql("../sql/ddl/procedure/delete_comfort.sql");2/*
     execute_query_from_file_sql("../sql/ddl/procedure/delete_service.sql"); 1*/
