@@ -60,7 +60,13 @@ void dlt_skills(struct competenze *competenze)
     if(yes_or_no("Vuoi cancellare queste competenze? (s/n)",'s','n',false,false) == true)
         do_delete_skills(competenze);
 }
-    
+ void dlt_employee(struct dipendente *dipendente)
+{	
+	show_employee(dipendente);
+	 if(yes_or_no("Vuoi cancellare queste dipendente? (s/n)",'s','n',false,false) == true)
+        do_delete_employee(dipendente);
+
+}   
 /*
 
 
@@ -94,19 +100,7 @@ void dlt_assoc(struct associata *associata)
 
 
 
-void dlt_employee(struct dipendente *dipendente)
-{	
-	char buff [NUM_LEN]; 
-	printf("\n\n** Dettagli Dipendente  **\n\n");
-	get_input("Inserisci l'id d'interesse:",NUM_LEN, buff, false); 
-	dipendente->iddipendente = atoi(buff); 
-	do_select_employee(dipendente);
- 	printf("*Nome:		%s \n Cognome:	%s \n Tipologia:	%s \n Telefono:	%s \n\n",
-		dipendente->nomedipendente,
-		dipendente->cognomedipendente,
-		dipendente->tipologiadipendente,
-		dipendente->telefonoaziendale ); 
-}
+
 
 
 void dlt_fmo(struct fmo *fmo)

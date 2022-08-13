@@ -946,16 +946,16 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_skills, "Unable to initialize delete_skills statement\n");
 			return false;
 		}
-		
-		/*
-	
-	
-	
 		if (!setup_prepared_stmt(&delete_employee, "call  delete_employee(?)", conn))
 		{ 
 			print_stmt_error(delete_employee, "Unable to initialize delete_employee statement\n");
 			return false;
 		}
+		/*
+	
+	
+	
+		
 		if (!setup_prepared_stmt(&delete_service , "call  delete_service (?)", conn))
 		{ 
 			print_stmt_error(delete_service , "Unable to initialize delete_service  statement\n");
@@ -2844,19 +2844,8 @@ void do_delete_employee(struct dipendente*dipendente)
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &dipendente->iddipendente, sizeof(dipendente->iddipendente));
 	
-	if (bind_exe(delete_employee, param, buff) == -1)
-		goto stop;
+	bind_exe(delete_employee, param, buff);
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, dipendente->nomedipendente, sizeof(dipendente->nomedipendente));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, dipendente->cognomedipendente, sizeof(dipendente->cognomedipendente));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, dipendente->tipologiadipendente, sizeof(dipendente->cognomedipendente));
-	set_binding_param(&param[3], MYSQL_TYPE_VAR_STRING, dipendente->telefonoaziendale, sizeof(dipendente->telefonoaziendale));
-	
-	
-	if(take_result(delete_employee, param, buff)== -1)
-		goto stop; 
-	
-	stop:
 	mysql_stmt_free_result(delete_employee);
 	mysql_stmt_reset(delete_employee);
  
