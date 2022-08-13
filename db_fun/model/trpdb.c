@@ -951,6 +951,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_employee, "Unable to initialize delete_employee statement\n");
 			return false;
 		}
+			if (!setup_prepared_stmt(&delete_fmo, "call  delete_fmo(?,?)", conn))
+		{ 
+			print_stmt_error(delete_fmo, "Unable to initialize delete_fmo statement\n");
+			return false;
+		}
 		/*
 	
 	
@@ -1032,11 +1037,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_fme, "Unable to initialize delete_fme statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&delete_fmo, "call  delete_fmo(?,?)", conn))
-		{ 
-			print_stmt_error(delete_fmo, "Unable to initialize delete_fmo statement\n");
-			return false;
-		}
+	
 		*/
 		if (!setup_prepared_stmt(&select_sparepart, "call select_sparepart(?)", conn))
 		{
@@ -2815,21 +2816,11 @@ void do_delete_fmo(struct fmo *fmo)
 	
 	char *buff = "delete_fmo";
 
-
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &fmo->foto, sizeof(fmo->foto));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, fmo->modello, strlen(fmo->modello));
 	
+	bind_exe(delete_fmo, param, buff); 
 	
-	if (bind_exe(delete_fmo, param, buff) == -1)
-		goto stop;
-
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, fmo->descrizione, sizeof(fmo->descrizione));
-	set_binding_param(&param[1], MYSQL_TYPE_BLOB, fmo->immagine, sizeof(fmo->immagine));
-	
-	if(take_result(delete_fmo, param, buff)== -1)
-		goto stop; 
-	
-	stop:
 	mysql_stmt_free_result(delete_fmo);
 	mysql_stmt_reset(delete_fmo);
  

@@ -63,10 +63,16 @@ void dlt_skills(struct competenze *competenze)
  void dlt_employee(struct dipendente *dipendente)
 {	
 	show_employee(dipendente);
-	 if(yes_or_no("Vuoi cancellare queste dipendente? (s/n)",'s','n',false,false) == true)
+	 if(yes_or_no("Vuoi cancellare questo dipendente? (s/n)",'s','n',false,false) == true)
         do_delete_employee(dipendente);
 
 }   
+void dlt_fmo(struct fmo *fmo)
+{	
+	show_fmo(fmo);
+	 if(yes_or_no("Vuoi cancellare questa relazione foto-modello? (s/n)",'s','n',false,false) == true)
+        do_delete_fmo(fmo);
+}
 /*
 
 
@@ -103,19 +109,7 @@ void dlt_assoc(struct associata *associata)
 
 
 
-void dlt_fmo(struct fmo *fmo)
-{	
-	char buff [NUM_LEN]; 
-	printf("\n\n** Dettagli Foto-Modelli  **\n\n");
-	get_input("Inserisci l'id della foto d'interesse:",NUM_LEN, buff, false); 
-	fmo->foto = atoi(buff); 
-	get_input("Inserisci il nome del modello d'interesse:",VARCHAR_LEN, fmo->modello,  false);
 
-	do_select_fmo(fmo);
- 	printf("*Descrizione:	%s \n Immagine:	%s\n\n",
-		fmo->descrizione,
-		fmo->immagine); 
-}
 
 void dlt_fme(struct fme *fme)
 {	
