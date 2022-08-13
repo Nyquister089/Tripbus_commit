@@ -103,6 +103,12 @@ void dlt_seat(struct postoprenotato *postoprenotato)
 	 if(yes_or_no("Vuoi cancellare questo posto prenotato? (s/n)",'s','n',false,false) == true)
         do_delete_seat(postoprenotato);
 }
+void dlt_model(struct modello *modello)
+{
+	show_model(modello);
+	 if(yes_or_no("Vuoi cancellare questo modello? (s/n)",'s','n',false,false) == true)
+        do_delete_model(modello);
+}
 /*
 
 
@@ -162,7 +168,7 @@ void dlt_assoc(struct associata *associata)
 
 }
 
-void dlt_model(struct modello *modello){
+
 	
 	printf("\n\n** Dettagli modello  **\n\n");
 	get_input("Inserisci l'id del modello d'interesse:",VARCHAR_LEN, modello->nomemodello, false); 

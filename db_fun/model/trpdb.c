@@ -176,11 +176,6 @@ static void close_prepared_stmts(void)
 		mysql_stmt_close(delete_service);
 		delete_service = NULL;
 	}
-	if (delete_model)
-	{ 
-		mysql_stmt_close(delete_model);
-		delete_model = NULL;
-	}
 	if (delete_certify)
 	{ 
 		mysql_stmt_close(delete_certify);
@@ -981,6 +976,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_seat, "Unable to initialize delete_seat statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&delete_model, "call  delete_model(?)", conn))
+		{ 
+			print_stmt_error(delete_model, "Unable to initialize delete_model statement\n");
+			return false;
+		}
 		/*
 	
 	
@@ -1032,11 +1032,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			return false;
 		}
 	
-		if (!setup_prepared_stmt(&delete_model, "call  delete_model(?)", conn))
-		{ 
-			print_stmt_error(delete_model, "Unable to initialize delete_model statement\n");
-			return false;
-		}
+	
 	
 	
 		
@@ -2669,22 +2665,14 @@ void do_select_service(struct servizio *servizio)
 
 void do_delete_model(struct modello *modello)
 {
-	MYSQL_BIND param[3];
+	MYSQL_BIND param[1];
 	
 	char *buff = "delete_model";
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, modello->nomemodello, strlen(modello->nomemodello));
 	
-	if (bind_exe(delete_model, param, buff) == -1)
-		goto stop;
-
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, modello->casacostruttrice, sizeof(modello->casacostruttrice));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, modello->datitecnici, sizeof(modello->datitecnici));
-	set_binding_param(&param[2], MYSQL_TYPE_LONG, &modello->numeroposti, sizeof(modello->numeroposti));
+	bind_exe(delete_model, param, buff);
 	
-	take_result(delete_model, param, buff);
- 
-	stop:
 	mysql_stmt_free_result(delete_model);
 	mysql_stmt_reset(delete_model);
  
@@ -2697,6 +2685,7 @@ void do_delete_seat(struct postoprenotato *postoprenotato)
 	char *buff = "delete_seat";
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &postoprenotato->viaggioassociato, sizeof(postoprenotato->viaggioassociato));
+
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &postoprenotato->numerodiposto, sizeof(postoprenotato->numerodiposto));
 	
 	bind_exe(delete_seat, param, buff);
