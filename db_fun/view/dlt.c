@@ -161,3 +161,10 @@ void dlt_comfort(struct comfort *comfort)
         do_delete_comfort(comfort);
 
 }
+void dlt_service(struct servizio *servizio)
+{
+	show_service(servizio);
+	 if(yes_or_no("Vuoi cancellare questo servizio? (s/n)",'s','n',false,false) == true)
+        do_delete_service(servizio);
+
+}

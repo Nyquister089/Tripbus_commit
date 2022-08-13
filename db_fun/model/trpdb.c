@@ -1021,33 +1021,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_comfort, "Unable to initialize delete_comfort statement\n");
 			return false;
 		}
-		/*
-	
-	
-	
-		
 		if (!setup_prepared_stmt(&delete_service , "call  delete_service (?)", conn))
 		{ 
 			print_stmt_error(delete_service , "Unable to initialize delete_service  statement\n");
 			return false;
 		}
-		
-		
-		
-	
-	
-		
-
-	
-	
-	
-	
-	
-		
-	
-	
-	
-		*/
 		if (!setup_prepared_stmt(&select_sparepart, "call select_sparepart(?)", conn))
 		{
 			print_stmt_error(select_sparepart, "Unable to initialize select_sparepart statement\n");
@@ -2959,7 +2937,7 @@ void do_delete_comfort(struct comfort *comfort)
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &comfort->idcomfort, sizeof(comfort->idcomfort));
 
 	bind_exe(delete_comfort, param, buff); 
-	
+
 	mysql_stmt_free_result(delete_comfort);
 	mysql_stmt_reset(delete_comfort);
 }
@@ -3053,21 +3031,14 @@ void do_delete_destination(struct meta *meta)
 
 void do_delete_service(struct servizio *servizio)
 {
-	MYSQL_BIND param[2];
+	MYSQL_BIND param[1];
 
 	char *buff ="delete_service"; 
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &servizio->idservizio, sizeof(servizio->idservizio));
 
-	if(bind_exe(delete_service, param, buff)==-1)
-		goto stop; 
+	bind_exe(delete_service, param, buff);
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, servizio->nomeservizio, sizeof(servizio->nomeservizio));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, servizio->descrizioneservizio, sizeof(servizio->descrizioneservizio));
-
-	take_result(delete_service,param, buff); 
-	
-	stop: 
 	mysql_stmt_free_result(delete_service);
 	mysql_stmt_reset(delete_service);
 }
