@@ -981,6 +981,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_model, "Unable to initialize delete_model statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&delete_certify, "call  delete_certify(?)", conn))
+		{ 
+			print_stmt_error(delete_certify, "Unable to initialize delete_certify statement\n");
+			return false;
+		}
 		/*
 	
 	
@@ -1026,11 +1031,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_destination, "Unable to initialize delete_destination statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&delete_certify, "call  delete_certify(?)", conn))
-		{ 
-			print_stmt_error(delete_certify, "Unable to initialize delete_certify statement\n");
-			return false;
-		}
+	
 	
 	
 	
@@ -2672,7 +2673,7 @@ void do_delete_model(struct modello *modello)
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, modello->nomemodello, strlen(modello->nomemodello));
 	
 	bind_exe(delete_model, param, buff);
-	
+
 	mysql_stmt_free_result(delete_model);
 	mysql_stmt_reset(delete_model);
  
@@ -2837,23 +2838,14 @@ void do_delete_sparepart(struct ricambio *ricambio) //FUNZIONA
 
 void do_delete_certify(struct tagliando *tagliando)
 {
-	MYSQL_BIND param[2];
+	MYSQL_BIND param[1];
 	
-
 	char *buff = "delete_certify";  
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &tagliando->idtagliando, sizeof(tagliando->idtagliando));
 
-	if (bind_exe(delete_certify, param, buff) == -1)
-		goto stop;
-
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tagliando->tipologiatagliando, sizeof(tagliando->tipologiatagliando));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tagliando->validitasuperate, sizeof(tagliando->validitasuperate));
+	bind_exe(delete_certify, param, buff);
 	
-	take_result(delete_certify, param, buff); 
-
-   	stop:
-
 	mysql_stmt_free_result(delete_certify);
 	mysql_stmt_reset(delete_certify);
 }

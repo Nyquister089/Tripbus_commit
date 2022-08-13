@@ -109,6 +109,12 @@ void dlt_model(struct modello *modello)
 	 if(yes_or_no("Vuoi cancellare questo modello? (s/n)",'s','n',false,false) == true)
         do_delete_model(modello);
 }
+void dlt_certify(struct tagliando *tagliando)
+{
+	show_certify(tagliando);
+	 if(yes_or_no("Vuoi cancellare questo tagliando? (s/n)",'s','n',false,false) == true)
+        do_delete_certify(tagliando);
+}
 /*
 
 
@@ -179,7 +185,7 @@ void dlt_assoc(struct associata *associata)
 		modello->numeroposti);
 }
 
-void dlt_certify(struct tagliando *tagliando){
+
 	
 	char buff[NUM_LEN];
 	printf("\n\n** Dettagli tagliando  **\n\n");
