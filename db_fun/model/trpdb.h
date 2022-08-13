@@ -84,6 +84,8 @@ struct comfort_mezzo{
 struct competenze {
 	int meccanicocompetente; 
 	char modelloassociato[VARCHAR_LEN];
+	// viariabili d'appoggio
+	char nomemeccanico[VARCHAR_LEN]; 
 	char telefono[TEL_LEN];
 }; 
 

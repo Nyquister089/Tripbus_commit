@@ -9,5 +9,5 @@ d.TelefonoAziendale
 from competenze as c
 join dipendente as d on c.MeccanicoCompetente = d.IdDipendente
 join modello as m on c.CompetenzeModello = m.NomeModello
-where CompetenzeModello = mdl and MeccanicoCompetente = mch;
+where c.CompetenzeModello = mdl and c.MeccanicoCompetente = mch;
 end

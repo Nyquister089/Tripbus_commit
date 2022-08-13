@@ -941,6 +941,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_assoc, "Unable to initialize delete_assoc statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&delete_skills, "call  delete_skills(?,?)", conn))
+		{ 
+			print_stmt_error(delete_skills, "Unable to initialize delete_skills statement\n");
+			return false;
+		}
 		
 		/*
 	
@@ -1032,11 +1037,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_fmo, "Unable to initialize delete_fmo statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&delete_skills, "call  delete_skills(?,?)", conn))
-		{ 
-			print_stmt_error(delete_skills, "Unable to initialize delete_skills statement\n");
-			return false;
-		}*/
+		*/
 		if (!setup_prepared_stmt(&select_sparepart, "call select_sparepart(?)", conn))
 		{
 			print_stmt_error(select_sparepart, "Unable to initialize select_sparepart statement\n");
@@ -2135,13 +2136,7 @@ void do_select_employee(struct dipendente*dipendente)
 void do_select_skills(struct competenze *competenze)
 {
 	MYSQL_BIND param[2];
-
-	
 	char *buff = "select_skills";
-
-	char telefono[VARCHAR_LEN];
-	char meccanico[VARCHAR_LEN];  
-
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &competenze->meccanicocompetente, sizeof(competenze->meccanicocompetente));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, competenze->modelloassociato, strlen(competenze->modelloassociato));
@@ -2149,16 +2144,11 @@ void do_select_skills(struct competenze *competenze)
 	if (bind_exe(select_skills, param, buff) == -1)
 		goto stop;
 
-
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, meccanico, sizeof(meccanico));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, telefono, sizeof(telefono));
-	
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, competenze->nomemeccanico, sizeof(competenze->nomemeccanico));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, competenze->telefono, sizeof(competenze->telefono));
 	
 	if(take_result(select_skills, param, buff)== -1)
 		goto stop; 
-	
-	strcpy(competenze->modelloassociato, meccanico); 
-	strcpy(competenze->telefono, telefono);
 	
 	stop:
 	mysql_stmt_free_result(select_skills);
@@ -2876,31 +2866,13 @@ void do_delete_skills(struct competenze *competenze)
 {
 	MYSQL_BIND param[2];
 
-	
 	char *buff = "delete_skills";
-
-	char telefono[VARCHAR_LEN];
-	char meccanico[VARCHAR_LEN];  
-
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &competenze->meccanicocompetente, sizeof(competenze->meccanicocompetente));
 	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, competenze->modelloassociato, strlen(competenze->modelloassociato));
 	
-	if (bind_exe(delete_skills, param, buff) == -1)
-		goto stop;
-
-
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, meccanico, sizeof(meccanico));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, telefono, sizeof(telefono));
+	bind_exe(delete_skills, param, buff);
 	
-	
-	if(take_result(delete_skills, param, buff)== -1)
-		goto stop; 
-	
-	strcpy(competenze->modelloassociato, meccanico); 
-	strcpy(competenze->telefono, telefono);
-	
-	stop:
 	mysql_stmt_free_result(delete_skills);
 	mysql_stmt_reset(delete_skills);
 }

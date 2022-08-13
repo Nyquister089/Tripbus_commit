@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Aug 12 09:15:42 2022
+# Make data base, printed on Sat Aug 13 09:13:17 2022
 
 # Variables
 
@@ -43,11 +43,11 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/d
 # automatic
 %F = $(notdir $%)
 # environment
-VSCODE_CODE_CACHE_PATH = /home/giordano/.config/Code/CachedData/da76f93349a72022ca4670c1b84860304616aaa2
+VSCODE_CODE_CACHE_PATH = /home/giordano/.config/Code/CachedData/6d9b74a70ca9c7733b29f0456fd8195364076dda
 # environment
 LANG = C
 # environment
-XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.02ANQ1
+XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.FI1TQ1
 # default
 .LOADED := 
 # default
@@ -81,13 +81,13 @@ MAKEFILE_LIST := Makefile
 # automatic
 @F = $(notdir $@)
 # environment
-VSCODE_PID = 3342
+VSCODE_PID = 25564
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/oem-Aspire-E5-553G:@/tmp/.ICE-unix/1189,unix/oem-Aspire-E5-553G:/tmp/.ICE-unix/1189
+SESSION_MANAGER = local/oem-Aspire-E5-553G:@/tmp/.ICE-unix/1162,unix/oem-Aspire-E5-553G:/tmp/.ICE-unix/1162
 # automatic
 *F = $(notdir $*)
 # environment
@@ -97,7 +97,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
 # environment
-VSCODE_NLS_CONFIG = {"locale":"it","availableLanguages":{"*":"it"},"_languagePackId":"712a61babeaf7b66367c01733516ce6a.it","_translationsConfigFile":"/home/giordano/.config/Code/clp/712a61babeaf7b66367c01733516ce6a.it/tcf.json","_cacheRoot":"/home/giordano/.config/Code/clp/712a61babeaf7b66367c01733516ce6a.it","_resolvedLanguagePackCoreLocation":"/home/giordano/.config/Code/clp/712a61babeaf7b66367c01733516ce6a.it/da76f93349a72022ca4670c1b84860304616aaa2","_corruptedFile":"/home/giordano/.config/Code/clp/712a61babeaf7b66367c01733516ce6a.it/corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"it","availableLanguages":{"*":"it"},"_languagePackId":"712a61babeaf7b66367c01733516ce6a.it","_translationsConfigFile":"/home/giordano/.config/Code/clp/712a61babeaf7b66367c01733516ce6a.it/tcf.json","_cacheRoot":"/home/giordano/.config/Code/clp/712a61babeaf7b66367c01733516ce6a.it","_resolvedLanguagePackCoreLocation":"/home/giordano/.config/Code/clp/712a61babeaf7b66367c01733516ce6a.it/6d9b74a70ca9c7733b29f0456fd8195364076dda","_corruptedFile":"/home/giordano/.config/Code/clp/712a61babeaf7b66367c01733516ce6a.it/corrupted.info","_languagePackSupport":true}
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -125,7 +125,7 @@ MAKEFILES :=
 # automatic
 ^F = $(notdir $^)
 # environment
-INVOCATION_ID = 438d860c7c4a471fa3c279f3d75ad311
+INVOCATION_ID = ee44fa904eb24e91a58274e9b87e871c
 # environment
 USERNAME = giordano
 # environment
@@ -153,7 +153,7 @@ GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # makefile
 .DEFAULT_GOAL := compile
 # environment
-SYSTEMD_EXEC_PID = 1212
+SYSTEMD_EXEC_PID = 1186
 # environment
 DISPLAY = :0
 # environment
@@ -163,15 +163,15 @@ GTK_MODULES = gail:atk-bridge
 # default
 MAKE_VERSION := 4.3
 # environment
-MANAGERPID = 1049
+MANAGERPID = 1030
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 3342
+GIO_LAUNCHED_DESKTOP_FILE_PID = 25564
 # environment
 _ = /usr/share/code/code
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
-JOURNAL_STREAM = 8:34172
+JOURNAL_STREAM = 8:31524
 # environment
 XDG_SESSION_CLASS = user
 # environment
@@ -183,7 +183,7 @@ QT_IM_MODULE = ibus
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-dffbc31b-1.70.0-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-dffbc31b-1.70.1-main.sock
 # environment
 IM_CONFIG_PHASE = 1
 # default
@@ -265,7 +265,7 @@ all:
 # strcache performance: lookups = 32 / hit rate = 18%
 # hash-table stats:
 # Load=26/8192=0%, Rehash=0, Collisions=1/32=3%
-# Finished Make data base on Fri Aug 12 09:15:42 2022
+# Finished Make data base on Sat Aug 13 09:13:17 2022
 
  
 make: *** No rule to make target 'all'.  Stop.

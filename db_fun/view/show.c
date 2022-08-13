@@ -151,7 +151,7 @@ void show_skills(struct competenze *competenze)
 	
 	do_select_skills(competenze);
  	printf("*Nome meccanico:%s \n Telefono :	%s \n\n",
-		competenze->modelloassociato,
+		competenze->nomemeccanico,
 		competenze->telefono); 
 }
 
