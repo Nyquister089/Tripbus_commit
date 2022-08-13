@@ -85,6 +85,13 @@ void dlt_ofr(struct offre *offre)
 	 if(yes_or_no("Vuoi cancellare questa offerta? (s/n)",'s','n',false,false) == true)
         do_delete_ofr(offre);
 }
+void dlt_tome(struct tome *tome)
+{		
+	show_tome(tome);
+	 if(yes_or_no("Vuoi cancellare questa associazione tour-mete? (s/n)",'s','n',false,false) == true)
+        do_delete_tome(tome);
+}
+
 /*
 
 
@@ -112,46 +119,9 @@ void dlt_assoc(struct associata *associata)
 	do_select_assoc(associata);
  	printf("*Data inizio soggiorno:%s \n Data fine soggiorno:	%s \n\n",
 		associata->datainiziosoggiorno,
-		associata->datafinesoggiorno); 
-
-}
+		associata->datafinesoggiorno);
 
 
-
-
-
-
-
-
-
-
-void dlt_ofr(struct offre *offre)
-{	
-	char buff [NUM_LEN]; 
-	printf("\n\n** Dettagli servizi-offerti  **\n\n");
-	get_input("Inserisci l'id del servizio d'interesse:",NUM_LEN, buff, false); 
-	offre->idservizio = atoi(buff); 
-	get_input("Inserisci l'id dell'albergo offerente:",NUM_LEN, buff, false);
-	offre->albergoofferente = atoi(buff); 
-	do_select_ofr(offre);
- 	printf("*Albergo:	%s\n Servizio:	%s \n Descrizione:	%s\n\n",
-		offre->meta,
-		offre->servizio,
-		offre->descrizione); 
-}
-
-void dlt_tome(struct tome *tome)
-{	
-	char buff [NUM_LEN]; 
-	printf("\n\n** Dettagli tour-meta  **\n\n");
-	get_input("Inserisci il nome del tour d'interesse:",VARCHAR_LEN, tome->tourinquestione, false); 
-	get_input("Inserisci l'id della meta d'interesse:",NUM_LEN, buff, false);
-	tome->metainquestione = atoi(buff); 
-	do_select_tome(tome);
- 	printf("*Descrizione tour:	%s\n Meta:		%s\n\n",
-		tome->descrizione,
-		tome->meta); 
-}
 
 
 void dlt_user(struct utente *utente){

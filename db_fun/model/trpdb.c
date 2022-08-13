@@ -966,6 +966,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_ofr, "Unable to initialize delete_ofr statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&delete_tome, "call  delete_tome(?,?)", conn))
+		{ 
+			print_stmt_error(delete_tome, "Unable to initialize delete_tome statement\n");
+			return false;
+		}
 		/*
 	
 	
@@ -1032,11 +1037,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_user, "Unable to initialize delete_user statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&delete_tome, "call  delete_tome(?,?)", conn))
-		{ 
-			print_stmt_error(delete_tome, "Unable to initialize delete_tome statement\n");
-			return false;
-		}
+		
 	
 	
 	
@@ -1777,7 +1778,7 @@ void do_insert_tome(struct tome *tome)
 	
 	char *buff = "insert_tome";
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tome->tourinquestione, sizeof(tome->tourinquestione));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tome->tourinquestione, strlen(tome->tourinquestione));
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &tome->metainquestione, sizeof(tome->metainquestione));
 	
 	bind_exe(insert_tome, param, buff); 
@@ -2012,7 +2013,7 @@ void do_select_tome(struct tome *tome)
 	
 	char *buff = "select_tome";
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tome->tourinquestione, sizeof(tome->tourinquestione));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tome->tourinquestione, strlen(tome->tourinquestione));
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &tome->metainquestione, sizeof(tome->metainquestione));
 	
 	if (bind_exe(select_tome, param, buff) == -1)
@@ -2741,18 +2742,11 @@ void do_delete_tome(struct tome *tome)
 	
 	char *buff = "delete_tome";
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tome->tourinquestione, sizeof(tome->tourinquestione));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tome->tourinquestione, strlen(tome->tourinquestione));
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &tome->metainquestione, sizeof(tome->metainquestione));
 	
-	if (bind_exe(delete_tome, param, buff) == -1)
-		goto stop;
+	bind_exe(delete_tome, param, buff);
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, tome->descrizione, sizeof(tome->descrizione));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, tome->meta, sizeof(tome->meta));
-	
-	take_result(delete_tome, param, buff);
- 
-	stop:
 	mysql_stmt_free_result(delete_tome);
 	mysql_stmt_reset(delete_tome);
  
