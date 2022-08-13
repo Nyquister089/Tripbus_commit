@@ -384,11 +384,11 @@ void show_location(struct localita *localita){
 
 
 	printf("\n\n** Dettagli localita  **\n\n");
-	get_input("Inserisci il nome d'interesse:",VARCHAR_LEN, localita->nomelocalita, false); 
-
+	get_input("Inserisci il nome d'interesse: ",VARCHAR_LEN, localita->nomelocalita, false); 
+	get_input("Inserisci il nome della regione: ", VARCHAR_LEN, localita->regione, false);
 	do_select_location(localita); 
-	printf("*Regione:	%s \n Stato:		%s\n\n",
-		localita->regione,
+	printf("*Stato:		%s\n\n",
+		
 		localita->stato
 		);
 

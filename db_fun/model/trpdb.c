@@ -996,6 +996,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_visit, "Unable to initialize delete_visit statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&delete_location, "call  delete_location(?, ?)", conn))
+		{ 
+			print_stmt_error(delete_location, "Unable to initialize delete_location statement\n");
+			return false;
+		}
 		/*
 	
 	
@@ -1026,11 +1031,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_room, "Unable to initialize delete_room statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&delete_location, "call  delete_location(?)", conn))
-		{ 
-			print_stmt_error(delete_location, "Unable to initialize delete_location statement\n");
-			return false;
-		}
+	
 		
 
 	
@@ -1098,7 +1099,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(select_room, "Unable to initialize select_room statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&select_location, "call  select_location(?)", conn))
+		if (!setup_prepared_stmt(&select_location, "call  select_location(?, ?)", conn))
 		{ 
 			print_stmt_error(select_location, "Unable to initialize select_location statement\n");
 			return false;
@@ -2544,12 +2545,12 @@ void do_select_location(struct localita *localita)
 	char *buff = "select_location";
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, localita->nomelocalita, strlen(localita->nomelocalita));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, localita->regione, sizeof(localita->regione));
 
 	if(bind_exe(select_location, param, buff)==-1)
 		goto stop; 
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, localita->regione, sizeof(localita->regione));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, localita->stato, sizeof(localita->stato));
+	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, localita->stato, sizeof(localita->stato));
 	
 	take_result(select_location, param, buff); 
 	
@@ -3042,17 +3043,11 @@ void do_delete_location(struct localita *localita)
 	char *buff = "delete_location";
 
 	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, localita->nomelocalita, strlen(localita->nomelocalita));
+	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, localita->regione, strlen(localita->regione));
 
-	if(bind_exe(delete_location, param, buff)==-1)
-		goto stop; 
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, localita->regione, sizeof(localita->regione));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, localita->stato, sizeof(localita->stato));
-	
-	take_result(delete_location, param, buff); 
-	
-	
-	stop:
+	bind_exe(delete_location, param, buff);
+
 	mysql_stmt_free_result(delete_location);
 	mysql_stmt_reset(delete_location);
 }

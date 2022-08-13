@@ -127,6 +127,12 @@ void dlt_visit(struct visita *visita)
 	 if(yes_or_no("Vuoi cancellare questa visita? (s/n)",'s','n',false,false) == true)
         do_delete_visit(visita);
 }
+void dlt_location(struct localita *localita)
+{	
+	show_location(localita);
+	 if(yes_or_no("Vuoi cancellare questa localita? (s/n)",'s','n',false,false) == true)
+        do_delete_location(localita);
+}
 /*
 
 
@@ -202,39 +208,7 @@ void dlt_room(struct camera *camera){
 
 }
 
-void dlt_location(struct localita *localita){
 
 
-	printf("\n\n** Dettagli localita  **\n\n");
-	get_input("Inserisci il nome d'interesse:",VARCHAR_LEN, localita->nomelocalita, false); 
-
-	do_select_location(localita); 
-	printf("*Regione:	%s \n Stato:		%s\n\n",
-		localita->regione,
-		localita->stato
-		);
-
-}
-
-
-	char buff[NUM_LEN];
-	printf("\n\n** Dettagli visita  **\n\n");
-	get_input("Inserisci l'id  d'interesse:",NUM_LEN, buff, false); 
-	visita->idvisita= atoi(buff); 
-	do_select_visit(visita); 
-	printf("*Tour:		%s  Id viaggio:	%d*\n*Nome meta:	%s Id meta:	%d*\n Data di arrivo:	%s\n Ora di arrivo:		%s\n Data di partenza:	%s\n Ora di partenza:	%s\n Guida:			%d\n Supplemento:		%f\n Trattamento:		%s\n\n",
-		visita->tour,
-		visita->viaggiorelativo,
-		visita->meta,
-		visita->metavisitata,
-		visita->datadiarrivo,
-		visita->oradiarrivo,
-		visita->datadipartenza,
-		visita->oradipartenza, 
-		visita->guida,
-		visita->supplemento,
-		visita->trattamentoalberghiero);
-
-}
 
 */
