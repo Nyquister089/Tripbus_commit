@@ -991,6 +991,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_destination, "Unable to initialize delete_destination statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&delete_visit, "call  delete_visit(?)", conn))
+		{ 
+			print_stmt_error(delete_visit, "Unable to initialize delete_visit statement\n");
+			return false;
+		}
 		/*
 	
 	
@@ -1026,11 +1031,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_location, "Unable to initialize delete_location statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&delete_visit, "call  delete_visit(?)", conn))
-		{ 
-			print_stmt_error(delete_visit, "Unable to initialize delete_visit statement\n");
-			return false;
-		}
+		
 
 	
 	
@@ -3058,47 +3059,13 @@ void do_delete_location(struct localita *localita)
 
 void do_delete_visit(struct visita *visita)
 {
-	MYSQL_BIND param[11];
-	MYSQL_TIME orariodiarrivo;
-	MYSQL_TIME orariodipartenza; 
-	MYSQL_TIME datadiarrivo; 
-	MYSQL_TIME datadipartenza; 
-
+	MYSQL_BIND param[1];
 	char *buff = "delete_visit";
-
-
-	init_mysql_timestamp(&orariodiarrivo); 
-	init_mysql_timestamp(&orariodipartenza);
-	date_to_mysql_time(visita->datadiarrivo, &datadiarrivo);
-	date_to_mysql_time(visita->datadipartenza, &datadipartenza); 
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &visita->idvisita, sizeof(visita->idvisita));
 
-	if(bind_exe(delete_visit, param, buff)==-1)
-		goto stop; 
+	bind_exe(delete_visit, param, buff);
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, visita->tour, sizeof(visita->tour));
-	set_binding_param(&param[1], MYSQL_TYPE_LONG, &visita->viaggiorelativo, sizeof(visita->viaggiorelativo));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, visita->meta, sizeof(visita->meta));
-	set_binding_param(&param[3], MYSQL_TYPE_LONG, &visita->metavisitata, sizeof(visita->metavisitata));
-	set_binding_param(&param[4], MYSQL_TYPE_DATE, &datadiarrivo, sizeof(datadiarrivo));
-	set_binding_param(&param[5], MYSQL_TYPE_TIME, &orariodiarrivo, sizeof(orariodiarrivo));
-	set_binding_param(&param[6], MYSQL_TYPE_DATE, &datadipartenza, sizeof(datadipartenza));
-	set_binding_param(&param[7], MYSQL_TYPE_TIME, &orariodipartenza, sizeof(orariodipartenza));
-	set_binding_param(&param[8], MYSQL_TYPE_TINY, &visita->guida, sizeof(visita->guida));
-	set_binding_param(&param[9], MYSQL_TYPE_FLOAT, &visita->supplemento, sizeof(visita->supplemento));
-	set_binding_param(&param[10], MYSQL_TYPE_VAR_STRING, visita->trattamentoalberghiero, sizeof(visita->trattamentoalberghiero));
-	
-
-	if(take_result(delete_visit, param, buff)==-1)
-		goto stop; 
-	
-	mysql_time_to_string(&orariodiarrivo,visita->oradiarrivo); 
-	mysql_time_to_string(&orariodipartenza, visita->oradipartenza); 
-	mysql_date_to_string(&datadiarrivo, visita->datadiarrivo); 
-	mysql_date_to_string(&datadipartenza, visita->datadipartenza); 
-	
-	stop:
 	mysql_stmt_free_result(delete_visit);
 	mysql_stmt_reset(delete_visit);
 }

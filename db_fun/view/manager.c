@@ -308,7 +308,7 @@ bool get_table_tour(char sel)
                 return true; 
                 }
 	            case GESTIONE_DELETE: {
-                    //del_visitiata(visita); 
+                    dlt_visit(visita); 
                 return true; 
                 }
 	            case QUIT_GEST_OP: {

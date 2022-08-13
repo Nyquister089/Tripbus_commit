@@ -21,8 +21,8 @@ void dlt_sparepart(struct ricambio *ricambio)
 {	
     
 }
-void dlt_review (struct revisione *revisione){
-
+void dlt_review (struct revisione *revisione)
+{
 	show_review(revisione); 
     if(yes_or_no("Vuoi cancellare questa revisione? (s/n)",'s','n',false,false) == true)
         do_delete_review(revisione);
@@ -121,6 +121,12 @@ void dlt_destination(struct meta *meta)
 	 if(yes_or_no("Vuoi cancellare questa meta? (s/n)",'s','n',false,false) == true)
         do_delete_destination(meta);
 }
+void dlt_visit(struct visita *visita)
+{	
+	show_visit(visita);
+	 if(yes_or_no("Vuoi cancellare questa visita? (s/n)",'s','n',false,false) == true)
+        do_delete_visit(visita);
+}
 /*
 
 
@@ -132,112 +138,6 @@ void dlt_destination(struct meta *meta)
 
 
 
-
-
-
-void dlt_assoc(struct associata *associata)
-{	
-	char buff [NUM_LEN]; 
-	printf("\n\n** Dettagli associata **\n\n");
-	get_input("Inserisci il codice dell'albergo:",NUM_LEN, buff, false); 
-	associata->albergoinquestione = atoi(buff); 
-	get_input("Inserisci il codice della camera :",NUM_LEN, buff, false);
-	associata->cameraprenotata = atoi(buff); 
-	get_input("Inserisci il numero dell'ospite :",NUM_LEN, buff, false);
-	associata->ospite = atoi(buff); 
-	do_select_assoc(associata);
- 	printf("*Data inizio soggiorno:%s \n Data fine soggiorno:	%s \n\n",
-		associata->datainiziosoggiorno,
-		associata->datafinesoggiorno);
-
-
-
-	char buff [NUM_LEN]; 
-	printf("\n\n** Dettagli utente **\n\n");
-	get_input("Inserisci l'id dell'utente d'interesse:", NUM_LEN, buff, false);
-	utente->id = atoi(buff); 
-	do_select_user(utente);
- 	printf("*Email:		%s\n Password:	%s \n Tipo:		%d\n\n",
-		utente->email,
-		utente->pswrd,
-		utente->tipo); 
-}
-
-
-
-	char buff [NUM_LEN]; 
-	printf("\n\n** Dettagli posto prenotato  **\n\n");
-	get_input("Inserisci il numero di posto d'interesse:",NUM_LEN, buff, false); 
-	postoprenotato->numerodiposto = atoi(buff); 
-	get_input("Inserisci l'id del viaggio d'interesse:",NUM_LEN, buff, false);
-	postoprenotato->viaggioassociato = atoi(buff); 
-	do_select_seat(postoprenotato);
- 	printf("*Nome passeggero:	%s\n Cognome passeggero:	%s \n Età:			%d \n Numero di prenotazione:%d\n\n",
-		postoprenotato->nomepasseggero,
-		postoprenotato->cognomepasseggero,
-		postoprenotato->etapasseggero,
-		postoprenotato->prenotazioneassociata);
-
-}
-
-
-	
-	printf("\n\n** Dettagli modello  **\n\n");
-	get_input("Inserisci l'id del modello d'interesse:",VARCHAR_LEN, modello->nomemodello, false); 
-	do_select_model(modello);
- 	printf("* Casa costruttrice:	%s\n Dati tecnici:		%s \n Numero di posti:	%d\n\n",
-		modello->casacostruttrice,
-		modello->datitecnici,
-		modello->numeroposti);
-}
-
-
-	
-	char buff[NUM_LEN];
-	printf("\n\n** Dettagli tagliando  **\n\n");
-	get_input("Inserisci l'id  d'interesse:",NUM_LEN, buff, false); 
-	tagliando->idtagliando= atoi(buff); 
-	do_select_certify(tagliando);
- 	printf("*Tipologia:		%s\n Validità superate:	%s \n\n",
-		tagliando->tipologiatagliando,
-		tagliando->validitasuperate);
-}
-
-
-
-	char buff[NUM_LEN];
-	printf("\n\n** Dettagli meta  **\n\n");
-	get_input("Inserisci l'id  d'interesse:",NUM_LEN, buff, false); 
-	meta->idmeta= atoi(buff); 
-	do_select_destination(meta); 
-	printf("*Nome:		%s\n Tipologia:	%s\n Località:	%s\n Indirizzo:	%s\n Telefono:	%s\n E-mail:	%s\n Fax:		%s\n",
-		meta->nomemeta,
-		meta->tipologiameta,
-		meta->localitadiappartenenza,
-		meta->indirizzo,
-		meta->telefonometa,
-		meta->emailmeta,
-		meta->faxmeta); 
-	if(strcmp((meta->tipologiameta), "Albergo") == 0)
-		printf(" Categoria:	%s\n\n", meta->categoriaalbergo); 
-	else
-		printf(" Orario di apertura:%s\n\n", meta->orariodiapertura); 
-
-}
-
-void dlt_service (struct servizio  *servizio ){
-
-	char buff[NUM_LEN]; 
-	printf("\n\n** Dettagli servizio   **\n\n");
-	get_input("Inserisci l'id d'interesse:",NUM_LEN, buff, false); 
-	servizio ->idservizio  = atoi(buff); 
-	do_select_service (servizio ); 
-	printf("*Nome:		%s \n Descrizione:	%s  \n\n",
-		servizio->nomeservizio ,
-		servizio->descrizioneservizio 
-		
-		);
-}
 
 void dlt_comfort(struct comfort *comfort){
 
@@ -316,7 +216,7 @@ void dlt_location(struct localita *localita){
 
 }
 
-void dlt_visit(struct visita *visita){
+
 	char buff[NUM_LEN];
 	printf("\n\n** Dettagli visita  **\n\n");
 	get_input("Inserisci l'id  d'interesse:",NUM_LEN, buff, false); 
