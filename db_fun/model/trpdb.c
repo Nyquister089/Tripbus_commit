@@ -1011,6 +1011,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_map, "Unable to initialize delete_map statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&delete_picture, "call  delete_picture(?)", conn))
+		{ 
+			print_stmt_error(delete_picture, "Unable to initialize delete_picture statement\n");
+			return false;
+		}
 		/*
 	
 	
@@ -1026,11 +1031,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_comfort, "Unable to initialize delete_comfort statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&delete_picture, "call  delete_picture(?)", conn))
-		{ 
-			print_stmt_error(delete_picture, "Unable to initialize delete_picture statement\n");
-			return false;
-		}
+		
 		
 	
 	
@@ -2972,21 +2973,14 @@ void do_delete_comfort(struct comfort *comfort)
 
 void do_delete_picture(struct documentazionefotografica *documentazionefotografica)
 {
-	MYSQL_BIND param[2];
+	MYSQL_BIND param[1];
 	
 	char *buff = "delete_picture";
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &documentazionefotografica->idfoto, sizeof(documentazionefotografica->idfoto));
 
-	if(bind_exe(delete_picture, param, buff)==-1)
-		goto stop; 
+	bind_exe(delete_picture, param, buff);
 
-	set_binding_param(&param[0], MYSQL_TYPE_BLOB, &documentazionefotografica->foto, sizeof(documentazionefotografica->foto));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, documentazionefotografica->descrzione, sizeof(documentazionefotografica->descrzione));
-	
-	take_result(delete_picture, param, buff); 
-	
-	stop:
 	mysql_stmt_free_result(delete_picture);
 	mysql_stmt_reset(delete_picture);
 }

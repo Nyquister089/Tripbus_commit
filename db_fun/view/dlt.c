@@ -147,6 +147,13 @@ void dlt_map(struct mappa *mappa)
         do_delete_map(mappa);
 
 }
+void dlt_picture(struct documentazionefotografica *documentazionefotografica)
+{
+	show_picture(documentazionefotografica);
+	 if(yes_or_no("Vuoi cancellare questa foto? (s/n)",'s','n',false,false) == true)
+        do_delete_picture(documentazionefotografica);
+
+}
 /*
 
 
@@ -174,19 +181,7 @@ void dlt_comfort(struct comfort *comfort){
 }
 
 
-void dlt_picture(struct documentazionefotografica *documentazionefotografica){
 
-	char buff[NUM_LEN]; 
-	printf("\n\n** Dettagli documentazionefotografica  **\n\n");
-	get_input("Inserisci l'id d'interesse:",NUM_LEN, buff, false); 
-	documentazionefotografica->idfoto = atoi(buff); 
-	do_select_picture(documentazionefotografica); 
-	printf("*Foto:		%s \n Descrizione:	%s  \n\n",
-		documentazionefotografica->foto,
-		documentazionefotografica->descrzione
-		
-		);
-}
 
 
 
