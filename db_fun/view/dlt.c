@@ -154,41 +154,10 @@ void dlt_picture(struct documentazionefotografica *documentazionefotografica)
         do_delete_picture(documentazionefotografica);
 
 }
-/*
+void dlt_comfort(struct comfort *comfort)
+{
+	show_comfort(comfort);
+	 if(yes_or_no("Vuoi cancellare questo comfort? (s/n)",'s','n',false,false) == true)
+        do_delete_comfort(comfort);
 
-
-
-
-
-
-
-
-
-
-
-void dlt_comfort(struct comfort *comfort){
-
-	char buff[NUM_LEN]; 
-	printf("\n\n** Dettagli comfort  **\n\n");
-	get_input("Inserisci l'id d'interesse:",NUM_LEN, buff, false); 
-	comfort->idcomfort = atoi(buff); 
-	do_select_comfort(comfort); 
-	printf("*Nome:		%s \n Descrizione:	%s  \n\n",
-		comfort->nomecomfort,
-		comfort->descrizionecomfort
-		
-		);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-*/

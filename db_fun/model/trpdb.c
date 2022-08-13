@@ -1016,6 +1016,11 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_picture, "Unable to initialize delete_picture statement\n");
 			return false;
 		}
+		if (!setup_prepared_stmt(&delete_comfort, "call  delete_comfort(?)", conn))
+		{ 
+			print_stmt_error(delete_comfort, "Unable to initialize delete_comfort statement\n");
+			return false;
+		}
 		/*
 	
 	
@@ -1026,11 +1031,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_service , "Unable to initialize delete_service  statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&delete_comfort, "call  delete_comfort(?)", conn))
-		{ 
-			print_stmt_error(delete_comfort, "Unable to initialize delete_comfort statement\n");
-			return false;
-		}
+		
 		
 		
 	
@@ -2951,21 +2952,14 @@ void do_delete_tour(struct tour *tour)
 
 void do_delete_comfort(struct comfort *comfort)
 {
-	MYSQL_BIND param[2];
+	MYSQL_BIND param[1];
 	
 	char *buff = "delete_comfort";
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &comfort->idcomfort, sizeof(comfort->idcomfort));
 
-	if(bind_exe(delete_comfort, param, buff)==-1)
-		goto stop; 
-
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, comfort->nomecomfort, sizeof(comfort->nomecomfort));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, comfort->descrizionecomfort, sizeof(comfort->descrizionecomfort));
+	bind_exe(delete_comfort, param, buff); 
 	
-	take_result(delete_comfort, param, buff); 
-	
-	stop:
 	mysql_stmt_free_result(delete_comfort);
 	mysql_stmt_reset(delete_comfort);
 }
