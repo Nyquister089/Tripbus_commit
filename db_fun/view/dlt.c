@@ -79,6 +79,12 @@ void dlt_fme(struct fme *fme)
 	 if(yes_or_no("Vuoi cancellare questa relazione foto-meta? (s/n)",'s','n',false,false) == true)
         do_delete_fme(fme);
 }
+void dlt_ofr(struct offre *offre)
+{	
+	show_ofr(offre);
+	 if(yes_or_no("Vuoi cancellare questa offerta? (s/n)",'s','n',false,false) == true)
+        do_delete_ofr(offre);
+}
 /*
 
 

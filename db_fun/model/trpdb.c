@@ -951,14 +951,19 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_employee, "Unable to initialize delete_employee statement\n");
 			return false;
 		}
-			if (!setup_prepared_stmt(&delete_fmo, "call  delete_fmo(?,?)", conn))
+		if (!setup_prepared_stmt(&delete_fmo, "call  delete_fmo(?,?)", conn))
 		{ 
 			print_stmt_error(delete_fmo, "Unable to initialize delete_fmo statement\n");
 			return false;
 		}
-			if (!setup_prepared_stmt(&delete_fme, "call  delete_fme(?,?)", conn))
+		if (!setup_prepared_stmt(&delete_fme, "call  delete_fme(?,?)", conn))
 		{ 
 			print_stmt_error(delete_fme, "Unable to initialize delete_fme statement\n");
+			return false;
+		}
+		if (!setup_prepared_stmt(&delete_ofr, "call  delete_ofr(?,?)", conn))
+		{ 
+			print_stmt_error(delete_ofr, "Unable to initialize delete_ofr statement\n");
 			return false;
 		}
 		/*
@@ -1032,11 +1037,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(delete_tome, "Unable to initialize delete_tome statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&delete_ofr, "call  delete_ofr(?,?)", conn))
-		{ 
-			print_stmt_error(delete_ofr, "Unable to initialize delete_ofr statement\n");
-			return false;
-		}
+	
 	
 	
 		*/
@@ -2759,26 +2760,15 @@ void do_delete_tome(struct tome *tome)
 
 void do_delete_ofr(struct offre *offre)
 {
-	MYSQL_BIND param[3];
+	MYSQL_BIND param[2];
 	
 	char *buff = "delete_ofr";
-
 
 	set_binding_param(&param[0], MYSQL_TYPE_LONG, &offre->albergoofferente, sizeof(offre->albergoofferente));
 	set_binding_param(&param[1], MYSQL_TYPE_LONG, &offre->idservizio, sizeof(offre->servizio));
 	
-	
-	if (bind_exe(delete_ofr, param, buff) == -1)
-		goto stop;
+	bind_exe(delete_ofr, param, buff); 
 
-	set_binding_param(&param[0], MYSQL_TYPE_VAR_STRING, offre->meta, sizeof(offre->meta));
-	set_binding_param(&param[1], MYSQL_TYPE_VAR_STRING, offre->servizio, sizeof(offre->servizio));
-	set_binding_param(&param[2], MYSQL_TYPE_VAR_STRING, offre->descrizione, sizeof(offre->descrizione));
-	
-	if(take_result(delete_ofr, param, buff)== -1)
-		goto stop; 
-	
-	stop:
 	mysql_stmt_free_result(delete_ofr);
 	mysql_stmt_reset(delete_ofr);
  

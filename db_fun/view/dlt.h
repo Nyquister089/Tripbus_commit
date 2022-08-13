@@ -29,7 +29,7 @@ extern void dlt_map(struct mappa *mappa);
 extern void dlt_picture(struct documentazionefotografica *documentazionefotografica) ;
 extern void dlt_employee(struct dipendente *dipendente);
 extern void dlt_user(struct utente *utente);
-extern void dlt_offert(struct offre *offre); 
+extern void dlt_ofr(struct offre *offre); 
 extern void dlt_service(struct servizio *servizio);
 extern void dlt_tome(struct tome *tome); 
 extern void dlt_fmo(struct fmo *fmo); 
