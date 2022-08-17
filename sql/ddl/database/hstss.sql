@@ -1,0 +1,3 @@
+DROP DATABASE IF EXISTS Hostessdb; 
+CREATE DATABASE IF NOT EXISTS Hostessdb CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci; 
+

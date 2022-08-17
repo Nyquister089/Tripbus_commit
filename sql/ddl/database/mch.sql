@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS Meccanicodb; 
+CREATE DATABASE IF NOT EXISTS Meccanicodb CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci; 

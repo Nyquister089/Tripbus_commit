@@ -94,6 +94,7 @@ MYSQL *start_connection_mysql()
     }
 }
 
+
 void close_connection_mysql()
 {
     mysql_close(connection_init_db);
@@ -102,6 +103,11 @@ void close_connection_mysql()
 void create_database()
 {
     execute_query_from_file_sql("../sql/ddl/database/tripdb.sql");
+    execute_query_from_file_sql("../sql/ddl/database/drvr.sql");
+    execute_query_from_file_sql("../sql/ddl/database/cstmr.sql");
+    execute_query_from_file_sql("../sql/ddl/database/hstss.sql");
+    execute_query_from_file_sql("../sql/ddl/database/mch.sql");
+    execute_query_from_file_sql("../sql/ddl/database/mngr.sql");
 }
 
 void drop_tables()
@@ -300,7 +306,6 @@ int main(int argc, char *argv[])
 {
     start_connection_mysql();
 
-    
     drop_tables();
     drop_views();
     drop_procedures();
@@ -311,4 +316,5 @@ int main(int argc, char *argv[])
     populate_tables();
 
     close_connection_mysql();
+
 }

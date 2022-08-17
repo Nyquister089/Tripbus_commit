@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS Managerdb; 
+CREATE DATABASE IF NOT EXISTS Managerdb CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci; 
