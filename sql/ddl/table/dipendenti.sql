@@ -7,3 +7,6 @@ CREATE TABLE IF NOT EXISTS `tripdb`.`dipendente` (
   PRIMARY KEY (`IdDipendente`),
   UNIQUE KEY `IdDipendente_UNIQUE` (`IdDipendente`)
 ) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci;
+
+
+

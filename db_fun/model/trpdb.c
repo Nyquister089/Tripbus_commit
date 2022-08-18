@@ -613,6 +613,18 @@ static bool initialize_prepared_stmts(role_t for_role)
 		break;
 
 	case AUTISTA:
+			printf("Autista statement"); 
+			fini_db(); 
+			opt_host_name = "localhost"; /* host (default=localhost) */
+			opt_user_name = "Autista";  /* username (default=login name)*/
+			opt_password = "drvr";	  /* password (default=none) */
+			opt_port_num = 3306;  /* port number (use built-in) */
+			opt_socket_name = NULL;	  /* socket name (use built-in) */
+			opt_db_name = "Autistadb";	  /* database name (default=none) */
+			opt_flags = 0;		  /* connection flags (none) */
+			init_db(); 
+
+			
 			if(!setup_prepared_stmt(&select_assigned_trip, "call select_assigned_trip(?)", conn)) {
 				print_stmt_error(select_assigned_trip, "Unable to initialize select_assigned_trip statement\n");
 				return false;

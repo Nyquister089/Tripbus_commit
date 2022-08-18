@@ -1,2 +1,1 @@
 DROP DATABASE IF EXISTS Autistadb; 
-CREATE DATABASE IF NOT EXISTS Autistadb CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci; 
