@@ -1,0 +1,27 @@
+grant execute on procedure delete_tour to 'Manager'@'localhost';                              	 	 
+grant execute on procedure delete_trip to 'Manager'@'localhost';   		 
+grant execute on procedure delete_destination to 'Manager'@'localhost';   	 
+grant execute on procedure delete_visit to 'Manager'@'localhost';  		 
+grant execute on procedure delete_room to 'Manager'@'localhost';   		 
+grant execute on procedure delete_location to 'Manager'@'localhost';   	 
+grant execute on procedure delete_map to 'Manager'@'localhost';   			  
+grant execute on procedure delete_picture to 'Manager'@'localhost';   		 
+grant execute on procedure delete_employee to 'Manager'@'localhost';   	  
+grant execute on procedure delete_user to 'Manager'@'localhost';   		  
+grant execute on procedure delete_ofr to 'Manager'@'localhost';   		 
+grant execute on procedure delete_service to 'Manager'@'localhost';   		 
+grant execute on procedure delete_tome to 'Manager'@'localhost';   		 
+grant execute on procedure delete_fmo to 'Manager'@'localhost';  			 
+grant execute on procedure delete_fme to 'Manager'@'localhost';   			 
+grant execute on procedure delete_model to 'Manager'@'localhost';   		 
+grant execute on procedure delete_bus to 'Manager'@'localhost';   			 
+grant execute on procedure delete_sparepart to 'Manager'@'localhost';   	 
+grant execute on procedure delete_certify to 'Manager'@'localhost';   		 
+grant execute on procedure delete_comfort to 'Manager'@'localhost';   		 
+grant execute on procedure delete_skills to 'Manager'@'localhost';   		 
+grant execute on procedure delete_costumer to 'Manager'@'localhost'; 
+grant execute on procedure delete_reservation to 'Manager'@'localhost';  
+grant execute on procedure delete_seat to 'Manager'@'localhost';  		
+grant execute on procedure delete_assoc to 'Manager'@'localhost'; 
+grant execute on procedure delete_review to 'Manager'@'localhost';  
+/*grant execute on procedure delete_sostitution to 'Manager'@'localhost';  */	
