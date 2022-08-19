@@ -103,6 +103,7 @@ void close_connection_mysql()
 void create_database()
 {
     execute_query_from_file_sql("../sql/ddl/database/tripdb.sql");
+    execute_query_from_file_sql("../sql/ddl/database/tripdb.sql");
 }
 
 void drop_tables()

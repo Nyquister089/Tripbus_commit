@@ -1,6 +1,4 @@
-/*create user if not exists 'Autista'@'localhost' identified by 'drvr'; 
-grant usage on tripdb.* to 'Austista'@'localhost'; */
-grant select on 
+/*grant select on 
 tripdb.viaggio
 to 'Autista'@'localhost'; 
 
@@ -34,30 +32,28 @@ to 'Autista'@'localhost';
 
 grant update on 
 tripdb.mezzo
-to 'Autista'@'localhost';  
+to 'Autista'@'localhost'; */ 
 
-grant execute on procedure 
-login
-TO 'Autista'@'localhost';
+grant execute on procedure login to 'Autista'@'localhost';
 
 grant execute on procedure 
 select_bus
-TO 'Autista'@'localhost';
+to 'Autista'@'localhost';
 
 grant execute on procedure 
 select_assigned_trip 
-TO 'Autista'@'localhost';
+to 'Autista'@'localhost';
 
 grant execute on procedure 
 select_dest_time	
-TO 'Autista'@'localhost';
+to 'Autista'@'localhost';
 
 grant execute on procedure 
 update_km 
-TO 'Autista'@'localhost';
+to 'Autista'@'localhost';
 
 grant execute on procedure 
 select_dvr_map 
-TO 'Autista'@'localhost';
+to 'Autista'@'localhost';
 
 flush privileges; 

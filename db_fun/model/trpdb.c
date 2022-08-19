@@ -661,6 +661,18 @@ static bool initialize_prepared_stmts(role_t for_role)
 		break; 
 
 	case HOSTESS:
+
+		printf("Hostess statement"); 
+		fini_db(); 
+		opt_host_name = "localhost"; /* host (default=localhost) */
+		opt_user_name = "Hostess";  /* username (default=login name)*/
+		opt_password = "hstss";	  /* password (default=none) */
+		opt_port_num = 3306;  /* port number (use built-in) */
+		opt_socket_name = NULL;	  /* socket name (use built-in) */
+		opt_db_name = "tripdb";	  /* database name (default=none) */
+		opt_flags = 0;		  /* connection flags (none) */
+		init_db(); 
+
 		if (!setup_prepared_stmt(&insert_costumer, "call insert_costumer(?, ?, ?, ?, ?, ?, ?, ?)", conn))
 		{ 
 			print_stmt_error(insert_costumer, "Unable to initialize insert costumer statement\n");
@@ -714,11 +726,18 @@ static bool initialize_prepared_stmts(role_t for_role)
 		break;
 
 	case CLIENTE:
-		if (!setup_prepared_stmt(&select_tour, "call select_tour(?)", conn))
-		{
-			print_stmt_error(select_tour, "Unable to initialize select_tour statement\n");
-			return false;
-		}
+
+		printf("Cliente statement"); 
+		fini_db(); 
+		opt_host_name = "localhost"; /* host (default=localhost) */
+		opt_user_name = "Cliente";  /* username (default=login name)*/
+		opt_password = "cstmr";	  /* password (default=none) */
+		opt_port_num = 3306;  /* port number (use built-in) */
+		opt_socket_name = NULL;	  /* socket name (use built-in) */
+		opt_db_name = "tripdb";	  /* database name (default=none) */
+		opt_flags = 0;		  /* connection flags (none) */
+		init_db(); 
+
 		if (!setup_prepared_stmt(&select_hotel_service, "call select_hotel_service(?)", conn))
 		{
 			print_stmt_error(select_hotel_service, "Unable to initialize select_hotel_service statement\n");
@@ -739,13 +758,22 @@ static bool initialize_prepared_stmts(role_t for_role)
 			print_stmt_error(select_dest_tour, "Unable to initialize select dest tour statement\n");
 			return false;
 		}
-		if (!setup_prepared_stmt(&select_trip, "call select_trip(?)", conn))
-		{
-			print_stmt_error(select_trip, "Unable to initialize select_trip statement\n");
-			return false;
-		}
+
 		break;
 	case MECCANICO:
+
+		printf("Meccanico statement"); 
+		fini_db(); 
+		opt_host_name = "localhost"; /* host (default=localhost) */
+		opt_user_name = "Meccanico";  /* username (default=login name)*/
+		opt_password = "mchn";	  /* password (default=none) */
+		opt_port_num = 3306;  /* port number (use built-in) */
+		opt_socket_name = NULL;	  /* socket name (use built-in) */
+		opt_db_name = "tripdb";	  /* database name (default=none) */
+		opt_flags = 0;		  /* connection flags (none) */
+		init_db(); 
+
+
 		if (!setup_prepared_stmt(&update_spareparts_number, "call  update_spareparts_number(?,?)", conn))
 		{ // Insert
 			print_stmt_error(update_spareparts_number, "Unable to initialize insert review statement\n");
@@ -783,6 +811,19 @@ static bool initialize_prepared_stmts(role_t for_role)
 		} 
 		break;
 		case MANAGER:
+
+		printf("Manager statement"); 
+		fini_db(); 
+		opt_host_name = "localhost"; /* host (default=localhost) */
+		opt_user_name = "Manager";  /* username (default=login name)*/
+		opt_password = "mngr";	  /* password (default=none) */
+		opt_port_num = 3306;  /* port number (use built-in) */
+		opt_socket_name = NULL;	  /* socket name (use built-in) */
+		opt_db_name = "tripdb";	  /* database name (default=none) */
+		opt_flags = 0;		  /* connection flags (none) */
+		init_db(); 
+
+
 		if (!setup_prepared_stmt(&insert_assoc, "call insert_assoc(?, ?, ?, ?, ?)", conn))
 		{
 			print_stmt_error(insert_assoc, "Unable to initialize update trip statement statement\n");
