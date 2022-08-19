@@ -23,6 +23,8 @@ extern void fini_db(void);
 #define VARCHAR_LEN 45
 #define DES_LEN 5000
 
+
+
 struct credentials {
 	char username[USERNAME_LEN];
 	char password[PASSWORD_LEN];

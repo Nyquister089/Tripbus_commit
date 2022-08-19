@@ -7,10 +7,20 @@
 #include "trpdb.h"
 #include "../utils/db.h"
 
+
+void var(void){
 static char *opt_host_name = "localhost"; /* host (default=localhost) */
 static char *opt_user_name = "giordano";  /* username (default=login name)*/
 static char *opt_password = "root1989";	  /* password (default=none) */
 static unsigned int opt_port_num = 3306;  /* port number (use built-in) */
+static char *opt_socket_name = NULL;	  /* socket name (use built-in) */
+static char *opt_db_name = "tripdb";	  /* database name (default=none) */
+static unsigned int opt_flags = 0;		  /* connection flags (none) */}
+
+static char *opt_host_name = "localhost"; /* host (default=localhost) */
+static char *opt_user_name = "Login";  /* username (default=login name)*/
+static char *opt_password = "lgn";	  /* password (default=none) */
+static unsigned int opt_port_num = 3306 ;  /* port number (use built-in) */
 static char *opt_socket_name = NULL;	  /* socket name (use built-in) */
 static char *opt_db_name = "tripdb";	  /* database name (default=none) */
 static unsigned int opt_flags = 0;		  /* connection flags (none) */
@@ -620,7 +630,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 			opt_password = "drvr";	  /* password (default=none) */
 			opt_port_num = 3306;  /* port number (use built-in) */
 			opt_socket_name = NULL;	  /* socket name (use built-in) */
-			opt_db_name = "Autistadb";	  /* database name (default=none) */
+			opt_db_name = "tripdb";	  /* database name (default=none) */
 			opt_flags = 0;		  /* connection flags (none) */
 			init_db(); 
 

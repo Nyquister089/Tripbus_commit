@@ -25,12 +25,15 @@ void view_login(struct credentials *cred)
 bool ask_for_relogin(void)
 {
 	return yes_or_no("Vuoi accedere con utente differente?", 'y', 'n', false, true);
+	
+
 }
 
 int main (void)
 {	
 	bool answer = false; 
 	bool ans = true; 
+
 
 	size_t role; 
 
