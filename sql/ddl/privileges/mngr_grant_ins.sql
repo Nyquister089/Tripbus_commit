@@ -1,6 +1,8 @@
 
 grant execute on procedure login to 'Manager'@'localhost'; 
 
+
+
 grant execute on procedure insert_tour to 'Manager'@'localhost';                              	 	 
 grant execute on procedure insert_trip to 'Manager'@'localhost';   		 
 grant execute on procedure insert_destination to 'Manager'@'localhost';   	 

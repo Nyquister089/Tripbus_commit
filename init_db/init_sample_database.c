@@ -268,7 +268,6 @@ void create_procedures(){
     execute_query_from_file_sql("../sql/ddl/procedure/insert_skill.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/insert_review.sql"); 
 
-
     execute_query_from_file_sql("../sql/ddl/procedure/delete_trip.sql"); 
     execute_query_from_file_sql("../sql/ddl/procedure/delete_tour.sql");
     execute_query_from_file_sql("../sql/ddl/procedure/delete_sparepart.sql"); 
@@ -299,6 +298,7 @@ void create_procedures(){
     }
 
     void privileges (void){
+        
         execute_query_from_file_sql("../sql/ddl/privileges/lgn_grant.sql"); 
         execute_query_from_file_sql("../sql/ddl/privileges/mngr_grant_sel.sql");
         execute_query_from_file_sql("../sql/ddl/privileges/mngr_grant_ins.sql");
@@ -307,12 +307,9 @@ void create_procedures(){
         execute_query_from_file_sql("../sql/ddl/privileges/cstmr_grant.sql");
         execute_query_from_file_sql("../sql/ddl/privileges/hstss_grant.sql");
         execute_query_from_file_sql("../sql/ddl/privileges/mchn_grant.sql");
-
-
     }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
     start_connection_mysql();
 
     drop_tables();

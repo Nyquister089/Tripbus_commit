@@ -1,6 +1,6 @@
 CREATE 
     ALGORITHM = UNDEFINED 
-    DEFINER = `giordano`@`localhost` 
+
     SQL SECURITY DEFINER
 VIEW `Meccanico_pianifica_revisione` AS
     SELECT 

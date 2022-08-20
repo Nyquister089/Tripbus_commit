@@ -1,3 +1,9 @@
+drop user if exists 'Login'@'localhost'; 
+drop user if exists 'Autista'@'localhost'; 
+drop user if exists 'Cliente'@'localhost'; 
+drop user if exists 'Hostess'@'localhost'; 
+drop user if exists 'Manager'@'localhost'; 
+
 create user if not exists 'Login'@'localhost' identified by 'lgn'; 
 grant usage on tripdb.* to 'Login'@'localhost'; 
 

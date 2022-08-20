@@ -1,6 +1,6 @@
 CREATE 
     ALGORITHM = UNDEFINED 
-    DEFINER = `giordano`@`localhost` 
+
     SQL SECURITY DEFINER
 VIEW `Hostess_cliente_prenotazioni` AS
     SELECT 

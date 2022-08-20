@@ -1,7 +1,6 @@
 USE `tripdb`; 
 CREATE
-    ALGORITHM = UNDEFINED 
-    DEFINER = `giordano`@`localhost` 
+    ALGORITHM = UNDEFINED
     SQL SECURITY DEFINER
 VIEW `tripdb`.`Autista_mete_visitate` AS
     SELECT 

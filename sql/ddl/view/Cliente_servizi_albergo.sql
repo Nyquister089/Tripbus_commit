@@ -1,7 +1,7 @@
 
 CREATE 
     ALGORITHM = UNDEFINED 
-    DEFINER = `giordano`@`localhost` 
+
     SQL SECURITY DEFINER
 VIEW `Cliente_servizi_albergo` AS
     SELECT 
