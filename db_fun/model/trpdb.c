@@ -609,7 +609,6 @@ static void close_prepared_stmts(void)
 
 static bool initialize_prepared_stmts(role_t for_role)
 {
-	printf("For role %d\n\n", for_role);
 
 	switch (for_role)
 	{
@@ -622,8 +621,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 		}
 		break;
 
-	case AUTISTA:
-			printf("Autista statement"); 
+	case AUTISTA: 
 			fini_db(); 
 			opt_host_name = "localhost"; /* host (default=localhost) */
 			opt_user_name = "Autista";  /* username (default=login name)*/
@@ -662,7 +660,6 @@ static bool initialize_prepared_stmts(role_t for_role)
 
 	case HOSTESS:
 
-		printf("Hostess statement"); 
 		fini_db(); 
 		opt_host_name = "localhost"; /* host (default=localhost) */
 		opt_user_name = "Hostess";  /* username (default=login name)*/
@@ -727,7 +724,6 @@ static bool initialize_prepared_stmts(role_t for_role)
 
 	case CLIENTE:
 
-		printf("Cliente statement"); 
 		fini_db(); 
 		opt_host_name = "localhost"; /* host (default=localhost) */
 		opt_user_name = "Cliente";  /* username (default=login name)*/
@@ -762,7 +758,6 @@ static bool initialize_prepared_stmts(role_t for_role)
 		break;
 	case MECCANICO:
 
-		printf("Meccanico statement"); 
 		fini_db(); 
 		opt_host_name = "localhost"; /* host (default=localhost) */
 		opt_user_name = "Meccanico";  /* username (default=login name)*/
@@ -812,7 +807,6 @@ static bool initialize_prepared_stmts(role_t for_role)
 		break;
 		case MANAGER:
 
-		printf("Manager statement"); 
 		fini_db(); 
 		opt_host_name = "localhost"; /* host (default=localhost) */
 		opt_user_name = "Manager";  /* username (default=login name)*/
@@ -1231,7 +1225,7 @@ static bool initialize_prepared_stmts(role_t for_role)
 
 bool init_db(void) // testato
 {
-	printf("Inizializzazione database...");
+
 	unsigned int timeout = 300;
 	bool reconnect = true;
 
@@ -1260,7 +1254,7 @@ bool init_db(void) // testato
 		print_error(conn, "[debug_info] failed.");
 	}
 #endif
-	printf("completata \n");
+
 	return initialize_prepared_stmts(LOGIN_ROLE);
 }
 
@@ -1313,7 +1307,6 @@ role_t attempt_login(struct credentials *cred)
 		role = FAILED_LOGIN;
 		goto out;
 	}
-	printf("ROLE %d \n", role);
 out:
 	// Consume the possibly-returned table for the output parameter
 	while (mysql_stmt_next_result(login_procedure) != -1)
@@ -1324,7 +1317,7 @@ out:
 	mysql_stmt_reset(login_procedure);
 
 	initialize_prepared_stmts(role);
-	printf("ROLE %d \n", role);
+
 	return role;
 }
 
